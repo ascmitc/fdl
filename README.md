@@ -1,5 +1,4 @@
-**ASC Framing Decision List
-READ ME**
+**ASC Framing Decision List - READ ME**
 
 Within this directory you will find many files and folders for the ASC FDL.  
 Here is a breakdown of their purpose:
