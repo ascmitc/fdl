@@ -25,4 +25,7 @@ These are also documented in the specification, but made available within this s
 **ASCFDL Specification**
 This is the technical specification for implementers
 
+**ASCFDL ERD**
+ERD file created to help implementers have quick access to attribute information
+
 
