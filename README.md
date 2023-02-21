@@ -28,4 +28,6 @@ This is the technical specification for implementers
 **ASCFDL ERD**
 ERD file created to help implementers have quick access to attribute information
 
-
+**Sample Files For Implementers**
+Please use the following link for sample source files, with .FDL's and the resulting expected images.  This will be very helpful for software/hardware developers to test their FDL implementation against our expected results.
+https://drive.google.com/drive/folders/1L1opQmDl6qhAik2wx2NEVz7-xbSFQ-ns?usp=sharing
