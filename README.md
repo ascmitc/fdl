@@ -22,6 +22,9 @@ This is the technical specification for implementers
 **ASCFDL ERD**
 ERD file created to help implementers have quick access to attribute information
 
+**ASC FDL Schema**
+ASC FDL Schema for implementers
+
 -----------------------------------------
 
 **Google Drive Directory**
