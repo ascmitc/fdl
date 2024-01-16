@@ -14,11 +14,11 @@
       "properties": {
         "major": {
           "type": "integer",
-          "const": 0
+          "const": 1
         },
         "minor": {
           "type": "integer",
-          "const": 1
+          "const": 0
         }
       },
       "required": [
