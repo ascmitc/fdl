@@ -37,3 +37,4 @@ Please use the following link for sample source files, with .FDL's and the resul
  - SMPTE ATC ASCFDL 20211028
 This is a recording from a SMPTE presentation introducing the challenges dailies operators face with managing framing, and how the FDL could help.
 
+ - ASC FDL Logos
