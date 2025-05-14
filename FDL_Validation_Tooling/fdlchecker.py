@@ -13,11 +13,17 @@ def validate_id_tree(fdl):
     fi_ids = set()
 
     for fi in fdl.get("framing_intents", []):
-        fi_id = fi["id"]
-        fi_label = fi["label"]
-        if fi_id in fi_ids:
-            raise RuntimeError(f"Framing Intent {fi_id} ({fi_label}): ID duplicated")
-        fi_ids.add(fi_id)
+        if "id" in fi:
+            fi_id = fi["id"]
+            if "label" in fi:
+                fi_label = fi["label"]
+            else:
+                fi_lable = "(no label)"
+            if fi_id in fi_ids:
+                raise RuntimeError(f"Framing Intent {fi_id} ({fi_label}): ID duplicated")
+            fi_ids.add(fi_id)
+        else:
+            raise RuntimeError(f"Framing Intent missing 'id'")
 
     if "default_framing_intent" in fdl:
         default_framing_intent = fdl["default_framing_intent"]
@@ -29,11 +35,17 @@ def validate_id_tree(fdl):
     fd_ids = set()
 
     for cx in fdl.get("contexts", []):
-        cx_label = cx["label"]
+        if "label" in cx:
+            cx_label = cx["label"]
+        else:
+            cx_label = "(no label)"
 
         for cv in cx.get("canvases", []):
             cv_id = cv["id"]
-            cv_label = cv["label"]
+            if "label" in cv:
+                cv_label = cv["label"]
+            else:
+                cv_label = "(no label)"
 
             cv_source_canvas_id = cv["source_canvas_id"]
             cv_source_canvas_ids.add(cv_source_canvas_id)
