@@ -13,14 +13,13 @@ def validate_id_tree(fdl):
     fi_ids = set()
 
     for fi in fdl.get("framing_intents", []):
-        if "id" in fi:
-            fi_id = fi["id"]
-            fi_label = fi.get("label", "(no label)")
-            if fi_id in fi_ids:
-                raise RuntimeError(f"Framing Intent {fi_id} ({fi_label}): ID duplicated")
-            fi_ids.add(fi_id)
-        else:
+        if "id" not in fi:
             raise RuntimeError(f"Framing Intent missing 'id'")
+        fi_id = fi["id"]
+        fi_label = fi.get("label", "(no label)")
+        if fi_id in fi_ids:
+            raise RuntimeError(f"Framing Intent {fi_id} ({fi_label}): ID duplicated")
+        fi_ids.add(fi_id)
 
     if "default_framing_intent" in fdl:
         default_framing_intent = fdl["default_framing_intent"]
