@@ -7,7 +7,9 @@
 from .fdl import FDL  # noqa: F401
 from .canvas import Canvas  # noqa: F401
 from .canvas_template import CanvasTemplate  # noqa: F401
+from .clip_id import ClipID  # noqa: F401
 from .context import Context  # noqa: F401
+from .file_sequence import FileSequence  # noqa: F401
 from .framing_decision import FramingDecision  # noqa: F401
 from .framing_intent import FramingIntent  # noqa: F401
 from .constants import (  # noqa: F401
@@ -17,6 +19,9 @@ from .constants import (  # noqa: F401
     RoundingEven,
     RoundingMode,
     VAlign,
+    ATTR_CONTENT_TRANSLATION,
+    ATTR_SCALE_FACTOR,
+    ATTR_SCALED_BOUNDING_BOX,
 )
 from .context import ResolveCanvasResult  # noqa: F401
 from .canvas_template import TemplateResult  # noqa: F401
@@ -29,11 +34,7 @@ from .rounding import (  # noqa: F401
     calculate_scale_factor,
     fdl_round,
 )
-from .clipid import (  # noqa: F401
-    ClipID,
-    FileSequence,
-)
-from .types import (  # noqa: F401
+from .fdl_types import (  # noqa: F401
     DimensionsFloat,
     DimensionsInt,
     PointFloat,
@@ -41,6 +42,9 @@ from .types import (  # noqa: F401
 )
 from .utils import (  # noqa: F401
     DEFAULT_ROUNDING_STRATEGY,
+    FramingFromIntentResult,
+    abi_version,
+    compute_framing_from_intent,
     find_by_id,
     find_by_label,
     get_anchor_from_path,

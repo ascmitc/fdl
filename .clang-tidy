@@ -15,6 +15,8 @@
 #   -cppcoreguidelines-non-private-member-variables  C-style structs in public header.
 #   -misc-non-private-member-variables-in-classes    Same reason.
 #   -bugprone-easily-swappable-parameters  Too noisy for APIs with multiple same-type params.
+#   -bugprone-macro-parentheses            C ABI macros use type params (HANDLE_TYPE* h);
+#                                          parenthesizing breaks pointer declarations.
 #   -readability-function-cognitive-complexity  Pipeline/geometry functions are inherently complex.
 #   -cppcoreguidelines-init-variables      Conflicts with declaration-near-use style.
 #
@@ -30,6 +32,7 @@ Checks: >
   -*,
   bugprone-*,
   -bugprone-easily-swappable-parameters,
+  -bugprone-macro-parentheses,
   cppcoreguidelines-*,
   -cppcoreguidelines-avoid-c-arrays,
   -cppcoreguidelines-macro-usage,
@@ -56,7 +59,7 @@ Checks: >
   -misc-include-cleaner,
   -misc-no-recursion,
 
-WarningsAsErrors: 'readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers'
+WarningsAsErrors: 'readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers,readability-implicit-bool-conversion'
 
 HeaderFilterRegex: 'native/core/(include|src)/.*\.h$'
 

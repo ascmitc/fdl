@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 from .constants import RoundingEven, RoundingMode
-from .types import DimensionsFloat
+from .fdl_types import DimensionsFloat
 
 
 class RoundStrategy:

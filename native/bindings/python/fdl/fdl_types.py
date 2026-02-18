@@ -7,8 +7,16 @@ from __future__ import annotations
 
 import math
 
-_FP_REL_TOL = 1e-9
-_FP_ABS_TOL = 1e-6
+
+def _load_fp_tolerances() -> tuple[float, float]:
+    from fdl_ffi import get_lib
+
+    lib = get_lib()
+    return lib.fdl_fp_rel_tol(), lib.fdl_fp_abs_tol()
+
+
+_FP_REL_TOL, _FP_ABS_TOL = _load_fp_tolerances()
+del _load_fp_tolerances
 
 
 class DimensionsInt:
@@ -336,7 +344,7 @@ class PointFloat:
         from fdl_ffi._structs import fdl_point_f64_t
 
         _c = fdl_point_f64_t(x=self.x, y=self.y)
-        if isinstance(other, (int, float)):
+        if isinstance(other, int | float):
             _r = get_lib().fdl_point_mul_scalar(_c, float(other))
         elif isinstance(other, PointFloat):
             return PointFloat(x=float(self.x) * float(other.x), y=float(self.y) * float(other.y))
@@ -351,6 +359,15 @@ class PointFloat:
         _c = fdl_point_f64_t(x=self.x, y=self.y)
         _c_other = fdl_point_f64_t(x=other.x, y=other.y)
         _r = get_lib().fdl_point_f64_lt(_c, _c_other)
+        return bool(_r)
+
+    def __gt__(self, other: PointFloat) -> bool:
+        from fdl_ffi import get_lib
+        from fdl_ffi._structs import fdl_point_f64_t
+
+        _c = fdl_point_f64_t(x=self.x, y=self.y)
+        _c_other = fdl_point_f64_t(x=other.x, y=other.y)
+        _r = get_lib().fdl_point_f64_gt(_c, _c_other)
         return bool(_r)
 
 

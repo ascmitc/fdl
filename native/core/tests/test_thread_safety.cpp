@@ -361,7 +361,10 @@ TEST_CASE("Concurrent template apply", "[thread]") {
             errors.fetch_add(1);
         }
 
-        if (result.scale_factor <= 0.0) {
+        auto* out_new_cvs = fdl_context_canvas_at(out_ctx, 1);
+        double sf_out = 0.0;
+        fdl_canvas_get_custom_attr_float(out_new_cvs, FDL_ATTR_SCALE_FACTOR, &sf_out);
+        if (sf_out <= 0.0) {
             errors.fetch_add(1);
         }
 

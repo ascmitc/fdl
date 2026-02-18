@@ -450,21 +450,24 @@ TEST_CASE("Context clip_id accessors", "[accessors][context]") {
         REQUIRE(json_str.find("A001") != std::string::npos);
     }
 
-    SECTION("Context with clip_id -struct getter (file variant)") {
-        auto cid = fdl_context_get_clip_id_struct(ctx);
-        REQUIRE(cid.clip_name != nullptr);
-        REQUIRE(std::string(cid.clip_name) == "A001");
-        REQUIRE(cid.has_file == 1);
-        REQUIRE(std::string(cid.file) == "A001C001_220101_R1AB.ari");
-        REQUIRE(cid.has_sequence == 0);
-        REQUIRE(cid.sequence.value == nullptr);
-        fdl_clip_id_free(&cid);
+    SECTION("Context with clip_id -handle getter (file variant)") {
+        auto* cid = fdl_context_clip_id(ctx);
+        REQUIRE(cid != nullptr);
+        REQUIRE(std::string(fdl_clip_id_get_clip_name(cid)) == "A001");
+        REQUIRE(fdl_clip_id_has_file(cid) == 1);
+        REQUIRE(std::string(fdl_clip_id_get_file(cid)) == "A001C001_220101_R1AB.ari");
+        REQUIRE(fdl_clip_id_has_sequence(cid) == 0);
+        REQUIRE(fdl_clip_id_sequence(cid) == nullptr);
     }
 
-    SECTION("fdl_clip_id_free on zeroed struct") {
-        fdl_clip_id_t cid = {};
-        fdl_clip_id_free(&cid);    // should not crash
-        fdl_clip_id_free(nullptr); // should not crash
+    SECTION("clip_id handle NULL safety") {
+        REQUIRE(fdl_context_clip_id(nullptr) == nullptr);
+        REQUIRE(fdl_clip_id_get_clip_name(nullptr) == nullptr);
+        REQUIRE(fdl_clip_id_has_file(nullptr) == 0);
+        REQUIRE(fdl_clip_id_get_file(nullptr) == nullptr);
+        REQUIRE(fdl_clip_id_has_sequence(nullptr) == 0);
+        REQUIRE(fdl_clip_id_sequence(nullptr) == nullptr);
+        REQUIRE(fdl_clip_id_to_json(nullptr, 0) == nullptr);
     }
 
     fdl_doc_free(doc);
@@ -542,14 +545,14 @@ TEST_CASE("set_clip_id_json -file variant", "[accessors][context][clip_id]") {
     auto* err = fdl_context_set_clip_id_json(ctx, json, std::strlen(json));
     REQUIRE(err == nullptr);
 
-    // Verify via struct getter
+    // Verify via handle getter
     REQUIRE(fdl_context_has_clip_id(ctx) == 1);
-    auto cid = fdl_context_get_clip_id_struct(ctx);
-    REQUIRE(std::string(cid.clip_name) == "B001");
-    REQUIRE(cid.has_file == 1);
-    REQUIRE(std::string(cid.file) == "B001C001.ari");
-    REQUIRE(cid.has_sequence == 0);
-    fdl_clip_id_free(&cid);
+    auto* cid = fdl_context_clip_id(ctx);
+    REQUIRE(cid != nullptr);
+    REQUIRE(std::string(fdl_clip_id_get_clip_name(cid)) == "B001");
+    REQUIRE(fdl_clip_id_has_file(cid) == 1);
+    REQUIRE(std::string(fdl_clip_id_get_file(cid)) == "B001C001.ari");
+    REQUIRE(fdl_clip_id_has_sequence(cid) == 0);
 
     fdl_doc_free(doc);
 }
@@ -564,12 +567,14 @@ TEST_CASE("set_clip_id_json -sequence variant", "[accessors][context][clip_id]")
     REQUIRE(err == nullptr);
 
     REQUIRE(fdl_context_has_clip_id(ctx) == 1);
-    auto cid = fdl_context_get_clip_id_struct(ctx);
-    REQUIRE(std::string(cid.clip_name) == "C001");
-    REQUIRE(cid.has_file == 0);
-    REQUIRE(cid.has_sequence == 1);
-    REQUIRE(std::string(cid.sequence.value) == "C001.####.exr");
-    fdl_clip_id_free(&cid);
+    auto* cid = fdl_context_clip_id(ctx);
+    REQUIRE(cid != nullptr);
+    REQUIRE(std::string(fdl_clip_id_get_clip_name(cid)) == "C001");
+    REQUIRE(fdl_clip_id_has_file(cid) == 0);
+    REQUIRE(fdl_clip_id_has_sequence(cid) == 1);
+    auto* seq = fdl_clip_id_sequence(cid);
+    REQUIRE(seq != nullptr);
+    REQUIRE(std::string(fdl_file_sequence_get_value(seq)) == "C001.####.exr");
 
     fdl_doc_free(doc);
 }
@@ -629,12 +634,17 @@ TEST_CASE("NULL handle safety", "[accessors][null]") {
     REQUIRE(fdl_canvas_has_physical_dimensions(nullptr) == 0);
     REQUIRE(fdl_context_has_clip_id(nullptr) == 0);
     REQUIRE(fdl_context_get_clip_id(nullptr) == nullptr);
-    {
-        auto cid = fdl_context_get_clip_id_struct(nullptr);
-        REQUIRE(cid.clip_name == nullptr);
-        REQUIRE(cid.has_file == 0);
-        REQUIRE(cid.has_sequence == 0);
-    }
+    REQUIRE(fdl_context_clip_id(nullptr) == nullptr);
+    REQUIRE(fdl_clip_id_get_clip_name(nullptr) == nullptr);
+    REQUIRE(fdl_clip_id_has_file(nullptr) == 0);
+    REQUIRE(fdl_clip_id_get_file(nullptr) == nullptr);
+    REQUIRE(fdl_clip_id_has_sequence(nullptr) == 0);
+    REQUIRE(fdl_clip_id_sequence(nullptr) == nullptr);
+    REQUIRE(fdl_clip_id_to_json(nullptr, 0) == nullptr);
+    REQUIRE(fdl_file_sequence_get_value(nullptr) == nullptr);
+    REQUIRE(fdl_file_sequence_get_idx(nullptr) == nullptr);
+    REQUIRE(fdl_file_sequence_get_min(nullptr) == 0);
+    REQUIRE(fdl_file_sequence_get_max(nullptr) == 0);
     REQUIRE(fdl_framing_decision_has_protection(nullptr) == 0);
     REQUIRE(fdl_canvas_template_has_preserve_from_source_canvas(nullptr) == 0);
     REQUIRE(fdl_canvas_template_has_maximum_dimensions(nullptr) == 0);

@@ -185,7 +185,7 @@ fdl_template_result_t apply_canvas_template(
     // --- Validate that fit_source and preserve paths exist in source ---
     auto validate_path_exists = [&](fdl_geometry_path_t path, const char* field_name) -> bool {
         if (path == FDL_GEOMETRY_PATH_CANVAS_EFFECTIVE_DIMENSIONS &&
-            !fdl_canvas_has_effective_dimensions(source_canvas)) {
+            fdl_canvas_has_effective_dimensions(source_canvas) == 0) {
             std::string msg = "Template ";
             msg += field_name;
             msg += " references 'canvas.effective_dimensions' but the source canvas "
@@ -194,7 +194,7 @@ fdl_template_result_t apply_canvas_template(
             return false;
         }
         if (path == FDL_GEOMETRY_PATH_FRAMING_PROTECTION_DIMENSIONS &&
-            !fdl_framing_decision_has_protection(source_framing)) {
+            fdl_framing_decision_has_protection(source_framing) == 0) {
             std::string msg = "Template ";
             msg += field_name;
             msg += " references 'framing_decision.protection_dimensions' but the source "
@@ -456,11 +456,15 @@ fdl_template_result_t apply_canvas_template(
         fdl_canvas_template_set_pad_to_maximum(out_ct, FDL_TRUE);
     }
 
+    // Store computed transformation values as custom attributes on the output canvas
+    fdl_canvas_set_custom_attr_float(new_cvs, FDL_ATTR_SCALE_FACTOR, scale_factor);
+    const fdl_point_f64_t ct_val = content_translation;
+    fdl_canvas_set_custom_attr_point_f64(new_cvs, FDL_ATTR_CONTENT_TRANSLATION, ct_val);
+    const fdl_dimensions_f64_t sbb_val = scaled_bounding_box;
+    fdl_canvas_set_custom_attr_dims_f64(new_cvs, FDL_ATTR_SCALED_BOUNDING_BOX, sbb_val);
+
     // Populate result
     result.output_fdl = out_doc;
-    result.scale_factor = scale_factor;
-    result.scaled_bounding_box = scaled_bounding_box;
-    result.content_translation = content_translation;
     result.context_label = fdl_strdup(label_str.c_str());
     result.canvas_id = fdl_strdup(new_canvas_id);
     result.framing_decision_id = fdl_strdup(fd_id.c_str());

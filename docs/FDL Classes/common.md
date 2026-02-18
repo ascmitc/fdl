@@ -1,54 +1,47 @@
-# Common
+# Common Types & Constants
 
-## Global Variables
-Version numbers are used as default values in [Header](header.md) and to select a matching json schema file
-if no version is set.
+## Value Types
 
-::: fdl.FDL_SCHEMA_MAJOR
-::: fdl.FDL_SCHEMA_MINOR
-::: fdl.FDL_SCHEMA_VERSION
----
+::: fdl.DimensionsInt
+    options:
+        inherited_members: false
 
-Different workflows have different requirements for precision, so we are flexible in how to apply 
-rounding of values
+::: fdl.DimensionsFloat
+    options:
+        inherited_members: false
 
-::: fdl.DEFAULT_ROUNDING_STRATEGY
-This is the default behavior for rounding the values of dimensions. The rules are the same as for
-`CanvasTemplate.round`.
+::: fdl.PointFloat
+    options:
+        inherited_members: false
 
-::: fdl.NO_ROUNDING
-This will disable rounding of values in dimensions. Exception being `Canvas.dimensions` when
-created by a canvas templates
-
-## Global Rounding Functions
-Use these functions to set the global rounding strategy for values of dimensions
-
-::: fdl.set_rounding_strategy
-
-::: fdl.get_rounding_strategy
+::: fdl.Rect
+    options:
+        inherited_members: false
 
 ---
 
-## Base Classes
-
-Below is a collection of the common classes that are used by other classes.
-
-::: fdl.Base
-    options:
-        inherited_members: false
-
-::: fdl.TypedCollection
-    options:
-        inherited_members: false
-
-::: fdl.Dimensions
-    options:
-        inherited_members: false
-
-::: fdl.Point
-    options:
-        inherited_members: false
+## Rounding
 
 ::: fdl.RoundStrategy
     options:
         inherited_members: false
+
+::: fdl.DEFAULT_ROUNDING_STRATEGY
+
+---
+
+## Global Rounding Functions
+
+::: fdl.set_rounding
+
+::: fdl.get_rounding
+
+---
+
+## Custom Attribute Name Constants
+
+These named constants identify first-class custom attributes set by canvas template application.
+
+::: fdl.ATTR_SCALE_FACTOR
+::: fdl.ATTR_CONTENT_TRANSLATION
+::: fdl.ATTR_SCALED_BOUNDING_BOX

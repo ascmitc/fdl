@@ -34,6 +34,17 @@
 namespace fdl {
 
 // -----------------------------------------------------------------------
+// First-class custom attribute name constants
+// -----------------------------------------------------------------------
+
+/** Custom attribute name for the template scale factor (float). */
+inline constexpr const char* ATTR_SCALE_FACTOR = FDL_ATTR_SCALE_FACTOR;
+/** Custom attribute name for the template content translation (point_f64). */
+inline constexpr const char* ATTR_CONTENT_TRANSLATION = FDL_ATTR_CONTENT_TRANSLATION;
+/** Custom attribute name for the template scaled bounding box (dims_f64). */
+inline constexpr const char* ATTR_SCALED_BOUNDING_BOX = FDL_ATTR_SCALED_BOUNDING_BOX;
+
+// -----------------------------------------------------------------------
 // Value type wrapper classes
 // -----------------------------------------------------------------------
 
@@ -193,6 +204,7 @@ public:
         return PointFloat(data_.x * other.data_.x, data_.y * other.data_.y);
     }
     bool operator<(const PointFloat& other) const { return ::fdl_point_f64_lt(data_, other.data_) != 0; }
+    bool operator>(const PointFloat& other) const { return ::fdl_point_f64_gt(data_, other.data_) != 0; }
     bool operator==(const PointFloat& other) const { return ::fdl_point_equal(data_, other.data_) != 0; }
     bool operator!=(const PointFloat& other) const { return !(*this == other); }
 
@@ -230,23 +242,6 @@ private:
 // Supporting structs
 // -----------------------------------------------------------------------
 
-struct FileSequence {
-    std::string value;
-    std::string idx;
-    int64_t min;
-    int64_t max;
-
-    static FileSequence from_c(fdl_file_sequence_t& c);
-};
-
-struct ClipID {
-    std::string clip_name;
-    std::optional<std::string> file;
-    std::optional<FileSequence> sequence;
-
-    static ClipID from_c(fdl_clip_id_t& c);
-};
-
 struct Version {
     int major;
     int minor;
@@ -261,6 +256,8 @@ class CanvasRef;
 class FramingDecisionRef;
 class FramingIntentRef;
 class CanvasTemplateRef;
+class ClipIDRef;
+class FileSequenceRef;
 struct TemplateResult;
 struct ResolveCanvasResult;
 
@@ -427,6 +424,108 @@ public:
         fdl_valign_t alignment_method_vertical,
         const fdl_round_strategy_t& round);
 
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return fdl_doc_set_custom_attr_string(doc_, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return fdl_doc_set_custom_attr_int(doc_, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return fdl_doc_set_custom_attr_float(doc_, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return fdl_doc_set_custom_attr_bool(doc_, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = fdl_doc_get_custom_attr_string(doc_, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if (fdl_doc_get_custom_attr_int(doc_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if (fdl_doc_get_custom_attr_float(doc_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if (fdl_doc_get_custom_attr_bool(doc_, name.c_str(), &out) == 0) {
+            return static_cast<bool>(out);
+        }
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const { return fdl_doc_has_custom_attr(doc_, name.c_str()) != 0; }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return fdl_doc_get_custom_attr_type(doc_, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) { return fdl_doc_remove_custom_attr(doc_, name.c_str()) == 0; }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const { return fdl_doc_custom_attrs_count(doc_); }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = fdl_doc_custom_attr_name_at(doc_, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return fdl_doc_set_custom_attr_point_f64(doc_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return fdl_doc_set_custom_attr_dims_f64(doc_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return fdl_doc_set_custom_attr_dims_i64(doc_, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if (fdl_doc_get_custom_attr_point_f64(doc_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if (fdl_doc_get_custom_attr_dims_f64(doc_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if (fdl_doc_get_custom_attr_dims_i64(doc_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsInt(out.width, out.height);
+    }
+
 private:
     fdl_doc_t* doc_;
 };
@@ -436,9 +535,6 @@ private:
 // -----------------------------------------------------------------------
 struct TemplateResult {
     FDL fdl;
-    double scale_factor;
-    DimensionsFloat scaled_bounding_box;
-    PointFloat content_translation;
 
     /** The new context created by the template apply. */
     ContextRef context() const;
@@ -447,17 +543,9 @@ struct TemplateResult {
     /** The new framing decision created by the template apply. */
     FramingDecisionRef framing_decision() const;
 
-    TemplateResult(
-        FDL fdl_,
-        double scale_factor_,
-        DimensionsFloat scaled_bounding_box_,
-        PointFloat content_translation_,
-        std::string context_label_,
-        std::string canvas_id_,
-        std::string framing_decision_id_)
-        : fdl(std::move(fdl_)), scale_factor(scale_factor_), scaled_bounding_box(scaled_bounding_box_),
-          content_translation(content_translation_), _context_label(std::move(context_label_)),
-          _canvas_id(std::move(canvas_id_)), _framing_decision_id(std::move(framing_decision_id_)) {}
+    TemplateResult(FDL fdl_, std::string context_label_, std::string canvas_id_, std::string framing_decision_id_)
+        : fdl(std::move(fdl_)), _context_label(std::move(context_label_)), _canvas_id(std::move(canvas_id_)),
+          _framing_decision_id(std::move(framing_decision_id_)) {}
 
     TemplateResult(TemplateResult&&) = default;
     TemplateResult& operator=(TemplateResult&&) = default;
@@ -487,13 +575,7 @@ public:
     }
 
     bool has_clip_id() const { return fdl_context_has_clip_id(ctx_) != 0; }
-    std::optional<ClipID> clip_id() const {
-        if (!fdl_context_has_clip_id(ctx_)) {
-            return std::nullopt;
-        }
-        auto c = fdl_context_get_clip_id_struct(ctx_);
-        return ClipID::from_c(c);
-    }
+    std::optional<ClipIDRef> clip_id() const;
     void set_clip_id(const std::string& json) {
         const char* err = fdl_context_set_clip_id_json(ctx_, json.c_str(), json.size());
         if (err) {
@@ -533,6 +615,108 @@ public:
     /** Find matching canvas when input dimensions differ from selected canvas. */
     ::fdl::ResolveCanvasResult resolve_canvas_for_dimensions(
         const fdl_dimensions_f64_t& input_dims, const CanvasRef& canvas, const FramingDecisionRef& framing) const;
+
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return fdl_context_set_custom_attr_string(ctx_, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return fdl_context_set_custom_attr_int(ctx_, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return fdl_context_set_custom_attr_float(ctx_, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return fdl_context_set_custom_attr_bool(ctx_, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = fdl_context_get_custom_attr_string(ctx_, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if (fdl_context_get_custom_attr_int(ctx_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if (fdl_context_get_custom_attr_float(ctx_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if (fdl_context_get_custom_attr_bool(ctx_, name.c_str(), &out) == 0) {
+            return static_cast<bool>(out);
+        }
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const { return fdl_context_has_custom_attr(ctx_, name.c_str()) != 0; }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return fdl_context_get_custom_attr_type(ctx_, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) { return fdl_context_remove_custom_attr(ctx_, name.c_str()) == 0; }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const { return fdl_context_custom_attrs_count(ctx_); }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = fdl_context_custom_attr_name_at(ctx_, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return fdl_context_set_custom_attr_point_f64(ctx_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return fdl_context_set_custom_attr_dims_f64(ctx_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return fdl_context_set_custom_attr_dims_i64(ctx_, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if (fdl_context_get_custom_attr_point_f64(ctx_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if (fdl_context_get_custom_attr_dims_f64(ctx_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if (fdl_context_get_custom_attr_dims_i64(ctx_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsInt(out.width, out.height);
+    }
 
     fdl_context_t* get() const noexcept { return ctx_; }
 
@@ -644,6 +828,112 @@ public:
         return Rect(out);
     }
 
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return fdl_canvas_set_custom_attr_string(canvas_, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return fdl_canvas_set_custom_attr_int(canvas_, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return fdl_canvas_set_custom_attr_float(canvas_, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return fdl_canvas_set_custom_attr_bool(canvas_, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = fdl_canvas_get_custom_attr_string(canvas_, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if (fdl_canvas_get_custom_attr_int(canvas_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if (fdl_canvas_get_custom_attr_float(canvas_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if (fdl_canvas_get_custom_attr_bool(canvas_, name.c_str(), &out) == 0) {
+            return static_cast<bool>(out);
+        }
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return fdl_canvas_has_custom_attr(canvas_, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return fdl_canvas_get_custom_attr_type(canvas_, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return fdl_canvas_remove_custom_attr(canvas_, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const { return fdl_canvas_custom_attrs_count(canvas_); }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = fdl_canvas_custom_attr_name_at(canvas_, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return fdl_canvas_set_custom_attr_point_f64(canvas_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return fdl_canvas_set_custom_attr_dims_f64(canvas_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return fdl_canvas_set_custom_attr_dims_i64(canvas_, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if (fdl_canvas_get_custom_attr_point_f64(canvas_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if (fdl_canvas_get_custom_attr_dims_f64(canvas_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if (fdl_canvas_get_custom_attr_dims_i64(canvas_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsInt(out.width, out.height);
+    }
+
     fdl_canvas_t* get() const noexcept { return canvas_; }
 
 private:
@@ -737,6 +1027,115 @@ public:
     /** Create a FramingDecision from a canvas and framing intent. */
     void from_framing_intent(
         const CanvasRef& canvas, const FramingIntentRef& framing_intent, const fdl_round_strategy_t& rounding);
+    /** Populate this framing decision from a canvas and framing intent (in-place). */
+    void populate_from_intent(
+        const CanvasRef& canvas, const FramingIntentRef& framing_intent, const fdl_round_strategy_t& rounding);
+
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return fdl_framing_decision_set_custom_attr_string(fd_, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return fdl_framing_decision_set_custom_attr_int(fd_, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return fdl_framing_decision_set_custom_attr_float(fd_, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return fdl_framing_decision_set_custom_attr_bool(fd_, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = fdl_framing_decision_get_custom_attr_string(fd_, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if (fdl_framing_decision_get_custom_attr_int(fd_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if (fdl_framing_decision_get_custom_attr_float(fd_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if (fdl_framing_decision_get_custom_attr_bool(fd_, name.c_str(), &out) == 0) {
+            return static_cast<bool>(out);
+        }
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return fdl_framing_decision_has_custom_attr(fd_, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return fdl_framing_decision_get_custom_attr_type(fd_, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return fdl_framing_decision_remove_custom_attr(fd_, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const { return fdl_framing_decision_custom_attrs_count(fd_); }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = fdl_framing_decision_custom_attr_name_at(fd_, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return fdl_framing_decision_set_custom_attr_point_f64(fd_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return fdl_framing_decision_set_custom_attr_dims_f64(fd_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return fdl_framing_decision_set_custom_attr_dims_i64(fd_, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if (fdl_framing_decision_get_custom_attr_point_f64(fd_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if (fdl_framing_decision_get_custom_attr_dims_f64(fd_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if (fdl_framing_decision_get_custom_attr_dims_i64(fd_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsInt(out.width, out.height);
+    }
 
     fdl_framing_decision_t* get() const noexcept { return fd_; }
 
@@ -782,6 +1181,112 @@ public:
     }
 
     // --- Builder methods ---
+
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return fdl_framing_intent_set_custom_attr_string(fi_, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return fdl_framing_intent_set_custom_attr_int(fi_, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return fdl_framing_intent_set_custom_attr_float(fi_, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return fdl_framing_intent_set_custom_attr_bool(fi_, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = fdl_framing_intent_get_custom_attr_string(fi_, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if (fdl_framing_intent_get_custom_attr_int(fi_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if (fdl_framing_intent_get_custom_attr_float(fi_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if (fdl_framing_intent_get_custom_attr_bool(fi_, name.c_str(), &out) == 0) {
+            return static_cast<bool>(out);
+        }
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return fdl_framing_intent_has_custom_attr(fi_, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return fdl_framing_intent_get_custom_attr_type(fi_, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return fdl_framing_intent_remove_custom_attr(fi_, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const { return fdl_framing_intent_custom_attrs_count(fi_); }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = fdl_framing_intent_custom_attr_name_at(fi_, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return fdl_framing_intent_set_custom_attr_point_f64(fi_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return fdl_framing_intent_set_custom_attr_dims_f64(fi_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return fdl_framing_intent_set_custom_attr_dims_i64(fi_, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if (fdl_framing_intent_get_custom_attr_point_f64(fi_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if (fdl_framing_intent_get_custom_attr_dims_f64(fi_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if (fdl_framing_intent_get_custom_attr_dims_i64(fi_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsInt(out.width, out.height);
+    }
 
     fdl_framing_intent_t* get() const noexcept { return fi_; }
 
@@ -873,10 +1378,414 @@ public:
         const std::string& source_context_label = "",
         const std::string& context_creator = "") const;
 
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return fdl_canvas_template_set_custom_attr_string(ct_, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return fdl_canvas_template_set_custom_attr_int(ct_, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return fdl_canvas_template_set_custom_attr_float(ct_, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return fdl_canvas_template_set_custom_attr_bool(ct_, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = fdl_canvas_template_get_custom_attr_string(ct_, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if (fdl_canvas_template_get_custom_attr_int(ct_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if (fdl_canvas_template_get_custom_attr_float(ct_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if (fdl_canvas_template_get_custom_attr_bool(ct_, name.c_str(), &out) == 0) {
+            return static_cast<bool>(out);
+        }
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return fdl_canvas_template_has_custom_attr(ct_, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return fdl_canvas_template_get_custom_attr_type(ct_, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return fdl_canvas_template_remove_custom_attr(ct_, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const { return fdl_canvas_template_custom_attrs_count(ct_); }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = fdl_canvas_template_custom_attr_name_at(ct_, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return fdl_canvas_template_set_custom_attr_point_f64(ct_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return fdl_canvas_template_set_custom_attr_dims_f64(ct_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return fdl_canvas_template_set_custom_attr_dims_i64(ct_, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if (fdl_canvas_template_get_custom_attr_point_f64(ct_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if (fdl_canvas_template_get_custom_attr_dims_f64(ct_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if (fdl_canvas_template_get_custom_attr_dims_i64(ct_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsInt(out.width, out.height);
+    }
+
     fdl_canvas_template_t* get() const noexcept { return ct_; }
 
 private:
     fdl_canvas_template_t* ct_;
+};
+
+// -----------------------------------------------------------------------
+// ClipIDRef — non-owning
+// -----------------------------------------------------------------------
+class ClipIDRef {
+public:
+    explicit ClipIDRef(fdl_clip_id_t* handle) noexcept : cid_(handle) {}
+
+    // --- Property accessors ---
+    std::string clip_name() const {
+        const char* p = fdl_clip_id_get_clip_name(cid_);
+        return p ? std::string(p) : std::string();
+    }
+
+    bool has_file() const { return fdl_clip_id_has_file(cid_) != 0; }
+    std::optional<std::string> file() const {
+        if (!fdl_clip_id_has_file(cid_)) {
+            return std::nullopt;
+        }
+        const char* p = fdl_clip_id_get_file(cid_);
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+
+    bool has_sequence() const { return fdl_clip_id_has_sequence(cid_) != 0; }
+    std::optional<FileSequenceRef> sequence() const;
+
+    // --- Collection traversal ---
+
+    /** Serialize to canonical JSON string. */
+    std::string to_json(int indent = 2) const {
+        char* ptr = fdl_clip_id_to_json(cid_, indent);
+        if (!ptr) {
+            throw std::runtime_error("fdl_clip_id_to_json returned NULL");
+        }
+        std::string json(ptr);
+        fdl_free(ptr);
+        return json;
+    }
+
+    // --- Builder methods ---
+
+    // --- Lifecycle methods ---
+    /** Validate this clip_id for mutual exclusion rules. */
+    void validate() const {
+        auto json = to_json(0);
+        const char* err = ::fdl_clip_id_validate_json(json.c_str(), json.size());
+        if (err) {
+            std::string msg(err);
+            fdl_free(const_cast<char*>(err));
+            throw std::runtime_error(msg);
+        }
+    }
+
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return fdl_clip_id_set_custom_attr_string(cid_, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return fdl_clip_id_set_custom_attr_int(cid_, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return fdl_clip_id_set_custom_attr_float(cid_, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return fdl_clip_id_set_custom_attr_bool(cid_, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = fdl_clip_id_get_custom_attr_string(cid_, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if (fdl_clip_id_get_custom_attr_int(cid_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if (fdl_clip_id_get_custom_attr_float(cid_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if (fdl_clip_id_get_custom_attr_bool(cid_, name.c_str(), &out) == 0) {
+            return static_cast<bool>(out);
+        }
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const { return fdl_clip_id_has_custom_attr(cid_, name.c_str()) != 0; }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return fdl_clip_id_get_custom_attr_type(cid_, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) { return fdl_clip_id_remove_custom_attr(cid_, name.c_str()) == 0; }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const { return fdl_clip_id_custom_attrs_count(cid_); }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = fdl_clip_id_custom_attr_name_at(cid_, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return fdl_clip_id_set_custom_attr_point_f64(cid_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return fdl_clip_id_set_custom_attr_dims_f64(cid_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return fdl_clip_id_set_custom_attr_dims_i64(cid_, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if (fdl_clip_id_get_custom_attr_point_f64(cid_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if (fdl_clip_id_get_custom_attr_dims_f64(cid_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if (fdl_clip_id_get_custom_attr_dims_i64(cid_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsInt(out.width, out.height);
+    }
+
+    fdl_clip_id_t* get() const noexcept { return cid_; }
+
+private:
+    fdl_clip_id_t* cid_;
+};
+
+// -----------------------------------------------------------------------
+// FileSequenceRef — non-owning
+// -----------------------------------------------------------------------
+class FileSequenceRef {
+public:
+    explicit FileSequenceRef(fdl_file_sequence_t* handle) noexcept : seq_(handle) {}
+
+    // --- Property accessors ---
+    std::string value() const {
+        const char* p = fdl_file_sequence_get_value(seq_);
+        return p ? std::string(p) : std::string();
+    }
+
+    std::string idx() const {
+        const char* p = fdl_file_sequence_get_idx(seq_);
+        return p ? std::string(p) : std::string();
+    }
+
+    int64_t min() const { return fdl_file_sequence_get_min(seq_); }
+
+    int64_t max() const { return fdl_file_sequence_get_max(seq_); }
+
+    // --- Collection traversal ---
+
+    // --- Builder methods ---
+
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return fdl_file_sequence_set_custom_attr_string(seq_, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return fdl_file_sequence_set_custom_attr_int(seq_, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return fdl_file_sequence_set_custom_attr_float(seq_, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return fdl_file_sequence_set_custom_attr_bool(seq_, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = fdl_file_sequence_get_custom_attr_string(seq_, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if (fdl_file_sequence_get_custom_attr_int(seq_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if (fdl_file_sequence_get_custom_attr_float(seq_, name.c_str(), &out) == 0) {
+            return out;
+        }
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if (fdl_file_sequence_get_custom_attr_bool(seq_, name.c_str(), &out) == 0) {
+            return static_cast<bool>(out);
+        }
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return fdl_file_sequence_has_custom_attr(seq_, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return fdl_file_sequence_get_custom_attr_type(seq_, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return fdl_file_sequence_remove_custom_attr(seq_, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const { return fdl_file_sequence_custom_attrs_count(seq_); }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = fdl_file_sequence_custom_attr_name_at(seq_, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return fdl_file_sequence_set_custom_attr_point_f64(seq_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return fdl_file_sequence_set_custom_attr_dims_f64(seq_, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return fdl_file_sequence_set_custom_attr_dims_i64(seq_, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if (fdl_file_sequence_get_custom_attr_point_f64(seq_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if (fdl_file_sequence_get_custom_attr_dims_f64(seq_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if (fdl_file_sequence_get_custom_attr_dims_i64(seq_, name.c_str(), &out) != 0) {
+            return std::nullopt;
+        }
+        return DimensionsInt(out.width, out.height);
+    }
+
+    fdl_file_sequence_t* get() const noexcept { return seq_; }
+
+private:
+    fdl_file_sequence_t* seq_;
 };
 
 // -----------------------------------------------------------------------
@@ -931,6 +1840,29 @@ inline FramingDecisionRef CanvasRef::framing_decision_at(uint32_t i) const {
 
 inline FramingDecisionRef CanvasRef::framing_decision_find_by_id(const std::string& id) const {
     return FramingDecisionRef(fdl_canvas_find_framing_decision_by_id(canvas_, id.c_str()));
+}
+
+// --- Handle-ref property implementations ---
+inline std::optional<ClipIDRef> ContextRef::clip_id() const {
+    if (!fdl_context_has_clip_id(ctx_)) {
+        return std::nullopt;
+    }
+    auto* h = fdl_context_clip_id(ctx_);
+    if (!h) {
+        return std::nullopt;
+    }
+    return ClipIDRef(h);
+}
+
+inline std::optional<FileSequenceRef> ClipIDRef::sequence() const {
+    if (!fdl_clip_id_has_sequence(cid_)) {
+        return std::nullopt;
+    }
+    auto* h = fdl_clip_id_sequence(cid_);
+    if (!h) {
+        return std::nullopt;
+    }
+    return FileSequenceRef(h);
 }
 
 // --- Builder implementations ---
@@ -1059,6 +1991,11 @@ inline void FramingDecisionRef::from_framing_intent(
     fdl_framing_decision_populate_from_intent(fd_, canvas.get(), framing_intent.get(), rounding);
 }
 
+inline void FramingDecisionRef::populate_from_intent(
+    const CanvasRef& canvas, const FramingIntentRef& framing_intent, const fdl_round_strategy_t& rounding) {
+    fdl_framing_decision_populate_from_intent(fd_, canvas.get(), framing_intent.get(), rounding);
+}
+
 inline ::fdl::TemplateResult CanvasTemplateRef::apply(
     const CanvasRef& source_canvas,
     const FramingDecisionRef& source_framing,
@@ -1095,9 +2032,6 @@ inline ::fdl::TemplateResult CanvasTemplateRef::apply(
 
     return TemplateResult{
         FDL(result.output_fdl),
-        result.scale_factor,
-        result.scaled_bounding_box,
-        result.content_translation,
         [&] {
             std::string s(result.context_label);
             fdl_free(const_cast<char*>(result.context_label));
@@ -1146,29 +2080,6 @@ inline bool DimensionsFloat::operator==(const DimensionsInt& other) const {
            0;
 }
 
-// --- Supporting struct from_c implementations ---
-inline FileSequence FileSequence::from_c(fdl_file_sequence_t& c) {
-    FileSequence result;
-    result.value = c.value ? std::string(c.value) : std::string();
-    result.idx = c.idx ? std::string(c.idx) : std::string();
-    result.min = c.min;
-    result.max = c.max;
-    return result;
-}
-
-inline ClipID ClipID::from_c(fdl_clip_id_t& c) {
-    ClipID result;
-    result.clip_name = c.clip_name ? std::string(c.clip_name) : std::string();
-    if (c.has_file && c.file) {
-        result.file = std::string(c.file);
-    }
-    if (c.has_sequence) {
-        result.sequence = FileSequence::from_c(c.sequence);
-    }
-    fdl_clip_id_free(&c);
-    return result;
-}
-
 // --- Free functions ---
 /** Round a single float value according to FDL rounding rules. */
 inline int64_t round(double value, fdl_rounding_even_t even, fdl_rounding_mode_t mode) {
@@ -1179,6 +2090,22 @@ inline int64_t round(double value, fdl_rounding_even_t even, fdl_rounding_mode_t
 inline double calculate_scale_factor(
     const DimensionsFloat& fit_norm, const DimensionsFloat& target_norm, fdl_fit_method_t fit_method) {
     return ::fdl_calculate_scale_factor(fit_norm, target_norm, fit_method);
+}
+
+/** Return the ABI version of the loaded library as (major, minor, patch). */
+inline fdl_abi_version_t abi_version() {
+    return ::fdl_abi_version();
+}
+
+/** Compute a framing decision from a framing intent without needing existing handles. */
+inline fdl_from_intent_result_t compute_framing_from_intent(
+    const DimensionsFloat& canvas_dims,
+    const DimensionsFloat& working_dims,
+    double squeeze,
+    const DimensionsInt& aspect_ratio,
+    double protection,
+    const fdl_round_strategy_t& rounding) {
+    return ::fdl_compute_framing_from_intent(canvas_dims, working_dims, squeeze, aspect_ratio, protection, rounding);
 }
 
 /** Create a rect from raw coordinates. */

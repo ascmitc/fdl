@@ -222,11 +222,9 @@ class TestContext:
         assert len(d["canvases"]) == 1
 
     def test_set_clip_id(self, doc):
-        from fdl import ClipID
-
         ctx = doc.contexts[0]
         assert ctx.clip_id is None
-        ctx.clip_id = ClipID(clip_name="A001", file="A001C001.ari")
+        ctx.clip_id = {"clip_name": "A001", "file": "A001C001.ari"}
         cid = ctx.clip_id
         assert cid is not None
         assert cid.clip_name == "A001"
@@ -234,11 +232,11 @@ class TestContext:
         assert cid.sequence is None
 
     def test_set_clip_id_sequence(self, doc):
-        from fdl import ClipID, FileSequence
-
         ctx = doc.contexts[0]
-        seq = FileSequence(value="B001.####.exr", idx="#", min=0, max=100)
-        ctx.clip_id = ClipID(clip_name="B001", sequence=seq)
+        ctx.clip_id = {
+            "clip_name": "B001",
+            "sequence": {"value": "B001.####.exr", "idx": "#", "min": 0, "max": 100},
+        }
         cid = ctx.clip_id
         assert cid is not None
         assert cid.clip_name == "B001"
@@ -247,10 +245,8 @@ class TestContext:
         assert cid.sequence.value == "B001.####.exr"
 
     def test_remove_clip_id(self, doc):
-        from fdl import ClipID
-
         ctx = doc.contexts[0]
-        ctx.clip_id = ClipID(clip_name="A001", file="A001C001.ari")
+        ctx.clip_id = {"clip_name": "A001", "file": "A001C001.ari"}
         assert ctx.clip_id is not None
         ctx.clip_id = None
         assert ctx.clip_id is None

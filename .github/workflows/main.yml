@@ -19,6 +19,8 @@ jobs:
   # ---------------------------------------------------------------------------
   # Lint — fast gate before tests
   # ---------------------------------------------------------------------------
+  # NOTE: These lint steps are mirrored by scripts/lint.py for local development.
+  # Keep both in sync when changing lint configuration.
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -41,11 +43,14 @@ jobs:
       - name: Run ruff format check
         run: uvx ruff format --check .
 
-      # --- C++ linting ---
+      # --- C++ linting (pinned to clang-19 to match local Homebrew) ---
       - name: Install clang tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format clang-tidy
+          sudo apt-get install -y clang-format-19 clang-tidy-19
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 100
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
+          sudo update-alternatives --install /usr/bin/run-clang-tidy run-clang-tidy /usr/bin/run-clang-tidy-19 100
 
       - name: Run clang-format check
         run: |
@@ -144,10 +149,12 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
-      # --- CMake & clang-format ---
+      # --- CMake & clang-format (pinned to 19 to match local Homebrew) ---
       - name: Install CMake and clang-format (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y cmake clang-format
+        run: |
+          sudo apt-get install -y cmake clang-format-19
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 100
 
       - name: Install CMake and clang-format (macOS)
         if: runner.os == 'macOS'
@@ -286,10 +293,12 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
-      # --- CMake & clang-format ---
+      # --- CMake & clang-format (pinned to 19 to match local Homebrew) ---
       - name: Install CMake and clang-format (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y cmake clang-format
+        run: |
+          sudo apt-get install -y cmake clang-format-19
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 100
 
       - name: Install CMake and clang-format (macOS)
         if: runner.os == 'macOS'

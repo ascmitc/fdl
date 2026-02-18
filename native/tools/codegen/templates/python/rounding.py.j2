@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from .constants import {{ enum_imports | join(", ") }}
 {% if type_imports %}
-from .types import {{ type_imports | join(", ") }}
+from .fdl_types import {{ type_imports | join(", ") }}
 {% endif %}
 {% if round_strategy %}
 

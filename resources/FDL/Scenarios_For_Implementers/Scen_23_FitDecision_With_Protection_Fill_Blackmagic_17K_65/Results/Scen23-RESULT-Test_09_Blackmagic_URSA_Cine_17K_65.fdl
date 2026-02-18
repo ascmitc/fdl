@@ -1,19 +1,19 @@
 {
-  "uuid": "585e2c7c-6bff-48ed-9678-50771434812b",
+  "uuid": "00000000-0000-0000-0000-000000000000",
   "version": {
     "major": 2,
     "minor": 0
   },
-  "fdl_creator": "Python-FDL-Demo",
+  "fdl_creator": "ASC FDL Tools",
   "default_framing_intent": "1",
   "framing_intents": [
     {
+      "label": "Default",
       "id": "1",
       "aspect_ratio": {
         "width": 1,
         "height": 1
       },
-      "label": "Default Framing Intent",
       "protection": 0.0
     }
   ],
@@ -23,46 +23,46 @@
       "context_creator": "ASC FDL Tools",
       "canvases": [
         {
+          "label": "12K 16:9",
           "id": "1",
           "source_canvas_id": "1",
           "dimensions": {
             "width": 12288,
             "height": 6912
           },
-          "label": "12K 16:9",
-          "anamorphic_squeeze": 1,
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
+              "label": "",
               "id": "1-1",
               "framing_intent_id": "1",
               "dimensions": {
-                "width": 11060,
-                "height": 5978
+                "width": 11060.0,
+                "height": 5978.0
               },
               "anchor_point": {
-                "x": 614,
-                "y": 332
+                "x": 614.0,
+                "y": 332.0
               },
-              "label": "",
               "protection_dimensions": {
-                "width": 12288,
-                "height": 6642
+                "width": 12288.0,
+                "height": 6642.0
               },
               "protection_anchor_point": {
-                "x": 0,
-                "y": 0
+                "x": 0.0,
+                "y": 0.0
               }
             }
           ]
         },
         {
-          "id": "ec664fee322c4ceab831906d5d732e",
+          "label": "VFX Pull - Custom: Blackmagic Design URSA Cine 17K 65 12K 16:9",
+          "id": "123456781234567812345678123456",
           "source_canvas_id": "1",
           "dimensions": {
             "width": 1436,
             "height": 1080
           },
-          "label": "VFX Pull - Custom: Blackmagic Design URSA Cine 17K 65 12K 16:9",
           "effective_dimensions": {
             "width": 1436,
             "height": 1080
@@ -74,7 +74,8 @@
           "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
-              "id": "ec664fee322c4ceab831906d5d732e-1",
+              "label": "",
+              "id": "123456781234567812345678123456-1",
               "framing_intent_id": "1",
               "dimensions": {
                 "width": 1336.0,
@@ -84,7 +85,6 @@
                 "x": 0.0,
                 "y": 54.0
               },
-              "label": "",
               "protection_dimensions": {
                 "width": 1436.0,
                 "height": 1080.0
@@ -94,13 +94,23 @@
                 "y": 0.0
               }
             }
-          ]
+          ],
+          "_scale_factor": 0.16260162601626016,
+          "_content_translation": {
+            "x": -562.0,
+            "y": 0.0
+          },
+          "_scaled_bounding_box": {
+            "width": 1998.0,
+            "height": 1124.0
+          }
         }
       ]
     }
   ],
   "canvas_templates": [
     {
+      "label": "VFX Pull - Custom",
       "id": "VX220310",
       "target_dimensions": {
         "width": 1436,
@@ -109,7 +119,6 @@
       "target_anamorphic_squeeze": 1.0,
       "fit_source": "framing_decision.protection_dimensions",
       "fit_method": "fill",
-      "label": "VFX Pull - Custom",
       "alignment_method_vertical": "center",
       "alignment_method_horizontal": "right",
       "preserve_from_source_canvas": "canvas.dimensions",
@@ -117,7 +126,6 @@
         "width": 1436,
         "height": 1080
       },
-      "pad_to_maximum": false,
       "round": {
         "even": "even",
         "mode": "round"

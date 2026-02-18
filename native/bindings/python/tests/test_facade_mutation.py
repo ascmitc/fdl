@@ -338,7 +338,7 @@ class TestApplyCanvasTemplate:
                 context_creator="test",
             )
 
-            assert result.scale_factor == pytest.approx(0.5)
+            assert result.canvas.get_custom_attr("scale_factor") == pytest.approx(0.5)
             assert result.fdl is not None
             result.fdl.close()
 

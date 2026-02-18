@@ -67,6 +67,22 @@ struct fdl_framing_decision {
     [[nodiscard]] jsoncons::ojson* node() const;
 };
 
+/** Handle to a clip ID (child of context, one-level index). */
+struct fdl_clip_id {
+    fdl_doc* owner;     /**< Owning document. */
+    uint32_t ctx_index; /**< Index into "contexts" array. */
+    /** @brief Resolve handle to its JSON node (context's "clip_id" object). @return Pointer to ojson node. */
+    [[nodiscard]] jsoncons::ojson* node() const;
+};
+
+/** Handle to a file sequence (grandchild of context, via clip_id, one-level index). */
+struct fdl_file_sequence {
+    fdl_doc* owner;     /**< Owning document. */
+    uint32_t ctx_index; /**< Index into "contexts" array. */
+    /** @brief Resolve handle to its JSON node (clip_id's "sequence" object). @return Pointer to ojson node. */
+    [[nodiscard]] jsoncons::ojson* node() const;
+};
+
 /** @} */
 
 /** @name Index packing helpers for deduplication map keys */
@@ -110,6 +126,8 @@ struct fdl_handle_cache {
     std::vector<std::unique_ptr<fdl_framing_decision>> framing_decisions; /**< Framing decision handles. */
     std::vector<std::unique_ptr<fdl_framing_intent>> framing_intents;     /**< Framing intent handles. */
     std::vector<std::unique_ptr<fdl_canvas_template>> canvas_templates;   /**< Canvas template handles. */
+    std::vector<std::unique_ptr<fdl_clip_id>> clip_ids;                   /**< Clip ID handles. */
+    std::vector<std::unique_ptr<fdl_file_sequence>> file_sequences;       /**< File sequence handles. */
     /** @} */
 
     /** @name Deduplication maps — index path to raw pointer into ownership vectors */
@@ -119,6 +137,8 @@ struct fdl_handle_cache {
     std::unordered_map<uint32_t, fdl_canvas_template*> ct_by_index; /**< Canvas template dedup map. */
     std::unordered_map<uint64_t, fdl_canvas*> cvs_by_key;           /**< Canvas dedup map (packed ctx+cvs key). */
     std::unordered_map<uint64_t, fdl_framing_decision*> fd_by_key;  /**< Framing decision dedup map (packed key). */
+    std::unordered_map<uint32_t, fdl_clip_id*> cid_by_ctx;          /**< Clip ID dedup map (by context index). */
+    std::unordered_map<uint32_t, fdl_file_sequence*> seq_by_ctx;    /**< File sequence dedup map (by context index). */
     /** @} */
 
     /** @brief Clear all handles and deduplication maps. */
@@ -128,11 +148,15 @@ struct fdl_handle_cache {
         framing_decisions.clear();
         framing_intents.clear();
         canvas_templates.clear();
+        clip_ids.clear();
+        file_sequences.clear();
         ctx_by_index.clear();
         fi_by_index.clear();
         ct_by_index.clear();
         cvs_by_key.clear();
         fd_by_key.clear();
+        cid_by_ctx.clear();
+        seq_by_ctx.clear();
     }
 };
 

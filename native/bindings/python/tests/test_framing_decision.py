@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 import pytest
 from fdl.canvas import Canvas
+from fdl.fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 from fdl.framing_decision import FramingDecision
 from fdl.rounding import RoundStrategy
-from fdl.types import DimensionsFloat, DimensionsInt, PointFloat
 
 from fdl import set_rounding
 

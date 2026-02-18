@@ -72,6 +72,8 @@ add_library(fdl_core SHARED
   src/fdl_framing_api.cpp
   src/fdl_template.cpp
   src/fdl_template_api.cpp
+  src/fdl_custom_attr.cpp
+  src/fdl_custom_attr_api.cpp
 )
 
 target_include_directories(fdl_core

@@ -804,23 +804,25 @@ TEST_CASE("ContextRef clip_id", "[raii][facade][context][clip_id]") {
         REQUIRE(ctx.has_clip_id());
         auto cid = ctx.clip_id();
         REQUIRE(cid.has_value());
-        REQUIRE(cid->clip_name == "A001");
-        REQUIRE(cid->file.has_value());
-        REQUIRE(*cid->file == "A001C001.ari");
-        REQUIRE_FALSE(cid->sequence.has_value());
+        REQUIRE(cid->clip_name() == "A001");
+        REQUIRE(cid->has_file());
+        REQUIRE(cid->file().value() == "A001C001.ari");
+        REQUIRE_FALSE(cid->has_sequence());
     }
 
     SECTION("set with file_sequence") {
         ctx.set_clip_id(R"({"clip_name":"B001","sequence":{"value":"B001.####.exr","idx":"#","min":0,"max":100}})");
         auto cid = ctx.clip_id();
         REQUIRE(cid.has_value());
-        REQUIRE(cid->clip_name == "B001");
-        REQUIRE_FALSE(cid->file.has_value());
-        REQUIRE(cid->sequence.has_value());
-        REQUIRE(cid->sequence->value == "B001.####.exr");
-        REQUIRE(cid->sequence->idx == "#");
-        REQUIRE(cid->sequence->min == 0);
-        REQUIRE(cid->sequence->max == 100);
+        REQUIRE(cid->clip_name() == "B001");
+        REQUIRE_FALSE(cid->has_file());
+        REQUIRE(cid->has_sequence());
+        auto seq = cid->sequence();
+        REQUIRE(seq.has_value());
+        REQUIRE(seq->value() == "B001.####.exr");
+        REQUIRE(seq->idx() == "#");
+        REQUIRE(seq->min() == 0);
+        REQUIRE(seq->max() == 100);
     }
 
     SECTION("remove clip_id") {
@@ -912,11 +914,15 @@ TEST_CASE("CanvasTemplate apply", "[raii][facade][canvas_template][apply]") {
 
     auto result = ct.apply(canvas, fd, "CV_02", "HD FD", "Source", "test");
 
-    REQUIRE(result.scale_factor == Approx(0.5));
     REQUIRE(static_cast<bool>(result.fdl));
     // Verify the result FDL has the new canvas
     auto result_json = result.fdl.as_json(2);
     REQUIRE(result_json.find("CV_02") != std::string::npos);
+
+    // Verify computed values are stored as custom attrs on the output canvas
+    auto sf = result.canvas().get_custom_attr_float(fdl::ATTR_SCALE_FACTOR);
+    REQUIRE(sf.has_value());
+    REQUIRE(sf.value() == Approx(0.5));
 }
 
 // -----------------------------------------------------------------------

@@ -364,57 +364,158 @@ const char* fdl_context_get_clip_id(const fdl_context_t* ctx) {
     return nullptr;
 }
 
-fdl_clip_id_t fdl_context_get_clip_id_struct(const fdl_context_t* ctx) {
-    fdl_clip_id_t result = {};
+fdl_clip_id_t* fdl_context_clip_id(fdl_context_t* ctx) {
     if (ctx == nullptr) {
-        return result;
+        return nullptr;
     }
     const doc_lock lock(ctx->owner);
     auto* n = ctx->node();
     if (n == nullptr || !n->contains("clip_id")) {
-        return result;
+        return nullptr;
     }
-
-    const auto& cid = (*n)["clip_id"];
-
-    if (cid.contains("clip_name") && cid["clip_name"].is_string()) {
-        result.clip_name = fdl_strdup(cid["clip_name"].as<std::string>().c_str());
+    auto& cache = ctx->owner->handles;
+    auto it = cache.cid_by_ctx.find(ctx->ctx_index);
+    if (it != cache.cid_by_ctx.end()) {
+        return it->second;
     }
-
-    if (cid.contains("file") && cid["file"].is_string()) {
-        result.has_file = FDL_TRUE;
-        result.file = fdl_strdup(cid["file"].as<std::string>().c_str());
-    }
-
-    if (cid.contains("sequence") && cid["sequence"].is_object()) {
-        result.has_sequence = FDL_TRUE;
-        const auto& seq = cid["sequence"];
-        if (seq.contains("value") && seq["value"].is_string()) {
-            result.sequence.value = fdl_strdup(seq["value"].as<std::string>().c_str());
-        }
-        if (seq.contains("idx") && seq["idx"].is_string()) {
-            result.sequence.idx = fdl_strdup(seq["idx"].as<std::string>().c_str());
-        }
-        result.sequence.min = seq.contains("min") ? seq["min"].as<int64_t>() : 0;
-        result.sequence.max = seq.contains("max") ? seq["max"].as<int64_t>() : 0;
-    }
-
-    return result;
+    auto h = std::make_unique<fdl_clip_id>();
+    h->owner = ctx->owner;
+    h->ctx_index = ctx->ctx_index;
+    auto* raw = h.get();
+    cache.clip_ids.push_back(std::move(h));
+    cache.cid_by_ctx[ctx->ctx_index] = raw;
+    return raw;
 }
 
-void fdl_clip_id_free(fdl_clip_id_t* clip_id) {
-    if (clip_id == nullptr) {
-        return;
+const char* fdl_clip_id_get_clip_name(const fdl_clip_id_t* cid) {
+    if (cid == nullptr) {
+        return nullptr;
     }
-    // NOLINTBEGIN(cppcoreguidelines-no-malloc,cppcoreguidelines-pro-type-const-cast)
-    free(const_cast<char*>(clip_id->clip_name));
-    free(const_cast<char*>(clip_id->file));
-    if (clip_id->has_sequence != 0) {
-        free(const_cast<char*>(clip_id->sequence.value));
-        free(const_cast<char*>(clip_id->sequence.idx));
+    const doc_lock lock(cid->owner);
+    auto* n = cid->node();
+    if (n == nullptr) {
+        return nullptr;
     }
-    // NOLINTEND(cppcoreguidelines-no-malloc,cppcoreguidelines-pro-type-const-cast)
-    *clip_id = {};
+    return get_string(n, "clip_name");
+}
+
+int fdl_clip_id_has_file(const fdl_clip_id_t* cid) {
+    if (cid == nullptr) {
+        return 0;
+    }
+    const doc_lock lock(cid->owner);
+    auto* n = cid->node();
+    if (n == nullptr) {
+        return 0;
+    }
+    return n->contains("file") ? FDL_TRUE : FDL_FALSE;
+}
+
+const char* fdl_clip_id_get_file(const fdl_clip_id_t* cid) {
+    if (cid == nullptr) {
+        return nullptr;
+    }
+    const doc_lock lock(cid->owner);
+    auto* n = cid->node();
+    if (n == nullptr) {
+        return nullptr;
+    }
+    return get_string(n, "file");
+}
+
+int fdl_clip_id_has_sequence(const fdl_clip_id_t* cid) {
+    if (cid == nullptr) {
+        return 0;
+    }
+    const doc_lock lock(cid->owner);
+    auto* n = cid->node();
+    if (n == nullptr) {
+        return 0;
+    }
+    return n->contains("sequence") ? FDL_TRUE : FDL_FALSE;
+}
+
+fdl_file_sequence_t* fdl_clip_id_sequence(fdl_clip_id_t* cid) {
+    if (cid == nullptr) {
+        return nullptr;
+    }
+    const doc_lock lock(cid->owner);
+    auto* n = cid->node();
+    if (n == nullptr || !n->contains("sequence")) {
+        return nullptr;
+    }
+    auto& cache = cid->owner->handles;
+    auto it = cache.seq_by_ctx.find(cid->ctx_index);
+    if (it != cache.seq_by_ctx.end()) {
+        return it->second;
+    }
+    auto h = std::make_unique<fdl_file_sequence>();
+    h->owner = cid->owner;
+    h->ctx_index = cid->ctx_index;
+    auto* raw = h.get();
+    cache.file_sequences.push_back(std::move(h));
+    cache.seq_by_ctx[cid->ctx_index] = raw;
+    return raw;
+}
+
+char* fdl_clip_id_to_json(const fdl_clip_id_t* cid, int indent) {
+    if (cid == nullptr) {
+        return nullptr;
+    }
+    const doc_lock lock(cid->owner);
+    auto* n = cid->node();
+    if (n == nullptr) {
+        return nullptr;
+    }
+    return fdl::detail::node_to_canonical_json(n, "clip_id", indent);
+}
+
+const char* fdl_file_sequence_get_value(const fdl_file_sequence_t* seq) {
+    if (seq == nullptr) {
+        return nullptr;
+    }
+    const doc_lock lock(seq->owner);
+    auto* n = seq->node();
+    if (n == nullptr) {
+        return nullptr;
+    }
+    return get_string(n, "value");
+}
+
+const char* fdl_file_sequence_get_idx(const fdl_file_sequence_t* seq) {
+    if (seq == nullptr) {
+        return nullptr;
+    }
+    const doc_lock lock(seq->owner);
+    auto* n = seq->node();
+    if (n == nullptr) {
+        return nullptr;
+    }
+    return get_string(n, "idx");
+}
+
+int64_t fdl_file_sequence_get_min(const fdl_file_sequence_t* seq) {
+    if (seq == nullptr) {
+        return 0;
+    }
+    const doc_lock lock(seq->owner);
+    auto* n = seq->node();
+    if (n == nullptr || !n->contains("min")) {
+        return 0;
+    }
+    return (*n)["min"].as<int64_t>();
+}
+
+int64_t fdl_file_sequence_get_max(const fdl_file_sequence_t* seq) {
+    if (seq == nullptr) {
+        return 0;
+    }
+    const doc_lock lock(seq->owner);
+    auto* n = seq->node();
+    if (n == nullptr || !n->contains("max")) {
+        return 0;
+    }
+    return (*n)["max"].as<int64_t>();
 }
 
 // -----------------------------------------------------------------------

@@ -163,22 +163,6 @@ TEST_CASE("apply_canvas_template matches Python golden vectors", "[template][app
 
             const auto& exp = v["expected"];
 
-            // Check scale factor
-            double exp_sf = exp["scale_factor"].as<double>();
-            REQUIRE(close_enough(result.scale_factor, exp_sf));
-
-            // Check scaled bounding box
-            double exp_bb_w = exp["scaled_bounding_box"]["width"].as<double>();
-            double exp_bb_h = exp["scaled_bounding_box"]["height"].as<double>();
-            REQUIRE(close_enough(result.scaled_bounding_box.width, exp_bb_w));
-            REQUIRE(close_enough(result.scaled_bounding_box.height, exp_bb_h));
-
-            // Check content translation
-            double exp_ct_x = exp["content_translation"]["x"].as<double>();
-            double exp_ct_y = exp["content_translation"]["y"].as<double>();
-            REQUIRE(close_enough(result.content_translation.x, exp_ct_x));
-            REQUIRE(close_enough(result.content_translation.y, exp_ct_y));
-
             // Verify output FDL structure via accessors
             REQUIRE(fdl_doc_contexts_count(result.output_fdl) == 1);
             auto* out_ctx = fdl_doc_context_at(result.output_fdl, 0);
@@ -188,6 +172,28 @@ TEST_CASE("apply_canvas_template matches Python golden vectors", "[template][app
             REQUIRE(fdl_context_canvases_count(out_ctx) == 2);
             auto* out_new_canvas = fdl_context_canvas_at(out_ctx, 1);
             REQUIRE(out_new_canvas != nullptr);
+
+            // Check scale factor (from canvas custom attr)
+            double exp_sf = exp["scale_factor"].as<double>();
+            double sf_out = 0.0;
+            REQUIRE(fdl_canvas_get_custom_attr_float(out_new_canvas, FDL_ATTR_SCALE_FACTOR, &sf_out) == 0);
+            REQUIRE(close_enough(sf_out, exp_sf));
+
+            // Check scaled bounding box (from canvas custom attr)
+            double exp_bb_w = exp["scaled_bounding_box"]["width"].as<double>();
+            double exp_bb_h = exp["scaled_bounding_box"]["height"].as<double>();
+            fdl_dimensions_f64_t bb_out = {};
+            REQUIRE(fdl_canvas_get_custom_attr_dims_f64(out_new_canvas, FDL_ATTR_SCALED_BOUNDING_BOX, &bb_out) == 0);
+            REQUIRE(close_enough(bb_out.width, exp_bb_w));
+            REQUIRE(close_enough(bb_out.height, exp_bb_h));
+
+            // Check content translation (from canvas custom attr)
+            double exp_ct_x = exp["content_translation"]["x"].as<double>();
+            double exp_ct_y = exp["content_translation"]["y"].as<double>();
+            fdl_point_f64_t ct_out = {};
+            REQUIRE(fdl_canvas_get_custom_attr_point_f64(out_new_canvas, FDL_ATTR_CONTENT_TRANSLATION, &ct_out) == 0);
+            REQUIRE(close_enough(ct_out.x, exp_ct_x));
+            REQUIRE(close_enough(ct_out.y, exp_ct_y));
 
             // Check output canvas dimensions
             auto out_dims = fdl_canvas_get_dimensions(out_new_canvas);

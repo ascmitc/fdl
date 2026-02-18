@@ -12,11 +12,11 @@
     "version": {
       "type": "object",
       "properties": {
-        "major": { 
-          "type": "integer" 
+        "major": {
+          "type": "integer"
         },
-        "minor": { 
-          "type": "integer" 
+        "minor": {
+          "type": "integer"
         }
       },
       "patternProperties": {

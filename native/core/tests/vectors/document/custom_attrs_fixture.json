@@ -1,0 +1,50 @@
+{
+  "uuid": "aaaaaaaa-bbbb-cccc-dddd-000000000099",
+  "version": {"major": 2, "minor": 0},
+  "fdl_creator": "custom-attr-test",
+  "_vendor_note": "This is a doc-level custom attr",
+  "_vendor_count": 42,
+  "default_framing_intent": "FI_01",
+  "framing_intents": [
+    {
+      "id": "FI_01",
+      "label": "2.39:1",
+      "aspect_ratio": {"width": 239, "height": 100},
+      "protection": 0.1,
+      "_fi_tag": "intent-custom"
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Camera A",
+      "context_creator": "DIT",
+      "_ctx_priority": 1,
+      "clip_id": {
+        "clip_name": "A001",
+        "file": "A001C001.ari",
+        "_cid_reel": "reel_A"
+      },
+      "canvases": [
+        {
+          "id": "CV_01",
+          "label": "Source",
+          "source_canvas_id": "CV_01",
+          "dimensions": {"width": 4096, "height": 2160},
+          "anamorphic_squeeze": 1.0,
+          "_canvas_vendor": "test-tool",
+          "framing_decisions": [
+            {
+              "id": "CV_01-FI_01",
+              "label": "2.39:1",
+              "framing_intent_id": "FI_01",
+              "dimensions": {"width": 3840.0, "height": 1607.0},
+              "anchor_point": {"x": 128.0, "y": 276.5},
+              "_fd_note": "hero framing"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "canvas_templates": []
+}

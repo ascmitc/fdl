@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
 # SPDX-License-Identifier: Apache-2.0
 import pytest
+from fdl.fdl_types import DimensionsFloat
 from fdl.rounding import RoundStrategy
-from fdl.types import DimensionsFloat
 
 from fdl import DEFAULT_ROUNDING_STRATEGY, get_rounding, set_rounding
 

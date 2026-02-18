@@ -9,9 +9,18 @@ and FFI bindings.  Type resolution is delegated to PythonAdapter.
 
 from __future__ import annotations
 
+import re
+
 from .adapters import PythonAdapter
 from .fdl_idl import IDL, EnumType, FreeFunctionDef, ValueType, VTMethod, VTOperator
 from .shared_context import camel_to_upper_snake
+
+
+def _class_to_module(class_name: str) -> str:
+    """Map a facade class name to its per-class module (e.g. ClipID → clip_id)."""
+    s1 = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1_\2", class_name)
+    return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+
 
 _py = PythonAdapter()
 
@@ -723,28 +732,36 @@ def build_facade_class_context(ir_cls, idl: IDL, enum_contexts: list[dict], ir_c
 
     properties = []
     for prop in ir_cls.properties:
-        python_type = _py.resolve_type(prop.type_key, nullable=prop.nullable)
+        # For handle_ref properties, resolve the target class name as the Python type
+        if prop.type_key == "handle_ref" and prop.handle_class:
+            python_type = prop.handle_class
+            if prop.nullable:
+                python_type = f"{python_type} | None"
+        else:
+            python_type = _py.resolve_type(prop.type_key, nullable=prop.nullable)
         converter = _py.resolve_converter(prop.type_key)
 
         # For enum converters, resolve the FROM_C / TO_C map names
         enum_from_c = type_key_to_from_c.get(prop.type_key, "")
         enum_to_c = type_key_to_to_c.get(prop.type_key, "")
 
-        properties.append(
-            {
-                "name": prop.name,
-                "type_key": prop.type_key,
-                "python_type": python_type,
-                "getter_fn": prop.getter_fn,
-                "setter_fn": prop.setter_fn,
-                "remover_fn": prop.remover_fn,
-                "has_fn": prop.has_fn,
-                "nullable": prop.nullable,
-                "converter": converter,
-                "enum_from_c": enum_from_c,
-                "enum_to_c": enum_to_c,
-            }
-        )
+        prop_ctx: dict = {
+            "name": prop.name,
+            "type_key": prop.type_key,
+            "python_type": python_type,
+            "getter_fn": prop.getter_fn,
+            "setter_fn": prop.setter_fn,
+            "remover_fn": prop.remover_fn,
+            "has_fn": prop.has_fn,
+            "nullable": prop.nullable,
+            "converter": converter,
+            "enum_from_c": enum_from_c,
+            "enum_to_c": enum_to_c,
+        }
+        if prop.handle_class:
+            prop_ctx["handle_class"] = prop.handle_class
+            prop_ctx["handle_class_module"] = _class_to_module(prop.handle_class)
+        properties.append(prop_ctx)
 
     collections = []
     for coll in ir_cls.collections:
@@ -784,6 +801,7 @@ def build_facade_class_context(ir_cls, idl: IDL, enum_contexts: list[dict], ir_c
             "composite_property",
             "instance_getter",
             "instance_getter_optional",
+            "validate_json",
         ) or (method.kind == "instance" and method.name != "to_json" and (method.params or method.error_handling)):
             ctx = build_lifecycle_method_context(method, idl, enum_contexts)
             lifecycle.append(ctx)
@@ -793,11 +811,17 @@ def build_facade_class_context(ir_cls, idl: IDL, enum_contexts: list[dict], ir_c
     if ir_cls.init and ir_class_by_name:
         init_ctx = build_init_context(ir_cls, idl, enum_contexts, ir_class_by_name)
 
+    # Custom attributes context
+    custom_attrs = ir_cls.custom_attrs
+    ca_prefix = ir_cls.handle_type.removesuffix("t") if custom_attrs else None
+
     return {
         "name": ir_cls.name,
         "handle_type": ir_cls.handle_type,
         "owns_handle": ir_cls.owns_handle,
         "identity_attr": ir_cls.identity_attr,
+        "custom_attrs": custom_attrs,
+        "ca_prefix": ca_prefix,
         "properties": properties,
         "collections": collections,
         "to_json_fn": to_json_fn,

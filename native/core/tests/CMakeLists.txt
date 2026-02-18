@@ -31,6 +31,7 @@ add_executable(fdl_core_tests
   test_framing.cpp
   test_template.cpp
   test_raii_facade.cpp
+  test_custom_attr.cpp
   test_thread_safety.cpp
   test_resolve_canvas.cpp
 )

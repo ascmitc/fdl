@@ -12,8 +12,15 @@ import math
 from .constants import {{ enum_imports | join(", ") }}
 {% endif %}
 
-_FP_REL_TOL = 1e-9
-_FP_ABS_TOL = 1e-6
+def _load_fp_tolerances() -> tuple[float, float]:
+    from fdl_ffi import get_lib
+
+    lib = get_lib()
+    return lib.fdl_fp_rel_tol(), lib.fdl_fp_abs_tol()
+
+
+_FP_REL_TOL, _FP_ABS_TOL = _load_fp_tolerances()
+del _load_fp_tolerances
 
 {% for vt in value_types %}
 
@@ -158,7 +165,7 @@ class {{ vt.python_class }}:
         from fdl_ffi import get_lib
         from fdl_ffi._structs import {{ op.c_struct }}
         _c = {{ op.c_struct }}({% for fn in op.field_names %}{{ fn }}=self.{{ fn }}{{ ", " if not loop.last else "" }}{% endfor %})
-        if isinstance(other, (int, float)):
+        if isinstance(other, int | float):
             _r = get_lib().{{ op.c_function }}(_c, float(other))
         elif isinstance(other, PointFloat):
             return PointFloat(x=float(self.x) * float(other.x), y=float(self.y) * float(other.y))

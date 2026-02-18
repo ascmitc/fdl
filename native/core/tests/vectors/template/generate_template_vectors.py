@@ -13,7 +13,7 @@ from fdl.config import set_rounding
 from fdl.context import Context
 from fdl.framingdecision import FramingDecision
 from fdl.rounding import RoundStrategy
-from fdl.types import DimensionsFloat, DimensionsInt, PointFloat
+from fdl.fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 
 
 def make_vector(label, tmpl, source_canvas, source_framing, source_context=None, context_creator=None, new_fd_name=""):
@@ -96,14 +96,14 @@ def make_vector(label, tmpl, source_canvas, source_framing, source_context=None,
         "source_context_label": source_context.label if source_context else None,
         # Expected outputs
         "expected": {
-            "scale_factor": result.scale_factor,
+            "scale_factor": out_new_canvas.get_custom_attr("scale_factor"),
             "scaled_bounding_box": {
-                "width": result.scaled_bounding_box.width,
-                "height": result.scaled_bounding_box.height,
+                "width": out_new_canvas.get_custom_attr("scaled_bounding_box").width,
+                "height": out_new_canvas.get_custom_attr("scaled_bounding_box").height,
             },
             "content_translation": {
-                "x": result.content_translation.x,
-                "y": result.content_translation.y,
+                "x": out_new_canvas.get_custom_attr("content_translation").x,
+                "y": out_new_canvas.get_custom_attr("content_translation").y,
             },
             # Output canvas geometry
             "output_canvas_dims": {

@@ -465,7 +465,12 @@ class MainWindow(QMainWindow):
                 self._app_state.set_transform_result(result)
 
                 # Set HUD data for output tab (source, template, output, translation, scale)
-                self.tab_container.output_tab.set_hud_data(source, template, output_model, result.content_translation, result.scale_factor)
+                from fdl import ATTR_CONTENT_TRANSLATION, ATTR_SCALE_FACTOR, ATTR_SCALED_BOUNDING_BOX
+
+                content_translation = result.canvas.get_custom_attr(ATTR_CONTENT_TRANSLATION)
+                scale_factor = result.canvas.get_custom_attr(ATTR_SCALE_FACTOR)
+                scaled_bounding_box = result.canvas.get_custom_attr(ATTR_SCALED_BOUNDING_BOX)
+                self.tab_container.output_tab.set_hud_data(source, template, output_model, content_translation, scale_factor)
 
                 # Transform and display output image if an image is loaded
                 if self._current_image_path:
@@ -476,8 +481,8 @@ class MainWindow(QMainWindow):
                         fd_id,
                         template,
                         result.canvas,
-                        result.scaled_bounding_box,
-                        result.content_translation,
+                        scaled_bounding_box,
+                        content_translation,
                     )
 
         except Exception as e:
@@ -786,6 +791,8 @@ class MainWindow(QMainWindow):
             _context, source_canvas, source_framing = get_fdl_components(source_fdl, context_label, canvas_id, fd_id)
             template = self._app_state.current_template
             Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            from fdl import ATTR_CONTENT_TRANSLATION, ATTR_SCALED_BOUNDING_BOX
+
             transform_image_with_computed_values(
                 input_path=self._current_image_path,
                 output_path=output_path,
@@ -793,8 +800,8 @@ class MainWindow(QMainWindow):
                 source_framing=source_framing,
                 template=template,
                 new_canvas=result.canvas,
-                scaled_bounding_box=result.scaled_bounding_box,
-                content_translation=result.content_translation,
+                scaled_bounding_box=result.canvas.get_custom_attr(ATTR_SCALED_BOUNDING_BOX),
+                content_translation=result.canvas.get_custom_attr(ATTR_CONTENT_TRANSLATION),
             )
             return True
         except Exception:
@@ -874,10 +881,6 @@ class MainWindow(QMainWindow):
             self._show_error("No template FDL available.")
             return
 
-        # Extract transform result components
-        scaled_bounding_box = transform_result.scaled_bounding_box
-        content_translation = transform_result.content_translation
-
         # Get the next scenario number
         next_scenario = self._unit_test_export_controller.get_next_scenario_number()
 
@@ -915,18 +918,6 @@ class MainWindow(QMainWindow):
                     float(source_fdl.current_canvas.dimensions.height),
                 )
 
-            # Extract scaled bounding box as tuple
-            if hasattr(scaled_bounding_box, "width"):
-                bbox_tuple = (int(scaled_bounding_box.width), int(scaled_bounding_box.height))
-            else:
-                bbox_tuple = (int(scaled_bounding_box[0]), int(scaled_bounding_box[1]))
-
-            # Extract content translation as tuple
-            if hasattr(content_translation, "x"):
-                trans_tuple = (float(content_translation.x), float(content_translation.y))
-            else:
-                trans_tuple = (float(content_translation[0]), float(content_translation[1]))
-
             # Perform the export
             self._unit_test_export_controller.export_unit_test(
                 source_fdl=source_fdl.fdl,
@@ -939,8 +930,6 @@ class MainWindow(QMainWindow):
                 canvas_id=canvas_id,
                 framing_id=framing_id,
                 input_dims=input_dims,
-                scaled_bounding_box=bbox_tuple,
-                content_translation=trans_tuple,
                 export_config=export_config,
             )
 

@@ -92,3 +92,45 @@ ojson* fdl_framing_decision::node() const {
     auto& arr = cvs["framing_decisions"];
     return fd_index < arr.size() ? &arr[fd_index] : nullptr;
 }
+
+ojson* fdl_clip_id::node() const {
+    if (owner == nullptr) {
+        return nullptr;
+    }
+    auto& data = owner->doc.data();
+    if (!data.contains("contexts")) {
+        return nullptr;
+    }
+    auto& ctxs = data["contexts"];
+    if (ctx_index >= ctxs.size()) {
+        return nullptr;
+    }
+    auto& ctx = ctxs[ctx_index];
+    if (!ctx.contains("clip_id")) {
+        return nullptr;
+    }
+    return &ctx["clip_id"];
+}
+
+ojson* fdl_file_sequence::node() const {
+    if (owner == nullptr) {
+        return nullptr;
+    }
+    auto& data = owner->doc.data();
+    if (!data.contains("contexts")) {
+        return nullptr;
+    }
+    auto& ctxs = data["contexts"];
+    if (ctx_index >= ctxs.size()) {
+        return nullptr;
+    }
+    auto& ctx = ctxs[ctx_index];
+    if (!ctx.contains("clip_id")) {
+        return nullptr;
+    }
+    auto& cid = ctx["clip_id"];
+    if (!cid.contains("sequence")) {
+        return nullptr;
+    }
+    return &cid["sequence"];
+}

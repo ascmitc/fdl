@@ -9,7 +9,7 @@ from __future__ import annotations
 import ctypes
 import json
 
-from .types import DimensionsFloat, DimensionsInt, PointFloat
+from .fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 from .rounding import RoundStrategy
 
 from .base import (
@@ -17,9 +17,7 @@ from .base import (
     _decode_str,
 )
 from .converters import (
-    _dims_f64,
     _dims_i64,
-    _point_f64,
     _round_strategy,
     _to_c_dims_i64,
     _to_c_round_strategy,
@@ -33,6 +31,14 @@ from .enum_maps import (
     H_ALIGN_TO_C,
     V_ALIGN_FROM_C,
     V_ALIGN_TO_C,
+)
+from ._custom_attrs import (
+    _all as _ca_all,
+    _count as _ca_count,
+    _get as _ca_get,
+    _has as _ca_has,
+    _remove as _ca_remove,
+    _set as _ca_set,
 )
 from dataclasses import dataclass
 from .constants import (
@@ -54,9 +60,6 @@ class TemplateResult:
     """Result of applying a canvas template."""
 
     fdl: object
-    scale_factor: float
-    scaled_bounding_box: DimensionsFloat
-    content_translation: PointFloat
     _context_label: str
     _canvas_id: str
     _framing_decision_id: str
@@ -277,9 +280,6 @@ class CanvasTemplate(HandleWrapper):
             self._lib.fdl_free(result.error)
             raise ValueError(msg)
         _fdl = FDL._from_handle(result.output_fdl, self._lib)
-        _scale_factor = float(result.scale_factor)
-        _scaled_bounding_box = _dims_f64(result.scaled_bounding_box)
-        _content_translation = _point_f64(result.content_translation)
         _context_label = ctypes.string_at(result.context_label).decode("utf-8")
         self._lib.fdl_free(result.context_label)
         _canvas_id = ctypes.string_at(result.canvas_id).decode("utf-8")
@@ -288,10 +288,67 @@ class CanvasTemplate(HandleWrapper):
         self._lib.fdl_free(result.framing_decision_id)
         return TemplateResult(
             fdl=_fdl,
-            scale_factor=_scale_factor,
-            scaled_bounding_box=_scaled_bounding_box,
-            content_translation=_content_translation,
             _context_label=_context_label,
             _canvas_id=_canvas_id,
             _framing_decision_id=_framing_decision_id,
         )
+
+    _CA_PREFIX = "fdl_canvas_template_"
+
+    def set_custom_attr(self, name: str, value: str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt) -> None:
+        """Set a custom attribute. Type is inferred from value.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+            value: Attribute value (str, int, float, bool, PointFloat, DimensionsFloat, or DimensionsInt).
+
+        Raises:
+            TypeError: If value is not str, int, float, bool, PointFloat, DimensionsFloat, or DimensionsInt.
+            ValueError: If an attribute with the same name exists with a different type.
+        """
+        self._check_handle()
+        _ca_set(self._lib, self._handle, self._CA_PREFIX, name, value)
+
+    def get_custom_attr(self, name: str) -> str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt | None:
+        """Get a custom attribute value by name.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+
+        Returns:
+            The attribute value, or None if not found.
+        """
+        self._check_handle()
+        return _ca_get(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def has_custom_attr(self, name: str) -> bool:
+        """Check if a custom attribute exists.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+        """
+        self._check_handle()
+        return _ca_has(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def remove_custom_attr(self, name: str) -> bool:
+        """Remove a custom attribute.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+
+        Returns:
+            True if the attribute was removed, False if it was not found.
+        """
+        self._check_handle()
+        return _ca_remove(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def custom_attrs_count(self) -> int:
+        """Return the number of custom attributes on this object."""
+        self._check_handle()
+        return _ca_count(self._lib, self._handle, self._CA_PREFIX)
+
+    @property
+    def custom_attrs(self) -> dict[str, str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt]:
+        """Return all custom attributes as a dictionary."""
+        self._check_handle()
+        return _ca_all(self._lib, self._handle, self._CA_PREFIX)

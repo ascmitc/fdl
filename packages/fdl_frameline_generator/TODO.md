@@ -8,4 +8,3 @@
   - Consider adding a CLI flag like `--fill-framing` or `--standalone-mode` to control this behavior
 
 Created: 2026-02-02
-

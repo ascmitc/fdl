@@ -146,8 +146,6 @@ class BaseFDLTestCase(unittest.TestCase):
         template_fdl_path: Path,
         template_label: str,
         test_name: str,
-        expected_scaled_bounding_box: tuple[float, float] | None = None,
-        expected_content_translation: tuple[float, float] | None = None,
         **kwargs,
     ):
         """
@@ -175,10 +173,6 @@ class BaseFDLTestCase(unittest.TestCase):
             Label of the canvas template to apply.
         test_name : str
             Name for output files.
-        expected_scaled_bounding_box : tuple, optional
-            Expected (width, height) of scaled bounding box.
-        expected_content_translation : tuple, optional
-            Expected (x, y) content translation.
         **kwargs : dict
             Additional arguments passed to subclass overrides.
         """
@@ -271,32 +265,6 @@ class BaseFDLTestCase(unittest.TestCase):
         self.assertIsNotNone(expected_template, f"Expected template '{template_label}' not found in expected FDL")
         self.assertIsNotNone(actual_template, f"Actual template '{template_label}' not found in generated FDL")
         self._fdl_comparator.compare_canvas_template(expected_template, actual_template)
-
-        # Validate scaled_bounding_box and content_translation if expected values provided
-        if expected_scaled_bounding_box is not None:
-            sbb = result.scaled_bounding_box
-            self.assertEqual(
-                sbb.width,
-                expected_scaled_bounding_box[0],
-                msg=f"scaled_bounding_box.width mismatch: expected {expected_scaled_bounding_box[0]}, got {sbb.width}",
-            )
-            self.assertEqual(
-                sbb.height,
-                expected_scaled_bounding_box[1],
-                msg=f"scaled_bounding_box.height mismatch: expected {expected_scaled_bounding_box[1]}, got {sbb.height}",
-            )
-
-        if expected_content_translation is not None:
-            self.assertEqual(
-                result.content_translation.x,
-                expected_content_translation[0],
-                msg=f"content_translation.x mismatch: expected {expected_content_translation[0]}, got {result.content_translation.x}",
-            )
-            self.assertEqual(
-                result.content_translation.y,
-                expected_content_translation[1],
-                msg=f"content_translation.y mismatch: expected {expected_content_translation[1]}, got {result.content_translation.y}",
-            )
 
         # Store result on self for subclass hooks
         self._template_result = result

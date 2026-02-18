@@ -141,7 +141,7 @@ def process_image_with_fdl(
     _check_raster_output(output_path)
 
     # Load FDL if needed
-    if isinstance(fdl, (str, Path)):
+    if isinstance(fdl, str | Path):
         fdl = read_from_file(fdl)
 
     # Get FDL components
@@ -255,9 +255,9 @@ def process_image_with_fdl_template(
     _check_raster_output(Path(output_path))
 
     # Load FDLs if needed
-    if isinstance(source_fdl, (str, Path)):
+    if isinstance(source_fdl, str | Path):
         source_fdl = read_from_file(source_fdl)
-    if isinstance(template_fdl, (str, Path)):
+    if isinstance(template_fdl, str | Path):
         template_fdl = read_from_file(template_fdl)
 
     # Get source FDL components
@@ -281,6 +281,9 @@ def process_image_with_fdl_template(
         context_creator=context.context_creator,
     )
 
+    # Read computed values from canvas custom attrs
+    from fdl import ATTR_CONTENT_TRANSLATION, ATTR_SCALED_BOUNDING_BOX
+
     # Delegate to the core transformation function
     return transform_image_with_computed_values(
         input_path=input_path,
@@ -289,8 +292,8 @@ def process_image_with_fdl_template(
         source_framing=framing_decision,
         template=template,
         new_canvas=result.canvas,
-        scaled_bounding_box=result.scaled_bounding_box,
-        content_translation=result.content_translation,
+        scaled_bounding_box=result.canvas.get_custom_attr(ATTR_SCALED_BOUNDING_BOX),
+        content_translation=result.canvas.get_custom_attr(ATTR_CONTENT_TRANSLATION),
         filter_name=filter_name,
     )
 
@@ -343,7 +346,7 @@ def extract_framing_region(
     _check_raster_output(output_path)
 
     # Load FDL if needed
-    if isinstance(fdl, (str, Path)):
+    if isinstance(fdl, str | Path):
         fdl = read_from_file(fdl)
 
     # Get FDL components

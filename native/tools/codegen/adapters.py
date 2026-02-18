@@ -38,6 +38,7 @@ class PythonAdapter:
         "fdl_valign_t": "VAlign",
         "fdl_geometry_t": "Geometry",
         "clip_id": "ClipID",
+        "handle_ref": "object",
     }
 
     CONVERTERS: dict[str, str] = {
@@ -58,6 +59,7 @@ class PythonAdapter:
         "fdl_halign_t": "enum_halign",
         "fdl_valign_t": "enum_valign",
         "clip_id": "clip_id",
+        "handle_ref": "handle_ref",
     }
 
     ERROR_CLASSES: dict[str, str] = {

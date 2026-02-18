@@ -6,7 +6,10 @@ FDL comparison utilities for integration tests.
 Extracted from tests/utils.py:run_template_test for reuse in UI tests.
 """
 
+import math
 import unittest
+
+from fdl.fdl_types import _FP_ABS_TOL, _FP_REL_TOL
 
 
 class FDLComparison:
@@ -52,6 +55,75 @@ class FDLComparison:
         else:
             assert expected == actual, f"{msg}: expected {expected}, got {actual}"
 
+    def _assertAlmostEqual(self, expected: float, actual: float, msg: str):
+        """
+        Tolerance-aware float comparison using project FP tolerances.
+
+        Parameters
+        ----------
+        expected : float
+            Expected value.
+        actual : float
+            Actual value.
+        msg : str
+            Error message on mismatch.
+        """
+        close = math.isclose(expected, actual, rel_tol=_FP_REL_TOL, abs_tol=_FP_ABS_TOL)
+        if self.test_case:
+            self.test_case.assertTrue(close, f"{msg}: expected {expected}, got {actual}")
+        else:
+            assert close, f"{msg}: expected {expected}, got {actual}"
+
+    def _fail(self, msg: str):
+        """Raise an assertion failure."""
+        if self.test_case:
+            self.test_case.fail(msg)
+        else:
+            raise AssertionError(msg)
+
+    def compare_custom_attrs(self, expected_obj, actual_obj, prefix: str = ""):
+        """
+        Compare all custom attributes between two FDL objects.
+
+        Iterates every custom attribute on both objects and asserts that
+        they have the same keys with matching values. Uses tolerance-aware
+        comparison for bare ``float`` values; compound types
+        (``DimensionsFloat``, ``PointFloat``, etc.) use their own
+        tolerance-aware ``__eq__``.
+
+        Parameters
+        ----------
+        expected_obj : Any
+            Expected FDL object with a ``.custom_attrs`` property.
+        actual_obj : Any
+            Actual FDL object with a ``.custom_attrs`` property.
+        prefix : str
+            Label prefix for error messages (e.g. ``"canvas"``).
+        """
+        expected_attrs = expected_obj.custom_attrs
+        actual_attrs = actual_obj.custom_attrs
+
+        expected_keys = set(expected_attrs.keys())
+        actual_keys = set(actual_attrs.keys())
+
+        missing = expected_keys - actual_keys
+        extra = actual_keys - expected_keys
+
+        if missing:
+            self._fail(f"{prefix} custom attrs: missing keys {sorted(missing)}")
+        if extra:
+            self._fail(f"{prefix} custom attrs: unexpected keys {sorted(extra)}")
+
+        for key in sorted(expected_keys & actual_keys):
+            expected_val = expected_attrs[key]
+            actual_val = actual_attrs[key]
+            label = f"{prefix}.custom_attrs['{key}']"
+
+            if isinstance(expected_val, float) and isinstance(actual_val, float):
+                self._assertAlmostEqual(expected_val, actual_val, f"{label} mismatch")
+            else:
+                self._assertEqual(expected_val, actual_val, f"{label} mismatch")
+
     def compare_context(self, expected_ctx, actual_ctx):
         """
         Compare context fields.
@@ -71,6 +143,7 @@ class FDLComparison:
         expected_clip_id = getattr(expected_ctx, "clip_id", None)
         actual_clip_id = getattr(actual_ctx, "clip_id", None)
         self._assertEqual(expected_clip_id, actual_clip_id, "context.clip_id mismatch")
+        self.compare_custom_attrs(expected_ctx, actual_ctx, "context")
 
     def compare_canvas(
         self,
@@ -107,6 +180,7 @@ class FDLComparison:
         self._assertEqual(expected_canvas.photosite_dimensions, actual_canvas.photosite_dimensions, "canvas.photosite_dimensions mismatch")
         self._assertEqual(expected_canvas.physical_dimensions, actual_canvas.physical_dimensions, "canvas.physical_dimensions mismatch")
         self._assertEqual(expected_canvas.anamorphic_squeeze, actual_canvas.anamorphic_squeeze, "canvas.anamorphic_squeeze mismatch")
+        self.compare_custom_attrs(expected_canvas, actual_canvas, "canvas")
 
     def compare_framing_decision(
         self,
@@ -142,6 +216,7 @@ class FDLComparison:
         self._assertEqual(
             expected_fd.protection_anchor_point, actual_fd.protection_anchor_point, "framing_decision.protection_anchor_point mismatch"
         )
+        self.compare_custom_attrs(expected_fd, actual_fd, "framing_decision")
 
     def compare_canvas_template(self, expected_tmpl, actual_tmpl):
         """
@@ -184,6 +259,7 @@ class FDLComparison:
         # Compare round sub-object
         self._assertEqual(expected_tmpl.round.even, actual_tmpl.round.even, "template.round.even mismatch")
         self._assertEqual(expected_tmpl.round.mode, actual_tmpl.round.mode, "template.round.mode mismatch")
+        self.compare_custom_attrs(expected_tmpl, actual_tmpl, "template")
 
     def compare_fdl_output(
         self,

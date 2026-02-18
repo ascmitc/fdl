@@ -12,6 +12,8 @@ Usage:
     source FDL, image, and template for debugging and regression testing.
 """
 
+from fdl.testing.scenario_config import ScenarioConfig, SourceVariant  # noqa: F401
+
 # Exported scenarios from FDL Viewer UI
 # New scenarios will be auto-appended here
 EXPORTED_SCENARIO_CONFIGS = {}

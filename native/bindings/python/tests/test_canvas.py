@@ -3,7 +3,7 @@
 import pytest
 from fdl.errors import FDLValidationError
 from fdl.fdl import FDL
-from fdl.types import DimensionsFloat, DimensionsInt, PointFloat
+from fdl.fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 
 
 def test_source_canvas_id_valid():

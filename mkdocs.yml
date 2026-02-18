@@ -1,7 +1,40 @@
 site_name: ASC FDL
 
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Architecture: architecture.md
+  - Code Generation: codegen.md
+  - C ABI Design: c_abi.md
+  - Template Application:
+    - Algorithm Overview: FDL_Apply_Template_Logic.md
+    - Implementer Guide: FDL_Template_Implementer_Guide.md
+  - Application Packages:
+    - Overview: packages.md
+    - FDL Viewer: fdl_viewer.md
+    - Frameline Generator: fdl_frameline_generator.md
+    - FDL Imaging: fdl_imaging.md
+  - API Reference:
+    - Python:
+      - FDL: FDL Classes/fdl.md
+      - Canvas: FDL Classes/canvas.md
+      - Canvas Template: FDL Classes/canvas_template.md
+      - Context: FDL Classes/context.md
+      - Framing Decision: FDL Classes/framing_decision.md
+      - Framing Intent: FDL Classes/framing_intent.md
+      - Header: FDL Classes/header.md
+      - Common Types: FDL Classes/common.md
+      - Errors: FDL Classes/errors.md
+    - "C/C++ (Doxygen)": api/index.html
+  - Contributing: contributions.md
+
 theme:
-  name: "readthedocs"
+  name: material
+  palette:
+    scheme: default
+  features:
+    - content.tabs.link
+    - content.code.copy
 
 plugins:
   - search
@@ -19,3 +52,10 @@ plugins:
             show_submodules: false
             merge_init_into_class: true
             allow_inspection: false
+
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details

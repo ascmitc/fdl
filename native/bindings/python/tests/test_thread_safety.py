@@ -498,7 +498,7 @@ class TestConcurrentTemplateApply:
                 )
 
                 with lock:
-                    results.append(result.scale_factor)
+                    results.append(result.canvas.get_custom_attr("scale_factor"))
 
                 result.fdl.close()
                 doc.close()

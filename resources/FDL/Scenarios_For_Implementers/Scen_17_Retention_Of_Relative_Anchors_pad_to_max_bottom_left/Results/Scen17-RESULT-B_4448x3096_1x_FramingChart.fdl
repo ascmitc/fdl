@@ -1,14 +1,14 @@
 {
-  "uuid": "12345678-1234-5678-1234-567812345678",
+  "uuid": "00000000-0000-0000-0000-000000000000",
   "version": {
     "major": 2,
     "minor": 0
   },
-  "fdl_creator": "Python-FDL-Demo",
+  "fdl_creator": "ASC FDL Tools",
   "default_framing_intent": "1",
   "framing_intents": [
     {
-      "label": "Default Framing Intent",
+      "label": "Default",
       "id": "1",
       "aspect_ratio": {
         "width": 1,
@@ -41,16 +41,16 @@
                 "height": 2252.0
               },
               "anchor_point": {
-                "x": 110.0,
-                "y": 350.0
+                "x": 222.0,
+                "y": 422.0
               },
               "protection_dimensions": {
                 "width": 4448.0,
                 "height": 2502.0
               },
               "protection_anchor_point": {
-                "x": 20.0,
-                "y": 250.0
+                "x": 0.0,
+                "y": 297.0
               }
             }
           ]
@@ -86,7 +86,16 @@
                 "y": 1840.0
               }
             }
-          ]
+          ],
+          "_scale_factor": 0.9590409590409591,
+          "_content_translation": {
+            "x": 0.0,
+            "y": 1840.0
+          },
+          "_scaled_bounding_box": {
+            "width": 3840.0,
+            "height": 2160.0
+          }
         }
       ]
     }

@@ -28,3 +28,16 @@ class {{ enum.python_class }}(_StrEnum):
 
 FP_REL_TOL = 1e-9
 FP_ABS_TOL = 1e-6
+
+# ---------------------------------------------------------------------------
+# First-class custom attribute name constants
+# ---------------------------------------------------------------------------
+
+ATTR_SCALE_FACTOR: str = "scale_factor"
+"""Custom attribute name for the template scale factor (float)."""
+
+ATTR_CONTENT_TRANSLATION: str = "content_translation"
+"""Custom attribute name for the template content translation (PointFloat)."""
+
+ATTR_SCALED_BOUNDING_BOX: str = "scaled_bounding_box"
+"""Custom attribute name for the template scaled bounding box (DimensionsFloat)."""

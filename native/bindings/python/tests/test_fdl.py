@@ -6,7 +6,7 @@ import pytest
 from fdl.context import Context
 from fdl.errors import FDLValidationError
 from fdl.fdl import FDL
-from fdl.types import DimensionsFloat, DimensionsInt, PointFloat
+from fdl.fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 
 from fdl import read_from_file, read_from_string
 

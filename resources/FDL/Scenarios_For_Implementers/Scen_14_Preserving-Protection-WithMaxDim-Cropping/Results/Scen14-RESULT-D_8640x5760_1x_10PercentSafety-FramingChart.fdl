@@ -1,24 +1,25 @@
 {
+  "uuid": "00000000-0000-0000-0000-000000000000",
   "version": {
     "major": 2,
     "minor": 0
   },
-  "uuid": "abdc2489-c715-41e2-a2c4-3e1cdd0a9ef9",
   "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
   "framing_intents": [
     {
-      "label": "",
+      "label": "Default",
       "id": "1",
       "aspect_ratio": {
-        "width": 16,
-        "height": 9
+        "width": 1,
+        "height": 1
       },
-      "protection": 0.1
+      "protection": 0.0
     }
   ],
   "contexts": [
     {
-      "label": "Sony VENICE 2 8K",
+      "label": "VFX Pull - Custom",
       "context_creator": "ASC FDL Tools",
       "canvases": [
         {
@@ -29,54 +30,56 @@
             "width": 8640,
             "height": 5760
           },
-          "anamorphic_squeeze": 1,
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
               "label": "",
               "id": "1-1",
               "framing_intent_id": "1",
               "dimensions": {
-                "width": 7776,
-                "height": 4374
+                "width": 7776.0,
+                "height": 4374.0
               },
               "anchor_point": {
-                "x": 432,
-                "y": 693
+                "x": 432.0,
+                "y": 693.0
               },
               "protection_dimensions": {
-                "width": 8640,
-                "height": 4860
+                "width": 8640.0,
+                "height": 4860.0
               },
               "protection_anchor_point": {
-                "x": 0,
-                "y": 450
+                "x": 0.0,
+                "y": 450.0
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "label": "VFX Pull - Custom",
-      "context_creator": "ASC FDL Tools",
-      "canvases": [
+        },
         {
           "label": "VFX Pull - Custom: Sony VENICE 2 8K 8.6K 3:2",
-          "id": "canvas1",
+          "id": "123456781234567812345678123456",
           "source_canvas_id": "1",
           "dimensions": {
             "width": 4000,
             "height": 2160
           },
-          "anamorphic_squeeze": 1,
+          "effective_dimensions": {
+            "width": 4000,
+            "height": 2160
+          },
+          "effective_anchor_point": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
               "label": "",
-              "id": "canvas1-1",
+              "id": "123456781234567812345678123456-1",
               "framing_intent_id": "1",
               "dimensions": {
-                "width": 3840,
-                "height": 2160
+                "width": 3840.0,
+                "height": 2160.0
               },
               "anchor_point": {
                 "x": 80.0,
@@ -87,18 +90,19 @@
                 "height": 2160.0
               },
               "protection_anchor_point": {
-                "x": 0,
-                "y": 0
+                "x": 0.0,
+                "y": 0.0
               }
             }
           ],
-          "effective_dimensions": {
-            "width": 4000,
-            "height": 2160
+          "_scale_factor": 0.49382716049382713,
+          "_content_translation": {
+            "x": -134.0,
+            "y": -120.0
           },
-          "effective_anchor_point": {
-            "x": 0.0,
-            "y": 0.0
+          "_scaled_bounding_box": {
+            "width": 4266.0,
+            "height": 2400.0
           }
         }
       ]
@@ -122,7 +126,6 @@
         "width": 4000,
         "height": 2160
       },
-      "pad_to_maximum": false,
       "round": {
         "even": "even",
         "mode": "round"

@@ -6,7 +6,7 @@
 TEST_CASE("ABI version returns expected values", "[abi]") {
     fdl_abi_version_t ver = fdl_abi_version();
     REQUIRE(ver.major == 0);
-    REQUIRE(ver.minor == 5);
+    REQUIRE(ver.minor == 6);
     REQUIRE(ver.patch == 0);
 }
 

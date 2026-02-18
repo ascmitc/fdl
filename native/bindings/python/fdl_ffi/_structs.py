@@ -6,10 +6,11 @@
 from __future__ import annotations
 
 import ctypes
+from typing import ClassVar
 
 
 class fdl_abi_version_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("major", ctypes.c_uint32),
         ("minor", ctypes.c_uint32),
         ("patch", ctypes.c_uint32),
@@ -21,7 +22,7 @@ class fdl_abi_version_t(ctypes.Structure):
 
 
 class fdl_dimensions_i64_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("width", ctypes.c_int64),
         ("height", ctypes.c_int64),
     ]
@@ -32,7 +33,7 @@ class fdl_dimensions_i64_t(ctypes.Structure):
 
 
 class fdl_dimensions_f64_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("width", ctypes.c_double),
         ("height", ctypes.c_double),
     ]
@@ -43,7 +44,7 @@ class fdl_dimensions_f64_t(ctypes.Structure):
 
 
 class fdl_point_f64_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("x", ctypes.c_double),
         ("y", ctypes.c_double),
     ]
@@ -54,7 +55,7 @@ class fdl_point_f64_t(ctypes.Structure):
 
 
 class fdl_rect_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("x", ctypes.c_double),
         ("y", ctypes.c_double),
         ("width", ctypes.c_double),
@@ -67,7 +68,7 @@ class fdl_rect_t(ctypes.Structure):
 
 
 class fdl_round_strategy_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("even", ctypes.c_uint32),
         ("mode", ctypes.c_uint32),
     ]
@@ -78,7 +79,7 @@ class fdl_round_strategy_t(ctypes.Structure):
 
 
 class fdl_geometry_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("canvas_dims", fdl_dimensions_f64_t),
         ("effective_dims", fdl_dimensions_f64_t),
         ("protection_dims", fdl_dimensions_f64_t),
@@ -94,7 +95,7 @@ class fdl_geometry_t(ctypes.Structure):
 
 
 class fdl_from_intent_result_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("dimensions", fdl_dimensions_f64_t),
         ("anchor_point", fdl_point_f64_t),
         ("has_protection", ctypes.c_int),
@@ -108,7 +109,7 @@ class fdl_from_intent_result_t(ctypes.Structure):
 
 
 class fdl_parse_result_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("doc", ctypes.c_void_p),
         ("error", ctypes.c_void_p),
     ]
@@ -119,11 +120,8 @@ class fdl_parse_result_t(ctypes.Structure):
 
 
 class fdl_template_result_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("output_fdl", ctypes.c_void_p),
-        ("scale_factor", ctypes.c_double),
-        ("scaled_bounding_box", fdl_dimensions_f64_t),
-        ("content_translation", fdl_point_f64_t),
         ("context_label", ctypes.c_void_p),
         ("canvas_id", ctypes.c_void_p),
         ("framing_decision_id", ctypes.c_void_p),
@@ -136,7 +134,7 @@ class fdl_template_result_t(ctypes.Structure):
 
 
 class fdl_resolve_canvas_result_t(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
         ("canvas", ctypes.c_void_p),
         ("framing_decision", ctypes.c_void_p),
         ("was_resolved", ctypes.c_int),
@@ -146,30 +144,3 @@ class fdl_resolve_canvas_result_t(ctypes.Structure):
     def __repr__(self) -> str:
         fields = ", ".join(f"{name}={getattr(self, name)}" for name, _ in self._fields_)
         return f"fdl_resolve_canvas_result_t({fields})"
-
-
-class fdl_file_sequence_t(ctypes.Structure):
-    _fields_ = [
-        ("value", ctypes.c_void_p),
-        ("idx", ctypes.c_void_p),
-        ("min", ctypes.c_int64),
-        ("max", ctypes.c_int64),
-    ]
-
-    def __repr__(self) -> str:
-        fields = ", ".join(f"{name}={getattr(self, name)}" for name, _ in self._fields_)
-        return f"fdl_file_sequence_t({fields})"
-
-
-class fdl_clip_id_t(ctypes.Structure):
-    _fields_ = [
-        ("clip_name", ctypes.c_void_p),
-        ("has_file", ctypes.c_int),
-        ("file", ctypes.c_void_p),
-        ("has_sequence", ctypes.c_int),
-        ("sequence", fdl_file_sequence_t),
-    ]
-
-    def __repr__(self) -> str:
-        fields = ", ".join(f"{name}={getattr(self, name)}" for name, _ in self._fields_)
-        return f"fdl_clip_id_t({fields})"

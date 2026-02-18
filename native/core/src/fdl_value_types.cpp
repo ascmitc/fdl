@@ -164,6 +164,10 @@ int fdl_point_f64_lt(fdl_point_f64_t a, fdl_point_f64_t b) {
     return (a.x < b.x || a.y < b.y) ? FDL_TRUE : FDL_FALSE;
 }
 
+int fdl_point_f64_gt(fdl_point_f64_t a, fdl_point_f64_t b) {
+    return (a.x > b.x || a.y > b.y) ? FDL_TRUE : FDL_FALSE;
+}
+
 // ---------------------------------------------------------------------------
 // Memory management
 // ---------------------------------------------------------------------------

@@ -75,6 +75,7 @@ class IRProperty:
     remover_fn: str | None = None
     has_fn: str | None = None
     nullable: bool = False
+    handle_class: str | None = None  # For handle_ref: target facade class name
 
     @property
     def read_only(self) -> bool:
@@ -193,6 +194,7 @@ class IRClass:
     factory: str | None = None
     destructor: str | None = None
     identity_attr: str | None = None  # "id" for Canvas/FD/FI/CT, "label" for Context, None for FDL
+    custom_attrs: bool = False  # True if this class supports custom attributes
     properties: list[IRProperty] = field(default_factory=list)
     collections: list[IRCollection] = field(default_factory=list)
     methods: list[IRMethod] = field(default_factory=list)

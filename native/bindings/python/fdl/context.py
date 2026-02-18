@@ -9,7 +9,7 @@ from __future__ import annotations
 import ctypes
 import json
 
-from .types import DimensionsFloat, DimensionsInt
+from .fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 
 from .base import (
     CollectionWrapper,
@@ -19,13 +19,21 @@ from .base import (
 from .converters import (
     _to_c_dims_f64,
 )
-from .clipid import ClipID
+from ._custom_attrs import (
+    _all as _ca_all,
+    _count as _ca_count,
+    _get as _ca_get,
+    _has as _ca_has,
+    _remove as _ca_remove,
+    _set as _ca_set,
+)
 from dataclasses import dataclass
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .canvas import Canvas
+    from .clip_id import ClipID
     from .framing_decision import FramingDecision
 
 
@@ -87,16 +95,23 @@ class Context(HandleWrapper):
         self._check_handle()
         if not self._lib.fdl_context_has_clip_id(self._handle):
             return None
-        raw = self._lib.fdl_context_get_clip_id_struct(self._handle)
-        return ClipID._from_c(raw, self._lib)
+        from .clip_id import ClipID
+
+        handle = self._lib.fdl_context_clip_id(self._handle)
+        if not handle:
+            return None
+        return ClipID._from_handle(handle, self._lib, self._doc_ref)
 
     @clip_id.setter
-    def clip_id(self, value: ClipID | None) -> None:
+    def clip_id(self, value: ClipID | dict | None) -> None:
         self._check_handle()
         if value is None:
             self._lib.fdl_context_remove_clip_id(self._handle)
             return
-        _json = json.dumps(value.to_dict()).encode("utf-8")
+        if isinstance(value, dict):
+            _json = json.dumps(value).encode("utf-8")
+        else:
+            _json = json.dumps(value.as_dict()).encode("utf-8")
         _err = self._lib.fdl_context_set_clip_id_json(self._handle, _json, len(_json))
         if _err:
             _msg = ctypes.string_at(_err).decode("utf-8")
@@ -192,3 +207,63 @@ class Context(HandleWrapper):
             framing_decision=_framing_decision,
             was_resolved=_was_resolved,
         )
+
+    _CA_PREFIX = "fdl_context_"
+
+    def set_custom_attr(self, name: str, value: str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt) -> None:
+        """Set a custom attribute. Type is inferred from value.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+            value: Attribute value (str, int, float, bool, PointFloat, DimensionsFloat, or DimensionsInt).
+
+        Raises:
+            TypeError: If value is not str, int, float, bool, PointFloat, DimensionsFloat, or DimensionsInt.
+            ValueError: If an attribute with the same name exists with a different type.
+        """
+        self._check_handle()
+        _ca_set(self._lib, self._handle, self._CA_PREFIX, name, value)
+
+    def get_custom_attr(self, name: str) -> str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt | None:
+        """Get a custom attribute value by name.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+
+        Returns:
+            The attribute value, or None if not found.
+        """
+        self._check_handle()
+        return _ca_get(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def has_custom_attr(self, name: str) -> bool:
+        """Check if a custom attribute exists.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+        """
+        self._check_handle()
+        return _ca_has(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def remove_custom_attr(self, name: str) -> bool:
+        """Remove a custom attribute.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+
+        Returns:
+            True if the attribute was removed, False if it was not found.
+        """
+        self._check_handle()
+        return _ca_remove(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def custom_attrs_count(self) -> int:
+        """Return the number of custom attributes on this object."""
+        self._check_handle()
+        return _ca_count(self._lib, self._handle, self._CA_PREFIX)
+
+    @property
+    def custom_attrs(self) -> dict[str, str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt]:
+        """Return all custom attributes as a dictionary."""
+        self._check_handle()
+        return _ca_all(self._lib, self._handle, self._CA_PREFIX)

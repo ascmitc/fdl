@@ -33,6 +33,17 @@
 
 namespace fdl {
 
+// -----------------------------------------------------------------------
+// First-class custom attribute name constants
+// -----------------------------------------------------------------------
+
+/** Custom attribute name for the template scale factor (float). */
+inline constexpr const char* ATTR_SCALE_FACTOR = FDL_ATTR_SCALE_FACTOR;
+/** Custom attribute name for the template content translation (point_f64). */
+inline constexpr const char* ATTR_CONTENT_TRANSLATION = FDL_ATTR_CONTENT_TRANSLATION;
+/** Custom attribute name for the template scaled bounding box (dims_f64). */
+inline constexpr const char* ATTR_SCALED_BOUNDING_BOX = FDL_ATTR_SCALED_BOUNDING_BOX;
+
 {% if value_types %}
 // -----------------------------------------------------------------------
 // Value type wrapper classes
@@ -163,19 +174,23 @@ public:
 
     // --- Property accessors ---
 {% for prop in fdl_class.properties %}
-{% if prop.kind is defined and prop.kind == "clip_id" %}
-    bool has_clip_id() const { return {{ prop.has_fn }}({{ prop.handle_field }}) != 0; }
-    std::optional<ClipID> clip_id() const {
-        if (!{{ prop.has_fn }}({{ prop.handle_field }})) return std::nullopt;
-        auto c = {{ prop.getter_fn }}({{ prop.handle_field }});
-        return ClipID::from_c(c);
-    }
-    void set_clip_id(const std::string& json) {
+{% if prop.kind is defined and prop.kind == "handle_ref" %}
+{% if prop.has_fn %}
+    bool has_{{ prop.name }}() const { return {{ prop.has_fn }}({{ prop.handle_field }}) != 0; }
+{% endif %}
+{% if prop.nullable %}
+    std::optional<{{ prop.ref_class }}> {{ prop.name }}() const;
+{% else %}
+    {{ prop.ref_class }} {{ prop.name }}() const;
+{% endif %}
+{% if prop.setter_fn %}
+    void set_{{ prop.name }}(const std::string& json) {
         const char* err = {{ prop.setter_fn }}({{ prop.handle_field }}, json.c_str(), json.size());
         if (err) { std::string msg(err); fdl_free(const_cast<char*>(err)); throw std::runtime_error(msg); }
     }
+{% endif %}
 {% if prop.remover_fn %}
-    void remove_clip_id() { {{ prop.remover_fn }}({{ prop.handle_field }}); }
+    void remove_{{ prop.name }}() { {{ prop.remover_fn }}({{ prop.handle_field }}); }
 {% endif %}
 {% else %}
 {% if prop.has_fn %}
@@ -306,6 +321,104 @@ public:
 {% endfor %}
 {% endfor %}
 
+{% if fdl_class.custom_attrs %}
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return {{ fdl_class.ca_prefix }}set_custom_attr_string({{ fdl_class.handle_field }}, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return {{ fdl_class.ca_prefix }}set_custom_attr_int({{ fdl_class.handle_field }}, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return {{ fdl_class.ca_prefix }}set_custom_attr_float({{ fdl_class.handle_field }}, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return {{ fdl_class.ca_prefix }}set_custom_attr_bool({{ fdl_class.handle_field }}, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = {{ fdl_class.ca_prefix }}get_custom_attr_string({{ fdl_class.handle_field }}, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_int({{ fdl_class.handle_field }}, name.c_str(), &out) == 0) return out;
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_float({{ fdl_class.handle_field }}, name.c_str(), &out) == 0) return out;
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_bool({{ fdl_class.handle_field }}, name.c_str(), &out) == 0) return static_cast<bool>(out);
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return {{ fdl_class.ca_prefix }}has_custom_attr({{ fdl_class.handle_field }}, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return {{ fdl_class.ca_prefix }}get_custom_attr_type({{ fdl_class.handle_field }}, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return {{ fdl_class.ca_prefix }}remove_custom_attr({{ fdl_class.handle_field }}, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const {
+        return {{ fdl_class.ca_prefix }}custom_attrs_count({{ fdl_class.handle_field }});
+    }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = {{ fdl_class.ca_prefix }}custom_attr_name_at({{ fdl_class.handle_field }}, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return {{ fdl_class.ca_prefix }}set_custom_attr_point_f64({{ fdl_class.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return {{ fdl_class.ca_prefix }}set_custom_attr_dims_f64({{ fdl_class.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return {{ fdl_class.ca_prefix }}set_custom_attr_dims_i64({{ fdl_class.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_point_f64({{ fdl_class.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_dims_f64({{ fdl_class.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_dims_i64({{ fdl_class.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return DimensionsInt(out.width, out.height);
+    }
+{% endif %}
+
 private:
     {{ fdl_class.handle_type }}* {{ fdl_class.handle_field }};
 };
@@ -363,19 +476,23 @@ public:
 
     // --- Property accessors ---
 {% for prop in cls.properties %}
-{% if prop.kind is defined and prop.kind == "clip_id" %}
-    bool has_clip_id() const { return {{ prop.has_fn }}({{ prop.handle_field }}) != 0; }
-    std::optional<ClipID> clip_id() const {
-        if (!{{ prop.has_fn }}({{ prop.handle_field }})) return std::nullopt;
-        auto c = {{ prop.getter_fn }}({{ prop.handle_field }});
-        return ClipID::from_c(c);
-    }
-    void set_clip_id(const std::string& json) {
+{% if prop.kind is defined and prop.kind == "handle_ref" %}
+{% if prop.has_fn %}
+    bool has_{{ prop.name }}() const { return {{ prop.has_fn }}({{ prop.handle_field }}) != 0; }
+{% endif %}
+{% if prop.nullable %}
+    std::optional<{{ prop.ref_class }}> {{ prop.name }}() const;
+{% else %}
+    {{ prop.ref_class }} {{ prop.name }}() const;
+{% endif %}
+{% if prop.setter_fn %}
+    void set_{{ prop.name }}(const std::string& json) {
         const char* err = {{ prop.setter_fn }}({{ prop.handle_field }}, json.c_str(), json.size());
         if (err) { std::string msg(err); fdl_free(const_cast<char*>(err)); throw std::runtime_error(msg); }
     }
+{% endif %}
 {% if prop.remover_fn %}
-    void remove_clip_id() { {{ prop.remover_fn }}({{ prop.handle_field }}); }
+    void remove_{{ prop.name }}() { {{ prop.remover_fn }}({{ prop.handle_field }}); }
 {% endif %}
 {% else %}
 {% if prop.has_fn %}
@@ -470,8 +587,117 @@ public:
         if (!::{{ lc.c_function }}({{ cls.handle_field }}, &out)) return std::nullopt;
         return {{ lc.returns }}(out);
     }
+{% elif lc.kind == "validate_json" %}
+    /** {{ lc.doc }} */
+    void {{ lc.name }}() const {
+        auto json = to_json(0);
+        const char* err = ::{{ lc.c_function }}(json.c_str(), json.size());
+        if (err) {
+            std::string msg(err);
+            fdl_free(const_cast<char*>(err));
+            throw std::runtime_error(msg);
+        }
+    }
 {% endif %}
 {% endfor %}
+
+{% endif %}
+{% if cls.custom_attrs %}
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return {{ cls.ca_prefix }}set_custom_attr_string({{ cls.handle_field }}, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return {{ cls.ca_prefix }}set_custom_attr_int({{ cls.handle_field }}, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return {{ cls.ca_prefix }}set_custom_attr_float({{ cls.handle_field }}, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return {{ cls.ca_prefix }}set_custom_attr_bool({{ cls.handle_field }}, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = {{ cls.ca_prefix }}get_custom_attr_string({{ cls.handle_field }}, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if ({{ cls.ca_prefix }}get_custom_attr_int({{ cls.handle_field }}, name.c_str(), &out) == 0) return out;
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if ({{ cls.ca_prefix }}get_custom_attr_float({{ cls.handle_field }}, name.c_str(), &out) == 0) return out;
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if ({{ cls.ca_prefix }}get_custom_attr_bool({{ cls.handle_field }}, name.c_str(), &out) == 0) return static_cast<bool>(out);
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return {{ cls.ca_prefix }}has_custom_attr({{ cls.handle_field }}, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return {{ cls.ca_prefix }}get_custom_attr_type({{ cls.handle_field }}, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return {{ cls.ca_prefix }}remove_custom_attr({{ cls.handle_field }}, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const {
+        return {{ cls.ca_prefix }}custom_attrs_count({{ cls.handle_field }});
+    }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = {{ cls.ca_prefix }}custom_attr_name_at({{ cls.handle_field }}, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return {{ cls.ca_prefix }}set_custom_attr_point_f64({{ cls.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return {{ cls.ca_prefix }}set_custom_attr_dims_f64({{ cls.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return {{ cls.ca_prefix }}set_custom_attr_dims_i64({{ cls.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if ({{ cls.ca_prefix }}get_custom_attr_point_f64({{ cls.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if ({{ cls.ca_prefix }}get_custom_attr_dims_f64({{ cls.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if ({{ cls.ca_prefix }}get_custom_attr_dims_i64({{ cls.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return DimensionsInt(out.width, out.height);
+    }
 
 {% endif %}
     {{ cls.handle_type }}* get() const noexcept { return {{ cls.handle_field }}; }
@@ -531,6 +757,47 @@ inline {{ coll.item_class }} {{ cls.cpp_name }}::{{ coll.singular }}_find_by_id(
 inline {{ coll.item_class }} {{ cls.cpp_name }}::{{ coll.singular }}_find_by_label(const std::string& label) const {
     return {{ coll.item_class }}({{ coll.find_by_label_fn }}({{ cls.handle_field }}, label.c_str()));
 }
+
+{% endif %}
+{% endfor %}
+{% endfor %}
+// --- Handle-ref property implementations ---
+{% for prop in fdl_class.properties %}
+{% if prop.kind is defined and prop.kind == "handle_ref" %}
+{% if prop.nullable %}
+inline std::optional<{{ prop.ref_class }}> {{ fdl_class.cpp_name }}::{{ prop.name }}() const {
+{% if prop.has_fn %}
+    if (!{{ prop.has_fn }}({{ prop.handle_field }})) return std::nullopt;
+{% endif %}
+    auto* h = {{ prop.getter_fn }}({{ prop.handle_field }});
+    if (!h) return std::nullopt;
+    return {{ prop.ref_class }}(h);
+}
+{% else %}
+inline {{ prop.ref_class }} {{ fdl_class.cpp_name }}::{{ prop.name }}() const {
+    return {{ prop.ref_class }}({{ prop.getter_fn }}({{ prop.handle_field }}));
+}
+{% endif %}
+
+{% endif %}
+{% endfor %}
+{% for cls in ref_classes %}
+{% for prop in cls.properties %}
+{% if prop.kind is defined and prop.kind == "handle_ref" %}
+{% if prop.nullable %}
+inline std::optional<{{ prop.ref_class }}> {{ cls.cpp_name }}::{{ prop.name }}() const {
+{% if prop.has_fn %}
+    if (!{{ prop.has_fn }}({{ prop.handle_field }})) return std::nullopt;
+{% endif %}
+    auto* h = {{ prop.getter_fn }}({{ prop.handle_field }});
+    if (!h) return std::nullopt;
+    return {{ prop.ref_class }}(h);
+}
+{% else %}
+inline {{ prop.ref_class }} {{ cls.cpp_name }}::{{ prop.name }}() const {
+    return {{ prop.ref_class }}({{ prop.getter_fn }}({{ prop.handle_field }}));
+}
+{% endif %}
 
 {% endif %}
 {% endfor %}

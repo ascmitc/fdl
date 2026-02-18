@@ -89,6 +89,32 @@ constexpr int64_t kDefaultAspectRatio = 1; /**< 1:1 aspect ratio for generated f
 /** Default JSON serialization indent (spaces per level). */
 constexpr int kDefaultJsonIndent = 2;
 
+/** @name Custom attribute return codes and type values
+ *  @{ */
+constexpr int kCustomAttrSuccess = 0;           /**< Operation succeeded. */
+constexpr int kCustomAttrError = -1;            /**< Operation failed (type mismatch, not found, etc.). */
+constexpr uint32_t kCustomAttrTypeNone = 0;     /**< Attribute not found. */
+constexpr uint32_t kCustomAttrTypeString = 1;   /**< String attribute. */
+constexpr uint32_t kCustomAttrTypeInt = 2;      /**< Integer attribute. */
+constexpr uint32_t kCustomAttrTypeFloat = 3;    /**< Floating-point attribute. */
+constexpr uint32_t kCustomAttrTypeBool = 4;     /**< Boolean attribute. */
+constexpr uint32_t kCustomAttrTypePointF64 = 5; /**< Point (x, y) attribute. */
+constexpr uint32_t kCustomAttrTypeDimsF64 = 6;  /**< Dimensions (width, height) float attribute. */
+constexpr uint32_t kCustomAttrTypeDimsI64 = 7;  /**< Dimensions (width, height) integer attribute. */
+constexpr uint32_t kCustomAttrTypeOther = 8;    /**< Unsupported JSON type. */
+/** @} */
+
+/** Custom attribute key prefix character. */
+constexpr char kCustomAttrPrefix = '_';
+
+/** @name First-class custom attribute name constants
+ *  Well-known attribute names set by template application.
+ *  @{ */
+constexpr const char* kAttrScaleFactor = "scale_factor";               /**< Template scale factor (float). */
+constexpr const char* kAttrContentTranslation = "content_translation"; /**< Template content translation (point_f64). */
+constexpr const char* kAttrScaledBoundingBox = "scaled_bounding_box";  /**< Template scaled bounding box (dims_f64). */
+/** @} */
+
 } // namespace fdl::constants
 
 #endif // FDL_CONSTANTS_INTERNAL_H

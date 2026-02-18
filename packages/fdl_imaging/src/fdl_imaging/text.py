@@ -16,7 +16,7 @@ once the image is de-squeezed for viewing.
 
 from enum import Enum
 
-from fdl.types import DimensionsFloat, PointFloat
+from fdl.fdl_types import DimensionsFloat, PointFloat
 from OpenImageIO import ImageBuf, ImageBufAlgo
 
 from fdl_imaging.colors import RGBA

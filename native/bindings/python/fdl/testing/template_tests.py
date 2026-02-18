@@ -98,8 +98,6 @@ class TestFDLTemplatesParameterized:
             "template_fdl_path": paths["template"],
             "template_label": config.template_label,
             "test_name": test_name,
-            "expected_scaled_bounding_box": variant.expected_scaled_bounding_box,
-            "expected_content_translation": variant.expected_content_translation,
         }
 
     def test_apply_fdl_template(self, scen_num, variant_letter):

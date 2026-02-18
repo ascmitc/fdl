@@ -36,6 +36,8 @@ _HANDLE_FIELD_MAP = {
     "fdl_framing_decision_t": "fd_",
     "fdl_framing_intent_t": "fi_",
     "fdl_canvas_template_t": "ct_",
+    "fdl_clip_id_t": "cid_",
+    "fdl_file_sequence_t": "seq_",
 }
 
 
@@ -62,7 +64,7 @@ def _singular(name: str) -> str:
 _CONST_REF_TYPES = {"std::string", "fdl_dimensions_i64_t", "fdl_dimensions_f64_t", "fdl_point_f64_t", "fdl_round_strategy_t"}
 
 # All facade class names
-_ALL_CLASSES = {"FDL", "Context", "Canvas", "FramingDecision", "FramingIntent", "CanvasTemplate"}
+_ALL_CLASSES = {"FDL", "Context", "Canvas", "FramingDecision", "FramingIntent", "CanvasTemplate", "ClipID", "FileSequence"}
 
 # Auxiliary dataclass field type → C++ type (for YAML-defined dataclass fields)
 _DC_FIELD_CPP: dict[str, str] = {
@@ -577,32 +579,44 @@ def _build_prop(prop, handle_field: str) -> dict | None:
     if prop.type_key == "json_value":
         return None
 
-    # Special handling for clip_id
-    if prop.name == "clip_id":
-        return {
-            "name": "clip_id",
-            "kind": "clip_id",
-            "has_fn": prop.has_fn,
+    # Handle-ref properties: wrap child handle as a Ref class
+    if prop.type_key == "handle_ref" and prop.handle_class:
+        ref_class = _cpp_class_name(prop.handle_class)
+        ctx: dict = {
+            "name": prop.name,
+            "kind": "handle_ref",
+            "ref_class": ref_class,
             "getter_fn": prop.getter_fn,
             "setter_fn": prop.setter_fn,
             "remover_fn": prop.remover_fn,
+            "has_fn": prop.has_fn,
             "handle_field": handle_field,
+            "nullable": prop.nullable,
         }
+        return ctx
 
     type_key = prop.type_key
     nullable = prop.nullable
 
     # Determine C++ getter return type and body
-    if type_key == "string":
+    # Nullable properties with has_fn must be checked first (including nullable strings)
+    if nullable and prop.has_fn and type_key == "string":
+        cpp_return_type = "std::optional<std::string>"
+        getter_body = (
+            f"if (!{prop.has_fn}({handle_field})) return std::nullopt;\n"
+            f"        const char* p = {prop.getter_fn}({handle_field});\n"
+            f"        return p ? std::optional<std::string>(p) : std::nullopt;"
+        )
+    elif nullable and prop.has_fn:
+        base_type = _cpp.resolve_type(type_key)
+        cpp_return_type = f"std::optional<{base_type}>"
+        getter_body = f"if (!{prop.has_fn}({handle_field})) return std::nullopt;\n        return {prop.getter_fn}({handle_field});"
+    elif type_key == "string":
         cpp_return_type = "std::string"
         getter_body = f"const char* p = {prop.getter_fn}({handle_field});\n        return p ? std::string(p) : std::string();"
     elif type_key == "bool":
         cpp_return_type = "bool"
         getter_body = f"return {prop.getter_fn}({handle_field}) != 0;"
-    elif nullable and prop.has_fn:
-        base_type = _cpp.resolve_type(type_key)
-        cpp_return_type = f"std::optional<{base_type}>"
-        getter_body = f"if (!{prop.has_fn}({handle_field})) return std::nullopt;\n        return {prop.getter_fn}({handle_field});"
     else:
         cpp_return_type = _cpp.resolve_type(type_key)
         getter_body = f"return {prop.getter_fn}({handle_field});"
@@ -844,6 +858,14 @@ def _build_lifecycle(method, handle_field: str) -> dict | None:
             "doc": method.doc,
         }
 
+    if kind == "validate_json":
+        return {
+            "kind": "validate_json",
+            "name": method.name,
+            "c_function": method.function,
+            "doc": method.doc or "Validate this object.",
+        }
+
     return None
 
 
@@ -896,10 +918,14 @@ def _build_class(ir_cls, idl: IDL) -> dict:
             "composite_property",
             "instance_getter",
             "instance_getter_optional",
+            "validate_json",
         ) or (method.kind == "instance" and method.name != "to_json" and (method.params or method.error_handling)):
             ctx = _build_lifecycle(method, hf)
             if ctx:
                 lifecycle.append(ctx)
+
+    # Custom attributes context
+    ca_prefix = ir_cls.handle_type.removesuffix("t") if ir_cls.custom_attrs else None
 
     return {
         "ir_name": ir_cls.name,
@@ -907,6 +933,8 @@ def _build_class(ir_cls, idl: IDL) -> dict:
         "handle_type": ir_cls.handle_type,
         "handle_field": hf,
         "owns_handle": ir_cls.owns_handle,
+        "custom_attrs": ir_cls.custom_attrs,
+        "ca_prefix": ca_prefix,
         "properties": properties,
         "collections": collections,
         "builders": builders,

@@ -1,24 +1,25 @@
 {
+  "uuid": "00000000-0000-0000-0000-000000000000",
   "version": {
     "major": 2,
     "minor": 0
   },
-  "uuid": "a7e3aefc-d709-47cf-8541-f579b37d3239",
   "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
   "framing_intents": [
     {
-      "label": "",
+      "label": "Default",
       "id": "1",
       "aspect_ratio": {
-        "width": 2520,
-        "height": 1417
+        "width": 1,
+        "height": 1
       },
-      "protection": 0.1
+      "protection": 0.0
     }
   ],
   "contexts": [
     {
-      "label": "RED V-RAPTOR 8K S35",
+      "label": "VFX Pull - Custom",
       "context_creator": "ASC FDL Tools",
       "canvases": [
         {
@@ -29,50 +30,52 @@
             "width": 5040,
             "height": 3780
           },
-          "anamorphic_squeeze": 1,
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
               "label": "",
               "id": "1-1",
               "framing_intent_id": "1",
               "dimensions": {
-                "width": 4536,
-                "height": 2550
+                "width": 4536.0,
+                "height": 2550.0
               },
               "anchor_point": {
-                "x": 252,
-                "y": 142
+                "x": 252.0,
+                "y": 142.0
               },
               "protection_dimensions": {
-                "width": 5040,
-                "height": 2834
+                "width": 5040.0,
+                "height": 2834.0
               },
               "protection_anchor_point": {
-                "x": 0,
-                "y": 0
+                "x": 0.0,
+                "y": 0.0
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "label": "VFX Pull - Custom",
-      "context_creator": "ASC FDL Tools",
-      "canvases": [
+        },
         {
           "label": "VFX Pull - Custom: RED V-RAPTOR 8K S35 7K 4:3 2x",
-          "id": "canvas1",
+          "id": "123456781234567812345678123456",
           "source_canvas_id": "1",
           "dimensions": {
             "width": 4266,
             "height": 3200
           },
-          "anamorphic_squeeze": 1,
+          "effective_dimensions": {
+            "width": 4266,
+            "height": 3200
+          },
+          "effective_anchor_point": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
               "label": "",
-              "id": "canvas1-1",
+              "id": "123456781234567812345678123456-1",
               "framing_intent_id": "1",
               "dimensions": {
                 "width": 3840.0,
@@ -87,18 +90,19 @@
                 "height": 2400.0
               },
               "protection_anchor_point": {
-                "x": 0,
+                "x": 0.0,
                 "y": 0.0
               }
             }
           ],
-          "effective_dimensions": {
-            "width": 4266,
-            "height": 3200
-          },
-          "effective_anchor_point": {
+          "_scale_factor": 0.8465608465608465,
+          "_content_translation": {
             "x": 0.0,
             "y": 0.0
+          },
+          "_scaled_bounding_box": {
+            "width": 4266.0,
+            "height": 3200.0
           }
         }
       ]
@@ -112,7 +116,7 @@
         "width": 3840,
         "height": 2160
       },
-      "target_anamorphic_squeeze": 1,
+      "target_anamorphic_squeeze": 1.0,
       "fit_source": "framing_decision.dimensions",
       "fit_method": "fit_all",
       "alignment_method_vertical": "center",
@@ -122,7 +126,6 @@
         "width": 6000,
         "height": 5000
       },
-      "pad_to_maximum": false,
       "round": {
         "even": "even",
         "mode": "round"

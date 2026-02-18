@@ -7,11 +7,12 @@
 from __future__ import annotations
 
 import ctypes
+from typing import ClassVar
 
 {% for vt in value_types %}
 
 class {{ vt.name }}(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, type]]] = [
 {% for field in vt.fields %}
         ("{{ field.name }}", {{ field.ctypes_type }}),
 {% endfor %}

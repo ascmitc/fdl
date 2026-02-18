@@ -16,11 +16,14 @@ from .rounding import RoundStrategy
 if TYPE_CHECKING:
     from .canvas import Canvas
     from .fdl import FDL
+    from .fdl_types import DimensionsFloat, DimensionsInt, PointFloat, Rect
     from .framing_decision import FramingDecision
-    from .types import DimensionsFloat, PointFloat, Rect
 
 __all__ = [
     "DEFAULT_ROUNDING_STRATEGY",
+    "FramingFromIntentResult",
+    "abi_version",
+    "compute_framing_from_intent",
     "find_by_id",
     "find_by_label",
     "get_anchor_from_path",
@@ -147,7 +150,7 @@ def get_dimensions_from_path(
     -------
     DimensionsFloat or None
     """
-    from .types import DimensionsFloat
+    from .fdl_types import DimensionsFloat
 
     if not path or path == "none":
         return DimensionsFloat(width=0.0, height=0.0)
@@ -197,7 +200,7 @@ def get_anchor_from_path(canvas: Canvas, framing: FramingDecision, path: str) ->
     -------
     PointFloat
     """
-    from .types import PointFloat
+    from .fdl_types import PointFloat
 
     if not path or path == "none" or path == "canvas.dimensions":
         return PointFloat(x=0.0, y=0.0)
@@ -336,6 +339,122 @@ def write_to_file(fdl_obj: FDL, file_path: Path | str, validate: bool = True) ->
     """
     file_path = Path(file_path)
     file_path.write_text(write_to_string(fdl_obj, validate=validate), encoding="utf-8")
+
+
+# -----------------------------------------------------------------------
+# ABI version
+# -----------------------------------------------------------------------
+
+
+def abi_version() -> tuple[int, int, int]:
+    """Return the ABI version of the loaded library as (major, minor, patch)."""
+    from fdl_ffi import get_lib
+
+    v = get_lib().fdl_abi_version()
+    return (v.major, v.minor, v.patch)
+
+
+# -----------------------------------------------------------------------
+# Standalone framing computation
+# -----------------------------------------------------------------------
+
+
+def compute_framing_from_intent(
+    canvas_dims: DimensionsFloat,
+    working_dims: DimensionsFloat,
+    squeeze: float,
+    aspect_ratio: DimensionsInt,
+    protection: float,
+    rounding: RoundStrategy | None = None,
+) -> FramingFromIntentResult:
+    """Compute a framing decision from a framing intent without needing existing handles.
+
+    Parameters
+    ----------
+    canvas_dims : DimensionsFloat
+        Source canvas dimensions.
+    working_dims : DimensionsFloat
+        Working (effective) dimensions.
+    squeeze : float
+        Anamorphic squeeze factor.
+    aspect_ratio : DimensionsInt
+        Target aspect ratio (e.g. DimensionsInt(width=16, height=9)).
+    protection : float
+        Protection percentage (0.0 - 1.0).
+    rounding : RoundStrategy | None
+        Rounding strategy. Uses the global default if None.
+
+    Returns
+    -------
+    FramingFromIntentResult
+        Computed dimensions, anchor point, and optional protection values.
+    """
+    from fdl_ffi import get_lib
+    from fdl_ffi._structs import fdl_dimensions_f64_t, fdl_dimensions_i64_t
+
+    from .converters import _to_c_round_strategy
+
+    if rounding is None:
+        rounding = get_rounding()
+
+    _c_canvas = fdl_dimensions_f64_t(width=canvas_dims.width, height=canvas_dims.height)
+    _c_working = fdl_dimensions_f64_t(width=working_dims.width, height=working_dims.height)
+    _c_ar = fdl_dimensions_i64_t(width=int(aspect_ratio.width), height=int(aspect_ratio.height))
+    _c_rs = _to_c_round_strategy(rounding)
+
+    r = get_lib().fdl_compute_framing_from_intent(
+        _c_canvas,
+        _c_working,
+        float(squeeze),
+        _c_ar,
+        float(protection),
+        _c_rs,
+    )
+
+    from .fdl_types import DimensionsFloat as _DF
+    from .fdl_types import PointFloat as _PF
+
+    dims = _DF(width=r.dimensions.width, height=r.dimensions.height)
+    anchor = _PF(x=r.anchor_point.x, y=r.anchor_point.y)
+    prot_dims = None
+    prot_anchor = None
+    if r.has_protection:
+        prot_dims = _DF(width=r.protection_dimensions.width, height=r.protection_dimensions.height)
+        prot_anchor = _PF(x=r.protection_anchor_point.x, y=r.protection_anchor_point.y)
+
+    return FramingFromIntentResult(
+        dimensions=dims,
+        anchor_point=anchor,
+        protection_dimensions=prot_dims,
+        protection_anchor_point=prot_anchor,
+    )
+
+
+class FramingFromIntentResult:
+    """Result of compute_framing_from_intent()."""
+
+    __slots__ = ("anchor_point", "dimensions", "protection_anchor_point", "protection_dimensions")
+
+    def __init__(
+        self,
+        *,
+        dimensions: DimensionsFloat,
+        anchor_point: PointFloat,
+        protection_dimensions: DimensionsFloat | None = None,
+        protection_anchor_point: PointFloat | None = None,
+    ) -> None:
+        self.dimensions = dimensions
+        self.anchor_point = anchor_point
+        self.protection_dimensions = protection_dimensions
+        self.protection_anchor_point = protection_anchor_point
+
+    def __repr__(self) -> str:
+        return (
+            f"FramingFromIntentResult(dimensions={self.dimensions!r}, "
+            f"anchor_point={self.anchor_point!r}, "
+            f"protection_dimensions={self.protection_dimensions!r}, "
+            f"protection_anchor_point={self.protection_anchor_point!r})"
+        )
 
 
 def make_rect(x: float, y: float, width: float, height: float) -> Rect:

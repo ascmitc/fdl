@@ -105,8 +105,6 @@ class UnitTestExportController(QObject):
         canvas_id: str,
         framing_id: str,
         input_dims: tuple[float, float],
-        scaled_bounding_box: tuple[int, int],
-        content_translation: tuple[float, float],
         export_config: dict,
     ) -> bool:
         """
@@ -134,10 +132,6 @@ class UnitTestExportController(QObject):
             The selected framing decision ID.
         input_dims : Tuple[float, float]
             Source image dimensions (width, height).
-        scaled_bounding_box : Tuple[int, int]
-            Expected bbox after transform (width, height).
-        content_translation : Tuple[float, float]
-            Expected content offset (x, y).
         export_config : dict
             Configuration from ExportUnitTestDialog.get_export_config().
 
@@ -194,8 +188,6 @@ class UnitTestExportController(QObject):
                 canvas_label=canvas_id,
                 framing_id=framing_id,
                 input_dims=input_dims,
-                scaled_bounding_box=scaled_bounding_box,
-                content_translation=content_translation,
                 template_label=template.label or template.id,
             )
 
@@ -218,8 +210,6 @@ class UnitTestExportController(QObject):
         canvas_label: str,
         framing_id: str,
         input_dims: tuple[float, float],
-        scaled_bounding_box: tuple[int, int],
-        content_translation: tuple[float, float],
         template_label: str,
     ) -> str:
         """
@@ -241,10 +231,6 @@ class UnitTestExportController(QObject):
             The framing decision ID.
         input_dims : Tuple[float, float]
             Input dimensions (width, height).
-        scaled_bounding_box : Tuple[int, int]
-            Expected scaled bbox (width, height).
-        content_translation : Tuple[float, float]
-            Expected translation (x, y).
         template_label : str
             The template label.
 
@@ -253,10 +239,7 @@ class UnitTestExportController(QObject):
         str
             Python code for the ScenarioConfig entry.
         """
-        # Round floats for cleaner output
         input_w, input_h = input_dims
-        bbox_w, bbox_h = scaled_bounding_box
-        trans_x, trans_y = content_translation
 
         code = f'''    {scenario_number}: ScenarioConfig(
         number={scenario_number},
@@ -268,8 +251,6 @@ class UnitTestExportController(QObject):
                 letter="{base_name.upper()}",
                 fdl_basename="{base_name}_source",
                 input_dims=({input_w}, {input_h}),
-                expected_scaled_bounding_box=({bbox_w}, {bbox_h}),
-                expected_content_translation=({trans_x}, {trans_y}),
                 context_label="{context_label}",
                 canvas_label="{canvas_label}",
                 test_name_suffix="{scenario_name}",

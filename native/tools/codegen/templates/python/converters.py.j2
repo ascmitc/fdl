@@ -8,7 +8,7 @@
 from __future__ import annotations
 
 {% if types_imports %}
-from .types import (
+from .fdl_types import (
 {% for cls in types_imports %}
     {{ cls }},
 {% endfor %}

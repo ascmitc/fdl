@@ -28,7 +28,7 @@ from fdl.fdl import FDL
 from fdl.framingdecision import FramingDecision
 from fdl.framingintent import FramingIntent
 from fdl.rounding import fdl_round
-from fdl.types import DimensionsFloat, DimensionsInt, PointFloat
+from fdl.fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 
 DEFAULT_OUTPUT = Path(__file__).resolve().parent.parent / "core" / "tests" / "vectors"
 
