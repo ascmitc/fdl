@@ -50,8 +50,7 @@ Napi::Value Wrap_fdl_alignment_shift(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Apply a canvas template to a source canvas/framing. Returns template_result_t. Caller must free with
-// fdl_template_result_free.
+// Apply a canvas template to a source canvas/framing.
 Napi::Value Wrap_fdl_apply_canvas_template(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* tmpl = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -85,7 +84,7 @@ Napi::Value Wrap_fdl_calculate_scale_factor(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Add a framing decision to a canvas. Returns handle (owned by doc).
+// Add a framing decision to a canvas.
 Napi::Value Wrap_fdl_canvas_add_framing_decision(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -101,7 +100,7 @@ Napi::Value Wrap_fdl_canvas_add_framing_decision(const Napi::CallbackInfo& info)
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Find a framing decision by its ID within a canvas.
 Napi::Value Wrap_fdl_canvas_find_framing_decision_by_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -113,7 +112,7 @@ Napi::Value Wrap_fdl_canvas_find_framing_decision_by_id(const Napi::CallbackInfo
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get a framing decision by index within a canvas.
 Napi::Value Wrap_fdl_canvas_framing_decision_at(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -122,7 +121,7 @@ Napi::Value Wrap_fdl_canvas_framing_decision_at(const Napi::CallbackInfo& info) 
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get the number of framing decisions in a canvas.
 Napi::Value Wrap_fdl_canvas_framing_decisions_count(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -130,7 +129,7 @@ Napi::Value Wrap_fdl_canvas_framing_decisions_count(const Napi::CallbackInfo& in
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the anamorphic squeeze factor.
 Napi::Value Wrap_fdl_canvas_get_anamorphic_squeeze(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -138,7 +137,7 @@ Napi::Value Wrap_fdl_canvas_get_anamorphic_squeeze(const Napi::CallbackInfo& inf
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the canvas dimensions in pixels.
 Napi::Value Wrap_fdl_canvas_get_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -146,7 +145,7 @@ Napi::Value Wrap_fdl_canvas_get_dimensions(const Napi::CallbackInfo& info) {
     return DimensionsI64ToObject(env, _r);
 }
 
-//
+// Get the effective anchor point (offset from canvas origin).
 Napi::Value Wrap_fdl_canvas_get_effective_anchor_point(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -154,7 +153,7 @@ Napi::Value Wrap_fdl_canvas_get_effective_anchor_point(const Napi::CallbackInfo&
     return PointF64ToObject(env, _r);
 }
 
-//
+// Get effective (active image area) dimensions.
 Napi::Value Wrap_fdl_canvas_get_effective_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -162,7 +161,7 @@ Napi::Value Wrap_fdl_canvas_get_effective_dimensions(const Napi::CallbackInfo& i
     return DimensionsI64ToObject(env, _r);
 }
 
-// Get effective rect. Returns 0 if absent, 1 if written to out_rect.
+// Get the effective (active image) rect of a canvas.
 Napi::Value Wrap_fdl_canvas_get_effective_rect(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -174,7 +173,7 @@ Napi::Value Wrap_fdl_canvas_get_effective_rect(const Napi::CallbackInfo& info) {
     return _out;
 }
 
-//
+// Get the ID of a canvas.
 Napi::Value Wrap_fdl_canvas_get_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -182,7 +181,7 @@ Napi::Value Wrap_fdl_canvas_get_id(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the label of a canvas.
 Napi::Value Wrap_fdl_canvas_get_label(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -190,7 +189,7 @@ Napi::Value Wrap_fdl_canvas_get_label(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get photosite (sensor) dimensions.
 Napi::Value Wrap_fdl_canvas_get_photosite_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -198,7 +197,7 @@ Napi::Value Wrap_fdl_canvas_get_photosite_dimensions(const Napi::CallbackInfo& i
     return DimensionsI64ToObject(env, _r);
 }
 
-//
+// Get physical dimensions (e.g. millimeters on sensor).
 Napi::Value Wrap_fdl_canvas_get_physical_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -206,7 +205,7 @@ Napi::Value Wrap_fdl_canvas_get_physical_dimensions(const Napi::CallbackInfo& in
     return DimensionsF64ToObject(env, _r);
 }
 
-// Get canvas rect as (0, 0, width, height).
+// Get the full canvas rect: (0, 0, dims.width, dims.height).
 Napi::Value Wrap_fdl_canvas_get_rect(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -214,7 +213,7 @@ Napi::Value Wrap_fdl_canvas_get_rect(const Napi::CallbackInfo& info) {
     return RectToObject(env, _r);
 }
 
-//
+// Get the source_canvas_id of a canvas (the canvas this was derived from).
 Napi::Value Wrap_fdl_canvas_get_source_canvas_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -222,7 +221,7 @@ Napi::Value Wrap_fdl_canvas_get_source_canvas_id(const Napi::CallbackInfo& info)
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Check if the canvas has effective dimensions set.
 Napi::Value Wrap_fdl_canvas_has_effective_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -230,7 +229,7 @@ Napi::Value Wrap_fdl_canvas_has_effective_dimensions(const Napi::CallbackInfo& i
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Check if the canvas has photosite dimensions set.
 Napi::Value Wrap_fdl_canvas_has_photosite_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -238,7 +237,7 @@ Napi::Value Wrap_fdl_canvas_has_photosite_dimensions(const Napi::CallbackInfo& i
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Check if the canvas has physical dimensions set.
 Napi::Value Wrap_fdl_canvas_has_physical_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -246,24 +245,24 @@ Napi::Value Wrap_fdl_canvas_has_physical_dimensions(const Napi::CallbackInfo& in
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Remove effective dimensions and anchor from a canvas.
 void Wrap_fdl_canvas_remove_effective(const Napi::CallbackInfo& info) {
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
     fdl_canvas_remove_effective(canvas);
 }
 
-//
+// Set anamorphic squeeze on a canvas.
 void Wrap_fdl_canvas_set_anamorphic_squeeze(const Napi::CallbackInfo& info) {
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
-    double anamorphic_squeeze = info[1].As<Napi::Number>().DoubleValue();
-    fdl_canvas_set_anamorphic_squeeze(canvas, anamorphic_squeeze);
+    double squeeze = info[1].As<Napi::Number>().DoubleValue();
+    fdl_canvas_set_anamorphic_squeeze(canvas, squeeze);
 }
 
-//
+// Set dimensions on a canvas.
 void Wrap_fdl_canvas_set_dimensions(const Napi::CallbackInfo& info) {
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
-    fdl_dimensions_i64_t dimensions = ObjectToDimensionsI64(info[1].As<Napi::Object>());
-    fdl_canvas_set_dimensions(canvas, dimensions);
+    fdl_dimensions_i64_t dims = ObjectToDimensionsI64(info[1].As<Napi::Object>());
+    fdl_canvas_set_dimensions(canvas, dims);
 }
 
 // Set effective dimensions and anchor on a canvas.
@@ -274,28 +273,28 @@ void Wrap_fdl_canvas_set_effective_dimensions(const Napi::CallbackInfo& info) {
     fdl_canvas_set_effective_dimensions(canvas, dims, anchor);
 }
 
-//
+// Set effective dimensions on a canvas.
 void Wrap_fdl_canvas_set_effective_dims_only(const Napi::CallbackInfo& info) {
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
-    fdl_dimensions_i64_t effective_dimensions = ObjectToDimensionsI64(info[1].As<Napi::Object>());
-    fdl_canvas_set_effective_dims_only(canvas, effective_dimensions);
+    fdl_dimensions_i64_t dims = ObjectToDimensionsI64(info[1].As<Napi::Object>());
+    fdl_canvas_set_effective_dims_only(canvas, dims);
 }
 
-//
+// Set photosite dimensions on a canvas.
 void Wrap_fdl_canvas_set_photosite_dimensions(const Napi::CallbackInfo& info) {
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
-    fdl_dimensions_i64_t photosite_dimensions = ObjectToDimensionsI64(info[1].As<Napi::Object>());
-    fdl_canvas_set_photosite_dimensions(canvas, photosite_dimensions);
+    fdl_dimensions_i64_t dims = ObjectToDimensionsI64(info[1].As<Napi::Object>());
+    fdl_canvas_set_photosite_dimensions(canvas, dims);
 }
 
-//
+// Set physical dimensions on a canvas.
 void Wrap_fdl_canvas_set_physical_dimensions(const Napi::CallbackInfo& info) {
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
-    fdl_dimensions_f64_t physical_dimensions = ObjectToDimensionsF64(info[1].As<Napi::Object>());
-    fdl_canvas_set_physical_dimensions(canvas, physical_dimensions);
+    fdl_dimensions_f64_t dims = ObjectToDimensionsF64(info[1].As<Napi::Object>());
+    fdl_canvas_set_physical_dimensions(canvas, dims);
 }
 
-//
+// Get the horizontal alignment method.
 Napi::Value Wrap_fdl_canvas_template_get_alignment_method_horizontal(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -303,7 +302,7 @@ Napi::Value Wrap_fdl_canvas_template_get_alignment_method_horizontal(const Napi:
     return Napi::Number::New(env, static_cast<uint32_t>(_r));
 }
 
-//
+// Get the vertical alignment method.
 Napi::Value Wrap_fdl_canvas_template_get_alignment_method_vertical(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -311,7 +310,7 @@ Napi::Value Wrap_fdl_canvas_template_get_alignment_method_vertical(const Napi::C
     return Napi::Number::New(env, static_cast<uint32_t>(_r));
 }
 
-//
+// Get the fit method — how source is scaled into target.
 Napi::Value Wrap_fdl_canvas_template_get_fit_method(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -319,7 +318,7 @@ Napi::Value Wrap_fdl_canvas_template_get_fit_method(const Napi::CallbackInfo& in
     return Napi::Number::New(env, static_cast<uint32_t>(_r));
 }
 
-//
+// Get the fit source — which dimension layer to scale from.
 Napi::Value Wrap_fdl_canvas_template_get_fit_source(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -327,7 +326,7 @@ Napi::Value Wrap_fdl_canvas_template_get_fit_source(const Napi::CallbackInfo& in
     return Napi::Number::New(env, static_cast<uint32_t>(_r));
 }
 
-//
+// Get the ID of a canvas template.
 Napi::Value Wrap_fdl_canvas_template_get_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -335,7 +334,7 @@ Napi::Value Wrap_fdl_canvas_template_get_id(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the label of a canvas template.
 Napi::Value Wrap_fdl_canvas_template_get_label(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -343,7 +342,7 @@ Napi::Value Wrap_fdl_canvas_template_get_label(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the maximum_dimensions constraint.
 Napi::Value Wrap_fdl_canvas_template_get_maximum_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -351,7 +350,7 @@ Napi::Value Wrap_fdl_canvas_template_get_maximum_dimensions(const Napi::Callback
     return DimensionsI64ToObject(env, _r);
 }
 
-// Get pad_to_maximum flag. Returns 1 if true, 0 if false.
+// Get the pad_to_maximum flag.
 Napi::Value Wrap_fdl_canvas_template_get_pad_to_maximum(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -359,7 +358,7 @@ Napi::Value Wrap_fdl_canvas_template_get_pad_to_maximum(const Napi::CallbackInfo
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the preserve_from_source_canvas geometry path.
 Napi::Value Wrap_fdl_canvas_template_get_preserve_from_source_canvas(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -367,7 +366,7 @@ Napi::Value Wrap_fdl_canvas_template_get_preserve_from_source_canvas(const Napi:
     return Napi::Number::New(env, static_cast<uint32_t>(_r));
 }
 
-//
+// Get the rounding strategy.
 Napi::Value Wrap_fdl_canvas_template_get_round(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -375,7 +374,7 @@ Napi::Value Wrap_fdl_canvas_template_get_round(const Napi::CallbackInfo& info) {
     return RoundStrategyToObject(env, _r);
 }
 
-//
+// Get the target anamorphic squeeze factor.
 Napi::Value Wrap_fdl_canvas_template_get_target_anamorphic_squeeze(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -383,7 +382,7 @@ Napi::Value Wrap_fdl_canvas_template_get_target_anamorphic_squeeze(const Napi::C
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the target dimensions of a canvas template.
 Napi::Value Wrap_fdl_canvas_template_get_target_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -391,7 +390,7 @@ Napi::Value Wrap_fdl_canvas_template_get_target_dimensions(const Napi::CallbackI
     return DimensionsI64ToObject(env, _r);
 }
 
-//
+// Check if maximum_dimensions constraint is set.
 Napi::Value Wrap_fdl_canvas_template_has_maximum_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -399,7 +398,7 @@ Napi::Value Wrap_fdl_canvas_template_has_maximum_dimensions(const Napi::Callback
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Check if preserve_from_source_canvas is set.
 Napi::Value Wrap_fdl_canvas_template_has_preserve_from_source_canvas(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -407,29 +406,28 @@ Napi::Value Wrap_fdl_canvas_template_has_preserve_from_source_canvas(const Napi:
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Set maximum_dimensions on a canvas template.
 void Wrap_fdl_canvas_template_set_maximum_dimensions(const Napi::CallbackInfo& info) {
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
-    fdl_dimensions_i64_t maximum_dimensions = ObjectToDimensionsI64(info[1].As<Napi::Object>());
-    fdl_canvas_template_set_maximum_dimensions(ct, maximum_dimensions);
+    fdl_dimensions_i64_t dims = ObjectToDimensionsI64(info[1].As<Napi::Object>());
+    fdl_canvas_template_set_maximum_dimensions(ct, dims);
 }
 
-// Set pad_to_maximum on a canvas template.
+// Set pad_to_maximum flag on a canvas template.
 void Wrap_fdl_canvas_template_set_pad_to_maximum(const Napi::CallbackInfo& info) {
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
     int pad = info[1].As<Napi::Number>().Int32Value();
     fdl_canvas_template_set_pad_to_maximum(ct, pad);
 }
 
-//
+// Set preserve_from_source_canvas on a canvas template.
 void Wrap_fdl_canvas_template_set_preserve_from_source_canvas(const Napi::CallbackInfo& info) {
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
-    fdl_geometry_path_t preserve_from_source_canvas =
-        static_cast<fdl_geometry_path_t>(info[1].As<Napi::Number>().Uint32Value());
-    fdl_canvas_template_set_preserve_from_source_canvas(ct, preserve_from_source_canvas);
+    fdl_geometry_path_t path = static_cast<fdl_geometry_path_t>(info[1].As<Napi::Number>().Uint32Value());
+    fdl_canvas_template_set_preserve_from_source_canvas(ct, path);
 }
 
-// Serialize canvas template to canonical JSON string. Caller owns (free with fdl_free).
+// Serialize a canvas template to canonical JSON.
 Napi::Value Wrap_fdl_canvas_template_to_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -444,7 +442,7 @@ Napi::Value Wrap_fdl_canvas_template_to_json(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, _result);
 }
 
-// Serialize canvas sub-object to canonical JSON string. Caller owns (free with fdl_free).
+// Serialize a canvas sub-object to canonical JSON.
 Napi::Value Wrap_fdl_canvas_to_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -459,7 +457,7 @@ Napi::Value Wrap_fdl_canvas_to_json(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, _result);
 }
 
-//
+// Get the clip_name from a clip_id.
 Napi::Value Wrap_fdl_clip_id_get_clip_name(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* cid = static_cast<fdl_clip_id_t*>(UnwrapHandle(info[0]));
@@ -467,7 +465,7 @@ Napi::Value Wrap_fdl_clip_id_get_clip_name(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the file path from a clip_id.
 Napi::Value Wrap_fdl_clip_id_get_file(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* cid = static_cast<fdl_clip_id_t*>(UnwrapHandle(info[0]));
@@ -475,7 +473,7 @@ Napi::Value Wrap_fdl_clip_id_get_file(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Check if a clip_id has a file path.
 Napi::Value Wrap_fdl_clip_id_has_file(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* cid = static_cast<fdl_clip_id_t*>(UnwrapHandle(info[0]));
@@ -483,7 +481,7 @@ Napi::Value Wrap_fdl_clip_id_has_file(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Check if a clip_id has a file sequence.
 Napi::Value Wrap_fdl_clip_id_has_sequence(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* cid = static_cast<fdl_clip_id_t*>(UnwrapHandle(info[0]));
@@ -491,7 +489,7 @@ Napi::Value Wrap_fdl_clip_id_has_sequence(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the file sequence handle from a clip_id.
 Napi::Value Wrap_fdl_clip_id_sequence(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* cid = static_cast<fdl_clip_id_t*>(UnwrapHandle(info[0]));
@@ -499,7 +497,7 @@ Napi::Value Wrap_fdl_clip_id_sequence(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-// Serialize clip_id to canonical JSON. Caller frees with fdl_free.
+// Serialize a clip_id to canonical JSON.
 Napi::Value Wrap_fdl_clip_id_to_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* cid = static_cast<fdl_clip_id_t*>(UnwrapHandle(info[0]));
@@ -514,7 +512,7 @@ Napi::Value Wrap_fdl_clip_id_to_json(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, _result);
 }
 
-// Validate clip_id JSON for mutual exclusion. Returns NULL if valid.
+// Validate clip_id JSON for mutual exclusion (file vs sequence).
 Napi::Value Wrap_fdl_clip_id_validate_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     std::string json_str_str = info[0].As<Napi::String>().Utf8Value();
@@ -542,7 +540,7 @@ Napi::Value Wrap_fdl_compute_framing_from_intent(const Napi::CallbackInfo& info)
     return FromIntentResultToObject(env, _r);
 }
 
-// Add a canvas to a context. Returns handle (owned by doc).
+// Add a canvas to a context.
 Napi::Value Wrap_fdl_context_add_canvas(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -557,7 +555,7 @@ Napi::Value Wrap_fdl_context_add_canvas(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get a canvas by index within a context.
 Napi::Value Wrap_fdl_context_canvas_at(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -566,7 +564,7 @@ Napi::Value Wrap_fdl_context_canvas_at(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get the number of canvases in a context.
 Napi::Value Wrap_fdl_context_canvases_count(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -574,7 +572,7 @@ Napi::Value Wrap_fdl_context_canvases_count(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the clip_id handle from a context.
 Napi::Value Wrap_fdl_context_clip_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -582,7 +580,7 @@ Napi::Value Wrap_fdl_context_clip_id(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Find a canvas by its ID within a context.
 Napi::Value Wrap_fdl_context_find_canvas_by_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -594,7 +592,7 @@ Napi::Value Wrap_fdl_context_find_canvas_by_id(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-// Get clip_id as JSON string. Returns NULL if not present. Caller owns (free with fdl_free).
+// Get clip_id as a JSON string.
 Napi::Value Wrap_fdl_context_get_clip_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -607,7 +605,7 @@ Napi::Value Wrap_fdl_context_get_clip_id(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, _result);
 }
 
-//
+// Get the context_creator of a context.
 Napi::Value Wrap_fdl_context_get_context_creator(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -615,7 +613,7 @@ Napi::Value Wrap_fdl_context_get_context_creator(const Napi::CallbackInfo& info)
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the label of a context.
 Napi::Value Wrap_fdl_context_get_label(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -623,7 +621,7 @@ Napi::Value Wrap_fdl_context_get_label(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Check if a context has a clip_id.
 Napi::Value Wrap_fdl_context_has_clip_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -631,13 +629,13 @@ Napi::Value Wrap_fdl_context_has_clip_id(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Remove clip_id from a context. Safe to call if not present.
 void Wrap_fdl_context_remove_clip_id(const Napi::CallbackInfo& info) {
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
     fdl_context_remove_clip_id(ctx);
 }
 
-// Resolve canvas for given input dimensions. Returns non-owning handles. Caller must free error with fdl_free.
+// Resolve canvas for given input dimensions.
 Napi::Value Wrap_fdl_context_resolve_canvas_for_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -648,7 +646,7 @@ Napi::Value Wrap_fdl_context_resolve_canvas_for_dimensions(const Napi::CallbackI
     return ResolveCanvasResultToObject(env, _r);
 }
 
-//
+// Set clip_id on a context from a JSON string.
 Napi::Value Wrap_fdl_context_set_clip_id_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -663,7 +661,7 @@ Napi::Value Wrap_fdl_context_set_clip_id_json(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, _result);
 }
 
-// Serialize context sub-object to canonical JSON string. Caller owns (free with fdl_free).
+// Serialize a context sub-object to canonical JSON.
 Napi::Value Wrap_fdl_context_to_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ctx = static_cast<fdl_context_t*>(UnwrapHandle(info[0]));
@@ -678,7 +676,7 @@ Napi::Value Wrap_fdl_context_to_json(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, _result);
 }
 
-// Clamp dimensions to maximum bounds. Delta offset written to out_delta.
+// Clamp dimensions to maximum bounds.
 Napi::Value Wrap_fdl_dimensions_clamp_to_dims(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_f64_t dims = ObjectToDimensionsF64(info[0].As<Napi::Object>());
@@ -691,7 +689,7 @@ Napi::Value Wrap_fdl_dimensions_clamp_to_dims(const Napi::CallbackInfo& info) {
     return _out;
 }
 
-// Check approximate equality with FDL tolerances.
+// Check if dimensions are approximately equal within FDL tolerance.
 Napi::Value Wrap_fdl_dimensions_equal(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_f64_t a = ObjectToDimensionsF64(info[0].As<Napi::Object>());
@@ -700,7 +698,7 @@ Napi::Value Wrap_fdl_dimensions_equal(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Greater-than (OR logic) for float64 dimensions.
+// Check if a > b using OR logic (either width or height is greater).
 Napi::Value Wrap_fdl_dimensions_f64_gt(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_f64_t a = ObjectToDimensionsF64(info[0].As<Napi::Object>());
@@ -709,7 +707,7 @@ Napi::Value Wrap_fdl_dimensions_f64_gt(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Less-than (OR logic) for float64 dimensions.
+// Check if a < b using OR logic (either width or height is less).
 Napi::Value Wrap_fdl_dimensions_f64_lt(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_f64_t a = ObjectToDimensionsF64(info[0].As<Napi::Object>());
@@ -726,7 +724,7 @@ Napi::Value Wrap_fdl_dimensions_f64_to_i64(const Napi::CallbackInfo& info) {
     return DimensionsI64ToObject(env, _r);
 }
 
-// Greater-than (OR logic) for int64 dimensions.
+// Check if a > b using OR logic (either width or height is greater).
 Napi::Value Wrap_fdl_dimensions_i64_gt(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_i64_t a = ObjectToDimensionsI64(info[0].As<Napi::Object>());
@@ -743,7 +741,7 @@ Napi::Value Wrap_fdl_dimensions_i64_is_zero(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Less-than (OR logic) for int64 dimensions.
+// Check if a < b using OR logic (either width or height is less).
 Napi::Value Wrap_fdl_dimensions_i64_lt(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_i64_t a = ObjectToDimensionsI64(info[0].As<Napi::Object>());
@@ -752,7 +750,7 @@ Napi::Value Wrap_fdl_dimensions_i64_lt(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Normalize int64 dimensions by applying anamorphic squeeze to width. Returns float dimensions.
+// Normalize int64 dimensions by applying anamorphic squeeze to width.
 Napi::Value Wrap_fdl_dimensions_i64_normalize(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_i64_t dims = ObjectToDimensionsI64(info[0].As<Napi::Object>());
@@ -778,7 +776,7 @@ Napi::Value Wrap_fdl_dimensions_normalize(const Napi::CallbackInfo& info) {
     return DimensionsF64ToObject(env, _r);
 }
 
-// Normalize and scale dimensions in one step.
+// Normalize and scale in one step.
 Napi::Value Wrap_fdl_dimensions_normalize_and_scale(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_f64_t dims = ObjectToDimensionsF64(info[0].As<Napi::Object>());
@@ -799,7 +797,7 @@ Napi::Value Wrap_fdl_dimensions_scale(const Napi::CallbackInfo& info) {
     return DimensionsF64ToObject(env, _r);
 }
 
-// Subtract two dimensions.
+// Subtract two dimensions: result = a - b.
 Napi::Value Wrap_fdl_dimensions_sub(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_f64_t a = ObjectToDimensionsF64(info[0].As<Napi::Object>());
@@ -808,7 +806,7 @@ Napi::Value Wrap_fdl_dimensions_sub(const Napi::CallbackInfo& info) {
     return DimensionsF64ToObject(env, _r);
 }
 
-// Add a canvas template to the document. Returns handle (owned by doc).
+// Add a canvas template to the document.
 Napi::Value Wrap_fdl_doc_add_canvas_template(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -837,7 +835,7 @@ Napi::Value Wrap_fdl_doc_add_canvas_template(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-// Add a context to the document. Returns handle (owned by doc).
+// Add a context to the document.
 Napi::Value Wrap_fdl_doc_add_context(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -849,7 +847,7 @@ Napi::Value Wrap_fdl_doc_add_context(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-// Add a framing intent to the document. Returns handle (owned by doc).
+// Add a framing intent to the document.
 Napi::Value Wrap_fdl_doc_add_framing_intent(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -862,7 +860,7 @@ Napi::Value Wrap_fdl_doc_add_framing_intent(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get a canvas template by index.
 Napi::Value Wrap_fdl_doc_canvas_template_at(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -871,7 +869,7 @@ Napi::Value Wrap_fdl_doc_canvas_template_at(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Find a canvas template by its ID string.
 Napi::Value Wrap_fdl_doc_canvas_template_find_by_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -883,7 +881,7 @@ Napi::Value Wrap_fdl_doc_canvas_template_find_by_id(const Napi::CallbackInfo& in
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get the number of canvas templates in the document.
 Napi::Value Wrap_fdl_doc_canvas_templates_count(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -891,7 +889,7 @@ Napi::Value Wrap_fdl_doc_canvas_templates_count(const Napi::CallbackInfo& info) 
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get a context by index.
 Napi::Value Wrap_fdl_doc_context_at(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -900,7 +898,7 @@ Napi::Value Wrap_fdl_doc_context_at(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Find a context by its label string.
 Napi::Value Wrap_fdl_doc_context_find_by_label(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -912,7 +910,7 @@ Napi::Value Wrap_fdl_doc_context_find_by_label(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get the number of contexts in the document.
 Napi::Value Wrap_fdl_doc_contexts_count(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -920,7 +918,7 @@ Napi::Value Wrap_fdl_doc_contexts_count(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Create an empty FDL document. Returns NULL on allocation failure.
+// Create an empty FDL document.
 Napi::Value Wrap_fdl_doc_create(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* _r = fdl_doc_create();
@@ -946,7 +944,7 @@ Napi::Value Wrap_fdl_doc_create_with_header(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get a framing intent by index.
 Napi::Value Wrap_fdl_doc_framing_intent_at(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -955,7 +953,7 @@ Napi::Value Wrap_fdl_doc_framing_intent_at(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Find a framing intent by its ID string.
 Napi::Value Wrap_fdl_doc_framing_intent_find_by_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -967,7 +965,7 @@ Napi::Value Wrap_fdl_doc_framing_intent_find_by_id(const Napi::CallbackInfo& inf
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get the number of framing intents in the document.
 Napi::Value Wrap_fdl_doc_framing_intents_count(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -975,7 +973,7 @@ Napi::Value Wrap_fdl_doc_framing_intents_count(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Free an FDL document. Safe to call with NULL.
+// Free an FDL document and all associated handles.
 void Wrap_fdl_doc_free(const Napi::CallbackInfo& info) {
     if (info[0].IsNull() || info[0].IsUndefined()) {
         return;
@@ -984,7 +982,7 @@ void Wrap_fdl_doc_free(const Napi::CallbackInfo& info) {
     fdl_doc_free(doc);
 }
 
-//
+// Get the default_framing_intent from a parsed FDL document.
 Napi::Value Wrap_fdl_doc_get_default_framing_intent(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -992,7 +990,7 @@ Napi::Value Wrap_fdl_doc_get_default_framing_intent(const Napi::CallbackInfo& in
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the fdl_creator from a parsed FDL document.
 Napi::Value Wrap_fdl_doc_get_fdl_creator(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -1000,7 +998,7 @@ Napi::Value Wrap_fdl_doc_get_fdl_creator(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the UUID from a parsed FDL document.
 Napi::Value Wrap_fdl_doc_get_uuid(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -1008,7 +1006,7 @@ Napi::Value Wrap_fdl_doc_get_uuid(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the FDL version major number.
 Napi::Value Wrap_fdl_doc_get_version_major(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -1016,7 +1014,7 @@ Napi::Value Wrap_fdl_doc_get_version_major(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the FDL version minor number.
 Napi::Value Wrap_fdl_doc_get_version_minor(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -1024,8 +1022,7 @@ Napi::Value Wrap_fdl_doc_get_version_minor(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Parse a JSON string into an FDL document. On success result.doc is non-NULL. On failure result.error is non-NULL
-// (free with fdl_free).
+// Parse a JSON string into an FDL document.
 Napi::Value Wrap_fdl_doc_parse_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     std::string json_str_str = info[0].As<Napi::String>().Utf8Value();
@@ -1034,28 +1031,28 @@ Napi::Value Wrap_fdl_doc_parse_json(const Napi::CallbackInfo& info) {
     return ParseResultToObject(env, _r);
 }
 
-//
+// Set the default_framing_intent on a document.
 void Wrap_fdl_doc_set_default_framing_intent(const Napi::CallbackInfo& info) {
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
-    std::string default_framing_intent_str = info[1].As<Napi::String>().Utf8Value();
-    fdl_doc_set_default_framing_intent(doc, default_framing_intent_str.c_str());
+    std::string fi_id_str = info[1].As<Napi::String>().Utf8Value();
+    fdl_doc_set_default_framing_intent(doc, fi_id_str.c_str());
 }
 
-//
+// Set the fdl_creator on a document.
 void Wrap_fdl_doc_set_fdl_creator(const Napi::CallbackInfo& info) {
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
-    std::string fdl_creator_str = info[1].As<Napi::String>().Utf8Value();
-    fdl_doc_set_fdl_creator(doc, fdl_creator_str.c_str());
+    std::string creator_str = info[1].As<Napi::String>().Utf8Value();
+    fdl_doc_set_fdl_creator(doc, creator_str.c_str());
 }
 
-//
+// Set the UUID on a document.
 void Wrap_fdl_doc_set_uuid(const Napi::CallbackInfo& info) {
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
     std::string uuid_str = info[1].As<Napi::String>().Utf8Value();
     fdl_doc_set_uuid(doc, uuid_str.c_str());
 }
 
-// Set the FDL version.
+// Set the FDL version on a document.
 void Wrap_fdl_doc_set_version(const Napi::CallbackInfo& info) {
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
     int major = info[1].As<Napi::Number>().Int32Value();
@@ -1063,7 +1060,7 @@ void Wrap_fdl_doc_set_version(const Napi::CallbackInfo& info) {
     fdl_doc_set_version(doc, major, minor);
 }
 
-// Serialize document to canonical JSON string. Caller owns the returned string (free with fdl_free).
+// Serialize document to canonical JSON string.
 Napi::Value Wrap_fdl_doc_to_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -1078,7 +1075,7 @@ Napi::Value Wrap_fdl_doc_to_json(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, _result);
 }
 
-// Run schema (Draft 2020-12) and semantic validators. Returns a result handle.
+// Run schema and semantic validators on the document.
 Napi::Value Wrap_fdl_doc_validate(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* doc = static_cast<fdl_doc_t*>(UnwrapHandle(info[0]));
@@ -1086,7 +1083,7 @@ Napi::Value Wrap_fdl_doc_validate(const Napi::CallbackInfo& info) {
     return Napi::External<void>::New(env, _r);
 }
 
-//
+// Get the index variable name.
 Napi::Value Wrap_fdl_file_sequence_get_idx(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* seq = static_cast<fdl_file_sequence_t*>(UnwrapHandle(info[0]));
@@ -1094,7 +1091,7 @@ Napi::Value Wrap_fdl_file_sequence_get_idx(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the maximum (last) frame number.
 Napi::Value Wrap_fdl_file_sequence_get_max(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* seq = static_cast<fdl_file_sequence_t*>(UnwrapHandle(info[0]));
@@ -1102,7 +1099,7 @@ Napi::Value Wrap_fdl_file_sequence_get_max(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the minimum (first) frame number.
 Napi::Value Wrap_fdl_file_sequence_get_min(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* seq = static_cast<fdl_file_sequence_t*>(UnwrapHandle(info[0]));
@@ -1110,7 +1107,7 @@ Napi::Value Wrap_fdl_file_sequence_get_min(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Get the sequence pattern value string.
 Napi::Value Wrap_fdl_file_sequence_get_value(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* seq = static_cast<fdl_file_sequence_t*>(UnwrapHandle(info[0]));
@@ -1118,14 +1115,14 @@ Napi::Value Wrap_fdl_file_sequence_get_value(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-// Absolute tolerance for floating-point comparison (1e-6).
+// Absolute tolerance for floating-point comparison.
 Napi::Value Wrap_fdl_fp_abs_tol(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto _r = fdl_fp_abs_tol();
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Relative tolerance for floating-point comparison (1e-9).
+// Relative tolerance for floating-point comparison.
 Napi::Value Wrap_fdl_fp_rel_tol(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto _r = fdl_fp_rel_tol();
@@ -1150,7 +1147,7 @@ void Wrap_fdl_framing_decision_adjust_protection_anchor(const Napi::CallbackInfo
     fdl_framing_decision_adjust_protection_anchor(fd, canvas, h_align, v_align);
 }
 
-//
+// Get the anchor point of a framing decision.
 Napi::Value Wrap_fdl_framing_decision_get_anchor_point(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1158,7 +1155,7 @@ Napi::Value Wrap_fdl_framing_decision_get_anchor_point(const Napi::CallbackInfo&
     return PointF64ToObject(env, _r);
 }
 
-//
+// Get the framing decision dimensions (floating-point sub-pixel).
 Napi::Value Wrap_fdl_framing_decision_get_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1166,7 +1163,7 @@ Napi::Value Wrap_fdl_framing_decision_get_dimensions(const Napi::CallbackInfo& i
     return DimensionsF64ToObject(env, _r);
 }
 
-//
+// Get the framing_intent_id that this framing decision references.
 Napi::Value Wrap_fdl_framing_decision_get_framing_intent_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1174,7 +1171,7 @@ Napi::Value Wrap_fdl_framing_decision_get_framing_intent_id(const Napi::Callback
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the ID of a framing decision.
 Napi::Value Wrap_fdl_framing_decision_get_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1182,7 +1179,7 @@ Napi::Value Wrap_fdl_framing_decision_get_id(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the label of a framing decision.
 Napi::Value Wrap_fdl_framing_decision_get_label(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1190,7 +1187,7 @@ Napi::Value Wrap_fdl_framing_decision_get_label(const Napi::CallbackInfo& info) 
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the protection anchor point.
 Napi::Value Wrap_fdl_framing_decision_get_protection_anchor_point(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1198,7 +1195,7 @@ Napi::Value Wrap_fdl_framing_decision_get_protection_anchor_point(const Napi::Ca
     return PointF64ToObject(env, _r);
 }
 
-//
+// Get the protection area dimensions.
 Napi::Value Wrap_fdl_framing_decision_get_protection_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1206,7 +1203,7 @@ Napi::Value Wrap_fdl_framing_decision_get_protection_dimensions(const Napi::Call
     return DimensionsF64ToObject(env, _r);
 }
 
-// Get protection rect. Returns 0 if absent, 1 if written to out_rect.
+// Get the framing decision protection rect.
 Napi::Value Wrap_fdl_framing_decision_get_protection_rect(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1218,7 +1215,7 @@ Napi::Value Wrap_fdl_framing_decision_get_protection_rect(const Napi::CallbackIn
     return _out;
 }
 
-// Get framing decision rect as (anchor_x, anchor_y, width, height).
+// Get the framing decision rect: (anchor.x, anchor.y, dims.width, dims.height).
 Napi::Value Wrap_fdl_framing_decision_get_rect(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1226,7 +1223,7 @@ Napi::Value Wrap_fdl_framing_decision_get_rect(const Napi::CallbackInfo& info) {
     return RectToObject(env, _r);
 }
 
-//
+// Check if a framing decision has protection area set.
 Napi::Value Wrap_fdl_framing_decision_has_protection(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1243,24 +1240,24 @@ void Wrap_fdl_framing_decision_populate_from_intent(const Napi::CallbackInfo& in
     fdl_framing_decision_populate_from_intent(fd, canvas, intent, rounding);
 }
 
-//
+// Remove protection dimensions and anchor from a framing decision.
 void Wrap_fdl_framing_decision_remove_protection(const Napi::CallbackInfo& info) {
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
     fdl_framing_decision_remove_protection(fd);
 }
 
-//
+// Set anchor point on a framing decision.
 void Wrap_fdl_framing_decision_set_anchor_point(const Napi::CallbackInfo& info) {
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
-    fdl_point_f64_t anchor_point = ObjectToPointF64(info[1].As<Napi::Object>());
-    fdl_framing_decision_set_anchor_point(fd, anchor_point);
+    fdl_point_f64_t point = ObjectToPointF64(info[1].As<Napi::Object>());
+    fdl_framing_decision_set_anchor_point(fd, point);
 }
 
-//
+// Set dimensions on a framing decision.
 void Wrap_fdl_framing_decision_set_dimensions(const Napi::CallbackInfo& info) {
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
-    fdl_dimensions_f64_t dimensions = ObjectToDimensionsF64(info[1].As<Napi::Object>());
-    fdl_framing_decision_set_dimensions(fd, dimensions);
+    fdl_dimensions_f64_t dims = ObjectToDimensionsF64(info[1].As<Napi::Object>());
+    fdl_framing_decision_set_dimensions(fd, dims);
 }
 
 // Set protection dimensions and anchor on a framing decision.
@@ -1271,21 +1268,21 @@ void Wrap_fdl_framing_decision_set_protection(const Napi::CallbackInfo& info) {
     fdl_framing_decision_set_protection(fd, dims, anchor);
 }
 
-//
+// Set protection anchor point on a framing decision (without changing dimensions).
 void Wrap_fdl_framing_decision_set_protection_anchor_point(const Napi::CallbackInfo& info) {
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
-    fdl_point_f64_t protection_anchor_point = ObjectToPointF64(info[1].As<Napi::Object>());
-    fdl_framing_decision_set_protection_anchor_point(fd, protection_anchor_point);
+    fdl_point_f64_t point = ObjectToPointF64(info[1].As<Napi::Object>());
+    fdl_framing_decision_set_protection_anchor_point(fd, point);
 }
 
-//
+// Set protection dimensions on a framing decision (without changing anchor).
 void Wrap_fdl_framing_decision_set_protection_dimensions(const Napi::CallbackInfo& info) {
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
-    fdl_dimensions_f64_t protection_dimensions = ObjectToDimensionsF64(info[1].As<Napi::Object>());
-    fdl_framing_decision_set_protection_dimensions(fd, protection_dimensions);
+    fdl_dimensions_f64_t dims = ObjectToDimensionsF64(info[1].As<Napi::Object>());
+    fdl_framing_decision_set_protection_dimensions(fd, dims);
 }
 
-// Serialize framing decision to canonical JSON string. Caller owns (free with fdl_free).
+// Serialize a framing decision to canonical JSON.
 Napi::Value Wrap_fdl_framing_decision_to_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
@@ -1300,7 +1297,7 @@ Napi::Value Wrap_fdl_framing_decision_to_json(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, _result);
 }
 
-//
+// Get the target aspect ratio of a framing intent.
 Napi::Value Wrap_fdl_framing_intent_get_aspect_ratio(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fi = static_cast<fdl_framing_intent_t*>(UnwrapHandle(info[0]));
@@ -1308,7 +1305,7 @@ Napi::Value Wrap_fdl_framing_intent_get_aspect_ratio(const Napi::CallbackInfo& i
     return DimensionsI64ToObject(env, _r);
 }
 
-//
+// Get the ID of a framing intent.
 Napi::Value Wrap_fdl_framing_intent_get_id(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fi = static_cast<fdl_framing_intent_t*>(UnwrapHandle(info[0]));
@@ -1316,7 +1313,7 @@ Napi::Value Wrap_fdl_framing_intent_get_id(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the label of a framing intent.
 Napi::Value Wrap_fdl_framing_intent_get_label(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fi = static_cast<fdl_framing_intent_t*>(UnwrapHandle(info[0]));
@@ -1324,7 +1321,7 @@ Napi::Value Wrap_fdl_framing_intent_get_label(const Napi::CallbackInfo& info) {
     return _r ? Napi::String::New(env, _r) : env.Null();
 }
 
-//
+// Get the protection factor of a framing intent.
 Napi::Value Wrap_fdl_framing_intent_get_protection(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fi = static_cast<fdl_framing_intent_t*>(UnwrapHandle(info[0]));
@@ -1332,21 +1329,21 @@ Napi::Value Wrap_fdl_framing_intent_get_protection(const Napi::CallbackInfo& inf
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-//
+// Set aspect ratio on a framing intent.
 void Wrap_fdl_framing_intent_set_aspect_ratio(const Napi::CallbackInfo& info) {
     auto* fi = static_cast<fdl_framing_intent_t*>(UnwrapHandle(info[0]));
-    fdl_dimensions_i64_t aspect_ratio = ObjectToDimensionsI64(info[1].As<Napi::Object>());
-    fdl_framing_intent_set_aspect_ratio(fi, aspect_ratio);
+    fdl_dimensions_i64_t dims = ObjectToDimensionsI64(info[1].As<Napi::Object>());
+    fdl_framing_intent_set_aspect_ratio(fi, dims);
 }
 
-//
+// Set protection factor on a framing intent.
 void Wrap_fdl_framing_intent_set_protection(const Napi::CallbackInfo& info) {
     auto* fi = static_cast<fdl_framing_intent_t*>(UnwrapHandle(info[0]));
     double protection = info[1].As<Napi::Number>().DoubleValue();
     fdl_framing_intent_set_protection(fi, protection);
 }
 
-// Serialize framing intent to canonical JSON string. Caller owns (free with fdl_free).
+// Serialize a framing intent to canonical JSON.
 Napi::Value Wrap_fdl_framing_intent_to_json(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fi = static_cast<fdl_framing_intent_t*>(UnwrapHandle(info[0]));
@@ -1370,7 +1367,7 @@ void Wrap_fdl_free(const Napi::CallbackInfo& info) {
     fdl_free(ptr);
 }
 
-// Apply offset to all anchors. Returns clamped geometry. Theoretical anchors written to output pointers.
+// Apply offset to all anchors, clamping to canvas bounds.
 Napi::Value Wrap_fdl_geometry_apply_offset(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_geometry_t geo = ObjectToGeometry(info[0].As<Napi::Object>());
@@ -1407,7 +1404,7 @@ Napi::Value Wrap_fdl_geometry_fill_hierarchy_gaps(const Napi::CallbackInfo& info
     return GeometryToObject(env, _r);
 }
 
-// Extract dimensions and anchor from geometry by path. Returns 0 on success, -1 on invalid path.
+// Extract dimensions and anchor from geometry by path.
 Napi::Value Wrap_fdl_geometry_get_dims_anchor_from_path(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_geometry_t geo = ObjectToGeometry(info[0].As<Napi::Object>());
@@ -1442,7 +1439,7 @@ Napi::Value Wrap_fdl_geometry_round(const Napi::CallbackInfo& info) {
     return GeometryToObject(env, _r);
 }
 
-// Create a rect from raw coordinates.
+// Construct a rect from raw coordinates.
 Napi::Value Wrap_fdl_make_rect(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     double x = info[0].As<Napi::Number>().DoubleValue();
@@ -1464,7 +1461,7 @@ Napi::Value Wrap_fdl_output_size_for_axis(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Add two points.
+// Add two points: result = a + b.
 Napi::Value Wrap_fdl_point_add(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_point_f64_t a = ObjectToPointF64(info[0].As<Napi::Object>());
@@ -1473,7 +1470,7 @@ Napi::Value Wrap_fdl_point_add(const Napi::CallbackInfo& info) {
     return PointF64ToObject(env, _r);
 }
 
-// Clamp point values to specified range.
+// Clamp point values to [min_val, max_val].
 Napi::Value Wrap_fdl_point_clamp(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_point_f64_t point = ObjectToPointF64(info[0].As<Napi::Object>());
@@ -1485,7 +1482,7 @@ Napi::Value Wrap_fdl_point_clamp(const Napi::CallbackInfo& info) {
     return PointF64ToObject(env, _r);
 }
 
-// Check approximate equality with FDL tolerances.
+// Check approximate equality within FDL tolerances.
 Napi::Value Wrap_fdl_point_equal(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_point_f64_t a = ObjectToPointF64(info[0].As<Napi::Object>());
@@ -1494,7 +1491,7 @@ Napi::Value Wrap_fdl_point_equal(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Greater-than (OR logic) for float64 points.
+// Check if a > b using OR logic (either x or y is greater).
 Napi::Value Wrap_fdl_point_f64_gt(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_point_f64_t a = ObjectToPointF64(info[0].As<Napi::Object>());
@@ -1503,7 +1500,7 @@ Napi::Value Wrap_fdl_point_f64_gt(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Less-than (OR logic) for float64 points.
+// Check if a < b using OR logic (either x or y is less).
 Napi::Value Wrap_fdl_point_f64_lt(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_point_f64_t a = ObjectToPointF64(info[0].As<Napi::Object>());
@@ -1529,7 +1526,7 @@ Napi::Value Wrap_fdl_point_mul_scalar(const Napi::CallbackInfo& info) {
     return PointF64ToObject(env, _r);
 }
 
-// Normalize point by applying anamorphic squeeze to x.
+// Normalize a point by applying anamorphic squeeze to x.
 Napi::Value Wrap_fdl_point_normalize(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_point_f64_t point = ObjectToPointF64(info[0].As<Napi::Object>());
@@ -1559,7 +1556,7 @@ Napi::Value Wrap_fdl_point_scale(const Napi::CallbackInfo& info) {
     return PointF64ToObject(env, _r);
 }
 
-// Subtract two points.
+// Subtract two points: result = a - b.
 Napi::Value Wrap_fdl_point_sub(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_point_f64_t a = ObjectToPointF64(info[0].As<Napi::Object>());
@@ -1568,7 +1565,7 @@ Napi::Value Wrap_fdl_point_sub(const Napi::CallbackInfo& info) {
     return PointF64ToObject(env, _r);
 }
 
-// Resolve dims/anchor from canvas/framing handles by path. Returns 0=success, 1=absent, -1=invalid.
+// Resolve dimensions and anchor directly from canvas/framing handles for a path.
 Napi::Value Wrap_fdl_resolve_geometry_layer(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
@@ -1584,7 +1581,7 @@ Napi::Value Wrap_fdl_resolve_geometry_layer(const Napi::CallbackInfo& info) {
     return _out;
 }
 
-// Round a single float value according to FDL rounding rules.
+// Round a single value according to FDL rounding rules.
 Napi::Value Wrap_fdl_round(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     double value = info[0].As<Napi::Number>().DoubleValue();
@@ -1594,7 +1591,7 @@ Napi::Value Wrap_fdl_round(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
-// Round both width and height of dimensions.
+// Round dimensions according to FDL rounding rules.
 Napi::Value Wrap_fdl_round_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_f64_t dims = ObjectToDimensionsF64(info[0].As<Napi::Object>());
@@ -1604,7 +1601,7 @@ Napi::Value Wrap_fdl_round_dimensions(const Napi::CallbackInfo& info) {
     return DimensionsF64ToObject(env, _r);
 }
 
-// Round both x and y of a point.
+// Round a point according to FDL rounding rules.
 Napi::Value Wrap_fdl_round_point(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_point_f64_t point = ObjectToPointF64(info[0].As<Napi::Object>());
@@ -1614,13 +1611,13 @@ Napi::Value Wrap_fdl_round_point(const Napi::CallbackInfo& info) {
     return PointF64ToObject(env, _r);
 }
 
-// Free a template result (doc + error string). Safe to call with NULL.
+// Free a template result (doc + all allocated strings).
 void Wrap_fdl_template_result_free(const Napi::CallbackInfo& info) {
     fdl_template_result_t result = ObjectToTemplateResult(info[0].As<Napi::Object>());
     fdl_template_result_free(&result);
 }
 
-// Get a specific error message by index. Returns NULL if index is out of range.
+// Get a specific error message by index.
 Napi::Value Wrap_fdl_validation_result_error_at(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* result = static_cast<fdl_validation_result_t*>(UnwrapHandle(info[0]));

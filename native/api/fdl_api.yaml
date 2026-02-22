@@ -935,768 +935,108 @@ object_model:
           type: int64_t
 
 # -----------------------------------------------------------------------
-# Functions
+# Function metadata overlay
 # -----------------------------------------------------------------------
-functions:
-  # === ABI version ===
-  - name: fdl_abi_version
-    category: lifecycle
-    returns: fdl_abi_version_t
-    params: []
-    doc: Return the ABI version of the loaded library.
-
-  # === Rounding ===
-  - name: fdl_round
-    category: math
-    returns: int64_t
-    params:
-      - { name: value, type: double }
-      - { name: even,  type: fdl_rounding_even_t }
-      - { name: mode,  type: fdl_rounding_mode_t }
-    doc: Round a single float value according to FDL rounding rules.
-
-  - name: fdl_round_dimensions
-    category: math
-    returns: fdl_dimensions_f64_t
-    params:
-      - { name: dims, type: fdl_dimensions_f64_t }
-      - { name: even, type: fdl_rounding_even_t }
-      - { name: mode, type: fdl_rounding_mode_t }
-    doc: Round both width and height of dimensions.
-
-  - name: fdl_round_point
-    category: math
-    returns: fdl_point_f64_t
-    params:
-      - { name: point, type: fdl_point_f64_t }
-      - { name: even,  type: fdl_rounding_even_t }
-      - { name: mode,  type: fdl_rounding_mode_t }
-    doc: Round both x and y of a point.
-
-  # === Dimensions operations ===
-  - name: fdl_dimensions_normalize
-    category: math
-    returns: fdl_dimensions_f64_t
-    params:
-      - { name: dims,    type: fdl_dimensions_f64_t }
-      - { name: squeeze, type: double }
-    doc: Normalize dimensions by applying anamorphic squeeze to width.
-
-  - name: fdl_dimensions_scale
-    category: math
-    returns: fdl_dimensions_f64_t
-    params:
-      - { name: dims,           type: fdl_dimensions_f64_t }
-      - { name: scale_factor,   type: double }
-      - { name: target_squeeze, type: double }
-    doc: Scale normalized dimensions and apply target squeeze.
-
-  - name: fdl_dimensions_normalize_and_scale
-    category: math
-    returns: fdl_dimensions_f64_t
-    params:
-      - { name: dims,           type: fdl_dimensions_f64_t }
-      - { name: input_squeeze,  type: double }
-      - { name: scale_factor,   type: double }
-      - { name: target_squeeze, type: double }
-    doc: Normalize and scale dimensions in one step.
-
-  - name: fdl_dimensions_sub
-    category: math
-    returns: fdl_dimensions_f64_t
-    params:
-      - { name: a, type: fdl_dimensions_f64_t }
-      - { name: b, type: fdl_dimensions_f64_t }
-    doc: Subtract two dimensions.
-
-  - name: fdl_dimensions_equal
-    category: math
-    returns: int
-    params:
-      - { name: a, type: fdl_dimensions_f64_t }
-      - { name: b, type: fdl_dimensions_f64_t }
-    doc: Check approximate equality with FDL tolerances.
-
-  - name: fdl_dimensions_is_zero
-    category: math
-    returns: int
-    params:
-      - { name: dims, type: fdl_dimensions_f64_t }
-    doc: Check if both width and height are zero.
-
-  # === Dimensions (integer) operations ===
-  - name: fdl_dimensions_i64_is_zero
-    category: math
-    returns: int
-    params:
-      - { name: dims, type: fdl_dimensions_i64_t }
-    doc: Check if both width and height are zero (int64 variant).
-
-  - name: fdl_dimensions_i64_normalize
-    category: math
-    returns: fdl_dimensions_f64_t
-    params:
-      - { name: dims, type: fdl_dimensions_i64_t }
-      - { name: squeeze, type: double }
-    doc: Normalize int64 dimensions by applying anamorphic squeeze to width. Returns float dimensions.
-
-  - name: fdl_dimensions_f64_to_i64
-    category: math
-    returns: fdl_dimensions_i64_t
-    params:
-      - { name: dims, type: fdl_dimensions_f64_t }
-    doc: Convert float dimensions to int64 by truncation.
-
-  - name: fdl_dimensions_i64_gt
-    category: math
-    returns: int
-    params:
-      - { name: a, type: fdl_dimensions_i64_t }
-      - { name: b, type: fdl_dimensions_i64_t }
-    doc: Greater-than (OR logic) for int64 dimensions.
-
-  - name: fdl_dimensions_i64_lt
-    category: math
-    returns: int
-    params:
-      - { name: a, type: fdl_dimensions_i64_t }
-      - { name: b, type: fdl_dimensions_i64_t }
-    doc: Less-than (OR logic) for int64 dimensions.
-
-  - name: fdl_dimensions_f64_gt
-    category: math
-    returns: int
-    params:
-      - { name: a, type: fdl_dimensions_f64_t }
-      - { name: b, type: fdl_dimensions_f64_t }
-    doc: Greater-than (OR logic) for float64 dimensions.
-
-  - name: fdl_dimensions_f64_lt
-    category: math
-    returns: int
-    params:
-      - { name: a, type: fdl_dimensions_f64_t }
-      - { name: b, type: fdl_dimensions_f64_t }
-    doc: Less-than (OR logic) for float64 dimensions.
-
-  # === Point operations ===
-  - name: fdl_point_normalize
-    category: math
-    returns: fdl_point_f64_t
-    params:
-      - { name: point,   type: fdl_point_f64_t }
-      - { name: squeeze, type: double }
-    doc: Normalize point by applying anamorphic squeeze to x.
-
-  - name: fdl_point_scale
-    category: math
-    returns: fdl_point_f64_t
-    params:
-      - { name: point,          type: fdl_point_f64_t }
-      - { name: scale_factor,   type: double }
-      - { name: target_squeeze, type: double }
-    doc: Scale a normalized point and apply target squeeze.
-
-  - name: fdl_point_add
-    category: math
-    returns: fdl_point_f64_t
-    params:
-      - { name: a, type: fdl_point_f64_t }
-      - { name: b, type: fdl_point_f64_t }
-    doc: Add two points.
-
-  - name: fdl_point_sub
-    category: math
-    returns: fdl_point_f64_t
-    params:
-      - { name: a, type: fdl_point_f64_t }
-      - { name: b, type: fdl_point_f64_t }
-    doc: Subtract two points.
-
-  - name: fdl_point_mul_scalar
-    category: math
-    returns: fdl_point_f64_t
-    params:
-      - { name: a,      type: fdl_point_f64_t }
-      - { name: scalar, type: double }
-    doc: Multiply point by scalar.
-
-  - name: fdl_point_clamp
-    category: math
-    returns: fdl_point_f64_t
-    params:
-      - { name: point,   type: fdl_point_f64_t }
-      - { name: min_val, type: double }
-      - { name: max_val, type: double }
-      - { name: has_min, type: int }
-      - { name: has_max, type: int }
-    doc: Clamp point values to specified range.
-
-  - name: fdl_point_is_zero
-    category: math
-    returns: int
-    params:
-      - { name: point, type: fdl_point_f64_t }
-    doc: Check if both x and y are zero.
-
-  - name: fdl_point_normalize_and_scale
-    category: math
-    returns: fdl_point_f64_t
-    params:
-      - { name: point, type: fdl_point_f64_t }
-      - { name: input_squeeze, type: double }
-      - { name: scale_factor, type: double }
-      - { name: target_squeeze, type: double }
-    doc: Normalize and scale a point in one step.
-
-  - name: fdl_point_equal
-    category: math
-    returns: int
-    params:
-      - { name: a, type: fdl_point_f64_t }
-      - { name: b, type: fdl_point_f64_t }
-    doc: Check approximate equality with FDL tolerances.
-
-  - name: fdl_point_f64_lt
-    category: math
-    returns: int
-    params:
-      - { name: a, type: fdl_point_f64_t }
-      - { name: b, type: fdl_point_f64_t }
-    doc: Less-than (OR logic) for float64 points.
-
-  - name: fdl_point_f64_gt
-    category: math
-    returns: int
-    params:
-      - { name: a, type: fdl_point_f64_t }
-      - { name: b, type: fdl_point_f64_t }
-    doc: Greater-than (OR logic) for float64 points.
-
-  # === Floating-point comparison constants ===
-  - name: fdl_fp_rel_tol
-    category: math
-    returns: double
-    params: []
-    doc: Relative tolerance for floating-point comparison (1e-9).
-
-  - name: fdl_fp_abs_tol
-    category: math
-    returns: double
-    params: []
-    doc: Absolute tolerance for floating-point comparison (1e-6).
-
-  # === Geometry operations ===
-  - name: fdl_geometry_fill_hierarchy_gaps
-    category: pipeline
-    returns: fdl_geometry_t
-    params:
-      - { name: geo,           type: fdl_geometry_t }
-      - { name: anchor_offset, type: fdl_point_f64_t }
-    doc: Fill gaps in the geometry hierarchy by propagating populated dimensions upward.
-
-  - name: fdl_geometry_normalize_and_scale
-    category: pipeline
-    returns: fdl_geometry_t
-    params:
-      - { name: geo,            type: fdl_geometry_t }
-      - { name: source_squeeze, type: double }
-      - { name: scale_factor,   type: double }
-      - { name: target_squeeze, type: double }
-    doc: Normalize and scale all 7 fields of the geometry.
-
-  - name: fdl_geometry_round
-    category: pipeline
-    returns: fdl_geometry_t
-    params:
-      - { name: geo,      type: fdl_geometry_t }
-      - { name: strategy, type: fdl_round_strategy_t }
-    doc: Round all 7 fields of the geometry.
-
-  - name: fdl_geometry_apply_offset
-    category: pipeline
-    returns: fdl_geometry_t
-    params:
-      - { name: geo,       type: fdl_geometry_t }
-      - { name: offset,    type: fdl_point_f64_t }
-      - { name: theo_eff,  type: "fdl_point_f64_t*", direction: out }
-      - { name: theo_prot, type: "fdl_point_f64_t*", direction: out }
-      - { name: theo_fram, type: "fdl_point_f64_t*", direction: out }
-    doc: Apply offset to all anchors. Returns clamped geometry. Theoretical anchors written to output pointers.
-
-  - name: fdl_geometry_crop
-    category: pipeline
-    returns: fdl_geometry_t
-    params:
-      - { name: geo,       type: fdl_geometry_t }
-      - { name: theo_eff,  type: fdl_point_f64_t }
-      - { name: theo_prot, type: fdl_point_f64_t }
-      - { name: theo_fram, type: fdl_point_f64_t }
-    doc: Crop all dimensions to visible portion within canvas.
-
-  - name: fdl_geometry_get_dims_anchor_from_path
-    category: pipeline
-    returns: int
-    params:
-      - { name: geo,        type: "const fdl_geometry_t*" }
-      - { name: path,       type: fdl_geometry_path_t }
-      - { name: out_dims,   type: "fdl_dimensions_f64_t*", direction: out }
-      - { name: out_anchor, type: "fdl_point_f64_t*",      direction: out }
-    doc: Extract dimensions and anchor from geometry by path. Returns 0 on success, -1 on invalid path.
-
-  - name: fdl_resolve_geometry_layer
-    category: pipeline
-    returns: int
-    params:
-      - { name: canvas,     type: "const fdl_canvas_t*" }
-      - { name: framing,    type: "const fdl_framing_decision_t*" }
-      - { name: path,       type: fdl_geometry_path_t }
-      - { name: out_dims,   type: "fdl_dimensions_f64_t*", direction: out }
-      - { name: out_anchor, type: "fdl_point_f64_t*",      direction: out }
-    doc: Resolve dims/anchor from canvas/framing handles by path. Returns 0=success, 1=absent, -1=invalid.
-
-  # === Rect convenience ===
-  - name: fdl_make_rect
-    category: pipeline
-    returns: fdl_rect_t
-    params:
-      - { name: x, type: double }
-      - { name: y, type: double }
-      - { name: width, type: double }
-      - { name: height, type: double }
-    doc: Create a rect from raw coordinates.
-
-  - name: fdl_canvas_get_rect
-    category: accessor
-    returns: fdl_rect_t
-    params:
-      - { name: canvas, type: "const fdl_canvas_t*" }
-    doc: Get canvas rect as (0, 0, width, height).
-
-  - name: fdl_canvas_get_effective_rect
-    category: accessor
-    returns: int
-    params:
-      - { name: canvas, type: "const fdl_canvas_t*" }
-      - { name: out_rect, type: "fdl_rect_t*", direction: out }
-    doc: Get effective rect. Returns 0 if absent, 1 if written to out_rect.
-
-  - name: fdl_framing_decision_get_rect
-    category: accessor
-    returns: fdl_rect_t
-    params:
-      - { name: fd, type: "const fdl_framing_decision_t*" }
-    doc: Get framing decision rect as (anchor_x, anchor_y, width, height).
-
-  - name: fdl_framing_decision_get_protection_rect
-    category: accessor
-    returns: int
-    params:
-      - { name: fd, type: "const fdl_framing_decision_t*" }
-      - { name: out_rect, type: "fdl_rect_t*", direction: out }
-    doc: Get protection rect. Returns 0 if absent, 1 if written to out_rect.
-
-  # === Pipeline helpers ===
-  - name: fdl_calculate_scale_factor
-    category: pipeline
-    returns: double
-    params:
-      - { name: fit_norm,    type: fdl_dimensions_f64_t }
-      - { name: target_norm, type: fdl_dimensions_f64_t }
-      - { name: fit_method,  type: fdl_fit_method_t }
-    doc: Calculate scale factor based on fit method.
-
-  - name: fdl_output_size_for_axis
-    category: pipeline
-    returns: double
-    params:
-      - { name: canvas_size, type: double }
-      - { name: max_size,    type: double }
-      - { name: has_max,     type: int }
-      - { name: pad_to_max,  type: int }
-    doc: Determine output canvas size for a single axis.
-
-  - name: fdl_alignment_shift
-    category: pipeline
-    returns: double
-    params:
-      - { name: fit_size,     type: double }
-      - { name: fit_anchor,   type: double }
-      - { name: output_size,  type: double }
-      - { name: canvas_size,  type: double }
-      - { name: target_size,  type: double }
-      - { name: is_center,    type: int }
-      - { name: align_factor, type: double }
-      - { name: pad_to_max,   type: int }
-    doc: Calculate content translation shift for a single axis.
-
-  - name: fdl_dimensions_clamp_to_dims
-    category: pipeline
-    returns: fdl_dimensions_f64_t
-    params:
-      - { name: dims,       type: fdl_dimensions_f64_t }
-      - { name: clamp_dims, type: fdl_dimensions_f64_t }
-      - { name: out_delta,  type: "fdl_point_f64_t*", direction: out }
-    doc: Clamp dimensions to maximum bounds. Delta offset written to out_delta.
-
-  # === Framing from intent ===
-  - name: fdl_compute_framing_from_intent
-    category: pipeline
-    returns: fdl_from_intent_result_t
-    params:
-      - { name: canvas_dims,  type: fdl_dimensions_f64_t }
-      - { name: working_dims, type: fdl_dimensions_f64_t }
-      - { name: squeeze,      type: double }
-      - { name: aspect_ratio, type: fdl_dimensions_i64_t }
-      - { name: protection,   type: double }
-      - { name: rounding,     type: fdl_round_strategy_t }
-    doc: Compute a framing decision from a framing intent.
-
-  # === Document lifecycle ===
-  - name: fdl_doc_create
-    category: lifecycle
-    returns: "fdl_doc_t*"
+# Annotations for C functions that cannot be derived from fdl_core.h.
+# Signatures and doc strings are parsed from the C header at codegen time.
+# Only functions needing ownership, nullable, or direction:out metadata
+# need entries here.
+# -----------------------------------------------------------------------
+function_metadata:
+  # --- Ownership: caller_frees_with_* ---
+  fdl_doc_create:
     ownership: caller_frees_with_fdl_doc_free
-    params: []
-    doc: Create an empty FDL document. Returns NULL on allocation failure.
-
-  - name: fdl_doc_free
-    category: memory
-    returns: void
-    params:
-      - { name: doc, type: "fdl_doc_t*", nullable: true }
-    doc: Free an FDL document. Safe to call with NULL.
-
-  - name: fdl_doc_parse_json
-    category: lifecycle
-    returns: fdl_parse_result_t
-    params:
-      - { name: json_str, type: "const char*" }
-      - { name: json_len, type: size_t }
-    doc: Parse a JSON string into an FDL document. On success result.doc is non-NULL. On failure result.error is non-NULL (free with fdl_free).
-
-  - name: fdl_doc_to_json
-    category: accessor
-    returns: "char*"
-    ownership: caller_frees
-    params:
-      - { name: doc,    type: "const fdl_doc_t*" }
-      - { name: indent, type: int }
-    doc: Serialize document to canonical JSON string. Caller owns the returned string (free with fdl_free).
-
-  - name: fdl_context_to_json
-    category: accessor
-    returns: "char*"
-    ownership: caller_frees
-    params:
-      - { name: ctx,    type: "const fdl_context_t*" }
-      - { name: indent, type: int }
-    doc: Serialize context sub-object to canonical JSON string. Caller owns (free with fdl_free).
-
-  - name: fdl_canvas_to_json
-    category: accessor
-    returns: "char*"
-    ownership: caller_frees
-    params:
-      - { name: canvas, type: "const fdl_canvas_t*" }
-      - { name: indent, type: int }
-    doc: Serialize canvas sub-object to canonical JSON string. Caller owns (free with fdl_free).
-
-  - name: fdl_framing_decision_to_json
-    category: accessor
-    returns: "char*"
-    ownership: caller_frees
-    params:
-      - { name: fd,     type: "const fdl_framing_decision_t*" }
-      - { name: indent, type: int }
-    doc: Serialize framing decision to canonical JSON string. Caller owns (free with fdl_free).
-
-  - name: fdl_framing_intent_to_json
-    category: accessor
-    returns: "char*"
-    ownership: caller_frees
-    params:
-      - { name: fi,     type: "const fdl_framing_intent_t*" }
-      - { name: indent, type: int }
-    doc: Serialize framing intent to canonical JSON string. Caller owns (free with fdl_free).
-
-  - name: fdl_canvas_template_to_json
-    category: accessor
-    returns: "char*"
-    ownership: caller_frees
-    params:
-      - { name: ct,     type: "const fdl_canvas_template_t*" }
-      - { name: indent, type: int }
-    doc: Serialize canvas template to canonical JSON string. Caller owns (free with fdl_free).
-
-  # === Document header accessors ===
-
-  - name: fdl_doc_set_version
-    category: setter
-    returns: void
-    params:
-      - { name: doc,   type: "fdl_doc_t*" }
-      - { name: major, type: int }
-      - { name: minor, type: int }
-    doc: Set the FDL version.
-
-  - name: fdl_doc_create_with_header
-    category: builder
-    returns: "fdl_doc_t*"
+  fdl_doc_create_with_header:
     ownership: caller_frees_with_fdl_doc_free
     params:
-      - { name: uuid,                    type: "const char*" }
-      - { name: version_major,           type: int }
-      - { name: version_minor,           type: int }
-      - { name: fdl_creator,             type: "const char*" }
-      - { name: default_framing_intent,  type: "const char*", nullable: true }
-    doc: Create a new FDL document with header fields and empty collections.
-
-  # === Collection traversal — Framing Intents (root) ===
-
-  - name: fdl_context_get_clip_id
-    category: accessor
-    returns: "const char*"
-    ownership: caller_frees
-    nullable: true
-    params:
-      - { name: ctx, type: "const fdl_context_t*" }
-    doc: Get clip_id as JSON string. Returns NULL if not present. Caller owns (free with fdl_free).
-
-
-  - name: fdl_clip_id_to_json
-    category: accessor
-    returns: "char*"
-    ownership: caller_frees
-    params:
-      - { name: cid, type: "const fdl_clip_id_t*" }
-      - { name: indent, type: int }
-    doc: Serialize clip_id to canonical JSON. Caller frees with fdl_free.
-
-
-  - name: fdl_canvas_template_get_pad_to_maximum
-    category: accessor
-    returns: int
-    params:
-      - { name: ct, type: "const fdl_canvas_template_t*" }
-    doc: Get pad_to_maximum flag. Returns 1 if true, 0 if false.
-
-
-  # === Template pipeline ===
-  - name: fdl_apply_canvas_template
-    category: pipeline
-    returns: fdl_template_result_t
-    params:
-      - { name: tmpl,                  type: "const fdl_canvas_template_t*" }
-      - { name: source_canvas,         type: "const fdl_canvas_t*" }
-      - { name: source_framing,        type: "const fdl_framing_decision_t*" }
-      - { name: new_canvas_id,         type: "const char*" }
-      - { name: new_fd_name,           type: "const char*" }
-      - { name: source_context_label,  type: "const char*", nullable: true }
-      - { name: context_creator,       type: "const char*", nullable: true }
-    doc: Apply a canvas template to a source canvas/framing. Returns template_result_t. Caller must free with fdl_template_result_free.
-
-  - name: fdl_template_result_free
-    category: memory
-    returns: void
-    params:
-      - { name: result, type: "fdl_template_result_t*", nullable: true }
-    doc: Free a template result (doc + error string). Safe to call with NULL.
-
-  - name: fdl_context_resolve_canvas_for_dimensions
-    category: collections
-    returns: fdl_resolve_canvas_result_t
-    params:
-      - { name: ctx,        type: "fdl_context_t*" }
-      - { name: input_dims, type: fdl_dimensions_f64_t }
-      - { name: canvas,     type: "fdl_canvas_t*" }
-      - { name: framing,    type: "fdl_framing_decision_t*" }
-    doc: Resolve canvas for given input dimensions. Returns non-owning handles. Caller must free error with fdl_free.
-
-  # === Document builder ===
-  - name: fdl_doc_add_framing_intent
-    category: builder
-    returns: "fdl_framing_intent_t*"
-    ownership: valid_until_doc_freed
-    params:
-      - { name: doc,        type: "fdl_doc_t*" }
-      - { name: id,         type: "const char*" }
-      - { name: label,      type: "const char*" }
-      - { name: aspect_w,   type: int64_t }
-      - { name: aspect_h,   type: int64_t }
-      - { name: protection, type: double }
-    doc: Add a framing intent to the document. Returns handle (owned by doc).
-
-  - name: fdl_doc_add_context
-    category: builder
-    returns: "fdl_context_t*"
-    ownership: valid_until_doc_freed
-    params:
-      - { name: doc,             type: "fdl_doc_t*" }
-      - { name: label,           type: "const char*" }
-      - { name: context_creator, type: "const char*", nullable: true }
-    doc: Add a context to the document. Returns handle (owned by doc).
-
-  - name: fdl_doc_add_canvas_template
-    category: builder
-    returns: "fdl_canvas_template_t*"
-    ownership: valid_until_doc_freed
-    params:
-      - { name: doc,            type: "fdl_doc_t*" }
-      - { name: id,             type: "const char*" }
-      - { name: label,          type: "const char*" }
-      - { name: target_w,       type: int64_t }
-      - { name: target_h,       type: int64_t }
-      - { name: target_squeeze, type: double }
-      - { name: fit_source,     type: fdl_geometry_path_t }
-      - { name: fit_method,     type: fdl_fit_method_t }
-      - { name: halign,         type: fdl_halign_t }
-      - { name: valign,         type: fdl_valign_t }
-      - { name: rounding,       type: fdl_round_strategy_t }
-    doc: Add a canvas template to the document. Returns handle (owned by doc).
-
-
-  - name: fdl_canvas_template_set_pad_to_maximum
-    category: setter
-    returns: void
-    params:
-      - { name: ct,  type: "fdl_canvas_template_t*" }
-      - { name: pad, type: int }
-    doc: Set pad_to_maximum on a canvas template.
-
-  - name: fdl_context_add_canvas
-    category: builder
-    returns: "fdl_canvas_t*"
-    ownership: valid_until_doc_freed
-    params:
-      - { name: ctx,              type: "fdl_context_t*" }
-      - { name: id,               type: "const char*" }
-      - { name: label,            type: "const char*" }
-      - { name: source_canvas_id, type: "const char*" }
-      - { name: dim_w,            type: int64_t }
-      - { name: dim_h,            type: int64_t }
-      - { name: squeeze,          type: double }
-    doc: Add a canvas to a context. Returns handle (owned by doc).
-
-  - name: fdl_canvas_set_effective_dimensions
-    category: setter
-    returns: void
-    params:
-      - { name: canvas, type: "fdl_canvas_t*" }
-      - { name: dims,   type: fdl_dimensions_i64_t }
-      - { name: anchor, type: fdl_point_f64_t }
-    doc: Set effective dimensions and anchor on a canvas.
-
-
-  - name: fdl_canvas_add_framing_decision
-    category: builder
-    returns: "fdl_framing_decision_t*"
-    ownership: valid_until_doc_freed
-    params:
-      - { name: canvas,            type: "fdl_canvas_t*" }
-      - { name: id,                type: "const char*" }
-      - { name: label,             type: "const char*" }
-      - { name: framing_intent_id, type: "const char*" }
-      - { name: dim_w,             type: double }
-      - { name: dim_h,             type: double }
-      - { name: anchor_x,          type: double }
-      - { name: anchor_y,          type: double }
-    doc: Add a framing decision to a canvas. Returns handle (owned by doc).
-
-  - name: fdl_framing_decision_set_protection
-    category: setter
-    returns: void
-    params:
-      - { name: fd,     type: "fdl_framing_decision_t*" }
-      - { name: dims,   type: fdl_dimensions_f64_t }
-      - { name: anchor, type: fdl_point_f64_t }
-    doc: Set protection dimensions and anchor on a framing decision.
-
-  # === FramingIntent setters ===
-
-  # === Framing decision business logic ===
-  - name: fdl_framing_decision_adjust_anchor
-    category: pipeline
-    returns: void
-    params:
-      - { name: fd,      type: "fdl_framing_decision_t*" }
-      - { name: canvas,  type: "const fdl_canvas_t*" }
-      - { name: h_align, type: fdl_halign_t }
-      - { name: v_align, type: fdl_valign_t }
-    doc: Adjust anchor_point on a framing decision based on alignment within canvas.
-
-  - name: fdl_framing_decision_adjust_protection_anchor
-    category: pipeline
-    returns: void
-    params:
-      - { name: fd,      type: "fdl_framing_decision_t*" }
-      - { name: canvas,  type: "const fdl_canvas_t*" }
-      - { name: h_align, type: fdl_halign_t }
-      - { name: v_align, type: fdl_valign_t }
-    doc: Adjust protection_anchor_point on a framing decision based on alignment within canvas.
-
-  - name: fdl_framing_decision_populate_from_intent
-    category: pipeline
-    returns: void
-    params:
-      - { name: fd,       type: "fdl_framing_decision_t*" }
-      - { name: canvas,   type: "const fdl_canvas_t*" }
-      - { name: intent,   type: "const fdl_framing_intent_t*" }
-      - { name: rounding, type: fdl_round_strategy_t }
-    doc: Populate a framing decision from a canvas and framing intent.
-
-  # === clip_id setter / remover / validator ===
-
-  - name: fdl_clip_id_validate_json
-    category: validation
-    returns: "const char*"
-    ownership: caller_frees
-    nullable: true
-    params:
-      - { name: json_str, type: "const char*" }
-      - { name: json_len, type: size_t }
-    doc: Validate clip_id JSON for mutual exclusion. Returns NULL if valid.
-
-  # === Validation ===
-  - name: fdl_doc_validate
-    category: validation
-    returns: "fdl_validation_result_t*"
+      default_framing_intent: { nullable: true }
+  fdl_doc_validate:
     ownership: caller_frees_with_fdl_validation_result_free
-    params:
-      - { name: doc, type: "const fdl_doc_t*" }
-    doc: Run schema (Draft 2020-12) and semantic validators. Returns a result handle.
 
-  - name: fdl_validation_result_error_count
-    category: validation
-    returns: uint32_t
-    params:
-      - { name: result, type: "const fdl_validation_result_t*" }
-    doc: Get the number of validation errors.
+  # --- Ownership: caller_frees ---
+  fdl_doc_to_json:
+    ownership: caller_frees
+  fdl_context_to_json:
+    ownership: caller_frees
+  fdl_canvas_to_json:
+    ownership: caller_frees
+  fdl_framing_decision_to_json:
+    ownership: caller_frees
+  fdl_framing_intent_to_json:
+    ownership: caller_frees
+  fdl_canvas_template_to_json:
+    ownership: caller_frees
+  fdl_clip_id_to_json:
+    ownership: caller_frees
 
-  - name: fdl_validation_result_error_at
-    category: validation
-    returns: "const char*"
+  # --- Ownership: caller_frees + nullable return ---
+  fdl_context_get_clip_id:
+    ownership: caller_frees
+    nullable: true
+  fdl_clip_id_validate_json:
+    ownership: caller_frees
+    nullable: true
+
+  # --- Ownership: valid_until_doc_freed ---
+  fdl_doc_add_framing_intent:
+    ownership: valid_until_doc_freed
+  fdl_doc_add_context:
+    ownership: valid_until_doc_freed
+    params:
+      context_creator: { nullable: true }
+  fdl_doc_add_canvas_template:
+    ownership: valid_until_doc_freed
+  fdl_context_add_canvas:
+    ownership: valid_until_doc_freed
+  fdl_canvas_add_framing_decision:
+    ownership: valid_until_doc_freed
+
+  # --- Ownership: valid_until_result_freed + nullable return ---
+  fdl_validation_result_error_at:
     ownership: valid_until_result_freed
     nullable: true
-    params:
-      - { name: result, type: "const fdl_validation_result_t*" }
-      - { name: index,  type: uint32_t }
-    doc: Get a specific error message by index. Returns NULL if index is out of range.
 
-  - name: fdl_validation_result_free
-    category: memory
-    returns: void
+  # --- Nullable params (no ownership) ---
+  fdl_doc_free:
     params:
-      - { name: result, type: "fdl_validation_result_t*", nullable: true }
-    doc: Free a validation result. Safe to call with NULL.
+      doc: { nullable: true }
+  fdl_template_result_free:
+    params:
+      result: { nullable: true }
+  fdl_validation_result_free:
+    params:
+      result: { nullable: true }
+  fdl_free:
+    params:
+      ptr: { nullable: true }
+  fdl_apply_canvas_template:
+    params:
+      source_context_label: { nullable: true }
+      context_creator: { nullable: true }
 
-  # === Memory management ===
-  - name: fdl_free
-    category: memory
-    returns: void
+  # --- Direction: out params ---
+  fdl_geometry_apply_offset:
     params:
-      - { name: ptr, type: "void*", nullable: true }
-    doc: Free memory allocated by fdl_core functions.
+      theo_eff: { direction: out }
+      theo_prot: { direction: out }
+      theo_fram: { direction: out }
+  fdl_geometry_get_dims_anchor_from_path:
+    params:
+      out_dims: { direction: out }
+      out_anchor: { direction: out }
+  fdl_resolve_geometry_layer:
+    params:
+      out_dims: { direction: out }
+      out_anchor: { direction: out }
+  fdl_canvas_get_effective_rect:
+    params:
+      out_rect: { direction: out }
+  fdl_framing_decision_get_protection_rect:
+    params:
+      out_rect: { direction: out }
+  fdl_dimensions_clamp_to_dims:
+    params:
+      out_delta: { direction: out }
 
 # -----------------------------------------------------------------------
 # Auxiliary types (error classes, version, etc.)

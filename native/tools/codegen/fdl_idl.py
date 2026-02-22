@@ -919,14 +919,65 @@ def _synthesize_functions(
     return synth
 
 
-def parse_idl(path: Path) -> IDL:
+def _merge_header_overlay(
+    header_path: Path,
+    metadata: dict,
+) -> list[Function]:
+    """Build Function list from C header signatures + YAML metadata overlay."""
+    from .c_header_parser import parse_c_header
+
+    parsed = parse_c_header(header_path)
+    functions: list[Function] = []
+
+    for pf in parsed.values():
+        # Skip custom attribute functions (handled by _generate_custom_attr_functions)
+        if "custom_attr" in pf.name:
+            continue
+
+        overlay = metadata.get(pf.name, {})
+        overlay_params = overlay.get("params", {})
+
+        params = []
+        for pp in pf.params:
+            pm = overlay_params.get(pp.name, {})
+            params.append(
+                FunctionParam(
+                    name=pp.name,
+                    c_type=pp.c_type,
+                    direction=pm.get("direction"),
+                    nullable=pm.get("nullable", False),
+                )
+            )
+
+        functions.append(
+            Function(
+                name=pf.name,
+                returns=pf.return_type,
+                params=params,
+                doc=overlay.get("doc", pf.doc),
+                ownership=overlay.get("ownership"),
+                nullable=overlay.get("nullable", False),
+                category=overlay.get("category"),
+            )
+        )
+
+    return functions
+
+
+def parse_idl(path: Path, header_path: Path | None = None) -> IDL:
     with path.open(encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
     value_types = [_parse_value_type(name, vt) for name, vt in data.get("value_types", {}).items()]
     enums = [_parse_enum(name, e) for name, e in data.get("enums", {}).items()]
     opaque_types = data.get("opaque_types", [])
-    functions = [_parse_function(f) for f in data.get("functions", [])]
+
+    # Two modes: new function_metadata overlay (with C header parsing) or legacy functions list
+    if "function_metadata" in data and header_path is not None and header_path.exists():
+        functions = _merge_header_overlay(header_path, data["function_metadata"])
+    else:
+        functions = [_parse_function(f) for f in data.get("functions", [])]
+
     object_model = _parse_object_model(data.get("object_model"))
     auxiliary_types = _parse_auxiliary_types(data.get("auxiliary_types"))
 
@@ -960,12 +1011,28 @@ def parse_idl(path: Path) -> IDL:
         )
 
     # Synthesize accessor/collection functions from object_model.
-    # Explicit entries in YAML take precedence over synthesized ones.
-    explicit_names = {f.name for f in functions}
+    # When using header-parsed functions, synthesized metadata (ownership,
+    # nullable) takes precedence over the bare header signatures.
+    fn_by_name = {f.name: f for f in functions}
     synthesized = _synthesize_functions(object_model, value_types, enums)
     for sf in synthesized:
-        if sf.name not in explicit_names:
+        existing = fn_by_name.get(sf.name)
+        if existing is None:
             functions.append(sf)
+        else:
+            # Merge synthesized metadata into header-parsed function
+            if sf.ownership and not existing.ownership:
+                existing.ownership = sf.ownership
+            if sf.nullable and not existing.nullable:
+                existing.nullable = sf.nullable
+            for sp in sf.params:
+                for ep in existing.params:
+                    if ep.name == sp.name:
+                        if sp.direction and not ep.direction:
+                            ep.direction = sp.direction
+                        if sp.nullable and not ep.nullable:
+                            ep.nullable = sp.nullable
+                        break
 
     # Sort for stable output regardless of YAML entry order or synthesis order.
     functions.sort(key=lambda f: f.name)

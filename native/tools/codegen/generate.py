@@ -38,7 +38,8 @@ def main() -> None:
         print(f"IDL file not found: {idl_path}", file=sys.stderr)
         sys.exit(1)
 
-    idl = parse_idl(idl_path)
+    header_path = repo_root / "core" / "include" / "fdl" / "fdl_core.h"
+    idl = parse_idl(idl_path, header_path=header_path)
 
     if args.target in ("python", "python-ffi"):
         from . import python_gen
