@@ -16,6 +16,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 YAML_PATH = REPO_ROOT / "native" / "api" / "fdl_api.yaml"
+HEADER_PATH = REPO_ROOT / "native" / "core" / "include" / "fdl" / "fdl_core.h"
 
 # Allow importing the codegen package
 sys.path.insert(0, str(REPO_ROOT / "native" / "tools"))
@@ -78,7 +79,7 @@ def extract_yaml_functions(yaml_path: Path) -> set[str]:
     Uses parse_idl() which synthesizes accessor/collection functions from the
     object_model, so the YAML doesn't need to list them explicitly.
     """
-    idl = parse_idl(yaml_path)
+    idl = parse_idl(yaml_path, header_path=HEADER_PATH)
     fns = {fn.name for fn in idl.functions}
 
     # Add custom attr functions for classes that declare custom_attrs: true.
