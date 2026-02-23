@@ -237,6 +237,96 @@ TEST_CASE("apply_canvas_template matches Python golden vectors", "[template][app
     }
 }
 
+TEST_CASE("apply_canvas_template target_anamorphic_squeeze=0 inherits source squeeze", "[template][apply][squeeze]") {
+    // When target_anamorphic_squeeze is 0, it should fall back to the source
+    // canvas anamorphic_squeeze for both geometry and output document values.
+    ojson root(jsoncons::json_object_arg);
+    root.insert_or_assign("uuid", "00000000-0000-0000-0000-000000000099");
+    root.insert_or_assign("version", ojson(jsoncons::json_object_arg));
+    root["version"].insert_or_assign("major", 2);
+    root["version"].insert_or_assign("minor", 0);
+    root.insert_or_assign("fdl_creator", "test");
+    root.insert_or_assign("framing_intents", ojson(jsoncons::json_array_arg));
+    root.insert_or_assign("contexts", ojson(jsoncons::json_array_arg));
+    root.insert_or_assign("canvas_templates", ojson(jsoncons::json_array_arg));
+
+    // Anamorphic source canvas (squeeze = 2.0)
+    ojson canvas_json(jsoncons::json_object_arg);
+    canvas_json.insert_or_assign("id", "CVS_ANA");
+    canvas_json.insert_or_assign("label", "Anamorphic");
+    canvas_json.insert_or_assign("source_canvas_id", "CVS_ANA");
+    canvas_json.insert_or_assign("dimensions", ojson(jsoncons::json_object_arg));
+    canvas_json["dimensions"].insert_or_assign("width", 4096);
+    canvas_json["dimensions"].insert_or_assign("height", 3432);
+    canvas_json.insert_or_assign("anamorphic_squeeze", 2.0);
+
+    ojson fd_json(jsoncons::json_object_arg);
+    fd_json.insert_or_assign("id", "CVS_ANA-FI_239");
+    fd_json.insert_or_assign("label", "2.39:1");
+    fd_json.insert_or_assign("framing_intent_id", "FI_239");
+    fd_json.insert_or_assign("dimensions", ojson(jsoncons::json_object_arg));
+    fd_json["dimensions"].insert_or_assign("width", 4096.0);
+    fd_json["dimensions"].insert_or_assign("height", 1714.0);
+    fd_json.insert_or_assign("anchor_point", ojson(jsoncons::json_object_arg));
+    fd_json["anchor_point"].insert_or_assign("x", 0.0);
+    fd_json["anchor_point"].insert_or_assign("y", 859.0);
+
+    ojson fds(jsoncons::json_array_arg);
+    fds.push_back(std::move(fd_json));
+    canvas_json.insert_or_assign("framing_decisions", std::move(fds));
+
+    ojson canvases(jsoncons::json_array_arg);
+    canvases.push_back(std::move(canvas_json));
+    ojson ctx(jsoncons::json_object_arg);
+    ctx.insert_or_assign("label", "Test");
+    ctx.insert_or_assign("canvases", std::move(canvases));
+    root["contexts"].push_back(std::move(ctx));
+
+    // Template with target_anamorphic_squeeze = 0 (should inherit source squeeze)
+    ojson tmpl_json(jsoncons::json_object_arg);
+    tmpl_json.insert_or_assign("id", "CT_SQUEEZE_ZERO");
+    tmpl_json.insert_or_assign("label", "Squeeze zero");
+    tmpl_json.insert_or_assign("target_dimensions", ojson(jsoncons::json_object_arg));
+    tmpl_json["target_dimensions"].insert_or_assign("width", 1920);
+    tmpl_json["target_dimensions"].insert_or_assign("height", 1080);
+    tmpl_json.insert_or_assign("target_anamorphic_squeeze", 0.0);
+    tmpl_json.insert_or_assign("fit_source", "framing_decision.dimensions");
+    tmpl_json.insert_or_assign("fit_method", "width");
+    tmpl_json.insert_or_assign("alignment_method_horizontal", "center");
+    tmpl_json.insert_or_assign("alignment_method_vertical", "center");
+    tmpl_json.insert_or_assign("round", ojson(jsoncons::json_object_arg));
+    tmpl_json["round"].insert_or_assign("even", "even");
+    tmpl_json["round"].insert_or_assign("mode", "up");
+    root["canvas_templates"].push_back(std::move(tmpl_json));
+
+    std::string json_str;
+    root.dump(json_str);
+
+    auto parse_result = fdl_doc_parse_json(json_str.c_str(), json_str.size());
+    REQUIRE(parse_result.doc != nullptr);
+
+    auto* ctx_handle = fdl_doc_context_at(parse_result.doc, 0);
+    auto* canvas = fdl_context_canvas_at(ctx_handle, 0);
+    auto* framing = fdl_canvas_framing_decision_at(canvas, 0);
+    auto* tmpl = fdl_doc_canvas_template_at(parse_result.doc, 0);
+
+    auto result = fdl_apply_canvas_template(tmpl, canvas, framing, "NEW_CVS", "test", "Test", "test");
+    INFO("Error: " << (result.error ? result.error : "none"));
+    REQUIRE(result.error == nullptr);
+    REQUIRE(result.output_fdl != nullptr);
+
+    // The output canvas should inherit squeeze=2.0 from the source, not 0
+    auto* out_ctx = fdl_doc_context_at(result.output_fdl, 0);
+    auto* out_new_canvas = fdl_context_canvas_at(out_ctx, 1);
+    REQUIRE(out_new_canvas != nullptr);
+
+    double out_squeeze = fdl_canvas_get_anamorphic_squeeze(out_new_canvas);
+    REQUIRE(close_enough(out_squeeze, 2.0));
+
+    fdl_template_result_free(&result);
+    fdl_doc_free(parse_result.doc);
+}
+
 TEST_CASE("apply_canvas_template NULL safety", "[template][null]") {
     auto result = fdl_apply_canvas_template(nullptr, nullptr, nullptr, "id", "name", nullptr, nullptr);
     REQUIRE(result.error != nullptr);

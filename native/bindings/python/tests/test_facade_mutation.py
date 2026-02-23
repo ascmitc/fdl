@@ -342,6 +342,52 @@ class TestApplyCanvasTemplate:
             assert result.fdl is not None
             result.fdl.close()
 
+    def test_apply_template_squeeze_zero_inherits_source(self):
+        """target_anamorphic_squeeze=0 should inherit squeeze from source canvas."""
+        from fdl import FDL, RoundingEven, RoundingMode
+
+        with FDL.create(
+            uuid="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+            fdl_creator="test",
+            default_framing_intent="FI_01",
+        ) as doc:
+            doc.add_framing_intent("FI_01", "Default", DimensionsInt(width=16, height=9), 0.0)
+            ctx = doc.add_context("Source", "test")
+            # Anamorphic source canvas with squeeze=2.0
+            canvas = ctx.add_canvas("CV_01", "Anamorphic", "CV_01", DimensionsInt(width=4096, height=3432), 2.0)
+            fd = canvas.add_framing_decision(
+                "CV_01-FI_01",
+                "Default FD",
+                "FI_01",
+                DimensionsFloat(width=4096.0, height=1714.0),
+                PointFloat(x=0.0, y=859.0),
+            )
+            ct = doc.add_canvas_template(
+                id="CT_01",
+                label="Squeeze Zero",
+                target_dimensions=DimensionsInt(width=1920, height=1080),
+                target_anamorphic_squeeze=0.0,
+                fit_source=GeometryPath.FRAMING_DIMENSIONS,
+                fit_method=FitMethod.WIDTH,
+                alignment_method_horizontal=HAlign.CENTER,
+                alignment_method_vertical=VAlign.CENTER,
+                round=RoundStrategy(even=RoundingEven.EVEN, mode=RoundingMode.UP),
+            )
+
+            result = ct.apply(
+                source_canvas=canvas,
+                source_framing=fd,
+                new_canvas_id="CV_02",
+                new_fd_name="Inherited Squeeze",
+                source_context_label="Source",
+                context_creator="test",
+            )
+
+            # Output canvas should have squeeze=2.0 inherited from source, not 0
+            assert result.canvas.anamorphic_squeeze == pytest.approx(2.0)
+            assert result.fdl is not None
+            result.fdl.close()
+
 
 # -----------------------------------------------------------------------
 # as_dict after mutation

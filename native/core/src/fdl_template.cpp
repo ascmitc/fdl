@@ -152,6 +152,7 @@ std::string safe_copy(const char* s) {
  * @param scale_factor          Computed scale factor (stored as custom attribute).
  * @param content_translation   Content translation shift (stored as custom attribute).
  * @param scaled_bounding_box   Scaled bounding box before output sizing (stored as custom attribute).
+ * @param target_squeeze        Resolved target anamorphic squeeze (0 already replaced with input squeeze).
  * @return Template result with output FDL and metadata, or error string on failure.
  */
 fdl_template_result_t build_template_output_document(
@@ -165,12 +166,12 @@ fdl_template_result_t build_template_output_document(
     const fdl_geometry_t& geometry,
     double scale_factor,
     fdl_point_f64_t content_translation,
-    fdl_dimensions_f64_t scaled_bounding_box) {
+    fdl_dimensions_f64_t scaled_bounding_box,
+    double target_squeeze) {
 
     fdl_template_result_t result = {};
 
     // Re-read template config from handle (lightweight JSON lookups)
-    double const target_squeeze = fdl_canvas_template_get_target_anamorphic_squeeze(tmpl);
     fdl_dimensions_i64_t const target_dims_i = fdl_canvas_template_get_target_dimensions(tmpl);
     fdl_geometry_path_t const fit_source = fdl_canvas_template_get_fit_source(tmpl);
     fdl_fit_method_t const fit_method = fdl_canvas_template_get_fit_method(tmpl);
@@ -540,7 +541,8 @@ fdl_template_result_t apply_canvas_template(
         geometry,
         scale_factor,
         content_translation,
-        scaled_bounding_box);
+        scaled_bounding_box,
+        target_squeeze);
 }
 
 } // namespace fdl::detail
