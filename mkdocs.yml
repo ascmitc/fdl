@@ -25,6 +25,7 @@ nav:
       - Header: FDL Classes/header.md
       - Common Types: FDL Classes/common.md
       - Errors: FDL Classes/errors.md
+    - "Node.js/TypeScript (TypeDoc)": node-api/index.html
     - "C/C++ (Doxygen)": api/index.html
   - Contributing: contributions.md
 

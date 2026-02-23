@@ -20,7 +20,8 @@
     "test:watch": "vitest",
     "format": "prettier --write 'src/**/*.ts'",
     "format:check": "prettier --check 'src/**/*.ts'",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "docs": "typedoc"
   },
   "dependencies": {
     "node-addon-api": "^8.0.0"
@@ -29,6 +30,7 @@
     "@types/node": "^20.0.0",
     "cmake-js": "^7.3.0",
     "prettier": "^3.0.0",
+    "typedoc": "^0.28.17",
     "typescript": "^5.4.0",
     "vitest": "^2.0.0"
   },

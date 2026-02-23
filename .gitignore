@@ -13,6 +13,9 @@ native/build/
 # Doxygen generated docs
 native/core/docs/api/
 
+# TypeDoc generated docs
+docs/node-api/
+
 # Python build artifacts
 native/bindings/python/build/**
 native/bindings/python/fdl.egg-info/**
