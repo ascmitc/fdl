@@ -204,27 +204,34 @@ fdl_template_result_t build_template_output_document(
         canvas_label = label_str;
     }
 
-    // Build new FDL document
+    // Build new FDL document, preserving the source's default_framing_intent
+    fdl_doc_t* source_doc = source_canvas->owner;
+    std::string const src_default_fi = safe_copy(fdl_doc_get_default_framing_intent(source_doc));
     fdl_doc_t* out_doc = fdl_doc_create_with_header(
         "00000000-0000-0000-0000-000000000000", // placeholder UUID
         fdl::constants::kDefaultVersionMajor,
         0,
         (context_creator != nullptr) ? context_creator : "",
-        source_fi_id_s.c_str());
+        src_default_fi.c_str());
 
     if (out_doc == nullptr) {
         result.error = fdl_strdup("Failed to create output document");
         return result;
     }
 
-    // Add default framing intent
-    fdl_doc_add_framing_intent(
-        out_doc,
-        source_fi_id_s.c_str(),
-        "Default",
-        fdl::constants::kDefaultAspectRatio,
-        fdl::constants::kDefaultAspectRatio,
-        0.0);
+    // Copy all framing intents from source document
+    uint32_t const fi_count = fdl_doc_framing_intents_count(source_doc);
+    for (uint32_t i = 0; i < fi_count; ++i) {
+        auto* fi = fdl_doc_framing_intent_at(source_doc, i);
+        auto ar = fdl_framing_intent_get_aspect_ratio(fi);
+        fdl_doc_add_framing_intent(
+            out_doc,
+            fdl_framing_intent_get_id(fi),
+            fdl_framing_intent_get_label(fi),
+            ar.width,
+            ar.height,
+            fdl_framing_intent_get_protection(fi));
+    }
 
     // Add context with source canvas and new canvas
     auto* out_ctx = fdl_doc_add_context(out_doc, label_str.c_str(), context_creator);

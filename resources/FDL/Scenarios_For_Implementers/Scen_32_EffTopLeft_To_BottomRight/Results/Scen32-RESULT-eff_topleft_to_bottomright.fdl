@@ -8,13 +8,13 @@
   "default_framing_intent": "eff_combo_intent",
   "framing_intents": [
     {
-      "label": "Default",
+      "label": "eff_topleft_to_bottomright",
       "id": "eff_combo_intent",
       "aspect_ratio": {
-        "width": 1,
-        "height": 1
+        "width": 16,
+        "height": 9
       },
-      "protection": 0.0
+      "protection": 0.1
     }
   ],
   "contexts": [

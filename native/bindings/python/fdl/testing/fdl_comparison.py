@@ -261,6 +261,49 @@ class FDLComparison:
         self._assertEqual(expected_tmpl.round.mode, actual_tmpl.round.mode, "template.round.mode mismatch")
         self.compare_custom_attrs(expected_tmpl, actual_tmpl, "template")
 
+    def compare_framing_intent(self, expected_fi, actual_fi, index: int = 0):
+        """
+        Compare framing intent fields.
+
+        Compares: id, label, aspect_ratio, protection
+
+        Parameters
+        ----------
+        expected_fi : FramingIntent
+            Expected framing intent object.
+        actual_fi : FramingIntent
+            Actual framing intent object.
+        index : int
+            Index for error message context.
+        """
+        prefix = f"framing_intents[{index}]"
+        self._assertEqual(expected_fi.id, actual_fi.id, f"{prefix}.id mismatch")
+        self._assertEqual(expected_fi.label, actual_fi.label, f"{prefix}.label mismatch")
+        self._assertEqual(expected_fi.aspect_ratio, actual_fi.aspect_ratio, f"{prefix}.aspect_ratio mismatch")
+        self._assertAlmostEqual(expected_fi.protection, actual_fi.protection, f"{prefix}.protection mismatch")
+
+    def compare_framing_intents(self, expected_fdl, actual_fdl):
+        """
+        Compare all framing intents and default_framing_intent between two FDLs.
+
+        Parameters
+        ----------
+        expected_fdl : FDL
+            Expected FDL object.
+        actual_fdl : FDL
+            Actual FDL object.
+        """
+        self._assertEqual(
+            expected_fdl.default_framing_intent,
+            actual_fdl.default_framing_intent,
+            "default_framing_intent mismatch",
+        )
+        expected_fis = list(expected_fdl.framing_intents)
+        actual_fis = list(actual_fdl.framing_intents)
+        self._assertEqual(len(expected_fis), len(actual_fis), "framing_intents count mismatch")
+        for i, (expected_fi, actual_fi) in enumerate(zip(expected_fis, actual_fis)):
+            self.compare_framing_intent(expected_fi, actual_fi, index=i)
+
     def compare_fdl_output(
         self,
         expected_fdl,

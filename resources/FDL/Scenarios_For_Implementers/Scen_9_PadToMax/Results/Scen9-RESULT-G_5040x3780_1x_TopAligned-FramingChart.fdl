@@ -8,13 +8,13 @@
   "default_framing_intent": "1",
   "framing_intents": [
     {
-      "label": "Default",
+      "label": "",
       "id": "1",
       "aspect_ratio": {
-        "width": 1,
-        "height": 1
+        "width": 2520,
+        "height": 1417
       },
-      "protection": 0.0
+      "protection": 0.1
     }
   ],
   "contexts": [

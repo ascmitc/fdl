@@ -266,6 +266,9 @@ class BaseFDLTestCase(unittest.TestCase):
         self.assertIsNotNone(actual_template, f"Actual template '{template_label}' not found in generated FDL")
         self._fdl_comparator.compare_canvas_template(expected_template, actual_template)
 
+        # Verify framing intents match expected
+        self._fdl_comparator.compare_framing_intents(expected_fdl, result.fdl)
+
         # Store result on self for subclass hooks
         self._template_result = result
         self._template = template

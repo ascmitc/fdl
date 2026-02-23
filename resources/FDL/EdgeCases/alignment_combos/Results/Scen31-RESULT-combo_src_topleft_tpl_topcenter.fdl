@@ -8,13 +8,13 @@
   "default_framing_intent": "combo_intent",
   "framing_intents": [
     {
-      "label": "Default",
+      "label": "TL source to top-center align",
       "id": "combo_intent",
       "aspect_ratio": {
-        "width": 1,
-        "height": 1
+        "width": 16,
+        "height": 9
       },
-      "protection": 0.0
+      "protection": 0.1
     }
   ],
   "contexts": [
