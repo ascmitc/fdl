@@ -1,50 +1,50 @@
-# ASC Framing Decision List (FDL)
+[# ASC Framing Decision List (FDL)
 
+**Getting Started:**
+
+_________________
+Introduction:
+_________________
+ASC FDL’s are a set of instructions for how to view content in any application. The ASC FDL provides a mechanism to document framing decisions through all phases of a production's life cycle, from pre-visualization through post-production. The FDL can exist in the form of a sidecar JSON file, or embedded into another data structure like camera original files. Any time an application is rendering media to another department or person, an accompanying set of ASC FDL data should be created and delivered. Therefore any downstream applications are able to apply the intended frame.
+
+_________________
+1-Sheet:
+_________________
+This is the first [document]([url](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_One-Sheet-20210807.PDF/)) you should read.
+This is a very brief introduction to what the FDL is and the problem it has set out to solve.
+
+_________________
+User Guide:
+_________________
+This is a [document]([url](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_UserGuide_v2.0.PDF/)) intended for end users to better understand how the FDL could be used within their workflows.
+This will also be a great reference for implementers to better understand the intention behind FDL usability.
+
+_______________________________
+Getting Access to Sample Media
+_______________________________
+After you compile the code, an interface has been provided allowing you to view framing charts, configure settings and instantly view the expected outcome both visually and as the resulting FDL.  
+
+_________________
+Specification:
+_________________
+This is the technical [specification]([url](https://ascmitc.github.io/fdl/dev/Specification/ASCFDL_Specification_v2.0.pdf/)) for implementers.
+
+_____________________
+Implementation Guide
+_____________________
+For anyone looking to implement the ASCFDL into thier tooling, [a guide]([url](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/)) has been created to offer helpful information. 
+
+____________________________________________
+CI available for macOS, Windows, and Linux
+____________________________________________
+Click on the CI/CD badge below to see per-platform results
 [![CI/CD](https://github.com/ascmitc/fdl/actions/workflows/main.yml/badge.svg)](https://github.com/ascmitc/fdl/actions/workflows/main.yml)
 [![Nightly Build](https://img.shields.io/badge/Nightly_Build-download-blue?logo=github)](https://nightly.link/ascmitc/fdl/workflows/main/main)
 [![GitHub Actions](https://img.shields.io/badge/All_Runs-view-grey?logo=githubactions)](https://github.com/ascmitc/fdl/actions/workflows/main.yml)
 
-> **CI runs on macOS, Windows, and Linux** — click the CI/CD badge above to see per-platform results.
 
-Within this directory you will find many files and folders for the ASC FDL.
-Here is a breakdown of their purpose:
 
-**ASC FDL One Sheet**
-This is the first document you should read.
-This is a very brief introduction to what the FDL is and the problem it has set out to solve.
 
-**ASC FDL User Guide**
-This is a document intended for end users to better understand how the FDL could be used within their workflows.
-This will also be a great reference for implementers to better understand the intention behind FDL usability.
-
-**ASC FDL DataPoints**
-This is a spreadsheet which breaks down each attribute within an FDL.
-These are also documented in the specification, but made available within this sheet in case it's helpful for implementers.
-
-**ASC FDL Specification**
-This is the technical specification for implementers.
-
-**ASC FDL ERD**
-ERD file created to help implementers have quick access to attribute information.
-
-**ASC FDL Schema**
-ASC FDL Schema for implementers.
-
------------------------------------------
-
-**Google Drive Directory**
-https://drive.google.com/drive/folders/1L1opQmDl6qhAik2wx2NEVz7-xbSFQ-ns?usp=sharing
-
-Contains:
- - Sample Files For Implementers
-Please use the following link for sample source files, with .FDL's and the resulting expected images.  This will be very helpful for software/hardware developers to test their FDL implementation against our expected results.
-
- - SMPTE ATC ASCFDL 20211028
-This is a recording from a SMPTE presentation introducing the challenges dailies operators face with managing framing, and how the FDL could help.
-
- - ASC FDL Logos
-
------------------------------------------
 
 ## Repository Overview
 
@@ -245,3 +245,4 @@ Git LFS objects are cached per-OS to avoid re-downloading large test resources o
 ### Test Parallelism
 
 Non-viewer Python test suites run with `pytest-xdist` (`-n auto`) for parallel execution across all available CPU cores. Viewer tests run serially to avoid display conflicts.
+](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/)
