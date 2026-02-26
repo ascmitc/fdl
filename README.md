@@ -10,7 +10,7 @@ ASC FDL’s are a set of instructions for how to view content in any application
 _________________
 1-Sheet:
 _________________
-This is the first [document](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_One-Sheet-20210807.PDF) you should read.
+This is the first [document](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_One-Sheet-20210807.pdf) you should read.
 This is a very brief introduction to what the FDL is and the problem it has set out to solve.
 
 _________________
