@@ -4,10 +4,12 @@
 
 _________________
 INTRODUCTION:
+
 ASC FDL’s are a set of instructions for how to view content in any application. The ASC FDL provides a mechanism to document framing decisions through all phases of a production's life cycle, from pre-visualization through post-production. The FDL can exist in the form of a sidecar JSON file, or embedded into another data structure like camera original files. Any time an application is rendering media to another department or person, an accompanying set of ASC FDL data should be created and delivered. Therefore any downstream applications are able to apply the intended frame.
 
 _________________
 1-SHEET:
+
 This is the first [document](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_One-Sheet-20210807.pdf) you should read.
 This is a very brief introduction to what the FDL is and the problem it has set out to solve.
 
@@ -15,31 +17,36 @@ This is a very brief introduction to what the FDL is and the problem it has set 
 
 _________________
 USER GUIDE:
+
 This is a [document](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_UserGuide_v2.0.PDF) intended for end users to better understand how the FDL could be used within their workflows.
 This will also be a great reference for implementers to better understand the intention behind FDL usability.
 
 
 
 _______________________________
-GETTING ACCESS TO SAMPLE MEDIA
+GETTING ACCESS TO SAMPLE MEDIA:
+
 After you compile the code, an interface has been provided allowing you to view framing charts, configure settings and instantly view the expected outcome both visually and as the resulting FDL.  
 
 
 
 _________________
 SPECIFICATION:
+
 This is the technical [specification](https://ascmitc.github.io/fdl/dev/Specification/ASCFDL_Specification_v2.0.pdf/) for implementers.
 
 
 
 _____________________
-IMPLIMENTATION GUIDE
+IMPLIMENTATION GUIDE:
+
 For anyone looking to implement the ASCFDL into thier tooling, [a guide](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/) has been created to offer helpful information. 
 
 
 
 ____________________________________________
-CI AVAILABLE FOR MACOS, WINDOWS & LINUX 
+CI AVAILABLE FOR MACOS, WINDOWS & LINUX:
+
 Click on the CI/CD badge below to see per-platform results
 [![CI/CD](https://github.com/ascmitc/fdl/actions/workflows/main.yml/badge.svg)](https://github.com/ascmitc/fdl/actions/workflows/main.yml)
 [![Nightly Build](https://img.shields.io/badge/Nightly_Build-download-blue?logo=github)](https://nightly.link/ascmitc/fdl/workflows/main/main)
