@@ -10,13 +10,13 @@ ASC FDL’s are a set of instructions for how to view content in any application
 _________________
 1-Sheet:
 _________________
-This is the first [document]([url](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_One-Sheet-20210807.PDF/)) you should read.
+This is the first [document](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_One-Sheet-20210807.PDF) you should read.
 This is a very brief introduction to what the FDL is and the problem it has set out to solve.
 
 _________________
 User Guide:
 _________________
-This is a [document]([url](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_UserGuide_v2.0.PDF/)) intended for end users to better understand how the FDL could be used within their workflows.
+This is a [document](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_UserGuide_v2.0.PDF) intended for end users to better understand how the FDL could be used within their workflows.
 This will also be a great reference for implementers to better understand the intention behind FDL usability.
 
 _______________________________
@@ -27,12 +27,12 @@ After you compile the code, an interface has been provided allowing you to view 
 _________________
 Specification:
 _________________
-This is the technical [specification]([url](https://ascmitc.github.io/fdl/dev/Specification/ASCFDL_Specification_v2.0.pdf/)) for implementers.
+This is the technical [specification](https://ascmitc.github.io/fdl/dev/Specification/ASCFDL_Specification_v2.0.pdf/) for implementers.
 
 _____________________
 Implementation Guide
 _____________________
-For anyone looking to implement the ASCFDL into thier tooling, [a guide]([url](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/)) has been created to offer helpful information. 
+For anyone looking to implement the ASCFDL into thier tooling, [a guide](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/) has been created to offer helpful information. 
 
 ____________________________________________
 CI available for macOS, Windows, and Linux
