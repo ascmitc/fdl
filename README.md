@@ -1,4 +1,4 @@
-[# ASC Framing Decision List (FDL)
+# ASC Framing Decision List (FDL)
 
 **Getting Started:**
 
