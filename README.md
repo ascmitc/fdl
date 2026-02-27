@@ -26,7 +26,9 @@ This will also be a great reference for implementers to better understand the in
 _______________________________
 GETTING ACCESS TO SAMPLE MEDIA:
 
-After you compile the code, an interface has been provided allowing you to view framing charts, configure settings and instantly view the expected outcome both visually and as the resulting FDL.  
+Sample data sets including reference images and associated source/result FDL data, can be found in [resources](https://github.com/ascmitc/fdl/tree/dev/resources/FDL).
+
+After compiling the code, an interface has been provided that allows you to view framing charts, configure settings, and instantly see the expected outcome both visually and as the resulting FDL JSON.  
 
 
 
