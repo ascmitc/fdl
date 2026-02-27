@@ -40,7 +40,7 @@ This is the technical [specification](https://ascmitc.github.io/fdl/dev/Specific
 _____________________
 IMPLIMENTATION GUIDE:
 
-For anyone looking to implement the ASCFDL into thier tooling, [a guide](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/) has been created to offer helpful information. 
+For anyone looking to implement the ASCFDL into their tooling, [a guide](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/) has been created to offer helpful information. 
 
 
 
