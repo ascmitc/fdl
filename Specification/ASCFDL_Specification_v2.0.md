@@ -980,12 +980,10 @@ canvas_templates allow for any number of source canvases and associated framing 
 
 **Example:**
 
-                    Source 01                                               Source 02                                                   Source 03  
-![Source 01](images/canvas-template-source-01.jpg) ![Source 02](images/canvas-template-source-02.jpg) ![Source 03](images/canvas-template-source-03.jpg)
-
-                    Result 01                                                Result 02                                                     Result 03
-
-![Result 01](images/canvas-template-result-01.jpg) ![Result 02](images/canvas-template-result-02.jpg) ![Result 03](images/canvas-template-result-03.jpg)
+|  |  |  |  |
+|---|---|---|---|
+| Source | ![Source 01](images/canvas-template-source-01.jpg) | ![Source 02](images/canvas-template-source-02.jpg) | ![Source 03](images/canvas-template-source-03.jpg) |
+| Result | ![Result 01](images/canvas-template-result-01.jpg) | ![Result 02](images/canvas-template-result-02.jpg) | ![Result 03](images/canvas-template-result-03.jpg) |
 
 **Child Elements:** label, id, target_dimensions, target_anamorphic_squeeze, fit_source, fit_method, alignment_method_vertical, alignment_method_horizontal, preserve_from_source_canvas, maximum_dimensions, pad_to_maximum, round
 
@@ -1072,15 +1070,10 @@ For example, if the target_anamorphic_squeeze is defined as 1.0 , an input sourc
 
 If target_anamorphic_squeeze has a value of 0, the canvases.anamorphic_squeeze value of input sources should be preserved. For example, if an input source has a canvases.anamorphic_squeeze value of 2.00 , and the canvas template target_anamorphic_squeeze has a value of 0, the output canvas would retain a anamorphic_squeeze value of 2.00.
 
- Source Anamorphic Squeeze: 2.0       Source Anamorphic Squeeze: 1.33    Source Anamorphic Squeeze: 1.0
-
-![Squeeze 2.0](images/anamorphic-squeeze-2.0.png) ![Squeeze 1.33](images/anamorphic-squeeze-1.33.png) ![Squeeze 1.0](images/anamorphic-squeeze-1.0.png)
-
-Canvas Template Target Anamorphic Squeeze: 1.0
-
-Result: 1.0:1                                       Result: 1.0:1                                          Result: 1.0:1                                       
-
-![Result 1.0:1](images/anamorphic-result-2.0-1.0.png) ![Result 1.0:1](images/anamorphic-result-1.33-1.0.png) ![Result 1.0:1](images/anamorphic-result-1.0-1.0.png)
+|  | Anamorphic Squeeze: 2.0 | Anamorphic Squeeze: 1.33 | Anamorphic Squeeze: 1.0 |
+|--|--------------------------------|----------------------------------|---------------------------------|
+| **Source** | ![Squeeze 2.0](images/anamorphic-squeeze-2.0.png) | ![Squeeze 1.33](images/anamorphic-squeeze-1.33.png) | ![Squeeze 1.0](images/anamorphic-squeeze-1.0.png) |
+| **Result** (Canvas Template Target Anamorphic Squeeze: 1.0) | ![Result 1.0:1](images/anamorphic-result-2.0-1.0.png) | ![Result 1.0:1](images/anamorphic-result-1.33-1.0.png) | ![Result 1.0:1](images/anamorphic-result-1.0-1.0.png) |
 
 The input media file’s canvases.anamorphic_squeeze value must be defined in an associated ASC FDL in order for the target_anamorphic_squeeze attribute to work. 
 
