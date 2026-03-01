@@ -1,5 +1,6 @@
 /fdl/
 .idea
+.DS_Store
 **/__pycache__/
 *.node
 **/tests/outputs/
