@@ -1201,7 +1201,7 @@ In the example used above for the `preserve_from_source` attribute, if a user ha
 
 However, if `maximum_dimensions`, is omitted, the dimensions of the resulting Canvas would not have been cropped.
 
-Example, with the same source image, Canvas Template `maximum_dimensions` values of {"width": 5000, "height": 3496} the resulting Canvas dimensions would still remain 4262 x 2968, as this attribute does not force any kind of scaling, and the dimensions do not meet or exceed the `maximum_dimensions` values.
+Example, with the same source image, Canvas Template `maximum_dimensions` values of {"width": 5000, "height": 3496} the resulting Canvas dimensions would still remain 4266 x 2970, as this attribute does not force any kind of scaling, and the dimensions do not meet or exceed the `maximum_dimensions` values.
 
 ![Maximum Dimensions No Crop](images/maximum-dimensions-no-crop.jpg)
 
@@ -1242,7 +1242,7 @@ The user has chosen the following values in their Canvas Template:
 "maximum_dimensions": { "width": 5000, "height": 3496 }
 ```
 
-With `pad_to_maximum` field set to false, the resulting Canvas dimensions would be  {"width": 3840, "height": 2160} and not forced to match the values defined in `maximum_dimensions`.
+With `pad_to_maximum` field set to false, the resulting Canvas dimensions would be  {"width": 4266, "height": 2970} and not forced to match the values defined in `maximum_dimensions`.
 
 ![Pad to Maximum False](images/pad-to-maximum-false.jpg)
 
@@ -1341,19 +1341,19 @@ Default Value: `"even": "even"`, `"mode": "up"`
           "source_canvas_id": "20220310",
           "dimensions": { "width": 4448, "height": 3096 },
           "effective_dimensions": { "width": 4448, "height": 3096 },
-          "effective_anchor_point": { "x": 0, "y": 0 },
+          "effective_anchor_point": { "x": 0.0, "y": 0.0 },
           "photosite_dimensions": { "width": 4448, "height": 3096 },
           "physical_dimensions": { "width": 36.7, "height": 25.54 },
-          "anamorphic_squeeze": 1,
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
               "label": "2-1 Framing",
               "id": "20220310-FDLSMP01",
               "framing_intent_id": "FDLSMP01",
-              "dimensions": { "width": 4004, "height": 2002 },
-              "anchor_point": { "x": 222, "y": 547 },
-              "protection_dimensions": { "width": 4448, "height": 2224 },
-              "protection_anchor_point": { "x": 0, "y": 436 }
+              "dimensions": { "width": 4004.0, "height": 2002.0 },
+              "anchor_point": { "x": 222.0, "y": 547.0 },
+              "protection_dimensions": { "width": 4448.0, "height": 2224.0 },
+              "protection_anchor_point": { "x": 0.0, "y": 436.0 }
             }
           ]
         }
@@ -1399,25 +1399,25 @@ Default Value: `"even": "even"`, `"mode": "up"`
           "effective_anchor_point": { "x": 0, "y": 0 },
           "photosite_dimensions": { "width": 4448, "height": 3096 },
           "physical_dimensions": { "width": 36.7, "height": 25.54 },
-          "anamorphic_squeeze": 1,
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
               "label": "Hero 1.78",
               "id": "20210902-29A901F1",
               "framing_intent_id": "29A901F1",
-              "dimensions": { "width": 4226, "height": 2376 },
-              "anchor_point": { "x": 111, "y": 360 },
-              "protection_dimensions": { "width": 4448, "height": 2508 },
-              "protection_anchor_point": { "x": 0, "y": 294 }
+              "dimensions": { "width": 4226.0, "height": 2376.0 },
+              "anchor_point": { "x": 111.0, "y": 360.0 },
+              "protection_dimensions": { "width": 4448.0, "height": 2508.0 },
+              "protection_anchor_point": { "x": 0.0, "y": 294.0 }
             },
             {
               "label": "Hero 2-1",
               "id": "20210902-0302684B",
               "framing_intent_id": "0302684B",
-              "dimensions": { "width": 4224, "height": 2112 },
-              "anchor_point": { "x": 112, "y": 492 },
-              "protection_dimensions": { "width": 4448, "height": 2224 },
-              "protection_anchor_point": { "x": 0, "y": 436 }
+              "dimensions": { "width": 4224.0, "height": 2112.0 },
+              "anchor_point": { "x": 112.0, "y": 492.0 },
+              "protection_dimensions": { "width": 4448.0, "height": 2224.0 },
+              "protection_anchor_point": { "x": 0.0, "y": 436.0 }
             }
           ]
         }
@@ -1448,7 +1448,7 @@ Default Value: `"even": "even"`, `"mode": "up"`
       "label": "VFX Pull",
       "id": "VX220310",
       "target_dimensions": { "width": 4096, "height": 1716 },
-      "target_anamorphic_squeeze": 1,
+      "target_anamorphic_squeeze": 1.0,
       "fit_source": "framing_decision.dimensions",
       "fit_method": "width",
       "alignment_method_vertical": "center",
@@ -1499,19 +1499,19 @@ Default Value: `"even": "even"`, `"mode": "up"`
           "source_canvas_id": "20220311",
           "dimensions": { "width": 4448, "height": 3096 },
           "effective_dimensions": { "width": 4004, "height": 2786 },
-          "effective_anchor_point": { "x": 222, "y": 155 },
+          "effective_anchor_point": { "x": 222.0, "y": 155.0 },
           "photosite_dimensions": { "width": 4448, "height": 3096 },
           "physical_dimensions": { "width": 36.7, "height": 25.54 },
-          "anamorphic_squeeze": 1,
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
               "label": "2-1 Framing",
               "id": "20220311-FDLSMP04",
               "framing_intent_id": "FDLSMP04",
-              "dimensions": { "width": 3804, "height": 1902 },
-              "anchor_point": { "x": 322, "y": 597 },
-              "protection_dimensions": { "width": 4004, "height": 2002 },
-              "protection_anchor_point": { "x": 222, "y": 547 }
+              "dimensions": { "width": 3804.0, "height": 1902.0 },
+              "anchor_point": { "x": 322.0, "y": 597.0 },
+              "protection_dimensions": { "width": 4004.0, "height": 2002.0 },
+              "protection_anchor_point": { "x": 222.0, "y": 547.0 }
             }
           ]
         }
@@ -1534,13 +1534,13 @@ Default Value: `"even": "even"`, `"mode": "up"`
     {
       "label": "2-1 Framing",
       "id": "FDLSMP04",
-      "aspect_ratio": { "width": 2, "height": 1 },
+      "aspect_ratio": { "width": 2.0, "height": 1.0 },
       "protection": 0.05
     }
   ],
   "contexts": [
     {
-      "label": "ArriLFV",
+      "label": "ArriLFV_Movie",
       "context_creator": "ASC FDL Committee",
       "clip_id": {
         "clip_name": "A002_C307_0523JT",
@@ -1549,23 +1549,58 @@ Default Value: `"even": "even"`, `"mode": "up"`
       "canvases": [
         {
           "label": "Open Gate Vignette",
-          "id": "20220311",
-          "source_canvas_id": "20220311",
+          "id": "20220311_V01",
           "dimensions": { "width": 4448, "height": 3096 },
           "effective_dimensions": { "width": 4004, "height": 2786 },
-          "effective_anchor_point": { "x": 222, "y": 155 },
+          "effective_anchor_point": { "x": 222.0, "y": 155.0 },
           "photosite_dimensions": { "width": 4448, "height": 3096 },
           "physical_dimensions": { "width": 36.7, "height": 25.54 },
-          "anamorphic_squeeze": 1,
+          "anamorphic_squeeze": 1.0,
           "framing_decisions": [
             {
               "label": "2-1 Framing",
               "id": "20220311-FDLSMP04",
               "framing_intent_id": "FDLSMP04",
-              "dimensions": { "width": 3804, "height": 1902 },
-              "anchor_point": { "x": 322, "y": 597 },
-              "protection_dimensions": { "width": 4004, "height": 2002 },
-              "protection_anchor_point": { "x": 222, "y": 547 }
+              "dimensions": { "width": 3804.0, "height": 1902.0 },
+              "anchor_point": { "x": 322.0, "y": 597.0 },
+              "protection_dimensions": { "width": 4004.0, "height": 2002.0 },
+              "protection_anchor_point": { "x": 222.0, "y": 547.0 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "ArriLFV_Sequence",
+      "context_creator": "ASC FDL Committee",
+      "clip_id": {
+        "clip_name": "A003_C307_0523JT",
+        "sequence": {
+          "value": "A003_C307_0523JT_###.exr",
+          "idx": "#",
+          "min": 0,
+          "max": 100
+        }
+      },
+      "canvases": [
+        {
+          "label": "Open Gate Full",
+          "id": "20220311_V02",
+          "dimensions": { "width": 4448, "height": 3096 },
+          "effective_dimensions": { "width": 4448, "height": 3096 },
+          "effective_anchor_point": { "x": 0.0, "y": 0.0 },
+          "photosite_dimensions": { "width": 4448, "height": 3096 },
+          "physical_dimensions": { "width": 36.7, "height": 25.54 },
+          "anamorphic_squeeze": 1.0,
+          "framing_decisions": [
+            {
+              "label": "2-1 Framing",
+              "id": "20220311-FDLSMP04_SEQ",
+              "framing_intent_id": "FDLSMP04",
+              "dimensions": { "width": 4224.0, "height": 2112.0 },
+              "anchor_point": { "x": 112.0, "y": 492.0 },
+              "protection_dimensions": { "width": 4448.0, "height": 2224.0 },
+              "protection_anchor_point": { "x": 0.0, "y": 436.0 }
             }
           ]
         }
