@@ -750,7 +750,7 @@ class MainWindow(QMainWindow):
             else:
                 self._show_error(f"Failed to save image to: {path}")
 
-    def export_output_image(self, output_path: str) -> bool:
+    def export_output_image(self, output_path: str, filter_name: str | None = None) -> bool:
         """
         Export the transformed output image to the specified path.
 
@@ -764,6 +764,8 @@ class MainWindow(QMainWindow):
         ----------
         output_path : str
             Path where the image should be saved. Use .svg for vector output.
+        filter_name : str, optional
+            OIIO filter for resize operations. If None, reads from app settings.
 
         Returns
         -------
@@ -784,6 +786,11 @@ class MainWindow(QMainWindow):
         if result is None:
             return False
         try:
+            if filter_name is None:
+                from fdl_viewer.utils.settings import AppSettings
+
+                filter_name = AppSettings().get_image_filter()
+
             source_fdl = self._app_state.source_fdl.fdl
             context_label = self._app_state.selected_context
             canvas_id = self._app_state.selected_canvas
@@ -802,6 +809,7 @@ class MainWindow(QMainWindow):
                 new_canvas=result.canvas,
                 scaled_bounding_box=result.canvas.get_custom_attr(ATTR_SCALED_BOUNDING_BOX),
                 content_translation=result.canvas.get_custom_attr(ATTR_CONTENT_TRANSLATION),
+                filter_name=filter_name,
             )
             return True
         except Exception:

@@ -290,24 +290,29 @@ class UITestHelper:
             return True
         return False
 
-    def export_output_image_programmatically(self, output_path: Path) -> bool:
+    def export_output_image_programmatically(self, output_path: Path, filter_name: str = "triangle") -> bool:
         """
         Export the transformed output image to the specified path.
 
         This bypasses the file dialog and directly exports the transformed
         image using MainWindow.export_output_image().
 
+        Uses "triangle" (bilinear) filter by default in tests for
+        deterministic cross-platform results.
+
         Parameters
         ----------
         output_path : Path
             Path where the output image should be saved.
+        filter_name : str
+            OIIO filter for resize operations. Default "triangle" for tests.
 
         Returns
         -------
         bool
             True if export was successful.
         """
-        return self.window.export_output_image(str(output_path))
+        return self.window.export_output_image(str(output_path), filter_name=filter_name)
 
     def get_source_fdl_model(self):
         """

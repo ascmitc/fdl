@@ -41,6 +41,7 @@ class BaseFDLImagingTestCase(BaseFDLTestCase):
         framing_decision_id: str,
         test_name: str,
         expected_image_path: Path | None = None,
+        filter_name: str = "triangle",
     ) -> Path:
         """
         Process a test image using OpenImageIO and FDL template transformations.
@@ -86,6 +87,7 @@ class BaseFDLImagingTestCase(BaseFDLTestCase):
             context_id=context_label,
             canvas_id=canvas_id,
             framing_decision_id=framing_decision_id,
+            filter_name=filter_name,
         )
 
         return output_path

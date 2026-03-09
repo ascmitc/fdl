@@ -76,6 +76,7 @@ class TestImageProcessing(BaseFDLTestCase):
                 canvas_id=canvas.id,
                 framing_decision_id=fd.id,
                 use_protection=True,
+                filter_name="triangle",
             )
 
             self.assertTrue(result)
@@ -117,6 +118,7 @@ class TestImageProcessing(BaseFDLTestCase):
                 context_id=context.label,
                 canvas_id=canvas.id,
                 framing_decision_id=fd.id,
+                filter_name="triangle",
             )
 
             self.assertTrue(result)
@@ -163,6 +165,7 @@ class TestImageProcessing(BaseFDLTestCase):
                 framing_decision_id=fd.id,
                 output_width=target_width,
                 output_height=target_height,
+                filter_name="triangle",
             )
 
             self.assertTrue(result)
