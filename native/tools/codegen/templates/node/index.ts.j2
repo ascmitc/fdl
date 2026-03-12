@@ -3,7 +3,7 @@
 // AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
 /**
  * @file index.ts
- * @brief Public API for @asc/fdl — re-exports all facade classes, types, and utilities.
+ * @brief Public API for @asc-mitc/fdl — re-exports all facade classes, types, and utilities.
  */
 
 // Facade classes
