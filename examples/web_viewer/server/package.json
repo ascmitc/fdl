@@ -1,6 +1,6 @@
 {
   "name": "fdl-viewer-server",
-  "version": "0.1.0-dev.5",
+  "version": "0.1.0-dev.6",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@asc-mitc/fdl": "file:../../../native/bindings/node",
+    "@asc-mitc/fdl": "0.1.0-dev.5",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "multer": "^1.4.5-lts.1",

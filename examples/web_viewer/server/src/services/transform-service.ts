@@ -8,8 +8,11 @@ import {
   RoundStrategy,
   RoundingEven,
   RoundingMode,
+  ATTR_SCALE_FACTOR,
+  ATTR_CONTENT_TRANSLATION,
+  ATTR_SCALED_BOUNDING_BOX,
 } from "@asc-mitc/fdl";
-import type { Canvas, FramingDecision, FDL } from "@asc-mitc/fdl";
+import type { Canvas, FramingDecision, FDL, PointFloat, DimensionsFloat } from "@asc-mitc/fdl";
 import type {
   TemplateParams,
   TransformResultData,
@@ -129,9 +132,9 @@ export function applyTransform(
   // Navigate to the output canvas/framing for geometry
   const outputFound = findCanvasAndFraming(
     result.fdl,
-    result._context_label,
-    result._canvas_id,
-    result._framing_decision_id,
+    result.contextLabel,
+    result.canvasId,
+    result.framingDecisionId,
   );
 
   const outputGeometry = outputFound
@@ -151,28 +154,19 @@ export function applyTransform(
 
   if (outputFound) {
     const canvas = outputFound.canvas;
-    if (canvas.hasCustomAttr("scale_factor")) {
-      scaleFactor = canvas.getCustomAttr("scale_factor") as number;
-    }
-    if (canvas.hasCustomAttr("content_translation_x")) {
-      contentTranslation = {
-        x: canvas.getCustomAttr("content_translation_x") as number,
-        y: canvas.getCustomAttr("content_translation_y") as number,
-      };
-    }
-    if (canvas.hasCustomAttr("scaled_bounding_box_width")) {
-      scaledBoundingBox = {
-        width: canvas.getCustomAttr("scaled_bounding_box_width") as number,
-        height: canvas.getCustomAttr("scaled_bounding_box_height") as number,
-      };
-    }
+    const sf = canvas.getCustomAttr(ATTR_SCALE_FACTOR);
+    if (sf !== null) scaleFactor = sf as number;
+    const ct = canvas.getCustomAttr(ATTR_CONTENT_TRANSLATION) as PointFloat | null;
+    if (ct !== null) contentTranslation = { x: ct.x, y: ct.y };
+    const sbb = canvas.getCustomAttr(ATTR_SCALED_BOUNDING_BOX) as DimensionsFloat | null;
+    if (sbb !== null) scaledBoundingBox = { width: sbb.width, height: sbb.height };
   }
 
   return {
     outputSessionId,
-    outputContextLabel: result._context_label,
-    outputCanvasId: result._canvas_id,
-    outputFramingId: result._framing_decision_id,
+    outputContextLabel: result.contextLabel,
+    outputCanvasId: result.canvasId,
+    outputFramingId: result.framingDecisionId,
     hierarchy: outputHierarchy,
     sourceGeometry,
     outputGeometry,
