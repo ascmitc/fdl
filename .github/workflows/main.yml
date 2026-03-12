@@ -472,8 +472,8 @@ jobs:
               cd native/bindings/python
               python -m build --wheel --outdir /workspace/dist/
               cd /workspace
-              auditwheel repair dist/fdl-*-linux_*.whl --wheel-dir dist/
-              rm dist/fdl-*-linux_*.whl
+              auditwheel repair dist/asc_fdl-*-linux_*.whl --wheel-dir dist/
+              rm dist/asc_fdl-*-linux_*.whl
             '
 
       # --- Upload build artifacts ---
@@ -668,3 +668,58 @@ jobs:
         working-directory: native/bindings/node
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # ---------------------------------------------------------------------------
+  # Publish Python packages to PyPI (tag pushes only)
+  # ---------------------------------------------------------------------------
+  pypi_publish:
+    name: Publish to PyPI
+    needs: [build_artifacts]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # required for OIDC Trusted Publishing
+
+    steps:
+      - name: Download wheels (macOS ARM64)
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels-macOS-ARM64
+          path: dist/
+
+      - name: Download wheels (Linux X64)
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels-Linux-X64
+          path: dist/
+
+      - name: Download wheels (Windows X64)
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels-Windows-X64
+          path: dist/
+
+      - name: Remove duplicate pure-Python wheels
+        # Pure-Python wheels (asc-fdl-imaging, asc-fdl-frameline-generator, asc-fdl-viewer)
+        # are built identically on all 3 platforms — keep only one copy of each
+        shell: bash
+        run: |
+          python3 - <<'EOF'
+          import glob, os
+          seen = set()
+          for whl in sorted(glob.glob("dist/*.whl")):
+              name = os.path.basename(whl)
+              if "py3-none-any" in name:
+                  key = "-".join(name.split("-")[:2])
+                  if key in seen:
+                      print(f"Removing duplicate: {name}")
+                      os.remove(whl)
+                  else:
+                      seen.add(key)
+          EOF
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
