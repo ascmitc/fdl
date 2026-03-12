@@ -42,7 +42,7 @@ This is the technical [specification](https://ascmitc.github.io/fdl/dev/Specific
 _____________________
 IMPLIMENTATION GUIDE:
 
-For anyone looking to implement the ASCFDL into their tooling, [a guide](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/) has been created to offer helpful information. 
+For anyone looking to implement the ASCFDL into their tooling, [a guide](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/) has been created to offer helpful information.
 
 
 
@@ -257,4 +257,51 @@ Git LFS objects are cached per-OS to avoid re-downloading large test resources o
 ### Test Parallelism
 
 Non-viewer Python test suites run with `pytest-xdist` (`-n auto`) for parallel execution across all available CPU cores. Viewer tests run serially to avoid display conflicts.
-](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/)
+
+-----------------------------------------
+
+## Release Process
+
+All package versions across the repository (Node.js, Python, and C++ core) are kept in sync using `scripts/set_version.py`.
+
+### Steps
+
+**1. Bump the version**
+
+Run the version script with the new version string. This updates all 9 version-bearing files in one command:
+
+```bash
+python scripts/set_version.py 0.2.0
+# or for a pre-release:
+python scripts/set_version.py 0.2.0-rc.1
+```
+
+Use `--dry-run` to preview changes without writing:
+
+```bash
+python scripts/set_version.py --dry-run 0.2.0
+```
+
+**2. Commit and open a PR**
+
+```bash
+git add -A
+git commit -m "Bump version to 0.2.0"
+git push origin your-branch
+# Open a PR targeting main and get it reviewed and merged
+```
+
+**3. Tag after CI passes on main**
+
+Once the PR is merged and the CI/CD pipeline on `main` passes, tag the merge commit:
+
+```bash
+git checkout main
+git pull origin main
+git tag v0.2.0
+git push origin v0.2.0
+```
+
+Pushing the tag triggers the full release pipeline: artifact builds on all platforms, GitHub Release creation, npm publish of `@asc-mitc/fdl` to the npm registry, and Python package publishing to PyPI.
+
+> **Pre-release tags** (containing `-dev`, `-alpha`, or `-rc`) can be pushed from the `dev` branch and will create a pre-release on GitHub without requiring the tag to be on `main`.
