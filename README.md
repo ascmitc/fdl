@@ -305,3 +305,14 @@ git push origin v0.2.0
 Pushing the tag triggers the full release pipeline: artifact builds on all platforms, GitHub Release creation, npm publish of `@asc-mitc/fdl` to the npm registry, and Python package publishing to PyPI.
 
 > **Pre-release tags** (containing `-dev`, `-alpha`, or `-rc`) can be pushed from the `dev` branch and will create a pre-release on GitHub without requiring the tag to be on `main`.
+
+### ABI Version
+
+The C library ABI version (`FDL_ABI_VERSION_MAJOR/MINOR/PATCH` in `native/core/cmake/FDLVersion.cmake`) is **independent of the package version** and is **not updated by `set_version.py`**.
+
+The ABI version must be bumped manually, directly in `FDLVersion.cmake`, and only when the public C ABI changes in a binary-incompatible way (e.g. removing or changing the signature of a symbol in `fdl_core.h`). Routine package version bumps (pre-releases, patch fixes, new features that don't break the C ABI) leave the ABI triple unchanged.
+
+| Version type | Managed by | When to bump |
+|---|---|---|
+| Package version (`0.x.y-dev.z`) | `scripts/set_version.py` | Every release |
+| C ABI version (`FDL_ABI_VERSION_*`) | Manual edit in `FDLVersion.cmake` | Only on binary-incompatible C ABI change |
