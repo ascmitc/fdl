@@ -91,7 +91,13 @@ def build_addon() -> int:
 
 def _bundle_libfdl_core(dest_dir: Path) -> None:
     """Copy the shared libfdl_core library into *dest_dir* next to the addon."""
-    lib_patterns = ["libfdl_core.dylib", "libfdl_core.so", "fdl_core.dll"]
+    lib_patterns = [
+        "libfdl_core.dylib",  # macOS unversioned symlink  → binary copy
+        "libfdl_core.*.dylib",  # macOS versioned: libfdl_core.0.dylib, libfdl_core.0.6.0.dylib
+        "libfdl_core.so",  # Linux unversioned symlink  → binary copy
+        "libfdl_core.so.*",  # Linux versioned: libfdl_core.so.0, libfdl_core.so.0.6.0
+        "fdl_core.dll",
+    ]
     for pattern in lib_patterns:
         candidates = list(CORE_BUILD_DIR.glob(pattern))
         for src in candidates:
