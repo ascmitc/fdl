@@ -8,8 +8,8 @@ import {
   RoundStrategy,
   RoundingEven,
   RoundingMode,
-} from "@asc/fdl";
-import type { Canvas, FramingDecision, FDL } from "@asc/fdl";
+} from "@asc-mitc/fdl";
+import type { Canvas, FramingDecision, FDL } from "@asc-mitc/fdl";
 import type {
   TemplateParams,
   TransformResultData,

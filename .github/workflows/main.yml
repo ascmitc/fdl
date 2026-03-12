@@ -263,9 +263,13 @@ jobs:
           lfs: false
           fetch-depth: 0
 
-      # Tag-on-main verification (release tags only)
+      # Tag-on-main verification (stable release tags only — skip pre-release suffixes like -dev, -alpha, -rc)
       - name: Verify tag belongs to main
-        if: startsWith(github.ref, 'refs/tags/')
+        if: >-
+          startsWith(github.ref, 'refs/tags/') &&
+          !contains(github.ref_name, '-dev') &&
+          !contains(github.ref_name, '-alpha') &&
+          !contains(github.ref_name, '-rc')
         shell: bash
         run: |
           git fetch origin main --depth=1
@@ -596,6 +600,71 @@ jobs:
           name: ${{ github.ref_name }}
           generate_release_notes: true
           draft: false
-          prerelease: false
+          prerelease: ${{ contains(github.ref_name, '-dev') || contains(github.ref_name, '-alpha') || contains(github.ref_name, '-rc') }}
           files: |
             release-assets/**
+
+  # ---------------------------------------------------------------------------
+  # Publish npm package — @asc-mitc/fdl (tag pushes only)
+  # ---------------------------------------------------------------------------
+  npm_publish:
+    name: Publish to npm
+    needs: [build_artifacts]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Download macOS (ARM64) addon
+        uses: actions/download-artifact@v4
+        with:
+          name: node-addon-macOS-ARM64
+          path: native/bindings/node/prebuilds/darwin-arm64/
+
+      - name: Download Linux (X64) addon
+        uses: actions/download-artifact@v4
+        with:
+          name: node-addon-Linux-X64
+          path: native/bindings/node/prebuilds/linux-x64/
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install codegen dependencies
+        run: uv pip install pyyaml jinja2 "datamodel-code-generator[http]>=0.25" --system
+
+      - name: Run codegen
+        run: python scripts/run_codegen.py
+
+      - name: Install Node.js dependencies
+        run: npm install --ignore-scripts
+        working-directory: native/bindings/node
+
+      - name: Build TypeScript
+        run: npx tsc
+        working-directory: native/bindings/node
+
+      - name: Set version from tag
+        run: npm version "${{ github.ref_name }}" --no-git-tag-version --allow-same-version
+        working-directory: native/bindings/node
+
+      - name: Publish to npm
+        run: npm publish --access public
+        working-directory: native/bindings/node
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

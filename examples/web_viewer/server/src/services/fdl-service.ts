@@ -3,8 +3,8 @@ import {
   readFromString,
   readFromFile,
   writeToString,
-} from "@asc/fdl";
-import type { Canvas, Context, FramingDecision } from "@asc/fdl";
+} from "@asc-mitc/fdl";
+import type { Canvas, Context, FramingDecision } from "@asc-mitc/fdl";
 import { v4 as uuidv4 } from "uuid";
 import type {
   FdlHierarchy,

@@ -2,7 +2,7 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/index.ts"],
   "out": "../../../docs/node-api",
-  "name": "@asc/fdl — Node.js API",
+  "name": "@asc-mitc/fdl — Node.js API",
   "excludeInternal": true,
   "excludePrivate": true,
   "exclude": ["src/ffi/**", "src/addon/**"],

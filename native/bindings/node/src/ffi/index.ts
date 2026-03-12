@@ -59,10 +59,23 @@ function candidatePaths(): string[] {
   const envPath = process.env.FDL_NODE_ADDON_PATH;
   if (envPath) paths.push(envPath);
 
-  // 2. Build output directory (standard cmake-js location)
+  // 2. Prebuilds directory (npm-published binaries)
+  const { platform, arch } = process;
+  paths.push(
+    join(
+      __dirname,
+      "..",
+      "..",
+      "prebuilds",
+      `${platform}-${arch}`,
+      "fdl_addon.node",
+    ),
+  );
+
+  // 3. Build output directory (standard cmake-js location)
   paths.push(join(__dirname, "..", "..", "build", "fdl_addon.node"));
 
-  // 3. Build output at package root (alternative)
+  // 4. Build output at package root (alternative)
   paths.push(join(__dirname, "..", "..", "build", "Release", "fdl_addon.node"));
   paths.push(join(__dirname, "..", "..", "build", "Debug", "fdl_addon.node"));
 

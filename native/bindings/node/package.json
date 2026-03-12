@@ -1,6 +1,6 @@
 {
-  "name": "@asc/fdl",
-  "version": "0.1.0",
+  "name": "@asc-mitc/fdl",
+  "version": "0.1.0-dev.1",
   "description": "Node.js/TypeScript bindings for the ASC Framing Decision List (FDL) library",
   "type": "module",
   "main": "./dist/index.js",
@@ -39,8 +39,7 @@
   },
   "files": [
     "dist/",
-    "build/fdl_addon.node",
-    "build/libfdl_core.*",
+    "prebuilds/",
     "src/addon/binding.cc",
     "src/addon/structs.h",
     "CMakeLists.txt"

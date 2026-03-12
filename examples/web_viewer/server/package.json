@@ -9,7 +9,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@asc/fdl": "file:../../../native/bindings/node",
+    "@asc-mitc/fdl": "file:../../../native/bindings/node",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "multer": "^1.4.5-lts.1",
