@@ -220,17 +220,19 @@ fdl_template_result_t build_template_output_document(
     }
 
     // Copy all framing intents from source document
+    // NOTE: safe_copy into std::string before the call to avoid dangling pointers.
+    // fdl_framing_intent_get_id / get_label return const char* into a thread-local
+    // string cache. If the cache reaches its eviction threshold between argument
+    // evaluations (C++ argument evaluation order is unspecified), the pointer from
+    // the first call can be invalidated when the second call triggers map_.clear().
     uint32_t const fi_count = fdl_doc_framing_intents_count(source_doc);
     for (uint32_t i = 0; i < fi_count; ++i) {
         auto* fi = fdl_doc_framing_intent_at(source_doc, i);
+        std::string const fi_id_s = safe_copy(fdl_framing_intent_get_id(fi));
+        std::string const fi_label_s = safe_copy(fdl_framing_intent_get_label(fi));
         auto ar = fdl_framing_intent_get_aspect_ratio(fi);
         fdl_doc_add_framing_intent(
-            out_doc,
-            fdl_framing_intent_get_id(fi),
-            fdl_framing_intent_get_label(fi),
-            ar.width,
-            ar.height,
-            fdl_framing_intent_get_protection(fi));
+            out_doc, fi_id_s.c_str(), fi_label_s.c_str(), ar.width, ar.height, fdl_framing_intent_get_protection(fi));
     }
 
     // Add context with source canvas and new canvas

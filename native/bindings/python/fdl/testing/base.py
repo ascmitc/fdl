@@ -46,9 +46,17 @@ class BaseFDLTestCase(unittest.TestCase):
 
     @classmethod
     def get_outputs_folder(cls):
-        """Gets the outputs folder, creating it if it doesn't exist."""
+        """Gets the outputs folder, creating it if it doesn't exist.
+
+        Under pytest-xdist each worker gets its own subdirectory to avoid
+        concurrent writes to the same file from different workers.
+        """
+        import os
+
         # Navigate: fdl/testing/ -> fdl/ -> python/ -> tests/outputs
-        output_path = Path(__file__).parents[1].parent / "tests" / "outputs"
+        base = Path(__file__).parents[1].parent / "tests" / "outputs"
+        worker_id = os.environ.get("PYTEST_XDIST_WORKER", "main")
+        output_path = base / worker_id
         if not output_path.exists():
             output_path.mkdir(parents=True, exist_ok=True)
         return output_path
