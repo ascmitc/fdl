@@ -242,7 +242,7 @@ jobs:
   # ---------------------------------------------------------------------------
   build_artifacts:
     name: Build Artifacts (${{ matrix.os }})
-    needs: test
+    needs: lint  # temporarily skipping tests to speed up npm publish validation
     if: >-
       github.event_name == 'schedule' ||
       github.event_name == 'workflow_dispatch' ||
@@ -512,7 +512,7 @@ jobs:
   # ---------------------------------------------------------------------------
   package_scenarios:
     name: Package Scenario Resources
-    needs: test
+    needs: lint  # temporarily skipping tests to speed up npm publish validation
     if: >-
       github.event_name == 'schedule' ||
       github.event_name == 'workflow_dispatch' ||

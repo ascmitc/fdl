@@ -1,6 +1,6 @@
 {
   "name": "@asc-mitc/fdl",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev.2",
   "description": "Node.js/TypeScript bindings for the ASC Framing Decision List (FDL) library",
   "type": "module",
   "main": "./dist/index.js",
@@ -12,7 +12,6 @@
     }
   },
   "scripts": {
-    "install": "node -e \"try{require('./build/fdl_addon.node')}catch{process.exit(1)}\" || cmake-js compile",
     "build": "cmake-js compile && tsc",
     "build:addon": "cmake-js compile",
     "build:ts": "tsc",
