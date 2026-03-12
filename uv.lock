@@ -507,7 +507,7 @@ wheels = [
 
 [[package]]
 name = "fdl"
-version = "0.1.0"
+version = "0.1.0.dev4"
 source = { editable = "native/bindings/python" }
 dependencies = [
     { name = "cffi" },
@@ -535,7 +535,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "fdl-frameline-generator"
-version = "1.0.0"
+version = "0.1.0.dev4"
 source = { editable = "packages/fdl_frameline_generator" }
 dependencies = [
     { name = "fdl" },
@@ -563,7 +563,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "fdl-imaging"
-version = "0.1.0"
+version = "0.1.0.dev4"
 source = { editable = "packages/fdl_imaging" }
 dependencies = [
     { name = "fdl" },
@@ -587,7 +587,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "fdl-viewer"
-version = "2.0.1"
+version = "0.1.0.dev4"
 source = { editable = "packages/fdl_viewer" }
 dependencies = [
     { name = "fdl" },
@@ -624,7 +624,7 @@ provides-extras = ["dev", "build"]
 
 [[package]]
 name = "fdl-workspace"
-version = "0.0.0"
+version = "0.1.0.dev4"
 source = { virtual = "." }
 dependencies = [
     { name = "fdl" },

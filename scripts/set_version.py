@@ -58,18 +58,26 @@ def update_package_json(path: Path, new_version: str, dry_run: bool) -> None:
 
 
 def update_fdl_version_cmake(path: Path, new_version: str, major: int, minor: int, patch: int, dry_run: bool) -> None:
-    """Update FDL_CORE_VERSION and ABI triple in FDLVersion.cmake."""
+    """Update FDL_CORE_VERSION, FDL_CORE_VERSION_FULL, and ABI triple in FDLVersion.cmake.
+
+    FDL_CORE_VERSION must be numeric-only (CMake project(VERSION) requirement).
+    FDL_CORE_VERSION_FULL carries the full string including any pre-release suffix.
+    """
+    base_version = f"{major}.{minor}.{patch}"
     text = path.read_text(encoding="utf-8")
 
-    text, n1 = re.subn(r'set\(FDL_CORE_VERSION ".*?"\)', f'set(FDL_CORE_VERSION "{new_version}")', text)
-    text, n2 = re.subn(r"set\(FDL_ABI_VERSION_MAJOR \d+\)", f"set(FDL_ABI_VERSION_MAJOR {major})", text)
-    text, n3 = re.subn(r"set\(FDL_ABI_VERSION_MINOR \d+\)", f"set(FDL_ABI_VERSION_MINOR {minor})", text)
-    text, n4 = re.subn(r"set\(FDL_ABI_VERSION_PATCH \d+\)", f"set(FDL_ABI_VERSION_PATCH {patch})", text)
+    # Numeric-only version for project(VERSION ...) — strip pre-release
+    text, n1 = re.subn(r'set\(FDL_CORE_VERSION\s+".*?"\)', f'set(FDL_CORE_VERSION      "{base_version}")', text)
+    # Full version string including pre-release suffix
+    text, n2 = re.subn(r'set\(FDL_CORE_VERSION_FULL\s+".*?"\)', f'set(FDL_CORE_VERSION_FULL "{new_version}")', text)
+    text, n3 = re.subn(r"set\(FDL_ABI_VERSION_MAJOR \d+\)", f"set(FDL_ABI_VERSION_MAJOR {major})", text)
+    text, n4 = re.subn(r"set\(FDL_ABI_VERSION_MINOR \d+\)", f"set(FDL_ABI_VERSION_MINOR {minor})", text)
+    text, n5 = re.subn(r"set\(FDL_ABI_VERSION_PATCH \d+\)", f"set(FDL_ABI_VERSION_PATCH {patch})", text)
 
-    if not all([n1, n2, n3, n4]):
+    if not all([n1, n2, n3, n4, n5]):
         print(f"  WARNING: some cmake version fields not found in {path.relative_to(REPO_ROOT)}", file=sys.stderr)
 
-    print(f"  {path.relative_to(REPO_ROOT)}: -> {new_version} (ABI {major}.{minor}.{patch})")
+    print(f"  {path.relative_to(REPO_ROOT)}: -> {base_version} / full={new_version} (ABI {major}.{minor}.{patch})")
     if not dry_run:
         path.write_text(text, encoding="utf-8")
 
