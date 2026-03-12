@@ -8,10 +8,10 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "fdl",
-    "fdl-frameline-generator",
-    "fdl-imaging",
-    "fdl-viewer",
+    "asc-fdl",
+    "asc-fdl-frameline-generator",
+    "asc-fdl-imaging",
+    "asc-fdl-viewer",
     "fdl-workspace",
 ]
 
@@ -55,6 +55,123 @@ sdist = { url = "https://files.pythonhosted.org/packages/38/61/0b9ae6399dd4a58d8
 wheels = [
     { url = "https://files.pythonhosted.org/packages/74/f5/9373290775639cb67a2fce7f629a1c240dce9f12fe927bc32b2736e16dfc/argcomplete-3.6.3-py3-none-any.whl", hash = "sha256:f5007b3a600ccac5d25bbce33089211dfd49eab4a7718da3f10e3082525a92ce", size = 43846, upload-time = "2025-10-20T03:33:33.021Z" },
 ]
+
+[[package]]
+name = "asc-fdl"
+version = "0.1.0.dev7"
+source = { editable = "native/bindings/python" }
+dependencies = [
+    { name = "cffi" },
+    { name = "pydantic" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "build" },
+    { name = "mktestdocs" },
+    { name = "pytest" },
+    { name = "pytest-xdist" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "build", marker = "extra == 'dev'", specifier = ">=1.0" },
+    { name = "cffi", specifier = ">=1.16" },
+    { name = "mktestdocs", marker = "extra == 'dev'", specifier = ">=0.2.0" },
+    { name = "pydantic", specifier = ">=2.0,<3" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
+    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.0" },
+]
+provides-extras = ["dev"]
+
+[[package]]
+name = "asc-fdl-frameline-generator"
+version = "0.1.0.dev7"
+source = { editable = "packages/fdl_frameline_generator" }
+dependencies = [
+    { name = "asc-fdl" },
+    { name = "asc-fdl-imaging" },
+    { name = "openimageio" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "pytest-xdist" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "asc-fdl", editable = "native/bindings/python" },
+    { name = "asc-fdl-imaging", editable = "packages/fdl_imaging" },
+    { name = "openimageio", specifier = ">=2.4.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.0" },
+    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.0" },
+]
+provides-extras = ["dev"]
+
+[[package]]
+name = "asc-fdl-imaging"
+version = "0.1.0.dev7"
+source = { editable = "packages/fdl_imaging" }
+dependencies = [
+    { name = "asc-fdl" },
+    { name = "openimageio" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-xdist" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "asc-fdl", editable = "native/bindings/python" },
+    { name = "openimageio", specifier = ">=2.4.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
+    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.0" },
+]
+provides-extras = ["dev"]
+
+[[package]]
+name = "asc-fdl-viewer"
+version = "0.1.0.dev7"
+source = { editable = "packages/fdl_viewer" }
+dependencies = [
+    { name = "asc-fdl" },
+    { name = "asc-fdl-imaging" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "openimageio" },
+    { name = "pyside6" },
+]
+
+[package.optional-dependencies]
+build = [
+    { name = "pyinstaller" },
+]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "pytest-qt" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "asc-fdl", editable = "native/bindings/python" },
+    { name = "asc-fdl-imaging", editable = "packages/fdl_imaging" },
+    { name = "numpy" },
+    { name = "openimageio", specifier = ">=2.4.0" },
+    { name = "pyinstaller", marker = "extra == 'build'", specifier = ">=5.0" },
+    { name = "pyside6", specifier = ">=6.5.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.0" },
+    { name = "pytest-qt", marker = "extra == 'dev'", specifier = ">=4.0" },
+]
+provides-extras = ["dev", "build"]
 
 [[package]]
 name = "babel"
@@ -506,142 +623,27 @@ wheels = [
 ]
 
 [[package]]
-name = "fdl"
-version = "0.1.0.dev6"
-source = { editable = "native/bindings/python" }
-dependencies = [
-    { name = "cffi" },
-    { name = "pydantic" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "build" },
-    { name = "mktestdocs" },
-    { name = "pytest" },
-    { name = "pytest-xdist" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "build", marker = "extra == 'dev'", specifier = ">=1.0" },
-    { name = "cffi", specifier = ">=1.16" },
-    { name = "mktestdocs", marker = "extra == 'dev'", specifier = ">=0.2.0" },
-    { name = "pydantic", specifier = ">=2.0,<3" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
-    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.0" },
-]
-provides-extras = ["dev"]
-
-[[package]]
-name = "fdl-frameline-generator"
-version = "0.1.0.dev6"
-source = { editable = "packages/fdl_frameline_generator" }
-dependencies = [
-    { name = "fdl" },
-    { name = "fdl-imaging" },
-    { name = "openimageio" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "pytest-xdist" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fdl", editable = "native/bindings/python" },
-    { name = "fdl-imaging", editable = "packages/fdl_imaging" },
-    { name = "openimageio", specifier = ">=2.4.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.0" },
-    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.0" },
-]
-provides-extras = ["dev"]
-
-[[package]]
-name = "fdl-imaging"
-version = "0.1.0.dev6"
-source = { editable = "packages/fdl_imaging" }
-dependencies = [
-    { name = "fdl" },
-    { name = "openimageio" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "pytest-xdist" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fdl", editable = "native/bindings/python" },
-    { name = "openimageio", specifier = ">=2.4.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
-    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.0" },
-]
-provides-extras = ["dev"]
-
-[[package]]
-name = "fdl-viewer"
-version = "0.1.0.dev6"
-source = { editable = "packages/fdl_viewer" }
-dependencies = [
-    { name = "fdl" },
-    { name = "fdl-imaging" },
-    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "numpy", version = "2.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "openimageio" },
-    { name = "pyside6" },
-]
-
-[package.optional-dependencies]
-build = [
-    { name = "pyinstaller" },
-]
-dev = [
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "pytest-qt" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fdl", editable = "native/bindings/python" },
-    { name = "fdl-imaging", editable = "packages/fdl_imaging" },
-    { name = "numpy" },
-    { name = "openimageio", specifier = ">=2.4.0" },
-    { name = "pyinstaller", marker = "extra == 'build'", specifier = ">=5.0" },
-    { name = "pyside6", specifier = ">=6.5.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.0" },
-    { name = "pytest-qt", marker = "extra == 'dev'", specifier = ">=4.0" },
-]
-provides-extras = ["dev", "build"]
-
-[[package]]
 name = "fdl-workspace"
-version = "0.1.0.dev6"
+version = "0.1.0.dev7"
 source = { virtual = "." }
 dependencies = [
-    { name = "fdl" },
-    { name = "fdl-frameline-generator" },
-    { name = "fdl-imaging" },
-    { name = "fdl-viewer" },
+    { name = "asc-fdl" },
+    { name = "asc-fdl-frameline-generator" },
+    { name = "asc-fdl-imaging" },
+    { name = "asc-fdl-viewer" },
 ]
 
 [package.optional-dependencies]
 dev = [
     { name = "datamodel-code-generator", extra = ["http"] },
+    { name = "jinja2" },
     { name = "mktestdocs" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-qt" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
+    { name = "pyyaml" },
 ]
 docs = [
     { name = "mkdocs-material" },
@@ -656,11 +658,12 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "asc-fdl", editable = "native/bindings/python" },
+    { name = "asc-fdl-frameline-generator", editable = "packages/fdl_frameline_generator" },
+    { name = "asc-fdl-imaging", editable = "packages/fdl_imaging" },
+    { name = "asc-fdl-viewer", editable = "packages/fdl_viewer" },
     { name = "datamodel-code-generator", extras = ["http"], marker = "extra == 'dev'", specifier = ">=0.25" },
-    { name = "fdl", editable = "native/bindings/python" },
-    { name = "fdl-frameline-generator", editable = "packages/fdl_frameline_generator" },
-    { name = "fdl-imaging", editable = "packages/fdl_imaging" },
-    { name = "fdl-viewer", editable = "packages/fdl_viewer" },
+    { name = "jinja2", marker = "extra == 'dev'", specifier = ">=3.0" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.0" },
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.20" },
     { name = "mktestdocs", marker = "extra == 'dev'", specifier = ">=0.2.0" },
@@ -670,6 +673,7 @@ requires-dist = [
     { name = "pytest-qt", marker = "extra == 'dev'", specifier = ">=4.0" },
     { name = "pytest-timeout", marker = "extra == 'dev'", specifier = ">=2.0" },
     { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.0" },
+    { name = "pyyaml", marker = "extra == 'dev'", specifier = ">=6.0" },
 ]
 provides-extras = ["dev", "docs"]
 

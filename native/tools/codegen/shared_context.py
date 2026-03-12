@@ -206,14 +206,25 @@ def is_lifecycle_method(method, *, skip_instance_names: set[str] | None = None) 
 _TEMPLATES_DIR = Path(__file__).parent / "templates"
 
 
+def _to_camel(name: str) -> str:
+    """Convert a snake_case or _snake_case identifier to camelCase.
+
+    Examples: '_context_label' -> 'contextLabel', 'canvas_id' -> 'canvasId'
+    """
+    parts = name.lstrip("_").split("_")
+    return parts[0] + "".join(p.title() for p in parts[1:])
+
+
 def make_jinja_env() -> Environment:
     """Create a Jinja2 environment pointing at the templates directory."""
-    return Environment(
+    env = Environment(
         loader=FileSystemLoader(str(_TEMPLATES_DIR)),
         keep_trailing_newline=True,
         trim_blocks=True,
         lstrip_blocks=True,
     )
+    env.filters["to_camel"] = _to_camel
+    return env
 
 
 # -----------------------------------------------------------------------

@@ -60,6 +60,19 @@ export class TemplateResult {
     this._framing_decision_id = _framing_decision_id;
   }
 
+  /** Public accessor for _context_label. */
+  get contextLabel(): string {
+    return this._context_label;
+  }
+  /** Public accessor for _canvas_id. */
+  get canvasId(): string {
+    return this._canvas_id;
+  }
+  /** Public accessor for _framing_decision_id. */
+  get framingDecisionId(): string {
+    return this._framing_decision_id;
+  }
+
   /** The new context created by the template apply. */
   get context(): Context | null {
     for (const item of this.fdl.contexts) {

@@ -67,6 +67,15 @@ export class {{ iface.name }} {
 {% endfor %}
   }
 
+{% for f in iface.fields %}
+{% if f.private %}
+  /** Public accessor for {{ f.name }}. */
+  get {{ f.name | to_camel }}(): {{ f.type }} {
+    return this.{{ f.name }};
+  }
+{% endif %}
+{% endfor %}
+
 {% for acc in iface.accessors %}
   /** {{ acc.doc }} */
   get {{ acc.name }}(): {{ acc.returns }} | null {
