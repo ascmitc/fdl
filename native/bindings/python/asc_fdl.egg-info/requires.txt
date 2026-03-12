@@ -1,0 +1,8 @@
+cffi>=1.16
+pydantic<3,>=2.0
+
+[dev]
+pytest>=7.0
+pytest-xdist>=3.0
+mktestdocs>=0.2.0
+build>=1.0
