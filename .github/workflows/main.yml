@@ -556,7 +556,7 @@ jobs:
         run: brew install cmake || true
 
       - name: Install codegen dependencies
-        run: uv pip install pyyaml jinja2 "datamodel-code-generator[http]>=0.25" --system
+        run: uv pip install pyyaml jinja2 "datamodel-code-generator[http]>=0.25" cffi --system
 
       - name: Run codegen
         run: python scripts/run_codegen.py
