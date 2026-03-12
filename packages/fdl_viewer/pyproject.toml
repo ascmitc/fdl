@@ -1,13 +1,13 @@
 [project]
-name = "fdl-viewer"
-version = "0.1.0-dev.6"
+name = "asc-fdl-viewer"
+version = "0.1.0-dev.8"
 description = "PySide6-based FDL Viewer application for viewing and transforming Framing Decision List files"
 license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
     "PySide6>=6.5.0",
-    "fdl",
-    "fdl-imaging",
+    "asc-fdl",
+    "asc-fdl-imaging",
     "OpenImageIO>=2.4.0",
     "numpy",
 ]

@@ -58,7 +58,7 @@ wheels = [
 
 [[package]]
 name = "asc-fdl"
-version = "0.1.0.dev7"
+version = "0.1.0.dev8"
 source = { editable = "native/bindings/python" }
 dependencies = [
     { name = "cffi" },
@@ -86,7 +86,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "asc-fdl-frameline-generator"
-version = "0.1.0.dev7"
+version = "0.1.0.dev8"
 source = { editable = "packages/fdl_frameline_generator" }
 dependencies = [
     { name = "asc-fdl" },
@@ -114,7 +114,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "asc-fdl-imaging"
-version = "0.1.0.dev7"
+version = "0.1.0.dev8"
 source = { editable = "packages/fdl_imaging" }
 dependencies = [
     { name = "asc-fdl" },
@@ -138,7 +138,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "asc-fdl-viewer"
-version = "0.1.0.dev7"
+version = "0.1.0.dev8"
 source = { editable = "packages/fdl_viewer" }
 dependencies = [
     { name = "asc-fdl" },
@@ -624,7 +624,7 @@ wheels = [
 
 [[package]]
 name = "fdl-workspace"
-version = "0.1.0.dev7"
+version = "0.1.0.dev8"
 source = { virtual = "." }
 dependencies = [
     { name = "asc-fdl" },

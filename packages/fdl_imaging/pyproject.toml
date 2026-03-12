@@ -1,11 +1,11 @@
 [project]
-name = "fdl-imaging"
-version = "0.1.0-dev.6"
+name = "asc-fdl-imaging"
+version = "0.1.0-dev.8"
 description = "FDL-based image processing using OpenImageIO"
 license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
-    "fdl",
+    "asc-fdl",
     "OpenImageIO>=2.4.0",
 ]
 
