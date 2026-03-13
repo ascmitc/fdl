@@ -679,7 +679,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write  # required for OIDC Trusted Publishing
 
     steps:
       - name: Download wheels (macOS ARM64)
@@ -723,3 +722,4 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
+          password: ${{ secrets.PYPI_TOKEN }}
