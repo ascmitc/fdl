@@ -63,11 +63,14 @@ typedef uint32_t fdl_custom_attr_type_t;
  * ABI version
  * ----------------------------------------------------------------------- */
 
-/** ABI version triple for runtime compatibility checks. */
+/** ABI version triple for runtime compatibility checks.
+ *  Fields are uint64_t (not uint32_t) so the struct avoids sub-register
+ *  packing on ARM64, which causes field-swap bugs in CFFI ABI mode.
+ *  See the Enums section comment for the full rationale. */
 typedef struct fdl_abi_version_t {
-    uint32_t major; /**< Breaking changes increment this. */
-    uint32_t minor; /**< Backwards-compatible additions increment this. */
-    uint32_t patch; /**< Bug-fix releases increment this. */
+    uint64_t major; /**< Breaking changes increment this. */
+    uint64_t minor; /**< Backwards-compatible additions increment this. */
+    uint64_t patch; /**< Bug-fix releases increment this. */
 } fdl_abi_version_t;
 
 /**
@@ -111,17 +114,29 @@ typedef struct fdl_rect_t {
  * declared alongside other sub-object handles in the Document Model section. */
 
 /* -----------------------------------------------------------------------
- * Enums (as uint32_t constants)
+ * Enums (as integer constants)
+ * -----------------------------------------------------------------------
+ * Most enums are typedef'd to uint32_t, which is sufficient for scalar
+ * arguments passed individually.
+ *
+ * Rounding enums (fdl_rounding_mode_t, fdl_rounding_even_t) use uint64_t
+ * because they are members of fdl_round_strategy_t, which is passed by
+ * value.  On ARM64, CFFI ABI mode (ffi.dlopen / libffi) mis-marshals
+ * structs whose multiple sub-64-bit fields pack into a single register:
+ * two uint32_t fields both land in x0 and get their halves swapped.
+ * Widening to uint64_t gives each field its own GPR (x0, x1), matching
+ * the layout of fdl_dimensions_i64_t which is known to work.  This has
+ * no effect on native C/C++ or N-API (Node.js) callers.
  * ----------------------------------------------------------------------- */
 
 /** Rounding mode — direction to round fractional pixel values. */
-typedef uint32_t fdl_rounding_mode_t;
+typedef uint64_t fdl_rounding_mode_t;
 #define FDL_ROUNDING_MODE_UP 0    /**< Always round up (ceiling). */
 #define FDL_ROUNDING_MODE_DOWN 1  /**< Always round down (floor). */
 #define FDL_ROUNDING_MODE_ROUND 2 /**< Round to nearest (half-to-even). */
 
 /** Rounding even — whether to snap results to even numbers. */
-typedef uint32_t fdl_rounding_even_t;
+typedef uint64_t fdl_rounding_even_t;
 #define FDL_ROUNDING_EVEN_WHOLE 0 /**< No even constraint (round to nearest integer). */
 #define FDL_ROUNDING_EVEN_EVEN 1  /**< Snap to nearest even integer after rounding. */
 

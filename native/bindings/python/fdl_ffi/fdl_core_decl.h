@@ -18,9 +18,9 @@ typedef uint32_t fdl_custom_attr_type_t;
 #define FDL_CUSTOM_ATTR_TYPE_OTHER 8
 
 typedef struct fdl_abi_version_t {
-    uint32_t major;
-    uint32_t minor;
-    uint32_t patch;
+    uint64_t major;
+    uint64_t minor;
+    uint64_t patch;
 } fdl_abi_version_t;
 
 fdl_abi_version_t fdl_abi_version(void);
@@ -47,12 +47,12 @@ typedef struct fdl_rect_t {
     double height;
 } fdl_rect_t;
 
-typedef uint32_t fdl_rounding_mode_t;
+typedef uint64_t fdl_rounding_mode_t;
 #define FDL_ROUNDING_MODE_UP 0
 #define FDL_ROUNDING_MODE_DOWN 1
 #define FDL_ROUNDING_MODE_ROUND 2
 
-typedef uint32_t fdl_rounding_even_t;
+typedef uint64_t fdl_rounding_even_t;
 #define FDL_ROUNDING_EVEN_WHOLE 0
 #define FDL_ROUNDING_EVEN_EVEN 1
 

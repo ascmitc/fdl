@@ -375,6 +375,104 @@ class TestTemplateEditorView:
 
         assert widget is not None
 
+    def test_rounding_mode_combo_values(self, qapp, app_state):
+        """Test all rounding mode options are present and selectable."""
+        from fdl.constants import RoundingMode
+
+        from fdl_viewer.views.sidebar.template_editor_view import TemplateEditorView
+
+        widget = TemplateEditorView()
+
+        assert widget._round_mode_combo.count() == 3
+        assert widget._round_mode_combo.itemData(0) == RoundingMode.UP
+        assert widget._round_mode_combo.itemData(1) == RoundingMode.DOWN
+        assert widget._round_mode_combo.itemData(2) == RoundingMode.ROUND
+
+    def test_rounding_even_combo_values(self, qapp, app_state):
+        """Test all rounding even options are present and selectable."""
+        from fdl.constants import RoundingEven
+
+        from fdl_viewer.views.sidebar.template_editor_view import TemplateEditorView
+
+        widget = TemplateEditorView()
+
+        assert widget._round_even_combo.count() == 2
+        assert widget._round_even_combo.itemData(0) == RoundingEven.WHOLE
+        assert widget._round_even_combo.itemData(1) == RoundingEven.EVEN
+
+    def test_set_template_rounding_round_trip(self, qapp, app_state):
+        """Test that set_template correctly updates rounding combos and _build_template preserves values."""
+        from fdl import CanvasTemplate, DimensionsInt, RoundStrategy
+        from fdl.constants import RoundingEven, RoundingMode
+
+        from fdl_viewer.views.sidebar.template_editor_view import TemplateEditorView
+
+        widget = TemplateEditorView()
+
+        template = CanvasTemplate(
+            id="test",
+            label="Test",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            round=RoundStrategy(even=RoundingEven.WHOLE, mode=RoundingMode.DOWN),
+        )
+        widget.set_template(template)
+
+        assert widget._round_even_combo.currentData() == RoundingEven.WHOLE
+        assert widget._round_mode_combo.currentData() == RoundingMode.DOWN
+
+        # Build template back and verify rounding survived
+        built = widget._build_template()
+        assert built.round.even == RoundingEven.WHOLE
+        assert built.round.mode == RoundingMode.DOWN
+
+    def test_rounding_mode_change_does_not_affect_even(self, qapp, app_state):
+        """Changing mode combo must not alter the even combo."""
+        from fdl import CanvasTemplate, DimensionsInt, RoundStrategy
+        from fdl.constants import RoundingEven, RoundingMode
+
+        from fdl_viewer.views.sidebar.template_editor_view import TemplateEditorView
+
+        widget = TemplateEditorView()
+
+        # Start with even=EVEN, mode=UP
+        template = CanvasTemplate(
+            id="test",
+            label="Test",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            round=RoundStrategy(even=RoundingEven.EVEN, mode=RoundingMode.UP),
+        )
+        widget.set_template(template)
+
+        # Change mode to DOWN
+        widget._round_mode_combo.setCurrentIndex(1)  # DOWN
+        assert widget._round_mode_combo.currentData() == RoundingMode.DOWN
+        # Even must remain EVEN
+        assert widget._round_even_combo.currentData() == RoundingEven.EVEN
+
+    def test_rounding_even_change_does_not_affect_mode(self, qapp, app_state):
+        """Changing even combo must not alter the mode combo."""
+        from fdl import CanvasTemplate, DimensionsInt, RoundStrategy
+        from fdl.constants import RoundingEven, RoundingMode
+
+        from fdl_viewer.views.sidebar.template_editor_view import TemplateEditorView
+
+        widget = TemplateEditorView()
+
+        # Start with even=EVEN, mode=DOWN
+        template = CanvasTemplate(
+            id="test",
+            label="Test",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            round=RoundStrategy(even=RoundingEven.EVEN, mode=RoundingMode.DOWN),
+        )
+        widget.set_template(template)
+
+        # Change even to WHOLE
+        widget._round_even_combo.setCurrentIndex(0)  # WHOLE
+        assert widget._round_even_combo.currentData() == RoundingEven.WHOLE
+        # Mode must remain DOWN
+        assert widget._round_mode_combo.currentData() == RoundingMode.DOWN
+
     def test_dimension_controls(self, qapp, app_state):
         """Test dimension controls exist and work."""
         from fdl_viewer.views.sidebar.template_editor_view import TemplateEditorView
