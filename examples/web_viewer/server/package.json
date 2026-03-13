@@ -9,7 +9,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@asc-mitc/fdl": "0.1.0-dev.9",
+    "@asc-mitc/fdl": "0.1.0-dev.11",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "multer": "^1.4.5-lts.1",
