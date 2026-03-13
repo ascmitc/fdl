@@ -463,7 +463,7 @@ Required Field: No
     "source_canvas_id": "34256345",
     "dimensions": { "width": 4448, "height": 3096 },
     "effective_dimensions": { "width": 4006, "height": 2788 },
-    "effective_anchor_point": { "x": 222, "y": 155 },
+    "effective_anchor_point": { "x": 222.0, "y": 155.0 },
     "photosite_dimensions": { "width": 4448, "height": 3096 },
     "physical_dimensions": { "width": 36.7, "height": 25.54 },
     "anamorphic_squeeze": 1.0
@@ -1145,7 +1145,7 @@ Default Value: `center`
 
 ### 7.4.9 preserve_from_source_canvas
 
-`preserve_from_source_canvas` specifies additional area from the input source canvas to be preserved in the resulting canvas, outside of the `fit_source` selected from the input source to fit into the `target_dimensions`. The output canvas dimensions may extend beyond the `target_dimensions` as a result. 
+`preserve_from_source_canvas` specifies additional area from the input source canvas to be preserved in the resulting canvas, equal or larger than the `fit_source` selected from the input source to fit into the `target_dimensions`. The output canvas dimensions may extend beyond the `target_dimensions` as a result. 
 
 If `preserve_from_source_canvas` results in a canvas larger than the specified `target_dimensions`, the resulting canvas dimensions shall extend to fit the area defined by `preserve_from_source_canvas`, maintaining the relative position and scale to the `fit_source` area within. 
 
@@ -1534,7 +1534,7 @@ Default Value: `"even": "even"`, `"mode": "up"`
     {
       "label": "2-1 Framing",
       "id": "FDLSMP04",
-      "aspect_ratio": { "width": 2.0, "height": 1.0 },
+      "aspect_ratio": { "width": 2, "height": 1 },
       "protection": 0.05
     }
   ],
@@ -1550,6 +1550,7 @@ Default Value: `"even": "even"`, `"mode": "up"`
         {
           "label": "Open Gate Vignette",
           "id": "20220311_V01",
+          "source_canvas_id": "20220311_V01",
           "dimensions": { "width": 4448, "height": 3096 },
           "effective_dimensions": { "width": 4004, "height": 2786 },
           "effective_anchor_point": { "x": 222.0, "y": 155.0 },
@@ -1559,7 +1560,7 @@ Default Value: `"even": "even"`, `"mode": "up"`
           "framing_decisions": [
             {
               "label": "2-1 Framing",
-              "id": "20220311-FDLSMP04",
+              "id": "20220311_V01-FDLSMP04",
               "framing_intent_id": "FDLSMP04",
               "dimensions": { "width": 3804.0, "height": 1902.0 },
               "anchor_point": { "x": 322.0, "y": 597.0 },
@@ -1586,6 +1587,7 @@ Default Value: `"even": "even"`, `"mode": "up"`
         {
           "label": "Open Gate Full",
           "id": "20220311_V02",
+          "source_canvas_id": "20220311_V02",
           "dimensions": { "width": 4448, "height": 3096 },
           "effective_dimensions": { "width": 4448, "height": 3096 },
           "effective_anchor_point": { "x": 0.0, "y": 0.0 },
@@ -1595,7 +1597,7 @@ Default Value: `"even": "even"`, `"mode": "up"`
           "framing_decisions": [
             {
               "label": "2-1 Framing",
-              "id": "20220311-FDLSMP04_SEQ",
+              "id": "20220311_V02-FDLSMP04",
               "framing_intent_id": "FDLSMP04",
               "dimensions": { "width": 4224.0, "height": 2112.0 },
               "anchor_point": { "x": 112.0, "y": 492.0 },
