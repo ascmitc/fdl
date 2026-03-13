@@ -580,18 +580,36 @@ jobs:
   # ---------------------------------------------------------------------------
   publish_release:
     name: Create GitHub Release
-    needs: [build_artifacts, package_scenarios]
+    needs: [build_artifacts, package_scenarios, npm_publish, pypi_publish]
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: Download all build artifacts
+      - name: Download Scenario Resources
         uses: actions/download-artifact@v4
         with:
-          path: release-assets
-          merge-multiple: true
+          name: Scenarios_For_Implementers
+          path: release-assets/
+
+      - name: Download FDL Viewer (macOS)
+        uses: actions/download-artifact@v4
+        with:
+          name: FDL_Viewer-macOS-ARM64
+          path: release-assets/
+
+      - name: Download FDL Viewer (Windows)
+        uses: actions/download-artifact@v4
+        with:
+          name: FDL_Viewer-Windows-X64
+          path: release-assets/
+
+      - name: Download FDL Viewer (Linux)
+        uses: actions/download-artifact@v4
+        with:
+          name: FDL_Viewer-Linux-X64
+          path: release-assets/
 
       - name: Create Release and upload assets
         uses: softprops/action-gh-release@v2
