@@ -11,7 +11,7 @@ are supported via OpenImageIO, and SVG vector output is also available.
 from importlib.metadata import PackageNotFoundError, version
 
 try:
-    __version__ = version("fdl-frameline-generator")
+    __version__ = version("asc-fdl-frameline-generator")
 except PackageNotFoundError:
     __version__ = "0.0.0"  # Fallback if package is not installed
 

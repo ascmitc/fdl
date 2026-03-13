@@ -10,7 +10,7 @@ FDL files using the fdl and fdl_imaging libraries.
 from importlib.metadata import PackageNotFoundError, version
 
 try:
-    __version__ = version("fdl-viewer")
+    __version__ = version("asc-fdl-viewer")
 except PackageNotFoundError:
     __version__ = "0.0.0"  # Fallback if package is not installed
 
