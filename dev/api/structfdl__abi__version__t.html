@@ -83,21 +83,22 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a2fcf109d9647d70e7137f04adfd3c952" id="r_a2fcf109d9647d70e7137f04adfd3c952"><td class="memItemLeft" align="right" valign="top"><a id="a2fcf109d9647d70e7137f04adfd3c952" name="a2fcf109d9647d70e7137f04adfd3c952"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>major</b></td></tr>
-<tr class="memdesc:a2fcf109d9647d70e7137f04adfd3c952"><td class="mdescLeft">&#160;</td><td class="mdescRight">Breaking changes increment this. <br /></td></tr>
-<tr class="separator:a2fcf109d9647d70e7137f04adfd3c952"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a498b1212827989db290854ef393d5b01" id="r_a498b1212827989db290854ef393d5b01"><td class="memItemLeft" align="right" valign="top"><a id="a498b1212827989db290854ef393d5b01" name="a498b1212827989db290854ef393d5b01"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>minor</b></td></tr>
-<tr class="memdesc:a498b1212827989db290854ef393d5b01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Backwards-compatible additions increment this. <br /></td></tr>
-<tr class="separator:a498b1212827989db290854ef393d5b01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47efdd8199429b9c6ee6da8c00256b36" id="r_a47efdd8199429b9c6ee6da8c00256b36"><td class="memItemLeft" align="right" valign="top"><a id="a47efdd8199429b9c6ee6da8c00256b36" name="a47efdd8199429b9c6ee6da8c00256b36"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>patch</b></td></tr>
-<tr class="memdesc:a47efdd8199429b9c6ee6da8c00256b36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bug-fix releases increment this. <br /></td></tr>
-<tr class="separator:a47efdd8199429b9c6ee6da8c00256b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7ca7c221592a498d65ac41dd44e5df9" id="r_ae7ca7c221592a498d65ac41dd44e5df9"><td class="memItemLeft" align="right" valign="top"><a id="ae7ca7c221592a498d65ac41dd44e5df9" name="ae7ca7c221592a498d65ac41dd44e5df9"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>major</b></td></tr>
+<tr class="memdesc:ae7ca7c221592a498d65ac41dd44e5df9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Breaking changes increment this. <br /></td></tr>
+<tr class="separator:ae7ca7c221592a498d65ac41dd44e5df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace1170bfc36553c6bcf43d04286d5c9c" id="r_ace1170bfc36553c6bcf43d04286d5c9c"><td class="memItemLeft" align="right" valign="top"><a id="ace1170bfc36553c6bcf43d04286d5c9c" name="ace1170bfc36553c6bcf43d04286d5c9c"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>minor</b></td></tr>
+<tr class="memdesc:ace1170bfc36553c6bcf43d04286d5c9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Backwards-compatible additions increment this. <br /></td></tr>
+<tr class="separator:ace1170bfc36553c6bcf43d04286d5c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9a2bbc95dcf8e9706e16c420d08562e" id="r_ac9a2bbc95dcf8e9706e16c420d08562e"><td class="memItemLeft" align="right" valign="top"><a id="ac9a2bbc95dcf8e9706e16c420d08562e" name="ac9a2bbc95dcf8e9706e16c420d08562e"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>patch</b></td></tr>
+<tr class="memdesc:ac9a2bbc95dcf8e9706e16c420d08562e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bug-fix releases increment this. <br /></td></tr>
+<tr class="separator:ac9a2bbc95dcf8e9706e16c420d08562e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ABI version triple for runtime compatibility checks. </p>
+<p>Fields are uint64_t (not uint32_t) so the struct avoids sub-register packing on ARM64, which causes field-swap bugs in CFFI ABI mode. See the Enums section comment for the full rationale. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/fdl/<a class="el" href="fdl__core_8h_source.html">fdl_core.h</a></li>
 </ul>

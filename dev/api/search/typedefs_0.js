@@ -22,8 +22,8 @@ var searchData=
   ['fdl_5frect_5ft_19',['fdl_rect_t',['../fdl__core_8h.html#abbbaadd37346aa39800ee5405375540c',1,'fdl_core.h']]],
   ['fdl_5fresolve_5fcanvas_5fresult_5ft_20',['fdl_resolve_canvas_result_t',['../fdl__core_8h.html#a909d1249922c5f62d91093180feb7b57',1,'fdl_core.h']]],
   ['fdl_5fround_5fstrategy_5ft_21',['fdl_round_strategy_t',['../fdl__core_8h.html#aeb9c72cc526f3f038a76e15fb2ad9f62',1,'fdl_core.h']]],
-  ['fdl_5frounding_5feven_5ft_22',['fdl_rounding_even_t',['../fdl__core_8h.html#a5ac84344e791a383514406d0169f869d',1,'fdl_core.h']]],
-  ['fdl_5frounding_5fmode_5ft_23',['fdl_rounding_mode_t',['../fdl__core_8h.html#a07d9e83cbd46572d81242a5b9857471d',1,'fdl_core.h']]],
+  ['fdl_5frounding_5feven_5ft_22',['fdl_rounding_even_t',['../fdl__core_8h.html#a9fcfa16ca1c537b31117866cbc1bab36',1,'fdl_core.h']]],
+  ['fdl_5frounding_5fmode_5ft_23',['fdl_rounding_mode_t',['../fdl__core_8h.html#a5a9befcc9fa0a343731f5bd2bbba2d79',1,'fdl_core.h']]],
   ['fdl_5ftemplate_5fresult_5ft_24',['fdl_template_result_t',['../fdl__core_8h.html#a6a4fbf9f1e20768e1e423ec0e250de4d',1,'fdl_core.h']]],
   ['fdl_5fvalidation_5fresult_5ft_25',['fdl_validation_result_t',['../fdl__core_8h.html#aa31e1c5cebf0175c5a6a53574a18d5a8',1,'fdl_core.h']]],
   ['fdl_5fvalign_5ft_26',['fdl_valign_t',['../fdl__core_8h.html#aaffaee27a4cbfb349438caefb9cf335e',1,'fdl_core.h']]]
