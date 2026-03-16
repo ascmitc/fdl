@@ -1478,10 +1478,10 @@
 Provides image cropping/extraction, template transformations, drawing
 primitives, text rendering, and pixel-level image comparison.</p>
 <p>This is a <strong>library-only</strong> package -- no CLI. It is used programmatically by
-<a href="../fdl_frameline_generator/">fdl-frameline-generator</a> and
-<a href="../fdl_viewer/">fdl-viewer</a>.</p>
+<a href="../fdl_frameline_generator/">asc-fdl-frameline-generator</a> and
+<a href="../fdl_viewer/">asc-fdl-viewer</a>.</p>
 <h2 id="install">Install</h2>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fdl-imaging
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>asc-fdl-imaging
 </code></pre></div>
 <p>Requires OpenImageIO to be available on the system.</p>
 <h2 id="capabilities">Capabilities</h2>
@@ -1595,11 +1595,11 @@ primitives, text rendering, and pixel-level image comparison.</p>
 <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">passed</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">message</span>
 </code></pre></div>
 <h2 id="package-relationships">Package Relationships</h2>
-<div class="highlight"><pre><span></span><code>fdl-viewer -------------+
-                        +---&gt; fdl-imaging ---&gt; fdl (core)
-fdl-frameline-generator +
+<div class="highlight"><pre><span></span><code>asc-fdl-viewer -------------+
+                            +---&gt; asc-fdl-imaging ---&gt; asc-fdl (core)
+asc-fdl-frameline-generator +
 </code></pre></div>
-<p><code>fdl-imaging</code> is the shared foundation: the frameline generator delegates all
+<p><code>asc-fdl-imaging</code> is the shared foundation: the frameline generator delegates all
 drawing primitives and text rendering to it, and the viewer uses it for image
 loading, processing, and visual QC comparison.</p>
 <h2 id="source">Source</h2>

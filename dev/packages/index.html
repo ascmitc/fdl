@@ -1317,34 +1317,34 @@
 
 
 <h1 id="application-packages">Application Packages</h1>
-<p>Beyond the core <code>fdl</code> library, the project includes three application packages
+<p>Beyond the core <code>asc-fdl</code> library, the project includes three application packages
 in the <code>packages/</code> directory. Each is a standalone Python package within the
 uv workspace.</p>
-<div class="highlight"><pre><span></span><code>fdl-viewer -------------+
-                        +---&gt; fdl-imaging ---&gt; fdl (core)
-fdl-frameline-generator +
+<div class="highlight"><pre><span></span><code>asc-fdl-viewer -------------+
+                            +---&gt; asc-fdl-imaging ---&gt; asc-fdl (core)
+asc-fdl-frameline-generator +
 </code></pre></div>
 <h2 id="frameline-generator"><a href="../fdl_frameline_generator/">Frameline Generator</a></h2>
 <p>Generates pixel-accurate frameline overlay images from FDL files. Supports
 EXR, PNG, TIFF, SVG, and more.</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fdl-frameline-generator
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>asc-fdl-frameline-generator
 fdl-frameline<span class="w"> </span>input.fdl<span class="w"> </span>output.png
 </code></pre></div>
 <h2 id="fdl-imaging"><a href="../fdl_imaging/">FDL Imaging</a></h2>
 <p>OpenImageIO-based image processing library for FDL workflows. Provides
 cropping, extraction, template transformation, drawing primitives, and
 pixel-level image comparison. Used by both the frameline generator and viewer.</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fdl-imaging
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>asc-fdl-imaging
 </code></pre></div>
 <h2 id="fdl-viewer"><a href="../fdl_viewer/">FDL Viewer</a></h2>
 <p>PySide6 desktop application for visualizing and transforming FDL files
 interactively. Displays source and output canvases with geometry overlays,
 supports template application, image overlay, and side-by-side comparison.</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fdl-viewer
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>asc-fdl-viewer
 fdl-viewer
 </code></pre></div>
 <h2 id="core-cli-fdl-validate">Core CLI: fdl-validate</h2>
-<p>The core <code>fdl</code> package also provides a command-line validation tool:</p>
+<p>The core <code>asc-fdl</code> package also provides a command-line validation tool:</p>
 <div class="highlight"><pre><span></span><code>fdl-validate<span class="w"> </span>scene.fdl<span class="w">              </span><span class="c1"># validate a single file</span>
 fdl-validate<span class="w"> </span>*.fdl<span class="w"> </span>--strict<span class="w">         </span><span class="c1"># validate multiple files</span>
 </code></pre></div>
