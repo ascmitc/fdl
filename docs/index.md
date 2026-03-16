@@ -67,10 +67,10 @@ Link against `libfdl_core` (built via CMake from `native/core/`).
 
 The `examples/` directory contains demonstration applications:
 
-- **`examples/web_viewer/`** -- A React + Express web viewer that loads and visualises FDL
-  files using the Node.js bindings. **This is a reference/demo application, not
-  production software.** It is provided to illustrate how to integrate the FDL
-  library into a web stack.
+- **[`examples/web_viewer/`](web_viewer.md)** -- A React + Express web viewer that loads and
+  visualises FDL files using the Node.js bindings. **This is a reference/demo
+  application, not production software.** It exists to validate the Node.js
+  bindings and demonstrate library portability across language runtimes.
 
 ## API Reference
 

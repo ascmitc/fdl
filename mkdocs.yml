@@ -27,6 +27,8 @@ nav:
       - Errors: FDL Classes/errors.md
     - "Node.js/TypeScript (TypeDoc)": node-api/index.html
     - "C/C++ (Doxygen)": api/index.html
+  - Examples:
+    - Web Viewer: web_viewer.md
   - Contributing: contributions.md
 
 theme:
