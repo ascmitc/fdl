@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 280" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12">
+  <defs>
+    <pattern id="clipHatch" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#FEF2F2"/>
+      <line x1="0" y1="8" x2="8" y2="0" stroke="#FECACA" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="280" fill="#FFFFFF"/>
+
+  <text font-weight="700" font-size="14" x="280" y="22" text-anchor="middle" fill="#1E293B">Right-aligned crop &#x2014; 400px overflow</text>
+
+  <!-- Clipped region (left side) -->
+  <rect x="40" y="60" width="90" height="150" rx="3" ry="3" fill="url(#clipHatch)" stroke="#EF4444" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Visible content inside output -->
+  <rect x="130" y="60" width="380" height="150" rx="5" ry="5" fill="#DBEAFE" opacity="0.4"/>
+
+  <!-- Output canvas border -->
+  <rect x="130" y="60" width="380" height="150" rx="5" ry="5" fill="none" stroke="#1E293B" stroke-width="2.5"/>
+
+  <text x="320" y="142" text-anchor="middle" font-weight="600" fill="#1E293B">Output Canvas (3840px)</text>
+  <text x="320" y="158" text-anchor="middle" fill="#475569" font-size="11">visible portion of content</text>
+
+  <!-- Clipped label -->
+  <text x="85" y="142" text-anchor="middle" fill="#EF4444" font-weight="600" font-size="11">400px</text>
+  <text x="85" y="157" text-anchor="middle" fill="#EF4444" font-size="10">clipped</text>
+
+  <!-- Theoretical anchor annotation -->
+  <line x1="40" y1="225" x2="40" y2="60" stroke="#D97706" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="130" y1="225" x2="130" y2="60" stroke="#1E293B" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <line x1="40" y1="232" x2="130" y2="232" stroke="#D97706" stroke-width="1.2"/>
+  <line x1="40" y1="228" x2="40" y2="236" stroke="#D97706" stroke-width="1.2"/>
+  <line x1="130" y1="228" x2="130" y2="236" stroke="#D97706" stroke-width="1.2"/>
+  <text x="85" y="250" text-anchor="middle" fill="#D97706" font-size="10" font-weight="600">theoretical_anchor.x = &#x2212;400</text>
+  <text x="85" y="264" text-anchor="middle" fill="#D97706" font-size="10">(content shifted left for right alignment)</text>
+</svg>

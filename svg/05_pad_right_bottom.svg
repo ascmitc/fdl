@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12">
+  <defs>
+    <pattern id="padBg" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#F1F5F9"/>
+      <circle cx="3" cy="3" r="0.6" fill="#CBD5E1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="600" height="420" fill="#FFFFFF"/>
+
+  <text font-weight="700" font-size="14" x="300" y="22" text-anchor="middle" fill="#1E293B">PAD &#x2014; right / bottom alignment</text>
+
+  <!-- Output canvas -->
+  <rect x="30" y="40" width="540" height="340" rx="6" ry="6" fill="url(#padBg)" stroke="#64748B" stroke-width="2"/>
+  <text x="40" y="60" fill="#64748B" font-weight="600" font-size="11">Output Canvas</text>
+
+  <!-- Target region (centred in output) -->
+  <rect x="100" y="75" width="400" height="270" rx="4" ry="4" fill="none" stroke="#10B981" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="110" y="93" fill="#10B981" font-weight="600" font-size="11">Target</text>
+
+  <!-- Fit (right/bottom aligned inside target) -->
+  <rect x="160" y="115" width="340" height="230" rx="4" ry="4" fill="#3B82F6" opacity="0.2" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="330" y="237" text-anchor="middle" font-weight="600" fill="#1E40AF">Fit</text>
+
+  <!-- target_offset vertical arrow -->
+  <line x1="65" y1="40" x2="65" y2="73" stroke="#D97706" stroke-width="1.2"/>
+  <polygon points="61,71 65,78 69,71" fill="#D97706"/>
+  <text x="18" y="58" fill="#D97706" font-size="10" font-weight="600">target_offset</text>
+
+  <!-- target_offset horizontal arrow -->
+  <line x1="30" y1="395" x2="98" y2="395" stroke="#D97706" stroke-width="1.2"/>
+  <polygon points="96,391 103,395 96,399" fill="#D97706"/>
+  <text x="35" y="410" fill="#D97706" font-size="10" font-weight="600">target_offset</text>
+
+  <!-- alignment_offset arrow -->
+  <line x1="100" y1="115" x2="158" y2="115" stroke="#7C3AED" stroke-width="1.2"/>
+  <polygon points="156,111 163,115 156,119" fill="#7C3AED"/>
+  <text x="105" y="110" fill="#7C3AED" font-size="10" font-weight="600">alignment_offset</text>
+  <text x="105" y="99" fill="#7C3AED" font-size="9">(gap &#xD7; 1.0)</text>
+</svg>

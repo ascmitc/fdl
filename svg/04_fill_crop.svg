@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12">
+  <defs>
+    <pattern id="cropHatch" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#FEE2E2"/>
+      <line x1="0" y1="8" x2="8" y2="0" stroke="#FECACA" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="480" height="260" fill="#FFFFFF"/>
+
+  <text font-weight="700" font-size="14" x="240" y="22" text-anchor="middle" fill="#1E293B">fill &#x2014; Crop</text>
+
+  <!-- Cropped overflow left -->
+  <rect x="50" y="40" width="50" height="190" rx="3" ry="3" fill="url(#cropHatch)" stroke="#EF4444" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Cropped overflow right -->
+  <rect x="380" y="40" width="50" height="190" rx="3" ry="3" fill="url(#cropHatch)" stroke="#EF4444" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Visible content inside target -->
+  <rect x="100" y="40" width="280" height="190" rx="4" ry="4" fill="#DBEAFE" opacity="0.5"/>
+
+  <!-- Target canvas border (visible area) -->
+  <rect x="100" y="40" width="280" height="190" rx="4" ry="4" fill="none" stroke="#1E293B" stroke-width="2"/>
+
+  <text x="240" y="142" text-anchor="middle" font-weight="600" fill="#1E40AF">target</text>
+
+  <!-- Labels -->
+  <text x="75" y="142" text-anchor="middle" fill="#EF4444" font-size="11" font-weight="600">cropped</text>
+  <text x="405" y="142" text-anchor="middle" fill="#EF4444" font-size="11" font-weight="600">cropped</text>
+
+  <!-- Dimension label -->
+  <line x1="50" y1="245" x2="430" y2="245" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="240" y="258" text-anchor="middle" fill="#3B82F6" font-size="10">scaled source (overflow both sides)</text>
+</svg>

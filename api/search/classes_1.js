@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['fdl_5fabi_5fversion_5ft_0',['fdl_abi_version_t',['../structfdl__abi__version__t.html',1,'']]],
+  ['fdl_5fcanvas_1',['fdl_canvas',['../structfdl__canvas.html',1,'']]],
+  ['fdl_5fcanvas_5ftemplate_2',['fdl_canvas_template',['../structfdl__canvas__template.html',1,'']]],
+  ['fdl_5fclip_5fid_3',['fdl_clip_id',['../structfdl__clip__id.html',1,'']]],
+  ['fdl_5fcontext_4',['fdl_context',['../structfdl__context.html',1,'']]],
+  ['fdl_5fdimensions_5ff64_5ft_5',['fdl_dimensions_f64_t',['../structfdl__dimensions__f64__t.html',1,'']]],
+  ['fdl_5fdimensions_5fi64_5ft_6',['fdl_dimensions_i64_t',['../structfdl__dimensions__i64__t.html',1,'']]],
+  ['fdl_5fdoc_7',['fdl_doc',['../structfdl__doc.html',1,'']]],
+  ['fdl_5ffile_5fsequence_8',['fdl_file_sequence',['../structfdl__file__sequence.html',1,'']]],
+  ['fdl_5fframing_5fdecision_9',['fdl_framing_decision',['../structfdl__framing__decision.html',1,'']]],
+  ['fdl_5fframing_5fintent_10',['fdl_framing_intent',['../structfdl__framing__intent.html',1,'']]],
+  ['fdl_5ffrom_5fintent_5fresult_5ft_11',['fdl_from_intent_result_t',['../structfdl__from__intent__result__t.html',1,'']]],
+  ['fdl_5fgeometry_5ft_12',['fdl_geometry_t',['../structfdl__geometry__t.html',1,'']]],
+  ['fdl_5fhandle_5fcache_13',['fdl_handle_cache',['../structfdl__handle__cache.html',1,'']]],
+  ['fdl_5fparse_5fresult_5ft_14',['fdl_parse_result_t',['../structfdl__parse__result__t.html',1,'']]],
+  ['fdl_5fpoint_5ff64_5ft_15',['fdl_point_f64_t',['../structfdl__point__f64__t.html',1,'']]],
+  ['fdl_5frect_5ft_16',['fdl_rect_t',['../structfdl__rect__t.html',1,'']]],
+  ['fdl_5fresolve_5fcanvas_5fresult_5ft_17',['fdl_resolve_canvas_result_t',['../structfdl__resolve__canvas__result__t.html',1,'']]],
+  ['fdl_5fround_5fstrategy_5ft_18',['fdl_round_strategy_t',['../structfdl__round__strategy__t.html',1,'']]],
+  ['fdl_5ftemplate_5fresult_5ft_19',['fdl_template_result_t',['../structfdl__template__result__t.html',1,'']]],
+  ['fdl_5fvalidation_5fresult_20',['fdl_validation_result',['../structfdl__validation__result.html',1,'']]]
+];

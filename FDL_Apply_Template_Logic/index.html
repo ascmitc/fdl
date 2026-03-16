@@ -1,0 +1,2097 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../c_abi/">
+      
+      
+        <link rel="next" href="../FDL_Template_Implementer_Guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>Algorithm Overview - ASC FDL</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fdl-apply-template-logic" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ASC FDL" class="md-header__button md-logo" aria-label="ASC FDL" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ASC FDL
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Algorithm Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ASC FDL" class="md-nav__button md-logo" aria-label="ASC FDL" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ASC FDL
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c_abi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C ABI Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template Application
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Template Application
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometry-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometry Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipeline Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-derive-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 -- Derive Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-populate-source-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 -- Populate Source Geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-fill-hierarchy-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 -- Fill Hierarchy Gaps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-compute-scale-factor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 -- Compute Scale Factor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-scale-and-round" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 -- Scale and Round
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-determine-output-size-per-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 -- Determine Output Size (per axis)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-calculate-alignment-shift-per-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 -- Calculate Alignment Shift (per axis)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7 -- Calculate Alignment Shift (per axis)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fit-regime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FIT regime
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pad-crop-regime-unified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PAD / CROP regime (unified)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clamp-for-crop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clamp for crop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-apply-offsets-to-anchors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8 -- Apply Offsets to Anchors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-crop-to-visible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9 -- Crop to Visible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-create-output-fdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10 -- Create Output FDL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-formula-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Formula Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL_Template_Implementer_Guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Packages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Packages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fdl_viewer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDL Viewer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fdl_frameline_generator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frameline Generator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fdl_imaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDL Imaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_1" id="__nav_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/fdl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/canvas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canvas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/canvas_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canvas Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/framing_decision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Framing Decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/framing_intent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Framing Intent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/header/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Header
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/common/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../node-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node.js/TypeScript (TypeDoc)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C/C++ (Doxygen)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometry-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometry Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipeline Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-derive-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 -- Derive Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-populate-source-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 -- Populate Source Geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-fill-hierarchy-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 -- Fill Hierarchy Gaps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-compute-scale-factor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 -- Compute Scale Factor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-scale-and-round" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 -- Scale and Round
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-determine-output-size-per-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 -- Determine Output Size (per axis)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-calculate-alignment-shift-per-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 -- Calculate Alignment Shift (per axis)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7 -- Calculate Alignment Shift (per axis)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fit-regime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FIT regime
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pad-crop-regime-unified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PAD / CROP regime (unified)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clamp-for-crop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clamp for crop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-apply-offsets-to-anchors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8 -- Apply Offsets to Anchors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-crop-to-visible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9 -- Crop to Visible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-create-output-fdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10 -- Create Output FDL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-formula-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Formula Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fdl-apply-template-logic">FDL Apply Template Logic</h1>
+<blockquote>
+<p>Step-by-step description of the <code>CanvasTemplate.apply()</code> pipeline.</p>
+<p><strong>Implementation</strong>: <code>native/core/src/fdl_template.cpp</code> (C++ core),
+exposed via <code>fdl_apply_canvas_template()</code> in <code>native/core/include/fdl/fdl_core.h</code>.
+Python and C++ RAII bindings call through to this C library.</p>
+<p><strong>FDL Spec Reference</strong>: Section 7.4 -- Template Application Algorithm</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>The template application algorithm takes a <strong>source canvas</strong> (with its framing decision)
+and a <strong>canvas template</strong>, and produces a new output canvas with transformed geometry.
+The algorithm processes all geometry layers through a linear pipeline:</p>
+<div class="highlight"><pre><span></span><code>Source Canvas + Template
+        |
+        v
+  +----------------------+
+  |  1. Derive Config     |
+  |  2. Populate          |
+  |  3. Hierarchy         |
+  |  4. Scale Factor      |
+  |  5. Scale &amp; Round     |
+  |  6. Output Size       |
+  |  7. Alignment Shift   |
+  |  8. Apply Offsets     |
+  |  9. Crop to Visible   |
+  | 10. Create Output     |
+  +----------------------+
+        |
+        v
+  Output Canvas + FDL
+</code></pre></div>
+<hr />
+<h2 id="geometry-layers">Geometry Layers</h2>
+<p>FDL defines four nested layers from outermost to innermost. Each layer has
+dimensions (width x height) and an anchor point (x, y) that positions it
+relative to the canvas origin.</p>
+<div class="highlight"><pre><span></span><code>+--------------------------------------------------+
+|  Canvas                                          |
+|  +------------------------------------------+    |
+|  |  Effective                               |    |
+|  |  +----------------------------------+    |    |
+|  |  |  Protection                      |    |    |
+|  |  |  +--------------------------+    |    |    |
+|  |  |  |  Framing                 |    |    |    |
+|  |  |  +--------------------------+    |    |    |
+|  |  +----------------------------------+    |    |
+|  +------------------------------------------+    |
++--------------------------------------------------+
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>FDL Path</th>
+<th>Anchor</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Canvas</td>
+<td><code>canvas.dimensions</code></td>
+<td>(0, 0)</td>
+<td>Outermost -- the full sensor/image area</td>
+</tr>
+<tr>
+<td>Effective</td>
+<td><code>canvas.effective_dimensions</code></td>
+<td>yes</td>
+<td>Active image area within the canvas</td>
+</tr>
+<tr>
+<td>Protection</td>
+<td><code>framing_decision.protection_dimensions</code></td>
+<td>yes</td>
+<td>Region with safety margin for cropping</td>
+</tr>
+<tr>
+<td>Framing</td>
+<td><code>framing_decision.dimensions</code></td>
+<td>yes</td>
+<td>Innermost -- the intended framing</td>
+</tr>
+</tbody>
+</table>
+<p>The hierarchy must always satisfy: <code>canvas &gt;= effective &gt;= protection &gt;= framing</code>.</p>
+<hr />
+<h2 id="pipeline-steps">Pipeline Steps</h2>
+<h3 id="step-1-derive-configuration">Step 1 -- Derive Configuration</h3>
+<p><strong>C++ implementation</strong>: <code>fdl_template.cpp</code>, <code>apply_canvas_template()</code> lines 153-179</p>
+<p>Read all template parameters and derive working values as local variables.
+There is no separate context object -- values are computed once at the start
+and threaded through helper functions via arguments.</p>
+<p>Key derived values:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fit_method</code></td>
+<td><code>template.fit_method</code> -- <code>fit_all</code>, <code>fill</code>, <code>width</code>, or <code>height</code></td>
+</tr>
+<tr>
+<td><code>preserve_path</code></td>
+<td><code>template.preserve_from_source_canvas</code> -- outermost layer to keep</td>
+</tr>
+<tr>
+<td><code>target_dims</code></td>
+<td><code>template.target_dimensions</code> (as float)</td>
+</tr>
+<tr>
+<td><code>max_dims</code>, <code>has_max_dims</code></td>
+<td><code>template.maximum_dimensions</code></td>
+</tr>
+<tr>
+<td><code>pad_to_maximum</code></td>
+<td><code>template.pad_to_maximum</code> -- expand output to max dims</td>
+</tr>
+<tr>
+<td><code>h_align</code>, <code>v_align</code></td>
+<td><code>template.alignment_method_horizontal/vertical</code></td>
+</tr>
+<tr>
+<td><code>input_squeeze</code></td>
+<td><code>source_canvas.anamorphic_squeeze</code> (default 1.0)</td>
+</tr>
+<tr>
+<td><code>target_squeeze</code></td>
+<td><code>template.target_anamorphic_squeeze</code> (default 1.0)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="step-2-populate-source-geometry">Step 2 -- Populate Source Geometry</h3>
+<p><strong>C++ implementation</strong>: <code>fdl_template.cpp</code>, <code>populate_from_path()</code> + <code>populate_layer()</code></p>
+<p>Build a <code>fdl_geometry_t</code> by reading dimensions and anchors from the source
+canvas and framing decision. Two template paths control what is read:</p>
+<ol>
+<li><strong><code>preserve_from_source_canvas</code></strong> -- the outermost layer to keep (e.g.
+   <code>canvas.effective_dimensions</code>). Populates this level and all layers
+   below it in the hierarchy.</li>
+<li><strong><code>fit_source</code></strong> -- the layer that will be fitted to the target (e.g.
+   <code>framing_decision.dimensions</code>). Populates this level and all layers
+   below it, overwriting any overlap with preserve.</li>
+</ol>
+<p>Both paths are validated against the source FDL using
+<code>fdl_resolve_geometry_layer()</code> -- if the source does not have the referenced
+layer, an error is raised.</p>
+<p>After population, the geometry is <strong>validated</strong>: framing dimensions must
+not be zero, and effective must not be smaller than protection.</p>
+<hr />
+<h3 id="step-3-fill-hierarchy-gaps">Step 3 -- Fill Hierarchy Gaps</h3>
+<p><strong>C API</strong>: <code>fdl_geometry_fill_hierarchy_gaps()</code>
+<strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code>, <code>geometry_fill_hierarchy_gaps()</code></p>
+<p>After population, some layers may be zero (not present in the source). The
+hierarchy is completed by propagating the outermost populated layer upward:</p>
+<ul>
+<li>If only <strong>framing</strong> is populated: canvas and effective become framing.</li>
+<li>If <strong>protection</strong> is populated: canvas and effective become protection.</li>
+<li>If <strong>effective</strong> is populated: canvas becomes effective.</li>
+<li>If <strong>canvas</strong> is populated: everything stays.</li>
+</ul>
+<p><strong>Special rule</strong>: Protection is <strong>never</strong> filled from framing. If protection
+was not explicitly provided, it stays zero (absent).</p>
+<p><strong>Anchor offset</strong>: All anchors are made relative to the outermost reference
+anchor. If <code>preserve_from_source_canvas</code> is specified, its anchor is the
+reference; otherwise the <code>fit_source</code> anchor is used. This offset is
+subtracted from all anchors so they represent positions relative to the
+new canvas origin.</p>
+<p>The function also returns the <code>fit_dims</code> (dimensions of the fit_source
+layer before scaling) for use in the next step.</p>
+<hr />
+<h3 id="step-4-compute-scale-factor">Step 4 -- Compute Scale Factor</h3>
+<p><strong>C API</strong>: <code>fdl_calculate_scale_factor()</code>
+<strong>C++ implementation</strong>: <code>fdl_pipeline.cpp</code>, <code>calculate_scale_factor()</code></p>
+<p>Calculate the single uniform scale factor that transforms the fit_source
+dimensions to match the template's target dimensions.</p>
+<p>Both fit and target dimensions are first <strong>normalized</strong> by their respective
+anamorphic squeeze factors to produce square-pixel equivalents (via
+<code>fdl_dimensions_normalize()</code>):</p>
+<div class="highlight"><pre><span></span><code>normalized_width = width * anamorphic_squeeze
+</code></pre></div>
+<p>The scale factor is then determined by the <code>fit_method</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Formula</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fit_all</code></td>
+<td><code>min(target_w / fit_w, target_h / fit_h)</code></td>
+<td>Fits entirely within target</td>
+</tr>
+<tr>
+<td><code>fill</code></td>
+<td><code>max(target_w / fit_w, target_h / fit_h)</code></td>
+<td>Fills target completely (may crop)</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td><code>target_w / fit_w</code></td>
+<td>Fits width exactly</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td><code>target_h / fit_h</code></td>
+<td>Fits height exactly</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="step-5-scale-and-round">Step 5 -- Scale and Round</h3>
+<p><strong>C API</strong>: <code>fdl_geometry_normalize_and_scale()</code> + <code>fdl_geometry_round()</code>
+<strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code></p>
+<p>Apply the scale factor to <strong>all</strong> dimensions and anchors uniformly.</p>
+<p><strong>Normalize and scale</strong> (per value):</p>
+<div class="highlight"><pre><span></span><code>scaled_value = (source_value * source_squeeze * scale_factor) / target_squeeze
+</code></pre></div>
+<p>This converts from source pixel space through square-pixel space to target
+pixel space in one operation.</p>
+<p><strong>Round</strong> all dimensions and anchors according to the template's <code>RoundStrategy</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>even</code></td>
+<td>Round to the nearest even integer</td>
+</tr>
+<tr>
+<td><code>whole</code></td>
+<td>Round to the nearest integer</td>
+</tr>
+<tr>
+<td><code>up</code></td>
+<td>Always round up (ceiling)</td>
+</tr>
+<tr>
+<td><code>down</code></td>
+<td>Always round down (floor)</td>
+</tr>
+<tr>
+<td><code>round</code></td>
+<td>Standard rounding (half-up)</td>
+</tr>
+</tbody>
+</table>
+<p>After rounding, all dimensions and anchors are clean integers (stored as
+float for pipeline consistency).</p>
+<p><strong>Extract scaled values</strong> for use in later steps:</p>
+<ul>
+<li><code>scaled_fit</code> -- fit_source dimensions after scale+round</li>
+<li><code>scaled_fit_anchor</code> -- fit_source anchor after scale+round</li>
+<li><code>scaled_bounding_box</code> -- canvas dimensions (the full bounding box)</li>
+</ul>
+<hr />
+<h3 id="step-6-determine-output-size-per-axis">Step 6 -- Determine Output Size (per axis)</h3>
+<p><strong>C API</strong>: <code>fdl_output_size_for_axis()</code>
+<strong>C++ implementation</strong>: <code>fdl_pipeline.cpp</code>, <code>output_size_for_axis()</code></p>
+<p>For each axis independently, determine the final output canvas size. Three
+modes exist:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Condition</th>
+<th>Output size</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PAD</strong></td>
+<td><code>has_max_dims</code> and <code>pad_to_maximum</code></td>
+<td><code>max_dims</code></td>
+<td>Expand to maximum dimensions</td>
+</tr>
+<tr>
+<td><strong>CROP</strong></td>
+<td><code>has_max_dims</code> and <code>canvas &gt; max</code></td>
+<td><code>max_dims</code></td>
+<td>Clamp canvas to maximum</td>
+</tr>
+<tr>
+<td><strong>FIT</strong></td>
+<td>No max constraint</td>
+<td><code>canvas</code></td>
+<td>Use canvas as-is</td>
+</tr>
+</tbody>
+</table>
+<p>Note: each axis is evaluated independently -- one axis may PAD while the
+other CROPs.</p>
+<hr />
+<h3 id="step-7-calculate-alignment-shift-per-axis">Step 7 -- Calculate Alignment Shift (per axis)</h3>
+<p><strong>C API</strong>: <code>fdl_alignment_shift()</code>
+<strong>C++ implementation</strong>: <code>fdl_pipeline.cpp</code>, <code>alignment_shift()</code></p>
+<p>Alignment factors: <code>left/top = 0.0</code>, <code>center = 0.5</code>, <code>right/bottom = 1.0</code>.</p>
+<p>Calculate the content translation (how many pixels to shift the entire
+scaled content) for each axis. This is where PAD, CROP, and alignment
+are unified into a single formula.</p>
+<h4 id="fit-regime">FIT regime</h4>
+<p>If <code>output == canvas</code> and <code>pad_to_maximum</code> is off: no shift is needed.
+The geometry is already correctly positioned from the hierarchy and scaling
+steps. <strong>Return 0.</strong></p>
+<h4 id="pad-crop-regime-unified">PAD / CROP regime (unified)</h4>
+<p>The shift is the sum of three independent offsets:</p>
+<div class="highlight"><pre><span></span><code>shift = target_offset + alignment_offset - fit_anchor
+</code></pre></div>
+<p><strong>1. Target offset</strong> -- where the target region starts in the output:</p>
+<div class="highlight"><pre><span></span><code>center_target = pad_to_maximum OR is_center
+target_offset = (output_size - target_size) * 0.5   if center_target
+              = 0                                    otherwise
+</code></pre></div>
+<p>When padding (<code>pad_to_maximum</code>), the target region is always centred in the
+larger output canvas. When using centre alignment, centring in the output is
+mathematically equivalent. When neither applies, the target sits at the
+output origin.</p>
+<p><strong>2. Alignment offset</strong> -- where the fit sits within the target:</p>
+<div class="highlight"><pre><span></span><code>gap = target_size - fit_size
+alignment_offset = gap * align_factor
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Alignment</th>
+<th><code>align_factor</code></th>
+<th>Fit position within target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>left / top</td>
+<td>0.0</td>
+<td>Snapped to left/top edge</td>
+</tr>
+<tr>
+<td>center</td>
+<td>0.5</td>
+<td>Centred</td>
+</tr>
+<tr>
+<td>right / bottom</td>
+<td>1.0</td>
+<td>Snapped to right/bottom edge</td>
+</tr>
+</tbody>
+</table>
+<p>When <code>gap &gt; 0</code>, the fit is smaller than the target and there is room.
+When <code>gap &lt; 0</code>, the fit is larger (overflow), and alignment determines
+which part is visible.</p>
+<p><strong>3. Fit anchor compensation</strong> -- <code>-fit_anchor</code>:</p>
+<p>The fit_source may not start at position (0, 0) within the bounding box.
+The fit_anchor is the offset from the canvas origin to the fit_source
+origin. This is subtracted to align the fit_source itself (not the
+bounding box).</p>
+<h4 id="clamp-for-crop">Clamp for crop</h4>
+<p>When cropping without padding (<code>pad_to_maximum</code> is off and <code>overflow &gt; 0</code>),
+the content must fill the entire output -- no empty space allowed. The shift
+is clamped:</p>
+<div class="highlight"><pre><span></span><code>shift = max(min(shift, 0.0), -overflow)
+</code></pre></div>
+<p>This ensures:
+- <code>shift &lt;= 0</code> : content starts at or before the output origin (no left gap)
+- <code>shift &gt;= -overflow</code> : content extends to or beyond the output end (no right gap)</p>
+<hr />
+<h3 id="step-8-apply-offsets-to-anchors">Step 8 -- Apply Offsets to Anchors</h3>
+<p><strong>C API</strong>: <code>fdl_geometry_apply_offset()</code>
+<strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code>, <code>geometry_apply_offset()</code></p>
+<p>The content translation calculated in step 7 is applied to <strong>all</strong> anchor
+points (effective, protection, framing):</p>
+<div class="highlight"><pre><span></span><code>new_anchor = original_anchor + content_translation
+</code></pre></div>
+<p>This produces two versions of each anchor:</p>
+<ul>
+<li><strong>Clamped anchors</strong> (stored in the geometry): <code>max(new_anchor, 0)</code> -- used
+  in the output FDL where anchors cannot be negative.</li>
+<li><strong>Theoretical anchors</strong> (returned separately): the raw unclamped values --
+  used in the next step to calculate how much of each layer is visible.</li>
+</ul>
+<p>Theoretical anchors can be <strong>negative</strong> when content extends off the left/top
+edge of the output canvas (e.g. right-aligned crop).</p>
+<hr />
+<h3 id="step-9-crop-to-visible">Step 9 -- Crop to Visible</h3>
+<p><strong>C API</strong>: <code>fdl_geometry_crop()</code>
+<strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code>, <code>geometry_crop()</code></p>
+<p>Calculate the <strong>visible portion</strong> of each layer within the output canvas.
+This is not a destructive pixel crop -- it computes what part of each
+geometry layer falls within the canvas boundaries.</p>
+<p>For each layer, the visible dimensions are:</p>
+<div class="highlight"><pre><span></span><code>clip_left    = max(0, -theoretical_anchor.x)
+clip_top     = max(0, -theoretical_anchor.y)
+visible_w    = dims.width - clip_left
+visible_h    = dims.height - clip_top
+visible_w    = min(visible_w, canvas.width - clamped_anchor.x)
+visible_h    = min(visible_h, canvas.height - clamped_anchor.y)
+</code></pre></div>
+<p>After individual clipping, the <strong>hierarchy is enforced</strong>:</p>
+<div class="highlight"><pre><span></span><code>effective  = min(effective, canvas)
+protection = min(protection, effective)     (if protection exists)
+framing    = min(framing, protection or effective)
+</code></pre></div>
+<p>This ensures inner layers never exceed their parent boundaries.</p>
+<p><strong>Example</strong> -- right-aligned crop with 400px overflow:</p>
+<div class="highlight"><pre><span></span><code>                    Output Canvas (3840px)
+        +-------------------------------------------+
+        |                                           |
+    +---+   visible portion of content              |
+    |   |                                           |
+    +---+                                           |
+        |                                           |
+        +-------------------------------------------+
+    ^
+    400px clipped (theoretical_anchor.x = -400)
+</code></pre></div>
+<hr />
+<h3 id="step-10-create-output-fdl">Step 10 -- Create Output FDL</h3>
+<p><strong>C++ implementation</strong>: <code>fdl_template.cpp</code>, lines 298-473</p>
+<p>Assemble the final output objects from the processed geometry:</p>
+<ol>
+<li>
+<p><strong>New Canvas</strong>: dimensions from geometry, effective dimensions and anchor,
+   anamorphic squeeze from the target, linked to the source canvas via
+   <code>source_canvas_id</code>.</p>
+</li>
+<li>
+<p><strong>New Framing Decision</strong>: framing dimensions and anchor from geometry,
+   protection dimensions and anchor (if present), linked to the source
+   framing intent.</p>
+</li>
+<li>
+<p><strong>Custom Attributes</strong>: <code>_scale_factor</code>, <code>_scaled_bounding_box</code>, and
+   <code>_content_translation</code> are stored on the output canvas for use by
+   image processing pipelines.</p>
+</li>
+<li>
+<p><strong>New Context</strong>: contains both the source canvas (for reference) and the
+   new output canvas.</p>
+</li>
+<li>
+<p><strong>New FDL</strong>: wraps the context, a default framing intent, and the
+   applied template.</p>
+</li>
+</ol>
+<p>The C API returns a <code>fdl_template_result_t</code> containing the output FDL
+document and IDs for resolving the created context, canvas, and framing
+decision. Python wraps this as <code>TemplateResult</code> with convenience properties.</p>
+<hr />
+<h2 id="complete-formula-reference">Complete Formula Reference</h2>
+<p>For a single axis, the full content translation calculation is:</p>
+<div class="highlight"><pre><span></span><code># Inputs
+canvas_size  = scaled bounding box on this axis
+target_size  = template target dimensions on this axis
+fit_size     = scaled fit_source dimensions on this axis
+fit_anchor   = scaled fit_source anchor on this axis
+output_size  = final output canvas size (from step 6)
+align_factor = 0.0 (left/top), 0.5 (center), 1.0 (right/bottom)
+
+# Output size (step 6)
+if has_max and pad_to_max:   output_size = max_size
+elif has_max and canvas &gt; max: output_size = max_size
+else:                          output_size = canvas_size
+
+# Content translation (step 7)
+overflow = canvas_size - output_size
+
+if overflow == 0 and not pad_to_max:
+    shift = 0                                           # FIT
+
+else:
+    center_target = pad_to_max or is_center
+    target_offset = (output - target) * 0.5  if center_target  else 0
+    gap             = target_size - fit_size
+    alignment       = gap * align_factor
+    shift           = target_offset + alignment - fit_anchor
+
+    if not pad_to_max and overflow &gt; 0:                 # Clamp for crop
+        shift = max(min(shift, 0), -overflow)
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

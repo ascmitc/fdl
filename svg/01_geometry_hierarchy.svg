@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13">
+  <defs>
+    <style>
+      .label { font-weight: 600; }
+      .sublabel { fill: #666; font-size: 11px; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="600" height="400" fill="#FFFFFF"/>
+
+  <!-- Canvas (outermost) -->
+  <rect x="20" y="20" width="560" height="360" rx="6" ry="6" stroke="#3B82F6" stroke-width="2" fill="#EFF6FF"/>
+  <text class="label" x="35" y="45" fill="#3B82F6">Canvas</text>
+  <text class="sublabel" x="35" y="62">canvas.dimensions</text>
+
+  <!-- Effective -->
+  <rect x="55" y="80" width="490" height="280" rx="6" ry="6" stroke="#10B981" stroke-width="2" fill="#ECFDF5"/>
+  <text class="label" x="70" y="105" fill="#10B981">Effective</text>
+  <text class="sublabel" x="70" y="122">canvas.effective_dimensions</text>
+
+  <!-- Protection -->
+  <rect x="95" y="140" width="410" height="200" rx="6" ry="6" stroke="#F59E0B" stroke-width="2" fill="#FFFBEB"/>
+  <text class="label" x="110" y="165" fill="#D97706">Protection</text>
+  <text class="sublabel" x="110" y="182">framing_decision.protection_dimensions</text>
+
+  <!-- Framing (innermost) -->
+  <rect x="140" y="200" width="320" height="120" rx="6" ry="6" stroke="#EF4444" stroke-width="2" fill="#FEF2F2"/>
+  <text class="label" x="155" y="225" fill="#EF4444">Framing</text>
+  <text class="sublabel" x="155" y="242">framing_decision.dimensions</text>
+
+  <!-- Anchor dots -->
+  <circle cx="55" cy="80" r="4" fill="#10B981"/>
+  <text x="63" y="77" font-size="10" fill="#10B981">effective_anchor</text>
+
+  <circle cx="95" cy="140" r="4" fill="#D97706"/>
+  <text x="103" y="137" font-size="10" fill="#D97706">protection_anchor</text>
+
+  <circle cx="140" cy="200" r="4" fill="#EF4444"/>
+  <text x="148" y="197" font-size="10" fill="#EF4444">anchor_point</text>
+</svg>

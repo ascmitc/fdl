@@ -1,0 +1,2084 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>Getting Started - ASC FDL</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ASC FDL" class="md-header__button md-logo" aria-label="ASC FDL" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ASC FDL
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ASC FDL" class="md-nav__button md-logo" aria-label="ASC FDL" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ASC FDL
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#loading-saving-an-fdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading &amp; Saving an FDL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-an-fdl-from-scratch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating an FDL from Scratch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#navigating-the-object-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigating the Object Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applying-a-canvas-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying a Canvas Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rounding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rounding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Attributes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvas-custom-attributes-on-template-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canvas Custom Attributes on Template Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c_abi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C ABI Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template Application
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Template Application
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL_Apply_Template_Logic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL_Template_Implementer_Guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Packages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Packages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fdl_viewer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDL Viewer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fdl_frameline_generator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frameline Generator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fdl_imaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDL Imaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_1" id="__nav_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/fdl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/canvas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canvas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/canvas_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canvas Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/framing_decision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Framing Decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/framing_intent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Framing Intent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/header/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Header
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/common/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FDL%20Classes/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../node-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node.js/TypeScript (TypeDoc)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C/C++ (Doxygen)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#loading-saving-an-fdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading &amp; Saving an FDL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-an-fdl-from-scratch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating an FDL from Scratch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#navigating-the-object-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigating the Object Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applying-a-canvas-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying a Canvas Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rounding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rounding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Attributes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvas-custom-attributes-on-template-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canvas Custom Attributes on Template Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="getting-started">Getting Started</h1>
+<h2 id="loading-saving-an-fdl">Loading &amp; Saving an FDL</h2>
+<p>The <code>read_from_file()</code> and <code>write_to_file()</code> functions validate by default, so
+the simplest workflow is:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">TypeScript</label><label for="__tabbed_1_3">C++</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">fdl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_from_file</span><span class="p">,</span> <span class="n">write_to_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+
+<span class="c1"># Load from a file (validates automatically)</span>
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;tests&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample_data&quot;</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Scenario-9__OriginalFDL_UsedToMakePlate.fdl&quot;</span><span class="p">)</span>
+
+<span class="c1"># Save to a file (validates automatically)</span>
+<span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.fdl&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">write_to_file</span><span class="p">(</span><span class="n">my_fdl</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">,</span><span class="w"> </span><span class="nx">writeToFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+
+<span class="c1">// Load from a file (validates automatically)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">&#39;my_document.fdl&#39;</span><span class="p">);</span>
+
+<span class="c1">// Save to a file (validates automatically)</span>
+<span class="nx">writeToFile</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;output.fdl&#39;</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+
+<span class="c1">// Load from a file (validates automatically)</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_file</span><span class="p">(</span><span class="s">&quot;my_document.fdl&quot;</span><span class="p">);</span>
+
+<span class="c1">// Save to a file (validates automatically)</span>
+<span class="n">fdl</span><span class="o">::</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;output.fdl&quot;</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>For string-based workflows (e.g., network transfer), use <code>read_from_string()</code> and
+<code>write_to_string()</code>. Pass <code>validate=false</code> (<code>False</code> in Python) if you want to skip
+validation, or call <code>validate()</code> manually:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Python</label><label for="__tabbed_2_2">TypeScript</label><label for="__tabbed_2_3">C++</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">fdl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_from_file</span><span class="p">,</span> <span class="n">read_from_string</span><span class="p">,</span> <span class="n">write_to_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;tests&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample_data&quot;</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Scenario-9__OriginalFDL_UsedToMakePlate.fdl&quot;</span><span class="p">)</span>
+
+<span class="c1"># Serialize to a JSON string (skip validation since we just loaded a valid file)</span>
+<span class="n">json_str</span> <span class="o">=</span> <span class="n">write_to_string</span><span class="p">(</span><span class="n">my_fdl</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+<span class="c1"># Parse from a JSON string and validate manually</span>
+<span class="n">my_fdl2</span> <span class="o">=</span> <span class="n">read_from_string</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">my_fdl2</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>  <span class="c1"># raises FDLValidationError on failure</span>
+<span class="k">assert</span> <span class="n">my_fdl2</span><span class="o">.</span><span class="n">uuid</span> <span class="o">==</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">uuid</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">,</span><span class="w"> </span><span class="nx">readFromString</span><span class="p">,</span><span class="w"> </span><span class="nx">writeToString</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">&#39;my_document.fdl&#39;</span><span class="p">);</span>
+
+<span class="c1">// Serialize to a JSON string (skip validation since we just loaded a valid file)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">jsonStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">writeToString</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+
+<span class="c1">// Parse from a JSON string and validate manually</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromString</span><span class="p">(</span><span class="nx">jsonStr</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="nx">myFdl2</span><span class="p">.</span><span class="nx">validate</span><span class="p">();</span><span class="w">  </span><span class="c1">// throws FDLValidationError on failure</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+
+<span class="c1">// Parse from a JSON string (validates automatically)</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">json_string</span><span class="p">);</span>
+
+<span class="c1">// Serialize to string (skip validation since we just loaded a valid doc)</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">write_to_string</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="cm">/*validate=*/</span><span class="nb">false</span><span class="p">);</span>
+
+<span class="c1">// Parse without validation, then validate manually</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">doc2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">json</span><span class="p">,</span><span class="w"> </span><span class="cm">/*validate=*/</span><span class="nb">false</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">errors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc2</span><span class="p">.</span><span class="n">validate</span><span class="p">();</span><span class="w">  </span><span class="c1">// returns vector&lt;string&gt;, empty on success</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="creating-an-fdl-from-scratch">Creating an FDL from Scratch</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Python</label><label for="__tabbed_3_2">TypeScript</label><label for="__tabbed_3_3">C++</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">FDL</span><span class="p">,</span> <span class="n">DimensionsInt</span><span class="p">,</span> <span class="n">DimensionsFloat</span><span class="p">,</span> <span class="n">PointFloat</span><span class="p">,</span> <span class="n">write_to_string</span>
+
+<span class="c1"># Create a new FDL document</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">FDL</span><span class="p">()</span>
+
+<span class="c1"># Add a framing intent</span>
+<span class="n">fi</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">add_framing_intent</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;FI178&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1.78-1 Framing&quot;</span><span class="p">,</span>
+    <span class="n">aspect_ratio</span><span class="o">=</span><span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">9</span><span class="p">),</span>
+    <span class="n">protection</span><span class="o">=</span><span class="mf">0.088</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Add a context with a canvas</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">add_context</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;PanavisionDXL2&quot;</span><span class="p">)</span>
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">add_canvas</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;CVS001&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Open Gate RAW&quot;</span><span class="p">,</span>
+    <span class="n">source_canvas_id</span><span class="o">=</span><span class="s2">&quot;CVS001&quot;</span><span class="p">,</span>
+    <span class="n">dimensions</span><span class="o">=</span><span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">5184</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4320</span><span class="p">),</span>
+    <span class="n">anamorphic_squeeze</span><span class="o">=</span><span class="mf">1.30</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Set optional canvas properties</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">set_effective</span><span class="p">(</span>
+    <span class="n">dims</span><span class="o">=</span><span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">5184</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4320</span><span class="p">),</span>
+    <span class="n">anchor</span><span class="o">=</span><span class="n">PointFloat</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">photosite_dimensions</span> <span class="o">=</span> <span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">5184</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4320</span><span class="p">)</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">physical_dimensions</span> <span class="o">=</span> <span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">25.92</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">21.60</span><span class="p">)</span>
+
+<span class="c1"># Add a framing decision referencing the framing intent</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">add_framing_decision</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;CVS001-FI178&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1.78-1 Framing&quot;</span><span class="p">,</span>
+    <span class="n">framing_intent_id</span><span class="o">=</span><span class="n">fi</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+    <span class="n">dimensions</span><span class="o">=</span><span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">5184.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2916.0</span><span class="p">),</span>
+    <span class="n">anchor_point</span><span class="o">=</span><span class="n">PointFloat</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">702.0</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Save to file (validates automatically)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+<span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.fdl&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_to_file</span>
+    <span class="n">write_to_file</span><span class="p">(</span><span class="n">my_fdl</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">FDL</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">PointFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">writeToFile</span><span class="p">,</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+
+<span class="c1">// Create a new FDL document</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FDL</span><span class="p">({});</span>
+
+<span class="c1">// Add a framing intent</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">fi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">addFramingIntent</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;FI178&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1.78-1 Framing&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">16</span><span class="p">,</span><span class="w"> </span><span class="mf">9</span><span class="p">),</span><span class="w"> </span><span class="mf">0.088</span><span class="p">,</span>
+<span class="p">);</span>
+
+<span class="c1">// Add a context with a canvas</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">addContext</span><span class="p">(</span><span class="s1">&#39;PanavisionDXL2&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ctx</span><span class="p">.</span><span class="nx">addCanvas</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;CVS001&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Open Gate RAW&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;CVS001&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">5184</span><span class="p">,</span><span class="w"> </span><span class="mf">4320</span><span class="p">),</span><span class="w"> </span><span class="mf">1.30</span><span class="p">,</span>
+<span class="p">);</span>
+
+<span class="c1">// Set optional canvas properties</span>
+<span class="nx">canvas</span><span class="p">.</span><span class="nx">setEffective</span><span class="p">(</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">5184</span><span class="p">,</span><span class="w"> </span><span class="mf">4320</span><span class="p">),</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">PointFloat</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">),</span>
+<span class="p">);</span>
+<span class="nx">canvas</span><span class="p">.</span><span class="nx">photositeDimensions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">5184</span><span class="p">,</span><span class="w"> </span><span class="mf">4320</span><span class="p">);</span>
+<span class="nx">canvas</span><span class="p">.</span><span class="nx">physicalDimensions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">(</span><span class="mf">25.92</span><span class="p">,</span><span class="w"> </span><span class="mf">21.60</span><span class="p">);</span>
+
+<span class="c1">// Add a framing decision referencing the framing intent</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvas</span><span class="p">.</span><span class="nx">addFramingDecision</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;CVS001-FI178&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1.78-1 Framing&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">fi</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">(</span><span class="mf">5184.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2916.0</span><span class="p">),</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">PointFloat</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">702.0</span><span class="p">),</span>
+<span class="p">);</span>
+
+<span class="c1">// Save to file (validates automatically)</span>
+<span class="nx">writeToFile</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;output.fdl&#39;</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+
+<span class="c1">// Create a new FDL document</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">FDL</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;00000000-0000-0000-0000-000000000001&quot;</span><span class="p">);</span>
+
+<span class="c1">// Add a framing intent</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">fi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">add_framing_intent</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;FI178&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.78-1 Framing&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">fdl_dimensions_i64_t</span><span class="p">{</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">},</span><span class="w"> </span><span class="mf">0.088</span><span class="p">);</span>
+
+<span class="c1">// Add a context with a canvas</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">add_context</span><span class="p">(</span><span class="s">&quot;PanavisionDXL2&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">add_canvas</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;CVS001&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Open Gate RAW&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CVS001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">fdl_dimensions_i64_t</span><span class="p">{</span><span class="mi">5184</span><span class="p">,</span><span class="w"> </span><span class="mi">4320</span><span class="p">},</span><span class="w"> </span><span class="mf">1.30</span><span class="p">);</span>
+
+<span class="c1">// Set optional canvas properties</span>
+<span class="n">canvas</span><span class="p">.</span><span class="n">set_effective</span><span class="p">(</span>
+<span class="w">    </span><span class="n">fdl_dimensions_i64_t</span><span class="p">{</span><span class="mi">5184</span><span class="p">,</span><span class="w"> </span><span class="mi">4320</span><span class="p">},</span>
+<span class="w">    </span><span class="n">fdl_point_f64_t</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">});</span>
+<span class="n">canvas</span><span class="p">.</span><span class="n">set_photosite_dimensions</span><span class="p">(</span><span class="n">fdl_dimensions_i64_t</span><span class="p">{</span><span class="mi">5184</span><span class="p">,</span><span class="w"> </span><span class="mi">4320</span><span class="p">});</span>
+<span class="n">canvas</span><span class="p">.</span><span class="n">set_physical_dimensions</span><span class="p">(</span><span class="n">fdl_dimensions_f64_t</span><span class="p">{</span><span class="mf">25.92</span><span class="p">,</span><span class="w"> </span><span class="mf">21.60</span><span class="p">});</span>
+
+<span class="c1">// Add a framing decision</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">canvas</span><span class="p">.</span><span class="n">add_framing_decision</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;CVS001-FI178&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.78-1 Framing&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;FI178&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">fdl_dimensions_f64_t</span><span class="p">{</span><span class="mf">5184.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2916.0</span><span class="p">},</span>
+<span class="w">    </span><span class="n">fdl_point_f64_t</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">702.0</span><span class="p">});</span>
+
+<span class="c1">// Save to file (validates automatically)</span>
+<span class="n">fdl</span><span class="o">::</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;output.fdl&quot;</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="navigating-the-object-model">Navigating the Object Model</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Python</label><label for="__tabbed_4_2">TypeScript</label><label for="__tabbed_4_3">C++</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">fdl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_from_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;tests&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample_data&quot;</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Scenario-9__OriginalFDL_UsedToMakePlate.fdl&quot;</span><span class="p">)</span>
+
+<span class="c1"># Iterate contexts</span>
+<span class="k">for</span> <span class="n">ctx</span> <span class="ow">in</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">contexts</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Context: </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Iterate canvases within a context</span>
+    <span class="k">for</span> <span class="n">canvas</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">canvases</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Canvas: </span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Iterate framing decisions within a canvas</span>
+        <span class="k">for</span> <span class="n">fd</span> <span class="ow">in</span> <span class="n">canvas</span><span class="o">.</span><span class="n">framing_decisions</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    FD: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Dimensions: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Anchor: (</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">anchor_point</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">anchor_point</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fd</span><span class="o">.</span><span class="n">protection_dimensions</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Protection: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">protection_dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">protection_dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Iterate framing intents</span>
+<span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">framing_intents</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Framing Intent: </span><span class="si">{</span><span class="n">fi</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2"> (protection=</span><span class="si">{</span><span class="n">fi</span><span class="o">.</span><span class="n">protection</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Look up by ID</span>
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">contexts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">canvases</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">framing_decisions</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="s2">&quot;20220310-FDLSMP03&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">fd</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found FD: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">&#39;my_document.fdl&#39;</span><span class="p">);</span>
+
+<span class="c1">// Iterate contexts</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">ctx</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">contexts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Context: </span><span class="si">${</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Iterate canvases within a context</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">canvas</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">ctx</span><span class="p">.</span><span class="nx">canvases</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  Canvas: </span><span class="si">${</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb"> (</span><span class="si">${</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">width</span><span class="si">}</span><span class="sb">x</span><span class="si">${</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">height</span><span class="si">}</span><span class="sb">)`</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Iterate framing decisions within a canvas</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">fd</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">canvas</span><span class="p">.</span><span class="nx">framingDecisions</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`    FD: </span><span class="si">${</span><span class="nx">fd</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`      Dimensions: </span><span class="si">${</span><span class="nx">fd</span><span class="p">.</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">width</span><span class="si">}</span><span class="sb">x</span><span class="si">${</span><span class="nx">fd</span><span class="p">.</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">height</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`      Anchor: (</span><span class="si">${</span><span class="nx">fd</span><span class="p">.</span><span class="nx">anchorPoint</span><span class="p">.</span><span class="nx">x</span><span class="si">}</span><span class="sb">, </span><span class="si">${</span><span class="nx">fd</span><span class="p">.</span><span class="nx">anchorPoint</span><span class="p">.</span><span class="nx">y</span><span class="si">}</span><span class="sb">)`</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Iterate framing intents</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">fi</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">framingIntents</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Framing Intent: </span><span class="si">${</span><span class="nx">fi</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb"> (protection=</span><span class="si">${</span><span class="nx">fi</span><span class="p">.</span><span class="nx">protection</span><span class="si">}</span><span class="sb">)`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Look up by ID</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">contexts</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">canvases</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvas</span><span class="p">.</span><span class="nx">framingDecisions</span><span class="p">.</span><span class="nx">getById</span><span class="p">(</span><span class="s1">&#39;20220310-FDLSMP03&#39;</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">fd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Found FD: </span><span class="si">${</span><span class="nx">fd</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">json_string</span><span class="p">);</span>
+
+<span class="c1">// Iterate contexts</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">contexts_count</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">context_at</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Iterate canvases</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">canvases_count</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">canvas_at</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">canvas</span><span class="p">.</span><span class="n">dimensions</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Iterate framing decisions</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">canvas</span><span class="p">.</span><span class="n">framing_decisions_count</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">canvas</span><span class="p">.</span><span class="n">framing_decision_at</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">fd_dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fd</span><span class="p">.</span><span class="n">dimensions</span><span class="p">();</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">anchor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fd</span><span class="p">.</span><span class="n">anchor_point</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Look up by ID</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">context_at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">canvas_at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">canvas</span><span class="p">.</span><span class="n">framing_decision_find_by_id</span><span class="p">(</span><span class="s">&quot;20220310-FDLSMP03&quot;</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="applying-a-canvas-template">Applying a Canvas Template</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:3"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Python</label><label for="__tabbed_5_2">TypeScript</label><label for="__tabbed_5_3">C++</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">fdl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_from_file</span><span class="p">,</span> <span class="n">ATTR_SCALE_FACTOR</span><span class="p">,</span> <span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">,</span> <span class="n">ATTR_SCALED_BOUNDING_BOX</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Load an FDL that contains canvas templates</span>
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;tests&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample_data&quot;</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Scenario-9__OriginalFDL_UsedToMakePlate.fdl&quot;</span><span class="p">)</span>
+
+<span class="c1"># Select the source canvas and framing decision</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">contexts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">source_canvas</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">canvases</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">source_framing</span> <span class="o">=</span> <span class="n">source_canvas</span><span class="o">.</span><span class="n">framing_decisions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Select a canvas template</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">canvas_templates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Applying template: </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Apply the template</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="n">source_canvas</span><span class="o">=</span><span class="n">source_canvas</span><span class="p">,</span>
+    <span class="n">source_framing</span><span class="o">=</span><span class="n">source_framing</span><span class="p">,</span>
+    <span class="n">new_canvas_id</span><span class="o">=</span><span class="s2">&quot;new_canvas&quot;</span><span class="p">,</span>
+    <span class="n">new_fd_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">source_context_label</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Access the output</span>
+<span class="n">output_fdl</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">fdl</span>
+<span class="n">output_canvas</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">canvas</span>
+<span class="n">output_framing</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">framing_decision</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output canvas: </span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Dimensions: </span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Read computed values from canvas custom attributes</span>
+<span class="n">scale_factor</span> <span class="o">=</span> <span class="n">output_canvas</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="n">ATTR_SCALE_FACTOR</span><span class="p">)</span>
+<span class="n">content_translation</span> <span class="o">=</span> <span class="n">output_canvas</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">)</span>
+<span class="n">scaled_bbox</span> <span class="o">=</span> <span class="n">output_canvas</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="n">ATTR_SCALED_BOUNDING_BOX</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Scale factor: </span><span class="si">{</span><span class="n">scale_factor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">content_translation</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Content translation: (</span><span class="si">{</span><span class="n">content_translation</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">content_translation</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">scaled_bbox</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Scaled bounding box: </span><span class="si">{</span><span class="n">scaled_bbox</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">scaled_bbox</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">readFromFile</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">,</span><span class="w"> </span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">,</span><span class="w"> </span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">,</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">&#39;my_document.fdl&#39;</span><span class="p">);</span>
+
+<span class="c1">// Select the source canvas and framing decision</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">contexts</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">sourceCanvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">canvases</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">sourceFraming</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sourceCanvas</span><span class="p">.</span><span class="nx">framingDecisions</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+
+<span class="c1">// Select a canvas template</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">canvasTemplates</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Applying template: </span><span class="si">${</span><span class="nx">template</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+
+<span class="c1">// Apply the template</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">template</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">sourceCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">sourceFraming</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;new_canvas&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+
+<span class="c1">// Access the output via convenience properties</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">outputFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">fdl</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">canvas</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">outputFraming</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">framingDecision</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Output canvas: </span><span class="si">${</span><span class="nx">outputCanvas</span><span class="o">!</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  Dimensions: </span><span class="si">${</span><span class="nx">outputCanvas</span><span class="o">!</span><span class="p">.</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">width</span><span class="si">}</span><span class="sb">x</span><span class="si">${</span><span class="nx">outputCanvas</span><span class="o">!</span><span class="p">.</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">height</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+
+<span class="c1">// Read computed values from canvas custom attributes</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">scaleFactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="o">!</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">contentTranslation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="o">!</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">scaledBbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="o">!</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  Scale factor: </span><span class="si">${</span><span class="nx">scaleFactor</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">json_string</span><span class="p">);</span>
+
+<span class="c1">// Select source canvas and framing</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">context_at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">source_canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">canvas_at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">source_framing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">source_canvas</span><span class="p">.</span><span class="n">framing_decision_at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// Select a canvas template</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">tmpl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">canvas_template_at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// Apply the template</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmpl</span><span class="p">.</span><span class="n">apply</span><span class="p">(</span>
+<span class="w">    </span><span class="n">source_canvas</span><span class="p">,</span><span class="w"> </span><span class="n">source_framing</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;new_canvas&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ctx</span><span class="p">.</span><span class="n">label</span><span class="p">());</span>
+
+<span class="c1">// Access the output</span>
+<span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">output_fdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">fdl</span><span class="p">;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">output_canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">canvas</span><span class="p">();</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">output_framing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">framing_decision</span><span class="p">();</span>
+
+<span class="c1">// Read computed values from canvas custom attributes</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">sf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_canvas</span><span class="p">.</span><span class="n">get_custom_attr_float</span><span class="p">(</span><span class="n">fdl</span><span class="o">::</span><span class="n">ATTR_SCALE_FACTOR</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_canvas</span><span class="p">.</span><span class="n">get_custom_attr_point_f64</span><span class="p">(</span><span class="n">fdl</span><span class="o">::</span><span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_canvas</span><span class="p">.</span><span class="n">get_custom_attr_dims_f64</span><span class="p">(</span><span class="n">fdl</span><span class="o">::</span><span class="n">ATTR_SCALED_BOUNDING_BOX</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="rounding">Rounding</h2>
+<p>FDL supports configurable rounding strategies for dimension values.
+The rounding strategy has two components:</p>
+<ul>
+<li><strong>even</strong>: <code>"even"</code> (round to nearest even number) or <code>"whole"</code> (round to nearest whole number)</li>
+<li><strong>mode</strong>: <code>"up"</code>, <code>"down"</code>, or <code>"round"</code> (standard rounding)</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:3"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Python</label><label for="__tabbed_6_2">TypeScript</label><label for="__tabbed_6_3">C++</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DimensionsFloat</span><span class="p">,</span>
+    <span class="n">RoundStrategy</span><span class="p">,</span>
+    <span class="n">set_rounding</span><span class="p">,</span>
+    <span class="n">get_rounding</span><span class="p">,</span>
+    <span class="n">DEFAULT_ROUNDING_STRATEGY</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Check the default strategy</span>
+<span class="n">default</span> <span class="o">=</span> <span class="n">get_rounding</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">default</span><span class="o">.</span><span class="n">even</span> <span class="o">==</span> <span class="s2">&quot;even&quot;</span>
+<span class="k">assert</span> <span class="n">default</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;up&quot;</span>
+
+<span class="c1"># Set a global rounding strategy</span>
+<span class="n">set_rounding</span><span class="p">(</span><span class="n">RoundStrategy</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">&quot;whole&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">get_rounding</span><span class="p">()</span><span class="o">.</span><span class="n">even</span> <span class="o">==</span> <span class="s2">&quot;whole&quot;</span>
+
+<span class="c1"># Reset to default</span>
+<span class="n">set_rounding</span><span class="p">(</span><span class="n">DEFAULT_ROUNDING_STRATEGY</span><span class="p">)</span>
+
+<span class="c1"># Per-dimension rounding</span>
+<span class="n">dims</span> <span class="o">=</span> <span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">19.456</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">79.456</span><span class="p">)</span>
+
+<span class="c1"># Round to nearest even number, rounding up</span>
+<span class="n">rounded_even_up</span> <span class="o">=</span> <span class="n">dims</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">rounded_even_up</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="mi">20</span>
+<span class="k">assert</span> <span class="n">rounded_even_up</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="mi">80</span>
+
+<span class="c1"># Round to nearest whole number, rounding down</span>
+<span class="n">rounded_whole_down</span> <span class="o">=</span> <span class="n">dims</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">&quot;whole&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;down&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">rounded_whole_down</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="mi">19</span>
+<span class="k">assert</span> <span class="n">rounded_whole_down</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="mi">79</span>
+
+<span class="c1"># Scale then round</span>
+<span class="n">dims2</span> <span class="o">=</span> <span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">1920.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">1080.0</span><span class="p">)</span>
+<span class="n">scaled</span> <span class="o">=</span> <span class="n">dims2</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">rounded</span> <span class="o">=</span> <span class="n">scaled</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">rounded</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="mi">960</span>
+<span class="k">assert</span> <span class="n">rounded</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="mi">540</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">DimensionsFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundStrategy</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingEven</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingMode</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">getRounding</span><span class="p">,</span><span class="w"> </span><span class="nx">setRounding</span><span class="p">,</span><span class="w"> </span><span class="nx">DEFAULT_ROUNDING_STRATEGY</span><span class="p">,</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+
+<span class="c1">// Check the default strategy</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">def</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getRounding</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">def</span><span class="p">.</span><span class="nx">even</span><span class="p">,</span><span class="w"> </span><span class="nx">def</span><span class="p">.</span><span class="nx">mode</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;even&quot;, &quot;up&quot;</span>
+
+<span class="c1">// Set a global rounding strategy</span>
+<span class="nx">setRounding</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">RoundStrategy</span><span class="p">(</span><span class="nx">RoundingEven</span><span class="p">.</span><span class="nx">WHOLE</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingMode</span><span class="p">.</span><span class="nx">ROUND</span><span class="p">));</span>
+
+<span class="c1">// Reset to default</span>
+<span class="nx">setRounding</span><span class="p">(</span><span class="nx">DEFAULT_ROUNDING_STRATEGY</span><span class="p">);</span>
+
+<span class="c1">// Per-dimension rounding</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">(</span><span class="mf">19.456</span><span class="p">,</span><span class="w"> </span><span class="mf">79.456</span><span class="p">);</span>
+
+<span class="c1">// Round to nearest even number, rounding up</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">roundedEvenUp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dims</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">RoundingEven</span><span class="p">.</span><span class="nx">EVEN</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingMode</span><span class="p">.</span><span class="nx">UP</span><span class="p">);</span>
+<span class="c1">// roundedEvenUp.width === 20, roundedEvenUp.height === 80</span>
+
+<span class="c1">// Round to nearest whole number, rounding down</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">roundedWholeDown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dims</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">RoundingEven</span><span class="p">.</span><span class="nx">WHOLE</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingMode</span><span class="p">.</span><span class="nx">DOWN</span><span class="p">);</span>
+<span class="c1">// roundedWholeDown.width === 19, roundedWholeDown.height === 79</span>
+
+<span class="c1">// Scale then round</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">dims2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">(</span><span class="mf">1920.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1080.0</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">scaled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dims2</span><span class="p">.</span><span class="nx">scale</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">rounded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">scaled</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">RoundingEven</span><span class="p">.</span><span class="nx">EVEN</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingMode</span><span class="p">.</span><span class="nx">UP</span><span class="p">);</span>
+<span class="c1">// rounded.width === 960, rounded.height === 540</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+
+<span class="c1">// Per-dimension rounding</span>
+<span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsFloat</span><span class="w"> </span><span class="nf">dims</span><span class="p">(</span><span class="mf">19.456</span><span class="p">,</span><span class="w"> </span><span class="mf">79.456</span><span class="p">);</span>
+
+<span class="c1">// Round to nearest even number, rounding up</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">rounded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dims</span><span class="p">.</span><span class="n">round</span><span class="p">(</span><span class="n">FDL_ROUNDING_EVEN_EVEN</span><span class="p">,</span><span class="w"> </span><span class="n">FDL_ROUNDING_MODE_UP</span><span class="p">);</span>
+<span class="c1">// rounded.width() == 20, rounded.height() == 80</span>
+
+<span class="c1">// Scale then round</span>
+<span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsFloat</span><span class="w"> </span><span class="nf">dims2</span><span class="p">(</span><span class="mf">1920.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1080.0</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">scaled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dims2</span><span class="p">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scaled</span><span class="p">.</span><span class="n">round</span><span class="p">(</span><span class="n">FDL_ROUNDING_EVEN_EVEN</span><span class="p">,</span><span class="w"> </span><span class="n">FDL_ROUNDING_MODE_UP</span><span class="p">);</span>
+<span class="c1">// result.width() == 960, result.height() == 540</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="custom-attributes">Custom Attributes</h2>
+<p>Custom attributes can be set on FDL documents, contexts, canvases, framing decisions,
+and canvas templates. Supported types include scalars (string, int, float, bool) and
+composite types (PointFloat, DimensionsFloat, DimensionsInt).</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:3"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><input id="__tabbed_7_3" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Python</label><label for="__tabbed_7_2">TypeScript</label><label for="__tabbed_7_3">C++</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">FDL</span><span class="p">,</span> <span class="n">DimensionsInt</span><span class="p">,</span> <span class="n">DimensionsFloat</span><span class="p">,</span> <span class="n">PointFloat</span>
+
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">FDL</span><span class="p">()</span>
+
+<span class="c1"># Set scalar attributes</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;project_name&quot;</span><span class="p">,</span> <span class="s2">&quot;My Film&quot;</span><span class="p">)</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;shot_count&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;aspect_ratio_value&quot;</span><span class="p">,</span> <span class="mf">1.78</span><span class="p">)</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;is_final&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Set composite attributes</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">,</span> <span class="n">PointFloat</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">128.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">256.0</span><span class="p">))</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;target_res&quot;</span><span class="p">,</span> <span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">3840.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2160.0</span><span class="p">))</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;sensor_size&quot;</span><span class="p">,</span> <span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">5184</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4320</span><span class="p">))</span>
+
+<span class="c1"># Get attributes by name</span>
+<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;project_name&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;My Film&quot;</span>
+<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;shot_count&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">42</span>
+<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;is_final&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+
+<span class="n">offset</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">PointFloat</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">offset</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="mf">128.0</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;target_res&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">DimensionsFloat</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="mf">3840.0</span>
+
+<span class="c1"># List all custom attributes</span>
+<span class="n">all_attrs</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">custom_attrs</span>
+<span class="k">assert</span> <span class="s2">&quot;project_name&quot;</span> <span class="ow">in</span> <span class="n">all_attrs</span>
+<span class="k">assert</span> <span class="s2">&quot;offset&quot;</span> <span class="ow">in</span> <span class="n">all_attrs</span>
+
+<span class="c1"># Remove an attribute</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">remove_custom_attr</span><span class="p">(</span><span class="s2">&quot;is_final&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;is_final&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FDL</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">PointFloat</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FDL</span><span class="p">({});</span>
+
+<span class="c1">// Set scalar attributes</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;project_name&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;My Film&#39;</span><span class="p">);</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;shot_count&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">42</span><span class="p">);</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;aspect_ratio_value&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">1.78</span><span class="p">);</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;is_final&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
+
+<span class="c1">// Set composite attributes</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PointFloat</span><span class="p">(</span><span class="mf">128.0</span><span class="p">,</span><span class="w"> </span><span class="mf">256.0</span><span class="p">));</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;target_res&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">(</span><span class="mf">3840.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2160.0</span><span class="p">));</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;sensor_size&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">5184</span><span class="p">,</span><span class="w"> </span><span class="mf">4320</span><span class="p">));</span>
+
+<span class="c1">// Get attributes by name</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;project_name&#39;</span><span class="p">));</span><span class="w">  </span><span class="c1">// &quot;My Film&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;shot_count&#39;</span><span class="p">));</span><span class="w">     </span><span class="c1">// 42</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;is_final&#39;</span><span class="p">));</span><span class="w">       </span><span class="c1">// true</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">);</span><span class="w">       </span><span class="c1">// PointFloat</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;target_res&#39;</span><span class="p">);</span><span class="w">   </span><span class="c1">// DimensionsFloat</span>
+
+<span class="c1">// List all custom attributes</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">allAttrs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">customAttrs</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">allAttrs</span><span class="p">));</span>
+
+<span class="c1">// Remove an attribute</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">removeCustomAttr</span><span class="p">(</span><span class="s1">&#39;is_final&#39;</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;is_final&#39;</span><span class="p">));</span><span class="w">  </span><span class="c1">// null</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">FDL</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;00000000-0000-0000-0000-000000000001&quot;</span><span class="p">);</span>
+
+<span class="c1">// Set scalar attributes</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;project_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;My Film&quot;</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;shot_count&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="p">(</span><span class="mi">42</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;aspect_ratio_value&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1.78</span><span class="p">);</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;is_final&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+
+<span class="c1">// Set composite attributes</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;offset&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">PointFloat</span><span class="p">(</span><span class="mf">128.0</span><span class="p">,</span><span class="w"> </span><span class="mf">256.0</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;target_res&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsFloat</span><span class="p">(</span><span class="mf">3840.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2160.0</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;sensor_size&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsInt</span><span class="p">(</span><span class="mi">5184</span><span class="p">,</span><span class="w"> </span><span class="mi">4320</span><span class="p">));</span>
+
+<span class="c1">// Get attributes by name</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_string</span><span class="p">(</span><span class="s">&quot;project_name&quot;</span><span class="p">);</span><span class="w">   </span><span class="c1">// optional&lt;string&gt;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_int</span><span class="p">(</span><span class="s">&quot;shot_count&quot;</span><span class="p">);</span><span class="w">        </span><span class="c1">// optional&lt;int64_t&gt;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_point_f64</span><span class="p">(</span><span class="s">&quot;offset&quot;</span><span class="p">);</span><span class="w">     </span><span class="c1">// optional&lt;PointFloat&gt;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_dims_f64</span><span class="p">(</span><span class="s">&quot;target_res&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// optional&lt;DimensionsFloat&gt;</span>
+
+<span class="c1">// Remove an attribute</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">remove_custom_attr</span><span class="p">(</span><span class="s">&quot;is_final&quot;</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="canvas-custom-attributes-on-template-results">Canvas Custom Attributes on Template Results</h2>
+<p>When you apply a canvas template, the computed transformation values are stored as
+custom attributes on the output canvas. Use the named constants to access them:</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ATTR_SCALE_FACTOR</code></td>
+<td>float</td>
+<td>The scale factor applied by the template</td>
+</tr>
+<tr>
+<td><code>ATTR_CONTENT_TRANSLATION</code></td>
+<td>PointFloat</td>
+<td>The (x, y) translation of content within the canvas</td>
+</tr>
+<tr>
+<td><code>ATTR_SCALED_BOUNDING_BOX</code></td>
+<td>DimensionsFloat</td>
+<td>The bounding box dimensions after scaling</td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:3"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><input id="__tabbed_8_3" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Python</label><label for="__tabbed_8_2">TypeScript</label><label for="__tabbed_8_3">C++</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">ATTR_SCALE_FACTOR</span><span class="p">,</span> <span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">,</span> <span class="n">ATTR_SCALED_BOUNDING_BOX</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_SCALE_FACTOR</span><span class="p">)</span>          <span class="c1"># &quot;scale_factor&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">)</span>   <span class="c1"># &quot;content_translation&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_SCALED_BOUNDING_BOX</span><span class="p">)</span>   <span class="c1"># &quot;scaled_bounding_box&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">,</span><span class="w"> </span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">,</span><span class="w"> </span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">,</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">);</span><span class="w">         </span><span class="c1">// &quot;scale_factor&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;content_translation&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;scaled_bounding_box&quot;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">sf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+
+<span class="c1">// fdl::ATTR_SCALE_FACTOR          == &quot;scale_factor&quot;</span>
+<span class="c1">// fdl::ATTR_CONTENT_TRANSLATION   == &quot;content_translation&quot;</span>
+<span class="c1">// fdl::ATTR_SCALED_BOUNDING_BOX   == &quot;scaled_bounding_box&quot;</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">sf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_canvas</span><span class="p">.</span><span class="n">get_custom_attr_float</span><span class="p">(</span><span class="n">fdl</span><span class="o">::</span><span class="n">ATTR_SCALE_FACTOR</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_canvas</span><span class="p">.</span><span class="n">get_custom_attr_point_f64</span><span class="p">(</span><span class="n">fdl</span><span class="o">::</span><span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_canvas</span><span class="p">.</span><span class="n">get_custom_attr_dims_f64</span><span class="p">(</span><span class="n">fdl</span><span class="o">::</span><span class="n">ATTR_SCALED_BOUNDING_BOX</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
