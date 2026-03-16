@@ -139,6 +139,8 @@ def build_with_pyinstaller() -> Path:
         "numpy.lib.format",
         # OpenImageIO itself
         "OpenImageIO",
+        # cffi is used by fdl_ffi for loading libfdl_core
+        "cffi",
     ]
     for hidden in hidden_imports:
         cmd.extend(["--hidden-import", hidden])
