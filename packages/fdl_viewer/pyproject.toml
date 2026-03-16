@@ -1,6 +1,6 @@
 [project]
 name = "asc-fdl-viewer"
-version = "1.0.0"
+version = "1.0.2"
 description = "PySide6-based FDL Viewer application for viewing and transforming Framing Decision List files"
 license = "Apache-2.0"
 requires-python = ">=3.10"

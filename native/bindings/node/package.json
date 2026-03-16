@@ -1,6 +1,6 @@
 {
   "name": "@asc-mitc/fdl",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Node.js/TypeScript bindings for the ASC Framing Decision List (FDL) library",
   "type": "module",
   "main": "./dist/index.js",

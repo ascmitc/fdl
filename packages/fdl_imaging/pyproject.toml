@@ -1,6 +1,6 @@
 [project]
 name = "asc-fdl-imaging"
-version = "1.0.0"
+version = "1.0.2"
 description = "FDL-based image processing using OpenImageIO"
 license = "Apache-2.0"
 requires-python = ">=3.10"
