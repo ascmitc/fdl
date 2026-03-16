@@ -1,0 +1,61 @@
+{
+  "uuid": "082e8362-6df3-421f-80a6-b173e4b6fb1d",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 16,
+        "height": 9
+      },
+      "protection": 0.10012919896599999
+    }
+  ],
+  "contexts": [
+    {
+      "label": "ARRI ALEXA Mini LF",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "4.5K LF Open Gate",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 4448,
+            "height": 3096
+          },
+          "anamorphic_squeeze": 2,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 2476,
+                "height": 2786
+              },
+              "anchor_point": {
+                "x": 986,
+                "y": 155
+              },
+              "protection_dimensions": {
+                "width": 2752,
+                "height": 3096
+              },
+              "protection_anchor_point": {
+                "x": 848,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

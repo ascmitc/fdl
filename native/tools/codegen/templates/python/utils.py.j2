@@ -1,0 +1,461 @@
+{# Jinja2 template — rendered by python_gen.py to produce utils.py. #}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+"""Utility functions for fdl."""
+
+from __future__ import annotations
+
+import threading
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from fdl_ffi import ffi
+
+from .base import CollectionWrapper
+from .rounding import RoundStrategy
+
+if TYPE_CHECKING:
+    from .canvas import Canvas
+    from .fdl import FDL
+    from .fdl_types import DimensionsFloat, DimensionsInt, PointFloat{{ ", " + utils_type_imports | join(", ") if utils_type_imports else "" }}
+    from .framing_decision import FramingDecision
+
+__all__ = [
+{% for name in utility_names %}
+    "{{ name }}",
+{% endfor %}
+]
+
+# -----------------------------------------------------------------------
+# Global rounding strategy (thread-safe)
+# -----------------------------------------------------------------------
+DEFAULT_ROUNDING_STRATEGY = RoundStrategy(even="even", mode="up")
+_rounding_strategy: RoundStrategy = DEFAULT_ROUNDING_STRATEGY
+_rounding_lock = threading.Lock()
+
+
+def set_rounding(strategy: RoundStrategy) -> None:
+    """Set the global default rounding strategy (thread-safe)."""
+    global _rounding_strategy
+    with _rounding_lock:
+        _rounding_strategy = strategy
+
+
+def get_rounding() -> RoundStrategy:
+    """Get the current global default rounding strategy (thread-safe)."""
+    with _rounding_lock:
+        return _rounding_strategy
+
+
+# -----------------------------------------------------------------------
+# Collection helpers
+# -----------------------------------------------------------------------
+
+
+def find_by_id(collection: CollectionWrapper, id_str: str):
+    """Find an item in a collection by its ``id`` field.
+
+    Delegates to the C ABI find-by-id function when available,
+    falling back to a linear scan.
+
+    Parameters
+    ----------
+    collection : CollectionWrapper
+        A facade collection (e.g. ``fdl.canvas_templates``, ``context.canvases``).
+    id_str : str
+        The id to search for.
+
+    Returns
+    -------
+    object or None
+        The matching item, or ``None`` if not found.
+    """
+    if collection._find_by_id_fn is not None:
+        raw = collection._find_by_id_fn(collection._parent_handle, id_str.encode("utf-8"))
+        if raw:
+            return collection._item_cls._from_handle(raw, collection._lib, collection._doc_ref)
+        return None
+    for item in collection:
+        if hasattr(item, "id") and item.id == id_str:
+            return item
+    return None
+
+
+def find_by_label(collection: CollectionWrapper, label: str):
+    """Find an item in a collection by its ``label`` field.
+
+    Delegates to the C ABI find-by-label function when available,
+    falling back to a linear scan.
+
+    Parameters
+    ----------
+    collection : CollectionWrapper
+        A facade collection (e.g. ``fdl.contexts``).
+    label : str
+        The label to search for.
+
+    Returns
+    -------
+    object or None
+        The matching item, or ``None`` if not found.
+    """
+    if collection._find_by_label_fn is not None:
+        raw = collection._find_by_label_fn(collection._parent_handle, label.encode("utf-8"))
+        if raw:
+            return collection._item_cls._from_handle(raw, collection._lib, collection._doc_ref)
+        return None
+    for item in collection:
+        if hasattr(item, "label") and item.label == label:
+            return item
+    return None
+
+
+# -----------------------------------------------------------------------
+# C ABI-backed geometry path resolution
+# -----------------------------------------------------------------------
+
+{% for util in c_abi_utils %}
+{% if util.extract == "dims" %}
+
+def get_dimensions_from_path(
+    canvas: Canvas, framing: FramingDecision, path: str, required: bool = True,
+) -> DimensionsFloat | None:
+    """{{ util.doc }}
+
+    Parameters
+    ----------
+    canvas : Canvas
+        The source canvas.
+    framing : FramingDecision
+        The source framing decision.
+    path : str
+        A GeometryPath string (e.g. ``"canvas.dimensions"``,
+        ``"framing_decision.protection_dimensions"``).
+    required : bool
+        If True (default), raise ``ValueError`` when the path resolves to None.
+
+    Returns
+    -------
+    DimensionsFloat or None
+    """
+    from .fdl_types import DimensionsFloat
+
+    if not path or path == "none":
+        return DimensionsFloat(width=0.0, height=0.0)
+
+    from fdl_ffi import get_lib
+
+    from .enum_maps import GEOMETRY_PATH_TO_C
+
+    c_path = GEOMETRY_PATH_TO_C.get(path)
+    if c_path is None:
+        raise ValueError(f"Unsupported source path: {path}")
+
+    out_dims = ffi.new("fdl_dimensions_f64_t*")
+    out_anchor = ffi.new("fdl_point_f64_t*")
+    rc = get_lib().{{ util.c_function }}(
+        canvas._handle, framing._handle, c_path,
+        out_dims, out_anchor,
+    )
+    if rc == 1:  # path valid but optional data absent
+        if required:
+            raise ValueError(
+                f"Template references '{path}' but the source does not have "
+                f"the referenced data defined."
+            )
+        return None
+    if rc < 0:
+        raise ValueError(f"Unsupported source path: {path}")
+
+    return DimensionsFloat(width=out_dims.width, height=out_dims.height)
+{% elif util.extract == "anchor" %}
+
+def get_anchor_from_path(canvas: Canvas, framing: FramingDecision, path: str) -> PointFloat:
+    """{{ util.doc }}
+
+    Parameters
+    ----------
+    canvas : Canvas
+        The source canvas.
+    framing : FramingDecision
+        The source framing decision.
+    path : str
+        A GeometryPath string (e.g. ``"canvas.dimensions"``,
+        ``"framing_decision.dimensions"``).
+
+    Returns
+    -------
+    PointFloat
+    """
+    from .fdl_types import PointFloat
+
+    if not path or path == "none" or path == "canvas.dimensions":
+        return PointFloat(x=0.0, y=0.0)
+
+    from fdl_ffi import get_lib
+
+    from .enum_maps import GEOMETRY_PATH_TO_C
+
+    c_path = GEOMETRY_PATH_TO_C.get(path)
+    if c_path is None:
+        raise ValueError(f"Unsupported source path for anchor point: {path}")
+
+    out_dims = ffi.new("fdl_dimensions_f64_t*")
+    out_anchor = ffi.new("fdl_point_f64_t*")
+    rc = get_lib().{{ util.c_function }}(
+        canvas._handle, framing._handle, c_path,
+        out_dims, out_anchor,
+    )
+    if rc == 1:  # absent -> return zeros
+        return PointFloat(x=0.0, y=0.0)
+    if rc < 0:
+        raise ValueError(f"Unsupported source path for anchor point: {path}")
+
+    return PointFloat(x=out_anchor.x, y=out_anchor.y)
+{% endif %}
+{% endfor %}
+
+
+# -----------------------------------------------------------------------
+# I/O convenience functions
+# -----------------------------------------------------------------------
+
+
+def read_from_string(s: str, validate: bool = True) -> FDL:
+    """Parse an FDL document from a JSON string.
+
+    Parameters
+    ----------
+    s : str
+        JSON string representing an FDL document.
+    validate : bool
+        Run schema and semantic validation after parsing (default True).
+
+    Returns
+    -------
+    FDL
+        The parsed FDL document.
+
+    Raises
+    ------
+    ValueError
+        If the JSON cannot be parsed.
+    FDLValidationError
+        If validation is enabled and the document is invalid.
+    """
+    from .fdl import FDL as _FDL
+
+    fdl = _FDL.parse(s.encode("utf-8"))
+    if validate:
+        fdl.validate()
+    return fdl
+
+
+def read_from_file(file_path: Path | str, validate: bool = True) -> FDL:
+    """Read an FDL document from a file on disk.
+
+    Parameters
+    ----------
+    file_path : Path | str
+        Path to the FDL file.
+    validate : bool
+        Run schema and semantic validation after parsing (default True).
+
+    Returns
+    -------
+    FDL
+        The parsed FDL document.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+    ValueError
+        If the JSON cannot be parsed.
+    FDLValidationError
+        If validation is enabled and the document is invalid.
+    """
+    file_path = Path(file_path)
+    if not file_path.exists():
+        raise FileNotFoundError(f"File not found: {file_path}")
+
+    with open(file_path, "rb") as f:
+        raw = f.read()
+
+    from .fdl import FDL as _FDL
+
+    fdl = _FDL.parse(raw)
+    if validate:
+        fdl.validate()
+    return fdl
+
+
+def write_to_string(fdl_obj: FDL, validate: bool = True) -> str:
+    """Serialize an FDL document to a JSON string.
+
+    Parameters
+    ----------
+    fdl_obj : FDL
+        The FDL document to serialize.
+    validate : bool
+        Run validation before serializing (default True).
+
+    Returns
+    -------
+    str
+        JSON string.
+    """
+    if validate:
+        fdl_obj.validate()
+    return fdl_obj.as_json()
+
+
+def write_to_file(fdl_obj: FDL, file_path: Path | str, validate: bool = True) -> None:
+    """Write an FDL document to a file on disk.
+
+    Parameters
+    ----------
+    fdl_obj : FDL
+        The FDL document to serialize.
+    file_path : Path | str
+        Destination path.
+    validate : bool
+        Run validation before writing (default True).
+    """
+    file_path = Path(file_path)
+    file_path.write_text(write_to_string(fdl_obj, validate=validate), encoding="utf-8")
+
+
+# -----------------------------------------------------------------------
+# ABI version
+# -----------------------------------------------------------------------
+
+
+def abi_version() -> tuple[int, int, int]:
+    """Return the ABI version of the loaded library as (major, minor, patch)."""
+    from fdl_ffi import get_lib
+
+    v = get_lib().fdl_abi_version()
+    return (v.major, v.minor, v.patch)
+
+
+# -----------------------------------------------------------------------
+# Standalone framing computation
+# -----------------------------------------------------------------------
+
+
+def compute_framing_from_intent(
+    canvas_dims: DimensionsFloat,
+    working_dims: DimensionsFloat,
+    squeeze: float,
+    aspect_ratio: DimensionsInt,
+    protection: float,
+    rounding: RoundStrategy | None = None,
+) -> FramingFromIntentResult:
+    """Compute a framing decision from a framing intent without needing existing handles.
+
+    Parameters
+    ----------
+    canvas_dims : DimensionsFloat
+        Source canvas dimensions.
+    working_dims : DimensionsFloat
+        Working (effective) dimensions.
+    squeeze : float
+        Anamorphic squeeze factor.
+    aspect_ratio : DimensionsInt
+        Target aspect ratio (e.g. DimensionsInt(width=16, height=9)).
+    protection : float
+        Protection percentage (0.0 - 1.0).
+    rounding : RoundStrategy | None
+        Rounding strategy. Uses the global default if None.
+
+    Returns
+    -------
+    FramingFromIntentResult
+        Computed dimensions, anchor point, and optional protection values.
+    """
+    from fdl_ffi import get_lib
+
+    from .converters import _to_c_round_strategy
+
+    if rounding is None:
+        rounding = get_rounding()
+
+    _c_canvas = ffi.new("fdl_dimensions_f64_t*", {"width": canvas_dims.width, "height": canvas_dims.height})[0]
+    _c_working = ffi.new("fdl_dimensions_f64_t*", {"width": working_dims.width, "height": working_dims.height})[0]
+    _c_ar = ffi.new("fdl_dimensions_i64_t*", {"width": int(aspect_ratio.width), "height": int(aspect_ratio.height)})[0]
+    _c_rs = _to_c_round_strategy(rounding)
+
+    r = get_lib().fdl_compute_framing_from_intent(
+        _c_canvas, _c_working, float(squeeze), _c_ar, float(protection), _c_rs,
+    )
+
+    from .fdl_types import DimensionsFloat as _DF
+    from .fdl_types import PointFloat as _PF
+
+    dims = _DF(width=r.dimensions.width, height=r.dimensions.height)
+    anchor = _PF(x=r.anchor_point.x, y=r.anchor_point.y)
+    prot_dims = None
+    prot_anchor = None
+    if r.has_protection:
+        prot_dims = _DF(width=r.protection_dimensions.width, height=r.protection_dimensions.height)
+        prot_anchor = _PF(x=r.protection_anchor_point.x, y=r.protection_anchor_point.y)
+
+    return FramingFromIntentResult(
+        dimensions=dims,
+        anchor_point=anchor,
+        protection_dimensions=prot_dims,
+        protection_anchor_point=prot_anchor,
+    )
+
+
+class FramingFromIntentResult:
+    """Result of compute_framing_from_intent()."""
+
+    __slots__ = ("anchor_point", "dimensions", "protection_anchor_point", "protection_dimensions")
+
+    def __init__(
+        self,
+        *,
+        dimensions: DimensionsFloat,
+        anchor_point: PointFloat,
+        protection_dimensions: DimensionsFloat | None = None,
+        protection_anchor_point: PointFloat | None = None,
+    ) -> None:
+        self.dimensions = dimensions
+        self.anchor_point = anchor_point
+        self.protection_dimensions = protection_dimensions
+        self.protection_anchor_point = protection_anchor_point
+
+    def __repr__(self) -> str:
+        return (
+            f"FramingFromIntentResult(dimensions={self.dimensions!r}, "
+            f"anchor_point={self.anchor_point!r}, "
+            f"protection_dimensions={self.protection_dimensions!r}, "
+            f"protection_anchor_point={self.protection_anchor_point!r})"
+        )
+{% for ff in free_functions %}
+
+
+def {{ ff.display_name }}({{ ff.param_sig }}) -> {{ ff.python_return }}:
+    """{{ ff.doc }}"""
+{% if ff.needed_c_structs %}
+    from fdl_ffi import ffi, get_lib
+{% else %}
+    from fdl_ffi import get_lib
+{% endif %}
+{% if ff.needed_converters or ff.needed_enum_maps %}
+
+{% endif %}
+{% if ff.needed_converters %}
+    from .converters import {{ ff.needed_converters | join(", ") }}
+{% endif %}
+{% if ff.needed_enum_maps %}
+    from .enum_maps import {{ ff.needed_enum_maps | join(", ") }}
+{% endif %}
+{% for line in ff.setup_lines %}
+    {{ line }}
+{% endfor %}
+    {{ ff.return_line }}
+{% endfor %}

@@ -1,0 +1,2 @@
+[console_scripts]
+fdl-validate = fdl.cli:main

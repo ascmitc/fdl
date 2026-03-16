@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12">
+  <defs>
+    <pattern id="bars" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#E2E8F0"/>
+      <line x1="0" y1="6" x2="6" y2="0" stroke="#CBD5E1" stroke-width="0.8"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="400" height="280" fill="#FFFFFF"/>
+
+  <text font-weight="700" font-size="14" x="200" y="22" text-anchor="middle" fill="#1E293B">fit_all &#x2014; Letterbox</text>
+
+  <!-- Target canvas -->
+  <rect x="50" y="40" width="300" height="210" rx="4" ry="4" fill="url(#bars)" stroke="#94A3B8" stroke-width="1.5"/>
+
+  <!-- Letterbox top -->
+  <rect x="50" y="40" width="300" height="40" rx="4" ry="4" fill="#E2E8F0" opacity="0.9"/>
+
+  <!-- Letterbox bottom -->
+  <rect x="50" y="210" width="300" height="40" rx="4" ry="4" fill="#E2E8F0" opacity="0.9"/>
+
+  <!-- Source content -->
+  <rect x="50" y="80" width="300" height="130" rx="2" ry="2" fill="#3B82F6" opacity="0.25" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="200" y="152" text-anchor="middle" font-weight="600" fill="#1E40AF">Source content</text>
+
+  <!-- Labels -->
+  <text x="360" y="64" fill="#64748B" font-size="11">&#x2190; letterbox</text>
+  <text x="360" y="235" fill="#64748B" font-size="11">&#x2190; letterbox</text>
+
+  <!-- Dimension labels -->
+  <line x1="38" y1="40" x2="38" y2="250" stroke="#94A3B8" stroke-width="0.8"/>
+  <text x="33" y="150" text-anchor="end" transform="rotate(-90,33,150)" fill="#64748B" font-size="10">target</text>
+
+  <line x1="50" y1="260" x2="350" y2="260" stroke="#94A3B8" stroke-width="0.8"/>
+  <text x="200" y="275" text-anchor="middle" fill="#64748B" font-size="10">target width</text>
+</svg>

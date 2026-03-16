@@ -1,0 +1,35 @@
+{# Jinja2 template — rendered by node_gen.py to produce version.ts #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file version.ts
+ * @brief {{ version.doc }}
+ */
+
+export class {{ version.class_name }} {
+{% for slot in version.slots %}
+  readonly {{ slot.name }}: number;
+{% endfor %}
+  readonly patch: number;
+
+  constructor(
+{% for slot in version.slots %}
+    {{ slot.name }}: number = {{ slot.default }},
+{% endfor %}
+    patch: number = 0,
+  ) {
+{% for slot in version.slots %}
+    this.{{ slot.name }} = {{ slot.name }};
+{% endfor %}
+    this.patch = patch;
+  }
+
+  equals(other: {{ version.class_name }}): boolean {
+    return {{ version.eq_parts | join(' && ') }} && this.patch === other.patch;
+  }
+
+  toString(): string {
+    return `{{ version.repr_format.replace(')', ', patch=${this.patch})') }}`;
+  }
+}

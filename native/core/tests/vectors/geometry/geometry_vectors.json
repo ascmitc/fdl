@@ -1,0 +1,1516 @@
+{
+  "description": "FDL Geometry golden vectors",
+  "version": "1.0",
+  "fill_hierarchy_gaps": [
+    {
+      "label": "all_populated",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 3900.0,
+          "height": 1700.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 48.0,
+          "y": 30.0
+        },
+        "protection_anchor": {
+          "x": 50.0,
+          "y": 200.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 250.0
+        }
+      },
+      "anchor_offset": {
+        "x": 48.0,
+        "y": 30.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 3900.0,
+          "height": 1700.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 2.0,
+          "y": 170.0
+        },
+        "framing_anchor": {
+          "x": 52.0,
+          "y": 220.0
+        }
+      }
+    },
+    {
+      "label": "only_framing_populated",
+      "input": {
+        "canvas_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "effective_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 50.0
+        }
+      },
+      "anchor_offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_anchor": {
+          "x": 100.0,
+          "y": 50.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 50.0
+        }
+      }
+    },
+    {
+      "label": "only_effective_populated",
+      "input": {
+        "canvas_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "effective_dims": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "effective_anchor": {
+          "x": 100.0,
+          "y": 50.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "anchor_offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "effective_anchor": {
+          "x": 100.0,
+          "y": 50.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "only_protection_populated",
+      "input": {
+        "canvas_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "effective_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_dims": {
+          "width": 3000.0,
+          "height": 1600.0
+        },
+        "framing_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 200.0,
+          "y": 100.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "anchor_offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 3000.0,
+          "height": 1600.0
+        },
+        "effective_dims": {
+          "width": 3000.0,
+          "height": 1600.0
+        },
+        "protection_dims": {
+          "width": 3000.0,
+          "height": 1600.0
+        },
+        "framing_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "effective_anchor": {
+          "x": 200.0,
+          "y": 100.0
+        },
+        "protection_anchor": {
+          "x": 200.0,
+          "y": 100.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "canvas_and_framing_only",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 500.0,
+          "y": 300.0
+        }
+      },
+      "anchor_offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 500.0,
+          "y": 300.0
+        }
+      }
+    },
+    {
+      "label": "anchor_offset_clamp",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 48.0,
+          "y": 30.0
+        },
+        "protection_anchor": {
+          "x": 10.0,
+          "y": 10.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 250.0
+        }
+      },
+      "anchor_offset": {
+        "x": 200.0,
+        "y": 300.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    }
+  ],
+  "normalize_and_scale": [
+    {
+      "label": "no_squeeze_half_scale",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 3900.0,
+          "height": 1700.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 48.0,
+          "y": 30.0
+        },
+        "protection_anchor": {
+          "x": 50.0,
+          "y": 200.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 250.0
+        }
+      },
+      "source_squeeze": 1.0,
+      "scale_factor": 0.5,
+      "target_squeeze": 1.0,
+      "expected": {
+        "canvas_dims": {
+          "width": 2048.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 2000.0,
+          "height": 1050.0
+        },
+        "protection_dims": {
+          "width": 1950.0,
+          "height": 850.0
+        },
+        "framing_dims": {
+          "width": 1900.0,
+          "height": 800.0
+        },
+        "effective_anchor": {
+          "x": 24.0,
+          "y": 15.0
+        },
+        "protection_anchor": {
+          "x": 25.0,
+          "y": 100.0
+        },
+        "framing_anchor": {
+          "x": 50.0,
+          "y": 125.0
+        }
+      }
+    },
+    {
+      "label": "squeeze_1_3_to_1_0",
+      "input": {
+        "canvas_dims": {
+          "width": 4448.0,
+          "height": 3096.0
+        },
+        "effective_dims": {
+          "width": 4448.0,
+          "height": 3096.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 4448.0,
+          "height": 2418.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 339.0
+        }
+      },
+      "source_squeeze": 1.3,
+      "scale_factor": 0.664251207729469,
+      "target_squeeze": 1.0,
+      "expected": {
+        "canvas_dims": {
+          "width": 3840.966183574882,
+          "height": 2056.521739130436
+        },
+        "effective_dims": {
+          "width": 3840.966183574882,
+          "height": 2056.521739130436
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 3840.966183574882,
+          "height": 1606.1594202898561
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 225.18115942029
+        }
+      }
+    },
+    {
+      "label": "squeeze_2_0_scale_1",
+      "input": {
+        "canvas_dims": {
+          "width": 2048.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 2048.0,
+          "height": 1080.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 2048.0,
+          "height": 858.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 111.0
+        }
+      },
+      "source_squeeze": 2.0,
+      "scale_factor": 1.0,
+      "target_squeeze": 1.0,
+      "expected": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 4096.0,
+          "height": 1080.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 4096.0,
+          "height": 858.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 111.0
+        }
+      }
+    }
+  ],
+  "round": [
+    {
+      "label": "round_even_up",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.7,
+          "height": 2160.3
+        },
+        "effective_dims": {
+          "width": 4000.5,
+          "height": 2100.5
+        },
+        "protection_dims": {
+          "width": 3900.1,
+          "height": 1700.9
+        },
+        "framing_dims": {
+          "width": 3800.3,
+          "height": 1600.7
+        },
+        "effective_anchor": {
+          "x": 48.5,
+          "y": 30.5
+        },
+        "protection_anchor": {
+          "x": 50.3,
+          "y": 200.7
+        },
+        "framing_anchor": {
+          "x": 100.1,
+          "y": 250.9
+        }
+      },
+      "even": "even",
+      "mode": "up",
+      "expected": {
+        "canvas_dims": {
+          "width": 4098,
+          "height": 2162
+        },
+        "effective_dims": {
+          "width": 4002,
+          "height": 2102
+        },
+        "protection_dims": {
+          "width": 3902,
+          "height": 1702
+        },
+        "framing_dims": {
+          "width": 3802,
+          "height": 1602
+        },
+        "effective_anchor": {
+          "x": 50,
+          "y": 32
+        },
+        "protection_anchor": {
+          "x": 52,
+          "y": 202
+        },
+        "framing_anchor": {
+          "x": 102,
+          "y": 252
+        }
+      }
+    },
+    {
+      "label": "round_whole_down",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.7,
+          "height": 2160.3
+        },
+        "effective_dims": {
+          "width": 4000.5,
+          "height": 2100.5
+        },
+        "protection_dims": {
+          "width": 3900.1,
+          "height": 1700.9
+        },
+        "framing_dims": {
+          "width": 3800.3,
+          "height": 1600.7
+        },
+        "effective_anchor": {
+          "x": 48.5,
+          "y": 30.5
+        },
+        "protection_anchor": {
+          "x": 50.3,
+          "y": 200.7
+        },
+        "framing_anchor": {
+          "x": 100.1,
+          "y": 250.9
+        }
+      },
+      "even": "whole",
+      "mode": "down",
+      "expected": {
+        "canvas_dims": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dims": {
+          "width": 4000,
+          "height": 2100
+        },
+        "protection_dims": {
+          "width": 3900,
+          "height": 1700
+        },
+        "framing_dims": {
+          "width": 3800,
+          "height": 1600
+        },
+        "effective_anchor": {
+          "x": 48,
+          "y": 30
+        },
+        "protection_anchor": {
+          "x": 50,
+          "y": 200
+        },
+        "framing_anchor": {
+          "x": 100,
+          "y": 250
+        }
+      }
+    },
+    {
+      "label": "round_even_round",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.7,
+          "height": 2160.3
+        },
+        "effective_dims": {
+          "width": 4000.5,
+          "height": 2100.5
+        },
+        "protection_dims": {
+          "width": 3900.1,
+          "height": 1700.9
+        },
+        "framing_dims": {
+          "width": 3800.3,
+          "height": 1600.7
+        },
+        "effective_anchor": {
+          "x": 48.5,
+          "y": 30.5
+        },
+        "protection_anchor": {
+          "x": 50.3,
+          "y": 200.7
+        },
+        "framing_anchor": {
+          "x": 100.1,
+          "y": 250.9
+        }
+      },
+      "even": "even",
+      "mode": "round",
+      "expected": {
+        "canvas_dims": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dims": {
+          "width": 4000,
+          "height": 2100
+        },
+        "protection_dims": {
+          "width": 3900,
+          "height": 1700
+        },
+        "framing_dims": {
+          "width": 3800,
+          "height": 1600
+        },
+        "effective_anchor": {
+          "x": 48,
+          "y": 30
+        },
+        "protection_anchor": {
+          "x": 50,
+          "y": 200
+        },
+        "framing_anchor": {
+          "x": 100,
+          "y": 250
+        }
+      }
+    }
+  ],
+  "apply_offset": [
+    {
+      "label": "positive_offset",
+      "input": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1800.0,
+          "height": 1000.0
+        },
+        "protection_dims": {
+          "width": 1700.0,
+          "height": 950.0
+        },
+        "framing_dims": {
+          "width": 1600.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 60.0,
+          "y": 40.0
+        },
+        "protection_anchor": {
+          "x": 110.0,
+          "y": 65.0
+        },
+        "framing_anchor": {
+          "x": 160.0,
+          "y": 90.0
+        }
+      },
+      "offset": {
+        "x": 50.0,
+        "y": 30.0
+      },
+      "expected_geometry": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1800.0,
+          "height": 1000.0
+        },
+        "protection_dims": {
+          "width": 1700.0,
+          "height": 950.0
+        },
+        "framing_dims": {
+          "width": 1600.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 110.0,
+          "y": 70.0
+        },
+        "protection_anchor": {
+          "x": 160.0,
+          "y": 95.0
+        },
+        "framing_anchor": {
+          "x": 210.0,
+          "y": 120.0
+        }
+      },
+      "expected_theo_eff": {
+        "x": 110.0,
+        "y": 70.0
+      },
+      "expected_theo_prot": {
+        "x": 160.0,
+        "y": 95.0
+      },
+      "expected_theo_fram": {
+        "x": 210.0,
+        "y": 120.0
+      }
+    },
+    {
+      "label": "negative_offset_clamp",
+      "input": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1800.0,
+          "height": 1000.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 1600.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 60.0,
+          "y": 40.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 160.0,
+          "y": 90.0
+        }
+      },
+      "offset": {
+        "x": -200.0,
+        "y": -150.0
+      },
+      "expected_geometry": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1800.0,
+          "height": 1000.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 1600.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "expected_theo_eff": {
+        "x": -140.0,
+        "y": -110.0
+      },
+      "expected_theo_prot": {
+        "x": -200.0,
+        "y": -150.0
+      },
+      "expected_theo_fram": {
+        "x": -40.0,
+        "y": -60.0
+      }
+    },
+    {
+      "label": "zero_offset",
+      "input": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1800.0,
+          "height": 1000.0
+        },
+        "protection_dims": {
+          "width": 1700.0,
+          "height": 950.0
+        },
+        "framing_dims": {
+          "width": 1600.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 60.0,
+          "y": 40.0
+        },
+        "protection_anchor": {
+          "x": 110.0,
+          "y": 65.0
+        },
+        "framing_anchor": {
+          "x": 160.0,
+          "y": 90.0
+        }
+      },
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "expected_geometry": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1800.0,
+          "height": 1000.0
+        },
+        "protection_dims": {
+          "width": 1700.0,
+          "height": 950.0
+        },
+        "framing_dims": {
+          "width": 1600.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 60.0,
+          "y": 40.0
+        },
+        "protection_anchor": {
+          "x": 110.0,
+          "y": 65.0
+        },
+        "framing_anchor": {
+          "x": 160.0,
+          "y": 90.0
+        }
+      },
+      "expected_theo_eff": {
+        "x": 60.0,
+        "y": 40.0
+      },
+      "expected_theo_prot": {
+        "x": 110.0,
+        "y": 65.0
+      },
+      "expected_theo_fram": {
+        "x": 160.0,
+        "y": 90.0
+      }
+    }
+  ],
+  "crop": [
+    {
+      "label": "no_crop_needed",
+      "input": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1800.0,
+          "height": 1000.0
+        },
+        "protection_dims": {
+          "width": 1700.0,
+          "height": 950.0
+        },
+        "framing_dims": {
+          "width": 1600.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 60.0,
+          "y": 40.0
+        },
+        "protection_anchor": {
+          "x": 110.0,
+          "y": 65.0
+        },
+        "framing_anchor": {
+          "x": 160.0,
+          "y": 90.0
+        }
+      },
+      "theo_eff": {
+        "x": 60.0,
+        "y": 40.0
+      },
+      "theo_prot": {
+        "x": 110.0,
+        "y": 65.0
+      },
+      "theo_fram": {
+        "x": 160.0,
+        "y": 90.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1800.0,
+          "height": 1000.0
+        },
+        "protection_dims": {
+          "width": 1700.0,
+          "height": 950.0
+        },
+        "framing_dims": {
+          "width": 1600.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 60.0,
+          "y": 40.0
+        },
+        "protection_anchor": {
+          "x": 110.0,
+          "y": 65.0
+        },
+        "framing_anchor": {
+          "x": 160.0,
+          "y": 90.0
+        }
+      }
+    },
+    {
+      "label": "negative_anchors_crop",
+      "input": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 2400.0,
+          "height": 1400.0
+        },
+        "protection_dims": {
+          "width": 2200.0,
+          "height": 1300.0
+        },
+        "framing_dims": {
+          "width": 2000.0,
+          "height": 1200.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 100.0,
+          "y": 50.0
+        },
+        "framing_anchor": {
+          "x": 200.0,
+          "y": 100.0
+        }
+      },
+      "theo_eff": {
+        "x": -200.0,
+        "y": -100.0
+      },
+      "theo_prot": {
+        "x": -100.0,
+        "y": -50.0
+      },
+      "theo_fram": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "protection_dims": {
+          "width": 1820.0,
+          "height": 1030.0
+        },
+        "framing_dims": {
+          "width": 1720.0,
+          "height": 980.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 100.0,
+          "y": 50.0
+        },
+        "framing_anchor": {
+          "x": 200.0,
+          "y": 100.0
+        }
+      }
+    },
+    {
+      "label": "no_protection_crop",
+      "input": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 2400.0,
+          "height": 1400.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 2000.0,
+          "height": 1200.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 200.0,
+          "y": 100.0
+        }
+      },
+      "theo_eff": {
+        "x": -200.0,
+        "y": -100.0
+      },
+      "theo_prot": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "theo_fram": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 1720.0,
+          "height": 980.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 200.0,
+          "y": 100.0
+        }
+      }
+    },
+    {
+      "label": "right_edge_crop",
+      "input": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 2400.0,
+          "height": 1080.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 2000.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 200.0,
+          "y": 90.0
+        }
+      },
+      "theo_eff": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "theo_prot": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "theo_fram": {
+        "x": 200.0,
+        "y": 90.0
+      },
+      "expected": {
+        "canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "effective_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "protection_dims": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "framing_dims": {
+          "width": 1720.0,
+          "height": 900.0
+        },
+        "effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "framing_anchor": {
+          "x": 200.0,
+          "y": 90.0
+        }
+      }
+    }
+  ],
+  "get_dims_anchor_from_path": [
+    {
+      "label": "path_canvas_dims",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 3900.0,
+          "height": 1700.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 48.0,
+          "y": 30.0
+        },
+        "protection_anchor": {
+          "x": 50.0,
+          "y": 200.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 250.0
+        }
+      },
+      "path": "canvas.dimensions",
+      "expected_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "expected_anchor": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "label": "path_effective_dims",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 3900.0,
+          "height": 1700.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 48.0,
+          "y": 30.0
+        },
+        "protection_anchor": {
+          "x": 50.0,
+          "y": 200.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 250.0
+        }
+      },
+      "path": "canvas.effective_dimensions",
+      "expected_dims": {
+        "width": 4000.0,
+        "height": 2100.0
+      },
+      "expected_anchor": {
+        "x": 48.0,
+        "y": 30.0
+      }
+    },
+    {
+      "label": "path_protection_dims",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 3900.0,
+          "height": 1700.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 48.0,
+          "y": 30.0
+        },
+        "protection_anchor": {
+          "x": 50.0,
+          "y": 200.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 250.0
+        }
+      },
+      "path": "framing_decision.protection_dimensions",
+      "expected_dims": {
+        "width": 3900.0,
+        "height": 1700.0
+      },
+      "expected_anchor": {
+        "x": 50.0,
+        "y": 200.0
+      }
+    },
+    {
+      "label": "path_framing_dims",
+      "input": {
+        "canvas_dims": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "effective_dims": {
+          "width": 4000.0,
+          "height": 2100.0
+        },
+        "protection_dims": {
+          "width": 3900.0,
+          "height": 1700.0
+        },
+        "framing_dims": {
+          "width": 3800.0,
+          "height": 1600.0
+        },
+        "effective_anchor": {
+          "x": 48.0,
+          "y": 30.0
+        },
+        "protection_anchor": {
+          "x": 50.0,
+          "y": 200.0
+        },
+        "framing_anchor": {
+          "x": 100.0,
+          "y": 250.0
+        }
+      },
+      "path": "framing_decision.dimensions",
+      "expected_dims": {
+        "width": 3800.0,
+        "height": 1600.0
+      },
+      "expected_anchor": {
+        "x": 100.0,
+        "y": 250.0
+      }
+    }
+  ]
+}

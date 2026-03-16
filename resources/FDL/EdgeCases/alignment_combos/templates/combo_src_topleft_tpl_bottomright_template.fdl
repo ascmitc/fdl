@@ -1,0 +1,33 @@
+{
+  "uuid": "b2a9b72b-b03d-4373-aa9f-68d993e065ff",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "Off-Center + Alignment Generator",
+  "canvas_templates": [
+    {
+      "label": "Template: bottom-right alignment",
+      "id": "src_tl_tpl_br",
+      "target_dimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "target_anamorphic_squeeze": 1.0,
+      "fit_source": "framing_decision.dimensions",
+      "fit_method": "fit_all",
+      "alignment_method_vertical": "bottom",
+      "alignment_method_horizontal": "right",
+      "preserve_from_source_canvas": "framing_decision.protection_dimensions",
+      "round": {
+        "even": "even",
+        "mode": "round"
+      },
+      "maximum_dimensions": {
+        "width": 4096,
+        "height": 2400
+      },
+      "pad_to_maximum": false
+    }
+  ]
+}

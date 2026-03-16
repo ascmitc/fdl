@@ -1,0 +1,61 @@
+{
+  "uuid": "eb520f25-e26c-40b5-af71-f338b184b8a8",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "Test Case Generator",
+  "default_framing_intent": "aspect_239x100_intent",
+  "framing_intents": [
+    {
+      "label": "239:100 Framing",
+      "id": "aspect_239x100_intent",
+      "aspect_ratio": {
+        "width": 239,
+        "height": 100
+      },
+      "protection": 0.1
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Generated Context",
+      "context_creator": "Test Case Generator",
+      "canvases": [
+        {
+          "label": "5120x4096",
+          "id": "aspect_239x100_canvas",
+          "source_canvas_id": "aspect_239x100_canvas",
+          "dimensions": {
+            "width": 5120,
+            "height": 4096
+          },
+          "anamorphic_squeeze": 1.0,
+          "framing_decisions": [
+            {
+              "label": "239:100 framing",
+              "id": "aspect_239x100_canvas-aspect_239x100_intent",
+              "framing_intent_id": "aspect_239x100_intent",
+              "dimensions": {
+                "width": 5120,
+                "height": 2142.2594142259413
+              },
+              "anchor_point": {
+                "x": 0.0,
+                "y": 976.8702928870293
+              },
+              "protection_dimensions": {
+                "width": 5120,
+                "height": 2380.288238028824
+              },
+              "protection_anchor_point": {
+                "x": 0,
+                "y": 857.8558809855881
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

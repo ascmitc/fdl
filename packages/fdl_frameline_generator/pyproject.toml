@@ -1,0 +1,41 @@
+[project]
+name = "asc-fdl-frameline-generator"
+version = "0.1.0-dev.11"
+description = "Generate frameline overlay images from FDL files (EXR/PNG/TIFF via OIIO, plus SVG vector output)"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "OpenImageIO>=2.4.0",
+    "asc-fdl",
+    "asc-fdl-imaging",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-xdist>=3.0",
+]
+
+[project.scripts]
+fdl-frameline = "fdl_frameline_generator.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fdl_frameline_generator"]
+
+[tool.ruff]
+line-length = 140
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "UP", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v -n auto -p no:pytest-qt"

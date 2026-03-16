@@ -1,0 +1,446 @@
+{
+  "description": "from_framing_intent golden vectors",
+  "version": "1.0",
+  "vectors": [
+    {
+      "label": "letterbox_no_protection_even_up",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 2160
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 239,
+        "height": 100
+      },
+      "protection": 0.0,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 4096,
+          "height": 1714
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "has_protection": false,
+        "protection_dimensions": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "letterbox_with_protection",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 2160
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 239,
+        "height": 100
+      },
+      "protection": 0.1,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 3688,
+          "height": 1544
+        },
+        "anchor_point": {
+          "x": 204.0,
+          "y": 308.0
+        },
+        "has_protection": true,
+        "protection_dimensions": {
+          "width": 4096,
+          "height": 1714
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        }
+      }
+    },
+    {
+      "label": "pillarbox_no_protection",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 2160
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 133,
+        "height": 100
+      },
+      "protection": 0.0,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 2874,
+          "height": 2160
+        },
+        "anchor_point": {
+          "x": 611.0,
+          "y": 0.0
+        },
+        "has_protection": false,
+        "protection_dimensions": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "pillarbox_with_protection",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 2160
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 133,
+        "height": 100
+      },
+      "protection": 0.05,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 2732,
+          "height": 2052
+        },
+        "anchor_point": {
+          "x": 682.0,
+          "y": 54.0
+        },
+        "has_protection": true,
+        "protection_dimensions": {
+          "width": 2874,
+          "height": 2160
+        },
+        "protection_anchor_point": {
+          "x": 611.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "square_intent",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 2160
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 1,
+        "height": 1
+      },
+      "protection": 0.0,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 2160,
+          "height": 2160
+        },
+        "anchor_point": {
+          "x": 968.0,
+          "y": 0.0
+        },
+        "has_protection": false,
+        "protection_dimensions": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "anamorphic_canvas",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 3432
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 3432.0
+      },
+      "squeeze": 2.0,
+      "aspect_ratio": {
+        "width": 239,
+        "height": 100
+      },
+      "protection": 0.0,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 4096,
+          "height": 3428
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 2.0
+        },
+        "has_protection": false,
+        "protection_dimensions": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "effective_dims_letterbox",
+      "canvas_dims": {
+        "width": 5184,
+        "height": 4320
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 239,
+        "height": 100
+      },
+      "protection": 0.0,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 4096,
+          "height": 1714
+        },
+        "anchor_point": {
+          "x": 544.0,
+          "y": 1303.0
+        },
+        "has_protection": false,
+        "protection_dimensions": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "exact_match_16_9",
+      "canvas_dims": {
+        "width": 1920,
+        "height": 1080
+      },
+      "working_dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 16,
+        "height": 9
+      },
+      "protection": 0.0,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "has_protection": false,
+        "protection_dimensions": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "letterbox_whole_round",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 2160
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 239,
+        "height": 100
+      },
+      "protection": 0.0,
+      "rounding": {
+        "even": "whole",
+        "mode": "round"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 4096,
+          "height": 1714
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "has_protection": false,
+        "protection_dimensions": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "letterbox_even_down",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 2160
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 239,
+        "height": 100
+      },
+      "protection": 0.0,
+      "rounding": {
+        "even": "even",
+        "mode": "down"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 4096,
+          "height": 1712
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 224.0
+        },
+        "has_protection": false,
+        "protection_dimensions": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "label": "high_protection_factor",
+      "canvas_dims": {
+        "width": 4096,
+        "height": 2160
+      },
+      "working_dims": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "squeeze": 1.0,
+      "aspect_ratio": {
+        "width": 239,
+        "height": 100
+      },
+      "protection": 0.5,
+      "rounding": {
+        "even": "even",
+        "mode": "up"
+      },
+      "expected": {
+        "dimensions": {
+          "width": 2048,
+          "height": 858
+        },
+        "anchor_point": {
+          "x": 1024.0,
+          "y": 651.0
+        },
+        "has_protection": true,
+        "protection_dimensions": {
+          "width": 4096,
+          "height": 1714
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        }
+      }
+    }
+  ]
+}

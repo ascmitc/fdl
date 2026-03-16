@@ -1,0 +1,11 @@
+{# Handwritten Jinja2 template — rendered by generate.py to produce the output .py file. #}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+"""FDL Core error types."""
+{% for err in errors %}
+
+
+class {{ err.name }}({{ err.parent }}):
+    pass
+{% endfor %}

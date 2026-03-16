@@ -1,0 +1,145 @@
+{# Jinja2 template — rendered by node_gen.py to produce binding.cc #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file binding.cc
+ * @brief N-API addon wrapping all fdl_core C functions.
+ *
+ * Each exported function extracts arguments from Napi::CallbackInfo,
+ * calls the underlying C function, and converts the result back to
+ * a JavaScript value.
+ */
+
+#include <napi.h>
+#include <string>
+#include "fdl/fdl_core.h"
+#include "structs.h"
+
+// -----------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------
+
+static void* UnwrapHandle(const Napi::Value& val) {
+    return val.As<Napi::External<void>>().Data();
+}
+
+// -----------------------------------------------------------------------
+// Wrapper functions
+// -----------------------------------------------------------------------
+
+{% for fn in functions %}
+// {{ fn.doc }}
+{% if fn.return_kind == "void" and not fn.has_out_params %}
+void {{ fn.wrapper_name }}(const Napi::CallbackInfo& info) {
+{% else %}
+Napi::Value {{ fn.wrapper_name }}(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+{% endif %}
+{% if fn.is_free_fn %}
+    if (info[0].IsNull() || info[0].IsUndefined()) return;
+{% endif %}
+{# --- Extract JS parameters --- #}
+{% for p in fn.params %}
+{% if p.kind == "handle" %}
+    auto* {{ p.name }} = static_cast<{{ p.c_type }}>(UnwrapHandle(info[{{ p.index }}]));
+{% elif p.kind == "string" %}
+{% if p.nullable %}
+    bool {{ p.name }}_is_null = info[{{ p.index }}].IsNull() || info[{{ p.index }}].IsUndefined();
+    std::string {{ p.name }}_str = {{ p.name }}_is_null ? std::string() : info[{{ p.index }}].As<Napi::String>().Utf8Value();
+{% else %}
+    std::string {{ p.name }}_str = info[{{ p.index }}].As<Napi::String>().Utf8Value();
+{% endif %}
+{% elif p.kind == "number" %}
+    {{ p.c_type }} {{ p.name }} = {{ p.extract }};
+{% elif p.kind == "enum" %}
+    {{ p.c_type }} {{ p.name }} = {{ p.extract }};
+{% elif p.kind == "struct" or p.kind == "struct_ptr" %}
+    {{ p.c_type }} {{ p.name }} = ObjectTo{{ p.pascal_name }}(info[{{ p.index }}].As<Napi::Object>());
+{% else %}
+    auto {{ p.name }} = {{ p.extract }};
+{% endif %}
+{% endfor %}
+{# --- Allocate out parameters --- #}
+{% for op in fn.out_params %}
+    {{ op.base_type }} {{ op.name }} = {};
+{% endfor %}
+{# --- Call C function and handle return --- #}
+{% if fn.has_out_params %}
+{# Functions with out-parameters: always return a JS object #}
+{% if fn.return_kind == "void" %}
+    {{ fn.name }}({{ fn.call_args_str }});
+{% elif fn.return_kind == "number" %}
+    {{ fn.return_type }} _rv = {{ fn.name }}({{ fn.call_args_str }});
+{% elif fn.return_kind == "struct" %}
+    {{ fn.return_type }} _rv = {{ fn.name }}({{ fn.call_args_str }});
+{% elif fn.return_kind == "handle" %}
+    auto* _rv = {{ fn.name }}({{ fn.call_args_str }});
+{% else %}
+    auto _rv = {{ fn.name }}({{ fn.call_args_str }});
+{% endif %}
+    auto _out = Napi::Object::New(env);
+{% if fn.return_kind == "number" %}
+    _out.Set("_return", Napi::Number::New(env, static_cast<double>(_rv)));
+{% elif fn.return_kind == "struct" %}
+    _out.Set("_return", {{ fn.return_pascal_name }}ToObject(env, _rv));
+{% elif fn.return_kind == "handle" %}
+    _out.Set("_return", _rv ? Napi::External<void>::New(env, _rv) : env.Null());
+{% endif %}
+{% for op in fn.out_params %}
+{% if op.is_struct %}
+    _out.Set("{{ op.js_name }}", {{ op.pascal_name }}ToObject(env, {{ op.name }}));
+{% else %}
+    _out.Set("{{ op.js_name }}", Napi::Number::New(env, static_cast<double>({{ op.name }})));
+{% endif %}
+{% endfor %}
+    return _out;
+{% elif fn.return_kind == "void" %}
+    {{ fn.name }}({{ fn.call_args_str }});
+{% elif fn.return_kind == "string" %}
+    const char* _r = {{ fn.name }}({{ fn.call_args_str }});
+    return _r ? Napi::String::New(env, _r) : env.Null();
+{% elif fn.return_kind == "string_free" %}
+    auto* _r = {{ fn.name }}({{ fn.call_args_str }});
+{% if fn.return_nullable %}
+    if (!_r) return env.Null();
+{% else %}
+    if (!_r) {
+        Napi::Error::New(env, "{{ fn.name }} returned NULL").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+{% endif %}
+    std::string _result(_r);
+    fdl_free(const_cast<char*>(_r));
+    return Napi::String::New(env, _result);
+{% elif fn.return_kind == "handle" %}
+    auto* _r = {{ fn.name }}({{ fn.call_args_str }});
+{% if fn.return_nullable %}
+    if (!_r) return env.Null();
+{% endif %}
+    return Napi::External<void>::New(env, _r);
+{% elif fn.return_kind == "number" %}
+    auto _r = {{ fn.name }}({{ fn.call_args_str }});
+    return Napi::Number::New(env, static_cast<double>(_r));
+{% elif fn.return_kind == "struct" %}
+    {{ fn.return_type }} _r = {{ fn.name }}({{ fn.call_args_str }});
+    return {{ fn.return_pascal_name }}ToObject(env, _r);
+{% elif fn.return_kind == "enum" %}
+    auto _r = {{ fn.name }}({{ fn.call_args_str }});
+    return Napi::Number::New(env, static_cast<uint32_t>(_r));
+{% endif %}
+}
+
+{% endfor %}
+// -----------------------------------------------------------------------
+// Module registration
+// -----------------------------------------------------------------------
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
+{% for reg in registrations %}
+    exports.Set("{{ reg.c_name }}", Napi::Function::New(env, {{ reg.wrapper_name }}));
+{% endfor %}
+    return exports;
+}
+
+NODE_API_MODULE(fdl_addon, Init)

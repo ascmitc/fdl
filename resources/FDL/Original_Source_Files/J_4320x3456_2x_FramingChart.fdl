@@ -1,0 +1,61 @@
+{
+  "uuid": "f082cf58-3bf4-4ead-955f-a63e0f7277d4",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 432,
+        "height": 181
+      },
+      "protection": 0.09990300679000001
+    }
+  ],
+  "contexts": [
+    {
+      "label": "RED DSMC2 MONSTRO 8K VV",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "4.5K 5:4",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 4320,
+            "height": 3456
+          },
+          "anamorphic_squeeze": 2,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 3712,
+                "height": 3110
+              },
+              "anchor_point": {
+                "x": 304,
+                "y": 173
+              },
+              "protection_dimensions": {
+                "width": 4124,
+                "height": 3456
+              },
+              "protection_anchor_point": {
+                "x": 98,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

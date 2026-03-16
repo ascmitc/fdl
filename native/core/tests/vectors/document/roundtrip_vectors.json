@@ -1,0 +1,589 @@
+{
+  "description": "FDL document roundtrip golden vectors \u2014 parse and re-serialize canonically",
+  "version": "1.0",
+  "vectors": [
+    {
+      "label": "minimal_fdl",
+      "input": {
+        "canvas_templates": [],
+        "contexts": [],
+        "framing_intents": [],
+        "fdl_creator": "test-roundtrip",
+        "version": {
+          "minor": 0,
+          "major": 2
+        },
+        "uuid": "00000000-0000-0000-0000-000000000001"
+      },
+      "expected": {
+        "uuid": "00000000-0000-0000-0000-000000000001",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-roundtrip",
+        "framing_intents": [],
+        "contexts": [],
+        "canvas_templates": []
+      }
+    },
+    {
+      "label": "fdl_with_framing_intents",
+      "input": {
+        "canvas_templates": [],
+        "contexts": [],
+        "framing_intents": [
+          {
+            "protection": 0.1,
+            "aspect_ratio": {
+              "height": 100,
+              "width": 239
+            },
+            "id": "FI_239",
+            "label": "2.39:1"
+          },
+          {
+            "protection": 0.0,
+            "aspect_ratio": {
+              "height": 9,
+              "width": 16
+            },
+            "id": "FI_178",
+            "label": "1.78:1"
+          }
+        ],
+        "default_framing_intent": "FI_239",
+        "fdl_creator": "test-roundtrip",
+        "version": {
+          "minor": 0,
+          "major": 2
+        },
+        "uuid": "00000000-0000-0000-0000-000000000002"
+      },
+      "expected": {
+        "uuid": "00000000-0000-0000-0000-000000000002",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-roundtrip",
+        "default_framing_intent": "FI_239",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.1
+          },
+          {
+            "label": "1.78:1",
+            "id": "FI_178",
+            "aspect_ratio": {
+              "width": 16,
+              "height": 9
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [],
+        "canvas_templates": []
+      }
+    },
+    {
+      "label": "fdl_with_context_canvas_fd",
+      "input": {
+        "canvas_templates": [],
+        "contexts": [
+          {
+            "canvases": [
+              {
+                "framing_decisions": [
+                  {
+                    "anchor_point": {
+                      "y": 223.0,
+                      "x": 0.0
+                    },
+                    "dimensions": {
+                      "height": 1714.0,
+                      "width": 4096.0
+                    },
+                    "framing_intent_id": "FI_239",
+                    "id": "CVS_OCF-FI_239",
+                    "label": "2.39:1"
+                  }
+                ],
+                "anamorphic_squeeze": 1.0,
+                "dimensions": {
+                  "height": 2160,
+                  "width": 4096
+                },
+                "source_canvas_id": "CVS_OCF",
+                "id": "CVS_OCF",
+                "label": "OCF"
+              }
+            ],
+            "label": "Camera A"
+          }
+        ],
+        "framing_intents": [
+          {
+            "protection": 0.0,
+            "aspect_ratio": {
+              "height": 100,
+              "width": 239
+            },
+            "id": "FI_239",
+            "label": "2.39:1"
+          }
+        ],
+        "fdl_creator": "test-roundtrip",
+        "version": {
+          "minor": 0,
+          "major": 2
+        },
+        "uuid": "00000000-0000-0000-0000-000000000003"
+      },
+      "expected": {
+        "uuid": "00000000-0000-0000-0000-000000000003",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-roundtrip",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      }
+    },
+    {
+      "label": "fdl_with_effective_dims_and_protection",
+      "input": {
+        "canvas_templates": [],
+        "contexts": [
+          {
+            "canvases": [
+              {
+                "framing_decisions": [
+                  {
+                    "protection_anchor_point": {
+                      "y": 1303.0,
+                      "x": 544.0
+                    },
+                    "protection_dimensions": {
+                      "height": 1714.0,
+                      "width": 4096.0
+                    },
+                    "anchor_point": {
+                      "y": 1388.66,
+                      "x": 749.0
+                    },
+                    "dimensions": {
+                      "height": 1542.68,
+                      "width": 3686.4
+                    },
+                    "framing_intent_id": "FI_239",
+                    "id": "CVS_EFF-FI_239",
+                    "label": "2.39:1"
+                  }
+                ],
+                "anamorphic_squeeze": 1.0,
+                "effective_anchor_point": {
+                  "y": 1080.0,
+                  "x": 544.0
+                },
+                "effective_dimensions": {
+                  "height": 2160,
+                  "width": 4096
+                },
+                "dimensions": {
+                  "height": 4320,
+                  "width": 5184
+                },
+                "source_canvas_id": "CVS_EFF",
+                "id": "CVS_EFF",
+                "label": "OCF with effective area"
+              }
+            ],
+            "label": "Camera B"
+          }
+        ],
+        "framing_intents": [
+          {
+            "protection": 0.1,
+            "aspect_ratio": {
+              "height": 100,
+              "width": 239
+            },
+            "id": "FI_239",
+            "label": "2.39:1"
+          }
+        ],
+        "fdl_creator": "test-roundtrip",
+        "version": {
+          "minor": 0,
+          "major": 2
+        },
+        "uuid": "00000000-0000-0000-0000-000000000004"
+      },
+      "expected": {
+        "uuid": "00000000-0000-0000-0000-000000000004",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-roundtrip",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.1
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera B",
+            "canvases": [
+              {
+                "label": "OCF with effective area",
+                "id": "CVS_EFF",
+                "source_canvas_id": "CVS_EFF",
+                "dimensions": {
+                  "width": 5184,
+                  "height": 4320
+                },
+                "effective_dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "effective_anchor_point": {
+                  "x": 544.0,
+                  "y": 1080.0
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_EFF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 3686.4,
+                      "height": 1542.68
+                    },
+                    "anchor_point": {
+                      "x": 749.0,
+                      "y": 1388.66
+                    },
+                    "protection_dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "protection_anchor_point": {
+                      "x": 544.0,
+                      "y": 1303.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      }
+    },
+    {
+      "label": "fdl_with_anamorphic_squeeze",
+      "input": {
+        "canvas_templates": [],
+        "contexts": [
+          {
+            "canvases": [
+              {
+                "framing_decisions": [
+                  {
+                    "anchor_point": {
+                      "y": 859.0,
+                      "x": 0.0
+                    },
+                    "dimensions": {
+                      "height": 1714.0,
+                      "width": 4096.0
+                    },
+                    "framing_intent_id": "FI_239",
+                    "id": "CVS_ANA-FI_239",
+                    "label": "2.39:1"
+                  }
+                ],
+                "anamorphic_squeeze": 2.0,
+                "dimensions": {
+                  "height": 3432,
+                  "width": 4096
+                },
+                "source_canvas_id": "CVS_ANA",
+                "id": "CVS_ANA",
+                "label": "Anamorphic"
+              }
+            ],
+            "context_creator": "DIT Station",
+            "label": "Camera C"
+          }
+        ],
+        "framing_intents": [
+          {
+            "protection": 0.0,
+            "aspect_ratio": {
+              "height": 100,
+              "width": 239
+            },
+            "id": "FI_239",
+            "label": "2.39:1"
+          }
+        ],
+        "fdl_creator": "test-roundtrip",
+        "version": {
+          "minor": 0,
+          "major": 2
+        },
+        "uuid": "00000000-0000-0000-0000-000000000005"
+      },
+      "expected": {
+        "uuid": "00000000-0000-0000-0000-000000000005",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-roundtrip",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera C",
+            "context_creator": "DIT Station",
+            "canvases": [
+              {
+                "label": "Anamorphic",
+                "id": "CVS_ANA",
+                "source_canvas_id": "CVS_ANA",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 3432
+                },
+                "anamorphic_squeeze": 2.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_ANA-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 859.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      }
+    },
+    {
+      "label": "identity_roundtrip",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000000006",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-identity",
+        "framing_intents": [
+          {
+            "label": "1.85:1",
+            "id": "FI_185",
+            "aspect_ratio": {
+              "width": 185,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [],
+        "canvas_templates": []
+      },
+      "expected": {
+        "uuid": "00000000-0000-0000-0000-000000000006",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-identity",
+        "framing_intents": [
+          {
+            "label": "1.85:1",
+            "id": "FI_185",
+            "aspect_ratio": {
+              "width": 185,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [],
+        "canvas_templates": []
+      }
+    },
+    {
+      "label": "null_default_framing_intent_stripped",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000000007",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-null-strip",
+        "default_framing_intent": null,
+        "framing_intents": [],
+        "contexts": [],
+        "canvas_templates": []
+      },
+      "expected": {
+        "uuid": "00000000-0000-0000-0000-000000000007",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-null-strip",
+        "framing_intents": [],
+        "contexts": [],
+        "canvas_templates": []
+      }
+    },
+    {
+      "label": "fdl_with_clip_id",
+      "input": {
+        "canvas_templates": [],
+        "contexts": [
+          {
+            "canvases": [
+              {
+                "framing_decisions": [],
+                "anamorphic_squeeze": 1.0,
+                "dimensions": {
+                  "height": 2160,
+                  "width": 3840
+                },
+                "source_canvas_id": "CVS_CLIP",
+                "id": "CVS_CLIP",
+                "label": "OCF"
+              }
+            ],
+            "clip_id": {
+              "file": "A001C001_220101_R1AB.ari",
+              "clip_name": "A001"
+            },
+            "label": "Camera D"
+          }
+        ],
+        "framing_intents": [],
+        "fdl_creator": "test-clip-id",
+        "version": {
+          "minor": 0,
+          "major": 2
+        },
+        "uuid": "00000000-0000-0000-0000-000000000008"
+      },
+      "expected": {
+        "uuid": "00000000-0000-0000-0000-000000000008",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-clip-id",
+        "framing_intents": [],
+        "contexts": [
+          {
+            "label": "Camera D",
+            "clip_id": {
+              "clip_name": "A001",
+              "file": "A001C001_220101_R1AB.ari"
+            },
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_CLIP",
+                "source_canvas_id": "CVS_CLIP",
+                "dimensions": {
+                  "width": 3840,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": []
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      }
+    }
+  ]
+}

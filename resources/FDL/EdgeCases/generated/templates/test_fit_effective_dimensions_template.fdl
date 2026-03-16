@@ -1,0 +1,29 @@
+{
+  "uuid": "8d25db85-b8fc-400d-9aa2-5746e7817dd8",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "Test Case Generator",
+  "framing_intents": [],
+  "contexts": [],
+  "canvas_templates": [
+    {
+      "label": "Template template_fit_effective",
+      "id": "template_fit_effective",
+      "target_dimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "target_anamorphic_squeeze": 1.0,
+      "fit_source": "canvas.effective_dimensions",
+      "fit_method": "fit_all",
+      "alignment_method_vertical": "center",
+      "alignment_method_horizontal": "center",
+      "round": {
+        "even": "even",
+        "mode": "round"
+      }
+    }
+  ]
+}

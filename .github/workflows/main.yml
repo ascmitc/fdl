@@ -17,10 +17,236 @@ on:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # Tests
+  # Lint — fast gate before tests
+  # ---------------------------------------------------------------------------
+  # NOTE: These lint steps are mirrored by scripts/lint.py for local development.
+  # Keep both in sync when changing lint configuration.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      # --- Python linting ---
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Run ruff check
+        run: uvx ruff check .
+
+      - name: Run ruff format check
+        run: uvx ruff format --check .
+
+      # --- C++ linting (pinned to clang-19 to match local Homebrew) ---
+      - name: Install clang tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format-19 clang-tidy-19
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 100
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
+          sudo update-alternatives --install /usr/bin/run-clang-tidy run-clang-tidy /usr/bin/run-clang-tidy-19 100
+
+      - name: Run clang-format check
+        run: |
+          find native/core/src native/core/include native/core/tests \
+            native/bindings/cpp/ native/bindings/node/src/addon/ \
+            -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.h' -o -name '*.hpp' \) \
+            -print0 | xargs -0 -P"$(nproc)" -n 5 clang-format --dry-run --Werror
+
+      - name: Install CMake
+        run: sudo apt-get install -y cmake
+
+      - name: Install codegen dependencies
+        run: uv pip install pyyaml jinja2 ruff "datamodel-code-generator[http]>=0.25" --system
+
+      - name: Run codegen (with drift check)
+        run: python scripts/run_codegen.py --check
+
+      - name: CMake configure (for compile_commands.json)
+        run: |
+          cmake -S native/core -B native/core/build \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DFDL_BUILD_TESTS=OFF
+
+      - name: Run clang-tidy
+        run: run-clang-tidy -p native/core/build -j"$(nproc)" native/core/src/
+
+      # --- TypeScript linting ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node.js dependencies
+        run: npm install --ignore-scripts
+        working-directory: native/bindings/node
+
+      - name: Run prettier check
+        run: npx prettier --check 'src/**/*.ts'
+        working-directory: native/bindings/node
+
+      - name: Run tsc type check
+        run: npx tsc --noEmit
+        working-directory: native/bindings/node
+
+  # ---------------------------------------------------------------------------
+  # Tests — gate for all downstream jobs
   # ---------------------------------------------------------------------------
   test:
     name: Tests (${{ matrix.os }})
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+    env:
+      CI: true
+      CICD: "1"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          lfs: false
+
+      # --- Git LFS setup (per-OS, skip-smudge + selective fetch) ---
+      - name: Install Git LFS (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-lfs
+          git lfs install --skip-smudge
+
+      - name: Install Git LFS (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install git-lfs || true
+          git lfs install --skip-smudge
+
+      - name: Install Git LFS (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git lfs install --skip-smudge
+
+      - name: Cache Git LFS objects
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs/objects
+          key: ${{ runner.os }}-git-lfs-${{ hashFiles('.gitattributes') }}
+          restore-keys: |
+            ${{ runner.os }}-git-lfs-
+
+      - name: Fetch LFS objects (non-Windows)
+        if: runner.os != 'Windows'
+        run: |
+          git lfs fetch --include="resources/FDL/Original_Source_Files/**,resources/FDL/New_Source_Files/**,resources/FDL/EdgeCases/**,resources/FDL/Scenarios_For_Implementers/**,packages/fdl_viewer/tests/expected/**,packages/fdl_viewer/src/fdl_viewer/resources/**,packages/fdl_frameline_generator/src/fdl_frameline_generator/resources/**"
+          git lfs checkout
+
+      - name: Fetch LFS objects (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git lfs fetch --include='resources/FDL/Original_Source_Files/**,resources/FDL/New_Source_Files/**,resources/FDL/EdgeCases/**,resources/FDL/Scenarios_For_Implementers/**,packages/fdl_viewer/tests/expected/**,packages/fdl_viewer/src/fdl_viewer/resources/**,packages/fdl_frameline_generator/src/fdl_frameline_generator/resources/**'
+          git lfs checkout
+
+      # --- Python + uv ---
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      # --- CMake & clang-format (pinned to 19 to match local Homebrew) ---
+      - name: Install CMake and clang-format (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y cmake clang-format-19
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 100
+
+      - name: Install CMake and clang-format (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cmake clang-format || true
+      # Windows runners already have CMake and LLVM (clang-format)
+
+      # --- Codegen ---
+      - name: Install codegen dependencies
+        run: uv pip install pyyaml jinja2 "datamodel-code-generator[http]>=0.25" --system
+
+      - name: Run codegen
+        run: python scripts/run_codegen.py
+
+      # --- Build native library ---
+      - name: Build native library and run C++ tests
+        run: python scripts/build_native.py --run-tests
+
+      - name: Check ABI symbol parity
+        if: runner.os != 'Windows'
+        run: python scripts/check_abi_symbols.py
+
+      # --- Node.js addon build + tests ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Node.js addon and run tests
+        if: runner.os != 'Windows'
+        run: python scripts/build_node.py --run-tests
+
+      # --- Python environment ---
+      - name: Install Python packages
+        run: uv sync --extra dev
+
+      # --- Run Python test suites ---
+      - name: Run fdl core tests
+        timeout-minutes: 20
+        run: uv run pytest native/bindings/python/tests/ -v -n auto --timeout=120 -p no:pytest-qt -p no:anyio -p no:typeguard
+
+      - name: Run fdl-imaging tests
+        timeout-minutes: 20
+        run: uv run pytest packages/fdl_imaging/tests/ -v -n auto --timeout=120 -p no:pytest-qt -p no:anyio -p no:typeguard
+
+      - name: Run fdl-frameline-generator tests
+        timeout-minutes: 20
+        run: uv run pytest packages/fdl_frameline_generator/tests/ -v --timeout=120 -p no:pytest-qt -p no:anyio -p no:typeguard
+
+      - name: Install Qt dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y libegl1 libxkbcommon0
+
+      - name: Run fdl-viewer tests (Linux)
+        if: runner.os == 'Linux'
+        timeout-minutes: 20
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: uv run pytest packages/fdl_viewer/tests/ -v --timeout=30 -p no:anyio -p no:typeguard
+
+      - name: Run fdl-viewer tests (macOS/Windows)
+        if: runner.os != 'Linux'
+        timeout-minutes: 20
+        run: uv run pytest packages/fdl_viewer/tests/ -v --timeout=30 -p no:anyio -p no:typeguard
+
+  # ---------------------------------------------------------------------------
+  # Build Artifacts — wheels + FDL Viewer app (nightly + release)
+  # ---------------------------------------------------------------------------
+  build_artifacts:
+    name: Build Artifacts (${{ matrix.os }})
+    needs: test
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.ref, 'refs/tags/')
     strategy:
       fail-fast: false
       matrix:
@@ -34,113 +260,356 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          lfs: false
-
-      # Placeholder: future test steps go here
-      - name: Validate environment
-        run: echo "Running on ${{ matrix.os }} - environment OK"
-
-      - name: Run tests
-        run: echo "No tests configured yet - skipping"
-
-  # ---------------------------------------------------------------------------
-  # Nightly Build & Artifact Upload
-  # ---------------------------------------------------------------------------
-  nightly_build:
-    name: Nightly Build (${{ matrix.os }})
-    needs: test
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-
-    runs-on: ${{ matrix.os }}
-    env:
-      CI: true
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          lfs: false
-
-      # Placeholder: future build steps go here
-      - name: Build
-        run: echo "No build configured yet - skipping"
-
-      # Placeholder: future artifact upload steps go here
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v6
-      #   with:
-      #     name: nightly-${{ runner.os }}
-      #     path: './dist/*'
-
-  # ---------------------------------------------------------------------------
-  # Release Build & Artifact Upload (tag pushes only)
-  # ---------------------------------------------------------------------------
-  release_build:
-    name: Release Build (${{ matrix.os }})
-    needs: test
-    if: startsWith(github.ref, 'refs/tags/')
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-
-    runs-on: ${{ matrix.os }}
-    env:
-      CI: true
-
-    steps:
-      - name: Checkout tagged commit
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.ref }}
           lfs: false
           fetch-depth: 0
 
+      # Tag-on-main verification (stable release tags only — skip pre-release suffixes like -dev, -alpha, -rc)
       - name: Verify tag belongs to main
+        if: >-
+          startsWith(github.ref, 'refs/tags/') &&
+          !contains(github.ref_name, '-dev') &&
+          !contains(github.ref_name, '-alpha') &&
+          !contains(github.ref_name, '-rc')
         shell: bash
         run: |
           git fetch origin main --depth=1
           if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
-            echo "Tag ${GITHUB_REF_NAME} is not on the main branch history. Aborting release."
+            echo "::error::Tag ${GITHUB_REF_NAME} is not on the main branch. Aborting."
             exit 1
           fi
           echo "Tag commit is on main."
 
-      # Placeholder: future build steps go here
-      - name: Build
-        run: echo "No build configured yet - skipping"
+      # --- Git LFS setup ---
+      - name: Install Git LFS (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-lfs
+          git lfs install --skip-smudge
 
-      # Placeholder: future artifact upload steps go here
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v6
-      #   with:
-      #     name: release-${{ runner.os }}
-      #     path: './dist/*'
+      - name: Install Git LFS (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install git-lfs || true
+          git lfs install --skip-smudge
+
+      - name: Install Git LFS (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git lfs install --skip-smudge
+
+      - name: Cache Git LFS objects
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs/objects
+          key: build-${{ runner.os }}-git-lfs-${{ hashFiles('.gitattributes') }}
+          restore-keys: |
+            build-${{ runner.os }}-git-lfs-
+            ${{ runner.os }}-git-lfs-
+
+      - name: Fetch LFS objects (non-Windows)
+        if: runner.os != 'Windows'
+        run: |
+          git lfs fetch --include="packages/fdl_viewer/src/fdl_viewer/resources/**,packages/fdl_frameline_generator/src/fdl_frameline_generator/resources/**"
+          git lfs checkout
+
+      - name: Fetch LFS objects (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git lfs fetch --include='packages/fdl_viewer/src/fdl_viewer/resources/**,packages/fdl_frameline_generator/src/fdl_frameline_generator/resources/**'
+          git lfs checkout
+
+      # --- Python + uv ---
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      # --- CMake & clang-format (pinned to 19 to match local Homebrew) ---
+      - name: Install CMake and clang-format (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y cmake clang-format-19
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 100
+
+      - name: Install CMake and clang-format (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cmake clang-format || true
+      # Windows runners already have CMake and LLVM (clang-format)
+
+      # --- Codegen ---
+      - name: Install codegen dependencies
+        run: uv pip install pyyaml jinja2 "datamodel-code-generator[http]>=0.25" --system
+
+      - name: Run codegen
+        run: python scripts/run_codegen.py
+
+      # --- Build native library ---
+      - name: Build native library
+        run: python scripts/build_native.py --no-tests
+
+      # --- Build Node.js addon (non-Windows) ---
+      - name: Set up Node.js
+        if: runner.os != 'Windows'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Node.js addon
+        if: runner.os != 'Windows'
+        run: python scripts/build_node.py --addon-only
+
+      # --- Copy native lib into fdl_ffi for wheel bundling ---
+      - name: Bundle native library (Linux)
+        if: runner.os == 'Linux'
+        run: cp native/core/build/libfdl_core.so native/bindings/python/fdl_ffi/
+
+      - name: Bundle native library (macOS)
+        if: runner.os == 'macOS'
+        run: cp native/core/build/libfdl_core.dylib native/bindings/python/fdl_ffi/
+
+      - name: Bundle native library (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          if [ -f native/core/build/Release/fdl_core.dll ]; then
+            cp native/core/build/Release/fdl_core.dll native/bindings/python/fdl_ffi/
+          else
+            cp native/core/build/fdl_core.dll native/bindings/python/fdl_ffi/
+          fi
+
+      # --- Build FDL Viewer standalone application (before wheels, so host .so is used) ---
+      - name: Create dist directory
+        shell: bash
+        run: mkdir -p dist
+
+      - name: Install all Python packages
+        run: uv sync --extra dev
+
+      - name: Install PyInstaller
+        run: uv pip install pyinstaller
+
+      - name: Build FDL Viewer application (macOS)
+        if: runner.os == 'macOS'
+        run: uv run python packages/fdl_viewer/compile.py --no-sign
+
+      - name: Build FDL Viewer application (Windows)
+        if: runner.os == 'Windows'
+        run: uv run python packages/fdl_viewer/compile.py --no-sign --no-dmg
+
+      - name: Build FDL Viewer application (Linux)
+        if: runner.os == 'Linux'
+        run: uv run python packages/fdl_viewer/compile.py --no-sign --no-dmg
+
+      # --- Package FDL Viewer application ---
+      - name: Package FDL Viewer (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          cp packages/fdl_viewer/dist/*.dmg dist/
+
+      - name: Package FDL Viewer (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "packages/fdl_viewer/dist/FDL Viewer" -DestinationPath "dist/FDL_Viewer-${{ runner.os }}-${{ runner.arch }}.zip"
+
+      - name: Package FDL Viewer (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          tar -czf "dist/FDL_Viewer-${{ runner.os }}-${{ runner.arch }}.tar.gz" -C packages/fdl_viewer/dist "FDL Viewer"
+
+      # --- Build Python wheels ---
+      - name: Install build tools
+        run: uv pip install build setuptools wheel hatchling --system
+
+      # Pure Python wheels (all platforms)
+      - name: Build fdl-imaging wheel
+        shell: bash
+        run: |
+          cd packages/fdl_imaging
+          python -m build --wheel --outdir ../../dist/
+
+      - name: Build fdl-frameline-generator wheel
+        shell: bash
+        run: |
+          cd packages/fdl_frameline_generator
+          python -m build --wheel --outdir ../../dist/
+
+      - name: Build fdl-viewer wheel
+        shell: bash
+        run: |
+          cd packages/fdl_viewer
+          python -m build --wheel --outdir ../../dist/
+
+      # fdl wheel (platform-specific — bundles native lib)
+      - name: Build fdl wheel (macOS/Windows)
+        if: runner.os != 'Linux'
+        shell: bash
+        run: |
+          cd native/bindings/python
+          python -m build --wheel --outdir ../../../dist/
+
+      # Linux fdl wheel — built inside manylinux container for PyPI compatibility
+      - name: Build fdl wheel (Linux manylinux)
+        if: runner.os == 'Linux'
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/workspace \
+            quay.io/pypa/manylinux_2_28_x86_64 bash -c '
+              cd /workspace
+              export PATH=/opt/python/cp312-cp312/bin:$PATH
+              pip install cmake pyyaml jinja2 "datamodel-code-generator[http]>=0.25" build setuptools wheel auditwheel
+              python scripts/run_codegen.py
+              rm -rf native/core/build
+              python scripts/build_native.py --no-tests
+              cp native/core/build/libfdl_core.so native/bindings/python/fdl_ffi/
+              cd native/bindings/python
+              python -m build --wheel --outdir /workspace/dist/
+              cd /workspace
+              auditwheel repair dist/asc_fdl-*-linux_*.whl --wheel-dir dist/
+              rm dist/asc_fdl-*-linux_*.whl
+            '
+
+      # --- Upload build artifacts ---
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ runner.os }}-${{ runner.arch }}
+          path: dist/*.whl
+          if-no-files-found: warn
+          retention-days: 2
+
+      - name: Upload FDL Viewer app
+        uses: actions/upload-artifact@v4
+        with:
+          name: FDL_Viewer-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            dist/*.dmg
+            dist/*.zip
+            dist/*.tar.gz
+          if-no-files-found: warn
+          retention-days: 2
+
+      - name: Upload Node.js addon
+        if: runner.os != 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-addon-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            native/bindings/node/build/fdl_addon.node
+            native/bindings/node/build/libfdl_core.*
+          if-no-files-found: warn
+          retention-days: 2
+
+  # ---------------------------------------------------------------------------
+  # Package Scenario Resources (platform-independent, runs once)
+  # ---------------------------------------------------------------------------
+  package_scenarios:
+    name: Package Scenario Resources
+    needs: test
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.ref, 'refs/tags/')
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          lfs: false
+
+      - name: Install Git LFS
+        run: |
+          brew install git-lfs || true
+          git lfs install --skip-smudge
+
+      - name: Cache Git LFS objects
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs/objects
+          key: scenarios-git-lfs-${{ hashFiles('.gitattributes') }}
+          restore-keys: |
+            build-macOS-git-lfs-
+            macOS-git-lfs-
+
+      - name: Fetch LFS objects
+        run: |
+          git lfs fetch --include="resources/FDL/Original_Source_Files/**,resources/FDL/New_Source_Files/**,resources/FDL/EdgeCases/**,resources/FDL/Scenarios_For_Implementers/**"
+          git lfs checkout
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install CMake
+        run: brew install cmake || true
+
+      - name: Install codegen dependencies
+        run: uv pip install pyyaml jinja2 "datamodel-code-generator[http]>=0.25" cffi --system
+
+      - name: Run codegen
+        run: python scripts/run_codegen.py
+
+      - name: Build native library
+        run: python scripts/build_native.py --no-tests
+
+      - name: Build scenario resources zip
+        run: python scripts/zip_scenario_resources.py -o Scenarios_For_Implementers.zip
+
+      - name: Upload scenario resources
+        uses: actions/upload-artifact@v4
+        with:
+          name: Scenarios_For_Implementers
+          path: Scenarios_For_Implementers.zip
+          if-no-files-found: error
+          retention-days: 2
 
   # ---------------------------------------------------------------------------
   # Create GitHub Release & Attach Artifacts (tag pushes only)
   # ---------------------------------------------------------------------------
   publish_release:
-    name: Create GitHub Release (${{ matrix.os }})
-    needs: release_build
+    name: Create GitHub Release
+    needs: [build_artifacts, package_scenarios, npm_publish, pypi_publish]
     if: startsWith(github.ref, 'refs/tags/')
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
-      - name: Download all build artifacts
-        uses: actions/download-artifact@v7
+      - name: Download Scenario Resources
+        uses: actions/download-artifact@v4
         with:
-          path: release-assets
-          merge-multiple: true
+          name: Scenarios_For_Implementers
+          path: release-assets/
+
+      - name: Download FDL Viewer (macOS)
+        uses: actions/download-artifact@v4
+        with:
+          name: FDL_Viewer-macOS-ARM64
+          path: release-assets/
+
+      - name: Download FDL Viewer (Windows)
+        uses: actions/download-artifact@v4
+        with:
+          name: FDL_Viewer-Windows-X64
+          path: release-assets/
+
+      - name: Download FDL Viewer (Linux)
+        uses: actions/download-artifact@v4
+        with:
+          name: FDL_Viewer-Linux-X64
+          path: release-assets/
 
       - name: Create Release and upload assets
         uses: softprops/action-gh-release@v2
@@ -149,6 +618,126 @@ jobs:
           name: ${{ github.ref_name }}
           generate_release_notes: true
           draft: false
-          prerelease: false
+          prerelease: ${{ contains(github.ref_name, '-dev') || contains(github.ref_name, '-alpha') || contains(github.ref_name, '-rc') }}
           files: |
             release-assets/**
+
+  # ---------------------------------------------------------------------------
+  # Publish npm package — @asc-mitc/fdl (tag pushes only)
+  # ---------------------------------------------------------------------------
+  npm_publish:
+    name: Publish to npm
+    needs: [build_artifacts]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Download macOS (ARM64) addon
+        uses: actions/download-artifact@v4
+        with:
+          name: node-addon-macOS-ARM64
+          path: native/bindings/node/prebuilds/darwin-arm64/
+
+      - name: Download Linux (X64) addon
+        uses: actions/download-artifact@v4
+        with:
+          name: node-addon-Linux-X64
+          path: native/bindings/node/prebuilds/linux-x64/
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install codegen dependencies
+        run: uv pip install pyyaml jinja2 "datamodel-code-generator[http]>=0.25" --system
+
+      - name: Run codegen
+        run: python scripts/run_codegen.py
+
+      - name: Install Node.js dependencies
+        run: npm install --ignore-scripts
+        working-directory: native/bindings/node
+
+      - name: Build TypeScript
+        run: npx tsc
+        working-directory: native/bindings/node
+
+      - name: Set version from tag
+        run: npm version "${{ github.ref_name }}" --no-git-tag-version --allow-same-version
+        working-directory: native/bindings/node
+
+      - name: Publish to npm
+        run: npm publish --access public
+        working-directory: native/bindings/node
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # ---------------------------------------------------------------------------
+  # Publish Python packages to PyPI (tag pushes only)
+  # ---------------------------------------------------------------------------
+  pypi_publish:
+    name: Publish to PyPI
+    needs: [build_artifacts]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Download wheels (macOS ARM64)
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels-macOS-ARM64
+          path: dist/
+
+      - name: Download wheels (Linux X64)
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels-Linux-X64
+          path: dist/
+
+      - name: Download wheels (Windows X64)
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels-Windows-X64
+          path: dist/
+
+      - name: Remove duplicate pure-Python wheels
+        # Pure-Python wheels (asc-fdl-imaging, asc-fdl-frameline-generator, asc-fdl-viewer)
+        # are built identically on all 3 platforms — keep only one copy of each
+        shell: bash
+        run: |
+          python3 - <<'EOF'
+          import glob, os
+          seen = set()
+          for whl in sorted(glob.glob("dist/*.whl")):
+              name = os.path.basename(whl)
+              if "py3-none-any" in name:
+                  key = "-".join(name.split("-")[:2])
+                  if key in seen:
+                      print(f"Removing duplicate: {name}")
+                      os.remove(whl)
+                  else:
+                      seen.add(key)
+          EOF
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+          password: ${{ secrets.PYPI_TOKEN }}

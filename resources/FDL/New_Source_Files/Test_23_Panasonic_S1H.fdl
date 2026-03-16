@@ -1,0 +1,61 @@
+{
+  "uuid": "1430645c-0a53-4aca-b55b-4c2406d2ed94",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 806,
+        "height": 343
+      },
+      "protection": 0.149592021759
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Panasonic S1H",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "6K",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 4836,
+            "height": 3380
+          },
+          "anamorphic_squeeze": 1.8,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 3752,
+                "height": 2874
+              },
+              "anchor_point": {
+                "x": 542,
+                "y": 253
+              },
+              "protection_dimensions": {
+                "width": 4412,
+                "height": 3380
+              },
+              "protection_anchor_point": {
+                "x": 212,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

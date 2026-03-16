@@ -1,0 +1,61 @@
+{
+  "uuid": "5afd811f-911a-4f76-908b-4dfbe71877f6",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 359,
+        "height": 270
+      },
+      "protection": 0.199860724234
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Sony FX3",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "4K",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 3840,
+            "height": 2160
+          },
+          "anamorphic_squeeze": 1,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 2298,
+                "height": 1728
+              },
+              "anchor_point": {
+                "x": 771,
+                "y": 216
+              },
+              "protection_dimensions": {
+                "width": 2872,
+                "height": 2160
+              },
+              "protection_anchor_point": {
+                "x": 484,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

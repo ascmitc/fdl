@@ -1,0 +1,103 @@
+{# Jinja2 template — rendered by node_gen.py to produce types.ts #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file types.ts
+ * @brief Value type classes for FDL dimensions, points, rects, etc.
+ */
+
+import { getAddon } from './ffi/index.js';
+{% if all_enum_imports %}
+import { {{ all_enum_imports | join(', ') }} } from './constants.js';
+{% endif %}
+{% if all_enum_map_imports %}
+import {
+{% for imp in all_enum_map_imports %}
+  {{ imp }},
+{% endfor %}
+} from './enum-maps.js';
+{% endif %}
+
+{% if has_float_compare %}
+const _FP_ABS_TOL = 1e-6;
+{% endif %}
+
+{% for vt in value_types %}
+// -----------------------------------------------------------------------
+// {{ vt.ts_class }}
+// -----------------------------------------------------------------------
+
+/** {{ vt.doc }} */
+export class {{ vt.ts_class }} {
+{% for field in vt.fields %}
+  {{ field.name }}: {{ field.ts_type }};
+{% endfor %}
+
+  constructor(
+{% for field in vt.fields %}
+    {{ field.name }}: {{ field.ts_type }} = {{ field.default }},
+{% endfor %}
+  ) {
+{% for field in vt.fields %}
+    this.{{ field.name }} = {{ field.name }};
+{% endfor %}
+  }
+
+  /** Value equality. */
+  equals(other: {{ vt.ts_class }}): boolean {
+    return {{ vt.eq_parts | join(' && ') }};
+  }
+{% if vt.cross_eq_class %}
+
+  /** Cross-type equality with {{ vt.cross_eq_class }}. */
+  equalsApprox(other: {{ vt.cross_eq_class }}): boolean {
+{% for field in vt.fields %}
+    if (Math.abs(this.{{ field.name }} - other.{{ field.name }}) >= _FP_ABS_TOL) return false;
+{% endfor %}
+    return true;
+  }
+{% endif %}
+
+  /** Create a shallow copy. */
+  clone(): {{ vt.ts_class }} {
+    return new {{ vt.ts_class }}({{ vt.clone_args }});
+  }
+
+  toString(): string {
+    return {{ vt.repr_expr }};
+  }
+
+  /** Convert to plain object. */
+  toJSON(): Record<string, unknown> {
+    return { {{ vt.json_entries }} };
+  }
+{% for m in vt.methods %}
+
+  /** {{ m.doc }} */
+{% if m.kind == "classmethod" %}
+  static {{ m.name }}({{ m.params_str }}): {{ m.ts_return }} {
+{% else %}
+  {{ m.name }}({{ m.params_str }}): {{ m.ts_return }} {
+{% endif %}
+{% for line in m.body_lines %}
+    {{ line }}
+{% endfor %}
+  }
+{% endfor %}
+{% for op in vt.operators %}
+
+  /** Operator: {{ op.op }} */
+{% if op.param_ts_type %}
+  {{ op.ts_name }}(other: {{ op.param_ts_type }}): {{ op.ts_return }} {
+{% else %}
+  {{ op.ts_name }}(): {{ op.ts_return }} {
+{% endif %}
+{% for line in op.body_lines %}
+    {{ line }}
+{% endfor %}
+  }
+{% endfor %}
+}
+
+{% endfor %}

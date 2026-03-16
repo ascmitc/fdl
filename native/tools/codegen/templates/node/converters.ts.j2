@@ -1,0 +1,54 @@
+{# Jinja2 template — rendered by node_gen.py to produce converters.ts #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file converters.ts
+ * @brief Converter functions between N-API addon raw objects and typed classes.
+ *
+ * The addon returns plain JS objects for struct types.  These functions
+ * convert between those raw objects and the typed value classes.
+ */
+
+{% if types_type_imports %}
+import { {{ types_type_imports | join(', ') }} } from './types.js';
+{% endif %}
+{% if rounding_type_imports %}
+import { {{ rounding_type_imports | join(', ') }} } from './rounding.js';
+{% endif %}
+{% if all_enum_map_imports %}
+import {
+{% for imp in all_enum_map_imports %}
+  {{ imp }},
+{% endfor %}
+} from './enum-maps.js';
+{% endif %}
+{% if all_enum_class_imports %}
+import { {{ all_enum_class_imports | join(', ') }} } from './constants.js';
+{% endif %}
+
+{% for vt in value_types %}
+// -----------------------------------------------------------------------
+// {{ vt.ts_class }}
+// -----------------------------------------------------------------------
+
+/** Convert addon raw object to {{ vt.ts_class }}. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function {{ vt.from_fn }}(raw: any): {{ vt.ts_class }} {
+  return new {{ vt.ts_class }}(
+{% for field in vt.fields %}
+    {{ field.from_c_expr }},
+{% endfor %}
+  );
+}
+
+/** Convert {{ vt.ts_class }} to addon-compatible plain object. */
+export function {{ vt.to_fn }}(val: {{ vt.ts_class }}): Record<string, unknown> {
+  return {
+{% for field in vt.fields %}
+    {{ field.name }}: {{ field.to_c_expr }},
+{% endfor %}
+  };
+}
+
+{% endfor %}

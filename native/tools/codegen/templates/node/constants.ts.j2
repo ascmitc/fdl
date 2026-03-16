@@ -1,0 +1,31 @@
+{# Jinja2 template — rendered by node_gen.py to produce constants.ts #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file constants.ts
+ * @brief TypeScript string enums for FDL constants.
+ */
+
+{% for enum in enums %}
+export enum {{ enum.ts_class }} {
+{% for member in enum.members %}
+  {{ member.name }} = '{{ member.str_value }}',
+{% endfor %}
+}
+
+{% endfor %}
+// ---------------------------------------------------------------------------
+// Floating-point comparison
+// ---------------------------------------------------------------------------
+
+export const FP_REL_TOL = 1e-9;
+export const FP_ABS_TOL = 1e-6;
+
+// ---------------------------------------------------------------------------
+// First-class custom attribute name constants
+// ---------------------------------------------------------------------------
+
+export const ATTR_SCALE_FACTOR: string = 'scale_factor';
+export const ATTR_CONTENT_TRANSLATION: string = 'content_translation';
+export const ATTR_SCALED_BOUNDING_BOX: string = 'scaled_bounding_box';

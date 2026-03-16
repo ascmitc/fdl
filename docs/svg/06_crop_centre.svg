@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 260" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12">
+  <defs>
+    <clipPath id="outputClip">
+      <rect x="110" y="50" width="340" height="170"/>
+    </clipPath>
+    <pattern id="cropHash" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#FEF2F2"/>
+      <line x1="0" y1="8" x2="8" y2="0" stroke="#FECACA" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="260" fill="#FFFFFF"/>
+
+  <text font-weight="700" font-size="14" x="280" y="22" text-anchor="middle" fill="#1E293B">CROP &#x2014; centre alignment</text>
+
+  <!-- Full scaled content (overflows both sides) -->
+  <rect x="40" y="50" width="480" height="170" rx="4" ry="4" fill="url(#cropHash)" stroke="#EF4444" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Visible content fill inside output -->
+  <rect x="110" y="50" width="340" height="170" rx="5" ry="5" fill="#DBEAFE" opacity="0.5"/>
+
+  <!-- Output canvas border -->
+  <rect x="110" y="50" width="340" height="170" rx="5" ry="5" fill="none" stroke="#1E293B" stroke-width="2.5"/>
+
+  <text x="280" y="140" text-anchor="middle" font-weight="600" fill="#1E293B">Output Canvas</text>
+  <text x="280" y="156" text-anchor="middle" fill="#475569" font-size="11">Fit (centred)</text>
+
+  <!-- Clipped left label -->
+  <text x="75" y="140" text-anchor="middle" fill="#EF4444" font-weight="600" font-size="11">clipped</text>
+
+  <!-- Clipped right label -->
+  <text x="485" y="140" text-anchor="middle" fill="#EF4444" font-weight="600" font-size="11">clipped</text>
+
+  <!-- Clamping annotation -->
+  <text x="280" y="245" text-anchor="middle" fill="#64748B" font-size="11">shift clamped: &#x2212;overflow &#x2264; shift &#x2264; 0</text>
+
+  <!-- Overflow brackets left -->
+  <line x1="40" y1="230" x2="110" y2="230" stroke="#EF4444" stroke-width="1"/>
+  <line x1="40" y1="226" x2="40" y2="234" stroke="#EF4444" stroke-width="1"/>
+  <line x1="110" y1="226" x2="110" y2="234" stroke="#EF4444" stroke-width="1"/>
+
+  <!-- Overflow brackets right -->
+  <line x1="450" y1="230" x2="520" y2="230" stroke="#EF4444" stroke-width="1"/>
+  <line x1="450" y1="226" x2="450" y2="234" stroke="#EF4444" stroke-width="1"/>
+  <line x1="520" y1="226" x2="520" y2="234" stroke="#EF4444" stroke-width="1"/>
+</svg>

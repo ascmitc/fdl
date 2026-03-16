@@ -1,0 +1,27 @@
+{# Jinja2 template — rendered by node_gen.py to produce enum-maps.ts #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file enum-maps.ts
+ * @brief Bidirectional maps between C integer enum values and TypeScript enums.
+ */
+
+import {
+{% for enum in enums %}
+  {{ enum.facade_class }},
+{% endfor %}
+} from './constants.js';
+
+{% for enum in enums %}
+// {{ enum.idl_name }} ↔ {{ enum.facade_class }}
+export const {{ enum.map_name }}_FROM_C: Map<number, {{ enum.facade_class }}> = new Map([
+{% for val in enum.entries %}
+  [{{ val.value }}, {{ enum.facade_class }}.{{ val.member }}],
+{% endfor %}
+]);
+export const {{ enum.map_name }}_TO_C: Map<{{ enum.facade_class }}, number> = new Map(
+  [...{{ enum.map_name }}_FROM_C].map(([k, v]) => [v, k]),
+);
+
+{% endfor %}

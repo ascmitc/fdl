@@ -1,0 +1,92 @@
+{# Jinja2 template — rendered by node_gen.py to produce rounding.ts #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file rounding.ts
+ * @brief Rounding strategy and rounding-related free functions.
+ */
+
+import { getAddon } from './ffi/index.js';
+{% if enum_imports %}
+import { {{ enum_imports | join(', ') }} } from './constants.js';
+{% endif %}
+{% if enum_map_imports %}
+import {
+{% for imp in enum_map_imports %}
+  {{ imp }},
+{% endfor %}
+} from './enum-maps.js';
+{% endif %}
+{% if type_imports %}
+import { {{ type_imports | join(', ') }} } from './types.js';
+{% endif %}
+{% if round_strategy %}
+
+// -----------------------------------------------------------------------
+// RoundStrategy
+// -----------------------------------------------------------------------
+
+/** Rounding strategy: combination of even/odd and direction. */
+export class RoundStrategy {
+{% for field in round_strategy.fields %}
+  {{ field.name }}: {{ field.ts_type }};
+{% endfor %}
+
+  constructor(
+{% for field in round_strategy.fields %}
+    {{ field.name }}: {{ field.ts_type }} = {{ field.default }},
+{% endfor %}
+  ) {
+{% for field in round_strategy.fields %}
+    this.{{ field.name }} = {{ field.name }};
+{% endfor %}
+  }
+
+  equals(other: RoundStrategy): boolean {
+    return {{ round_strategy.eq_parts | join(' && ') }};
+  }
+
+  clone(): RoundStrategy {
+    return new RoundStrategy({{ round_strategy.clone_args }});
+  }
+
+  toString(): string {
+    return {{ round_strategy.repr_expr }};
+  }
+
+  toJSON(): Record<string, unknown> {
+    return { {{ round_strategy.json_entries }} };
+  }
+}
+
+/** Default rounding strategy. */
+export const DEFAULT_ROUNDING_STRATEGY = new RoundStrategy();
+
+let _currentRounding: RoundStrategy = DEFAULT_ROUNDING_STRATEGY;
+
+/** Get the current global rounding strategy. */
+export function getRounding(): RoundStrategy {
+  return _currentRounding;
+}
+
+/** Set the global rounding strategy. Returns the previous value. */
+export function setRounding(strategy: RoundStrategy): RoundStrategy {
+  const prev = _currentRounding;
+  _currentRounding = strategy;
+  return prev;
+}
+{% endif %}
+
+// -----------------------------------------------------------------------
+// Rounding free functions
+// -----------------------------------------------------------------------
+{% for ff in free_functions %}
+
+/** {{ ff.doc }} */
+export function {{ ff.name }}({{ ff.params_str }}): {{ ff.ts_return }} {
+{% for line in ff.body_lines %}
+  {{ line }}
+{% endfor %}
+}
+{% endfor %}

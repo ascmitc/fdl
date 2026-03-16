@@ -1,0 +1,61 @@
+{
+  "uuid": "5ac00d3b-088c-45a1-a8bb-621469aa3bd2",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "Test Case Generator",
+  "default_framing_intent": "squeeze_1_8_intent",
+  "framing_intents": [
+    {
+      "label": "16:9 Framing",
+      "id": "squeeze_1_8_intent",
+      "aspect_ratio": {
+        "width": 16,
+        "height": 9
+      },
+      "protection": 0.1
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Generated Context",
+      "context_creator": "Test Case Generator",
+      "canvases": [
+        {
+          "label": "4096x3072",
+          "id": "squeeze_1_8_canvas",
+          "source_canvas_id": "squeeze_1_8_canvas",
+          "dimensions": {
+            "width": 4096,
+            "height": 3072
+          },
+          "anamorphic_squeeze": 1.8,
+          "framing_decisions": [
+            {
+              "label": "16:9 framing",
+              "id": "squeeze_1_8_canvas-squeeze_1_8_intent",
+              "framing_intent_id": "squeeze_1_8_intent",
+              "dimensions": {
+                "width": 3034.074074074074,
+                "height": 3072
+              },
+              "anchor_point": {
+                "x": 530.962962962963,
+                "y": 0.0
+              },
+              "protection_dimensions": {
+                "width": 3371.19341563786,
+                "height": 3072
+              },
+              "protection_anchor_point": {
+                "x": 362.4032921810699,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

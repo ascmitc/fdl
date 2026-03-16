@@ -1,0 +1,213 @@
+{# Jinja2 template — rendered by node_gen.py to produce utils.ts #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file utils.ts
+ * @brief Utility functions for FDL operations.
+ */
+
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { getAddon } from './ffi/index.js';
+import { DimensionsFloat, DimensionsInt, PointFloat{% if type_imports %}, {{ type_imports | join(', ') }}{% endif %} } from './types.js';
+import { GeometryPath{% if enum_imports %}, {{ enum_imports | join(', ') }}{% endif %} } from './constants.js';
+import { GEOMETRY_PATH_TO_C{% if enum_map_imports %}{% for imp in enum_map_imports %}, {{ imp }}{% endfor %}{% endif %} } from './enum-maps.js';
+import { toRoundStrategy } from './converters.js';
+import { RoundStrategy, getRounding } from './rounding.js';
+import { Version } from './version.js';
+// Type-only imports for facade classes (runtime-loaded lazily below)
+import type { FDL as FDLType } from './fdl.js';
+import type { Canvas as CanvasType } from './canvas.js';
+import type { FramingDecision as FDType } from './framing-decision.js';
+
+// Lazy loader for circular deps in ESM
+const _require = createRequire(import.meta.url);
+function _lazyFDL(): typeof import('./fdl.js') {
+  return _require('./fdl.js');
+}
+
+{% for ff in free_functions %}
+/** {{ ff.doc }} */
+export function {{ ff.name }}({{ ff.params_str }}): {{ ff.ts_return }} {
+{% for line in ff.body_lines %}
+  {{ line }}
+{% endfor %}
+}
+
+{% endfor %}
+// -----------------------------------------------------------------------
+// I/O convenience functions
+// -----------------------------------------------------------------------
+
+/** Parse an FDL document from a JSON string. */
+export function readFromString(json: string, validate = true): FDLType {
+  const { FDL } = _lazyFDL();
+  const doc = FDL.parse(json);
+  if (validate) doc.validate();
+  return doc;
+}
+
+/** Read an FDL document from a file on disk. */
+export function readFromFile(filePath: string, validate = true): FDLType {
+  const contents = readFileSync(filePath, 'utf-8');
+  return readFromString(contents, validate);
+}
+
+/** Serialize an FDL document to a JSON string. */
+export function writeToString(doc: FDLType, validate = true): string {
+  if (validate) doc.validate();
+  return doc.asJson();
+}
+
+/** Write an FDL document to a file on disk. */
+export function writeToFile(
+  doc: FDLType,
+  filePath: string,
+  validate = true,
+): void {
+  writeFileSync(filePath, writeToString(doc, validate), 'utf-8');
+}
+
+// -----------------------------------------------------------------------
+// ABI version
+// -----------------------------------------------------------------------
+
+/** Return the ABI version of the loaded library. */
+export function abiVersion(): Version {
+  const addon = getAddon();
+  const v = addon.fdl_abi_version() as {
+    major: number;
+    minor: number;
+    patch: number;
+  };
+  return new Version(v.major, v.minor, v.patch);
+}
+
+// -----------------------------------------------------------------------
+// Geometry path resolution
+// -----------------------------------------------------------------------
+
+/** Resolve dimensions from a geometry path string. */
+export function getDimensionsFromPath(
+  canvas: CanvasType,
+  framing: FDType,
+  path: string,
+  required = true,
+): DimensionsFloat | null {
+  if (!path || path === 'none') {
+    return new DimensionsFloat(0, 0);
+  }
+  const addon = getAddon();
+  const cPath = GEOMETRY_PATH_TO_C.get(path as GeometryPath);
+  if (cPath === undefined) {
+    throw new Error(`Unsupported source path: ${path}`);
+  }
+  const result = addon.fdl_resolve_geometry_layer(
+    (canvas as any)._handle,
+    (framing as any)._handle,
+    cPath,
+  ) as { _return: number; dims: { width: number; height: number }; anchor: { x: number; y: number } };
+  if (result._return === 1) {
+    if (required) {
+      throw new Error(
+        `Template references '${path}' but the source does not have the referenced data defined.`,
+      );
+    }
+    return null;
+  }
+  if (result._return < 0) {
+    throw new Error(`Unsupported source path: ${path}`);
+  }
+  return new DimensionsFloat(result.dims.width, result.dims.height);
+}
+
+/** Resolve anchor point from a geometry path string. */
+export function getAnchorFromPath(
+  canvas: CanvasType,
+  framing: FDType,
+  path: string,
+): PointFloat {
+  if (!path || path === 'none' || path === 'canvas.dimensions') {
+    return new PointFloat(0, 0);
+  }
+  const addon = getAddon();
+  const cPath = GEOMETRY_PATH_TO_C.get(path as GeometryPath);
+  if (cPath === undefined) {
+    throw new Error(`Unsupported source path for anchor point: ${path}`);
+  }
+  const result = addon.fdl_resolve_geometry_layer(
+    (canvas as any)._handle,
+    (framing as any)._handle,
+    cPath,
+  ) as { _return: number; dims: { width: number; height: number }; anchor: { x: number; y: number } };
+  if (result._return === 1 || result._return < 0) {
+    return new PointFloat(0, 0);
+  }
+  return new PointFloat(result.anchor.x, result.anchor.y);
+}
+
+// -----------------------------------------------------------------------
+// Standalone framing computation
+// -----------------------------------------------------------------------
+
+/** Result of computeFramingFromIntent(). */
+export interface FramingFromIntentResult {
+  dimensions: DimensionsFloat;
+  anchorPoint: PointFloat;
+  protectionDimensions: DimensionsFloat | null;
+  protectionAnchorPoint: PointFloat | null;
+}
+
+/** Compute a framing decision from a framing intent without needing existing handles. */
+export function computeFramingFromIntent(
+  canvasDims: DimensionsFloat,
+  workingDims: DimensionsFloat,
+  squeeze: number,
+  aspectRatio: DimensionsInt,
+  protection: number,
+  rounding: RoundStrategy | null = null,
+): FramingFromIntentResult {
+  const addon = getAddon();
+  const rs = rounding ?? getRounding();
+  const result = addon.fdl_compute_framing_from_intent(
+    { width: canvasDims.width, height: canvasDims.height },
+    { width: workingDims.width, height: workingDims.height },
+    squeeze,
+    { width: aspectRatio.width, height: aspectRatio.height },
+    protection,
+    toRoundStrategy(rs),
+  ) as {
+    dimensions: { width: number; height: number };
+    anchor_point: { x: number; y: number };
+    has_protection: number;
+    protection_dimensions: { width: number; height: number };
+    protection_anchor_point: { x: number; y: number };
+  };
+  const dims = new DimensionsFloat(
+    result.dimensions.width,
+    result.dimensions.height,
+  );
+  const anchor = new PointFloat(
+    result.anchor_point.x,
+    result.anchor_point.y,
+  );
+  let protDims: DimensionsFloat | null = null;
+  let protAnchor: PointFloat | null = null;
+  if (result.has_protection) {
+    protDims = new DimensionsFloat(
+      result.protection_dimensions.width,
+      result.protection_dimensions.height,
+    );
+    protAnchor = new PointFloat(
+      result.protection_anchor_point.x,
+      result.protection_anchor_point.y,
+    );
+  }
+  return {
+    dimensions: dims,
+    anchorPoint: anchor,
+    protectionDimensions: protDims,
+    protectionAnchorPoint: protAnchor,
+  };
+}

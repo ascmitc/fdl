@@ -1,0 +1,50 @@
+[project]
+name = "fdl-workspace"
+version = "0.1.0-dev.11"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "asc-fdl",
+    "asc-fdl-imaging",
+    "asc-fdl-frameline-generator",
+    "asc-fdl-viewer",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-xdist>=3.0",
+    "pytest-qt>=4.0",
+    "pytest-cov>=4.0",
+    "pytest-timeout>=2.0",
+    "mktestdocs>=0.2.0",
+    "datamodel-code-generator[http]>=0.25",
+    "pyyaml>=6.0",
+    "jinja2>=3.0",
+]
+docs = [
+    "mkdocs-material>=9.0",
+    "mkdocstrings[python]>=0.20",
+    "pymdown-extensions>=10.0",
+]
+
+[tool.ruff]
+line-length = 140
+exclude = ["native/bindings/python/build/**", "native/bindings/python/fdl.egg-info/**", "native/**/build/**", "**/node_modules/**"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["fdl", "fdl_ffi", "fdl_imaging", "fdl_frameline_generator", "fdl_viewer"]
+
+[tool.uv.workspace]
+members = ["packages/*", "native/bindings/python"]
+
+[tool.uv.sources]
+asc-fdl = { workspace = true }
+asc-fdl-imaging = { workspace = true }
+asc-fdl-frameline-generator = { workspace = true }
+asc-fdl-viewer = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "cffi>=2.0.0",
+]

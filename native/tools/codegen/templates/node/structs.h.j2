@@ -1,0 +1,45 @@
+{# Jinja2 template — rendered by node_gen.py to produce structs.h #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file structs.h
+ * @brief C struct <-> Napi::Object conversion helpers for the Node.js addon.
+ */
+
+#pragma once
+#include <napi.h>
+#include "fdl/fdl_core.h"
+
+{% for st in structs %}
+// -----------------------------------------------------------------------
+// {{ st.c_name }}
+// -----------------------------------------------------------------------
+
+inline {{ st.c_name }} ObjectTo{{ st.pascal_name }}(const Napi::Object& obj) {
+    {{ st.c_name }} result;
+{% for f in st.fields %}
+{% if f.is_nested %}
+    result.{{ f.name }} = {{ f.to_c }};
+{% elif f.kind == "string" %}
+    {
+        std::string _{{ f.name }} = {{ f.to_c }};
+        // Note: string is copied into the struct; caller must manage lifetime.
+        result.{{ f.name }} = _{{ f.name }}.c_str();
+    }
+{% else %}
+    result.{{ f.name }} = {{ f.to_c }};
+{% endif %}
+{% endfor %}
+    return result;
+}
+
+inline Napi::Object {{ st.pascal_name }}ToObject(Napi::Env env, const {{ st.c_name }}& d) {
+    auto obj = Napi::Object::New(env);
+{% for f in st.fields %}
+    obj.Set("{{ f.name }}", {{ f.to_js }});
+{% endfor %}
+    return obj;
+}
+
+{% endfor %}

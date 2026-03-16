@@ -1,0 +1,69 @@
+{
+  "uuid": "5463dbe4-ec30-4324-b8a1-67408aed40db",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "Light Iron Galixy",
+  "default_framing_intent": "fiWILIY0",
+  "framing_intents": [
+    {
+      "label": "133-100 Framing",
+      "id": "fiWILIY0",
+      "aspect_ratio": {
+        "width": 133,
+        "height": 100
+      },
+      "protection": 0.07
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Alexa 65",
+      "context_creator": "Light Iron Galixy",
+      "canvases": [
+        {
+          "label": "Open Gate 6.5K",
+          "id": "pXLM4OnA",
+          "source_canvas_id": "pXLM4OnA",
+          "dimensions": {
+            "width": 6560,
+            "height": 3100
+          },
+          "effective_dimensions": {
+            "width": 4960,
+            "height": 2790
+          },
+          "effective_anchor_point": {
+            "x": 400,
+            "y": 150
+          },
+          "anamorphic_squeeze": 0.9,
+          "framing_decisions": [
+            {
+              "label": "133-100Framing",
+              "id": "pXLM4OnA-fiWILIY0",
+              "framing_intent_id": "fiWILIY0",
+              "dimensions": {
+                "width": 3450.951,
+                "height": 2335.23
+              },
+              "anchor_point": {
+                "x": 754.5245,
+                "y": 227.385
+              },
+              "protection_dimensions": {
+                "width": 3710.7000000000003,
+                "height": 2511
+              },
+              "protection_anchor_point": {
+                "x": 624.6499999999999,
+                "y": 139.5
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

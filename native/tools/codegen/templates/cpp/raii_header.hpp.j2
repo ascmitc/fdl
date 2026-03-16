@@ -1,0 +1,1076 @@
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file fdl.hpp
+ * @brief Header-only C++ RAII wrappers around the fdl_core C ABI.
+ *
+ * Provides move-only RAII FDL ownership and non-owning handle Refs
+ * for convenient FDL document traversal from C++ consumers.
+ *
+ * Usage:
+ *   #include "fdl/fdl.hpp"
+ *
+ *   auto doc = fdl::read_from_file("my_document.fdl");
+ *   for (uint32_t i = 0; i < doc.contexts_count(); ++i) {
+ *       auto ctx = doc.context_at(i);
+ *       // ...
+ *   }
+ *   fdl::write_to_file(doc, "output.fdl");
+ */
+
+#ifndef FDL_HPP
+#define FDL_HPP
+
+#include "fdl/fdl_core.h"
+
+#include <cstdint>
+#include <optional>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <utility>
+#include <vector>
+{% if has_io_utils %}
+#include <fstream>
+#include <iterator>
+{% endif %}
+
+namespace fdl {
+
+// -----------------------------------------------------------------------
+// First-class custom attribute name constants
+// -----------------------------------------------------------------------
+
+/** Custom attribute name for the template scale factor (float). */
+inline constexpr const char* ATTR_SCALE_FACTOR = FDL_ATTR_SCALE_FACTOR;
+/** Custom attribute name for the template content translation (point_f64). */
+inline constexpr const char* ATTR_CONTENT_TRANSLATION = FDL_ATTR_CONTENT_TRANSLATION;
+/** Custom attribute name for the template scaled bounding box (dims_f64). */
+inline constexpr const char* ATTR_SCALED_BOUNDING_BOX = FDL_ATTR_SCALED_BOUNDING_BOX;
+
+{% if value_types %}
+// -----------------------------------------------------------------------
+// Value type wrapper classes
+// -----------------------------------------------------------------------
+
+// Forward declarations for cross-type references in deferred methods
+{% for vt in value_types %}
+class {{ vt.cpp_class }};
+{% endfor %}
+
+{% for vt in value_types %}
+
+class {{ vt.cpp_class }} {
+public:
+    {{ vt.cpp_class }}() : data_{} {}
+    {{ vt.cpp_class }}({{ vt.constructor_params }}) : data_{{ "{" }}{{ vt.constructor_init }}{{ "}" }} {}
+    {{ vt.cpp_class }}({{ vt.c_struct }} raw) : data_(raw) {}
+    operator {{ vt.c_struct }}() const { return data_; }
+
+{% for f in vt.fields %}
+    {{ f.cpp_type }} {{ f.name }}() const { return data_.{{ f.name }}; }
+{% endfor %}
+
+{% for m in vt.inline_methods %}
+    {{ m.return_type }} {{ m.name }}({{ m.param_list }}) {{ "const " if m.is_const else "" }}{
+        {{ m.body }}
+    }
+
+{% endfor %}
+{% for m in vt.deferred_methods %}
+    {{ m.return_type }} {{ m.name }}({{ m.param_list }}) {{ "const " if m.is_const else "" }};
+{% endfor %}
+{% for op in vt.operators %}
+{% if op.kind == "explicit_bool" %}
+    explicit operator bool() const { {{ op.body }} }
+{% elif op.kind == "iadd" %}
+    {{ vt.cpp_class }}& operator+=({{ op.param_decl }}) { {{ op.body }} }
+{% elif op.kind == "binary" %}
+    {{ op.return_type }} operator{{ op.op_symbol }}({{ op.param_decl }}) const { {{ op.body }} }
+{% endif %}
+{% endfor %}
+{% if vt.equality_body %}
+    bool operator==(const {{ vt.cpp_class }}& other) const { return {{ vt.equality_body }}; }
+    bool operator!=(const {{ vt.cpp_class }}& other) const { return !(*this == other); }
+{% endif %}
+{% if vt.cross_eq_class %}
+    bool operator==(const {{ vt.cross_eq_class }}& other) const ;
+    bool operator!=(const {{ vt.cross_eq_class }}& other) const { return !(*this == other); }
+{% endif %}
+
+    {{ vt.c_struct }} raw() const { return data_; }
+
+private:
+    {{ vt.c_struct }} data_;
+};
+{% endfor %}
+{% endif %}
+
+{% if aux_json_wrappers or aux_version %}
+// -----------------------------------------------------------------------
+// Supporting structs
+// -----------------------------------------------------------------------
+{% for jw in aux_json_wrappers %}
+
+struct {{ jw.class_name }} {
+{% for f in jw.fields %}
+    {{ f.cpp_type }} {{ f.name }};
+{% endfor %}
+
+    static {{ jw.class_name }} from_c({{ jw.c_struct }}& c);
+};
+{% endfor %}
+
+{% if aux_version %}
+struct {{ aux_version.class_name }} {
+{% for f in aux_version.fields %}
+    {{ f.cpp_type }} {{ f.name }};
+{% endfor %}
+};
+{% endif %}
+{% endif %}
+
+// -----------------------------------------------------------------------
+// Forward declarations
+// -----------------------------------------------------------------------
+class {{ fdl_class.cpp_name }};
+{% for cls in ref_classes %}
+class {{ cls.cpp_name }};
+{% endfor %}
+{% if template_result %}
+struct {{ template_result.class_name }};
+{% endif %}
+{% for dc in extra_dataclasses %}
+struct {{ dc.class_name }};
+{% endfor %}
+
+// -----------------------------------------------------------------------
+// {{ fdl_class.cpp_name }} — RAII owner of {{ fdl_class.handle_type }}*
+// -----------------------------------------------------------------------
+class {{ fdl_class.cpp_name }} {
+public:
+    {{ fdl_class.cpp_name }}() noexcept : {{ fdl_class.handle_field }}(nullptr) {}
+
+    explicit {{ fdl_class.cpp_name }}({{ fdl_class.handle_type }}* handle) noexcept : {{ fdl_class.handle_field }}(handle) {}
+
+    ~{{ fdl_class.cpp_name }}() {
+        if ({{ fdl_class.handle_field }}) fdl_doc_free({{ fdl_class.handle_field }});
+    }
+
+    // Move-only
+    {{ fdl_class.cpp_name }}({{ fdl_class.cpp_name }}&& other) noexcept
+        : {{ fdl_class.handle_field }}(other.{{ fdl_class.handle_field }}) { other.{{ fdl_class.handle_field }} = nullptr; }
+    {{ fdl_class.cpp_name }}& operator=({{ fdl_class.cpp_name }}&& other) noexcept {
+        if (this != &other) {
+            if ({{ fdl_class.handle_field }}) fdl_doc_free({{ fdl_class.handle_field }});
+            {{ fdl_class.handle_field }} = other.{{ fdl_class.handle_field }};
+            other.{{ fdl_class.handle_field }} = nullptr;
+        }
+        return *this;
+    }
+    {{ fdl_class.cpp_name }}(const {{ fdl_class.cpp_name }}&) = delete;
+    {{ fdl_class.cpp_name }}& operator=(const {{ fdl_class.cpp_name }}&) = delete;
+
+    /** Raw pointer access (non-owning). */
+    {{ fdl_class.handle_type }}* get() const noexcept { return {{ fdl_class.handle_field }}; }
+
+    explicit operator bool() const noexcept { return {{ fdl_class.handle_field }} != nullptr; }
+
+    // --- Property accessors ---
+{% for prop in fdl_class.properties %}
+{% if prop.kind is defined and prop.kind == "handle_ref" %}
+{% if prop.has_fn %}
+    bool has_{{ prop.name }}() const { return {{ prop.has_fn }}({{ prop.handle_field }}) != 0; }
+{% endif %}
+{% if prop.nullable %}
+    std::optional<{{ prop.ref_class }}> {{ prop.name }}() const;
+{% else %}
+    {{ prop.ref_class }} {{ prop.name }}() const;
+{% endif %}
+{% if prop.setter_fn %}
+    void set_{{ prop.name }}(const std::string& json) {
+        const char* err = {{ prop.setter_fn }}({{ prop.handle_field }}, json.c_str(), json.size());
+        if (err) { std::string msg(err); fdl_free(const_cast<char*>(err)); throw std::runtime_error(msg); }
+    }
+{% endif %}
+{% if prop.remover_fn %}
+    void remove_{{ prop.name }}() { {{ prop.remover_fn }}({{ prop.handle_field }}); }
+{% endif %}
+{% else %}
+{% if prop.has_fn %}
+    bool {{ prop.has_fn.name }}() const { {{ prop.has_fn.body }} }
+{% endif %}
+    {{ prop.return_type }} {{ prop.name }}() const {
+        {{ prop.getter_body }}
+    }
+{% if prop.setter %}
+    void set_{{ prop.name }}({{ prop.setter.type }} value) {
+        {{ prop.setter.body }}
+    }
+{% endif %}
+{% if prop.remover %}
+    void {{ prop.remover.name }}() { {{ prop.remover.body }} }
+{% endif %}
+{% endif %}
+
+{% endfor %}
+    // --- Collection traversal ---
+{% for coll in fdl_class.collections %}
+    uint32_t {{ coll.name }}_count() const { return {{ coll.count_fn }}({{ fdl_class.handle_field }}); }
+    {{ coll.item_class }} {{ coll.singular }}_at(uint32_t i) const;
+{% if coll.find_by_id_fn %}
+    {{ coll.item_class }} {{ coll.singular }}_find_by_id(const std::string& id) const;
+{% endif %}
+{% if coll.find_by_label_fn %}
+    {{ coll.item_class }} {{ coll.singular }}_find_by_label(const std::string& label) const;
+{% endif %}
+{% endfor %}
+
+{% if fdl_class.to_json_fn %}
+    // --- Serialization ---
+
+    /** Serialize to canonical JSON string. */
+    std::string to_json(int indent = 2) const {
+        char* ptr = {{ fdl_class.to_json_fn }}({{ fdl_class.handle_field }}, indent);
+        if (!ptr) throw std::runtime_error("{{ fdl_class.to_json_fn }} returned NULL");
+        std::string json(ptr);
+        fdl_free(ptr);
+        return json;
+    }
+{% endif %}
+
+    // --- Lifecycle methods ---
+{% for lc in fdl_class.lifecycle %}
+{% if lc.kind == "parse" %}
+
+    /** {{ lc.doc }} */
+    static {{ fdl_class.cpp_name }} {{ lc.name }}(const std::string& json) {
+        auto result = {{ lc.c_function }}(json.data(), json.size());
+        if (result.{{ lc.error.error_field }}) {
+            std::string msg(result.{{ lc.error.error_field }});
+            fdl_free(const_cast<char*>(result.{{ lc.error.error_field }}));
+            throw std::runtime_error(msg);
+        }
+        return {{ fdl_class.cpp_name }}(result.{{ lc.error.success_field }});
+    }
+{% elif lc.kind == "create" %}
+
+    /** {{ lc.doc }} */
+    static {{ fdl_class.cpp_name }} {{ lc.name }}(
+{% for p in lc.params %}
+        {{ p.decl }}{{ "," if not loop.last else ")" }}
+{% endfor %}
+    {
+        auto* handle = {{ lc.c_function }}({{ lc.c_args | join(", ") }});
+        if (!handle) throw std::runtime_error("{{ lc.c_function }} returned NULL");
+        return {{ fdl_class.cpp_name }}(handle);
+    }
+{% elif lc.kind == "validate" %}
+
+    /** {{ lc.doc }} */
+    std::vector<std::string> {{ lc.name }}() const {
+        std::vector<std::string> errors;
+        auto* vr = {{ lc.c_function }}({{ lc.handle_field }});
+        uint32_t count = {{ lc.error.count_fn }}(vr);
+        for (uint32_t i = 0; i < count; ++i) {
+            const char* msg = {{ lc.error.at_fn }}(vr, i);
+            if (msg) errors.emplace_back(msg);
+        }
+        {{ lc.error.free_fn }}(vr);
+        return errors;
+    }
+{% elif lc.kind == "as_json" %}
+
+    /** {{ lc.doc }} */
+    std::string {{ lc.name }}(int indent = 2) const {
+        char* ptr = {{ lc.c_function }}({{ lc.handle_field }}, indent);
+        if (!ptr) throw std::runtime_error("{{ lc.c_function }} returned NULL");
+        std::string result(ptr);
+        fdl_free(ptr);
+        return result;
+    }
+{% elif lc.kind == "composite_property" %}
+
+    /** {{ lc.doc }} */
+    {{ lc.returns }} {{ lc.name }}() const {
+        return {{ lc.returns }}{
+{% for key, method in lc.compose_from.items() %}
+            {{ method }}(){{ "," if not loop.last else "" }}
+{% endfor %}
+        };
+    }
+{% elif lc.kind == "instance_getter" %}
+
+    /** {{ lc.doc }} */
+    {{ lc.returns }} {{ lc.name }}() const {
+        return {{ lc.returns }}(::{{ lc.c_function }}({{ fdl_class.handle_field }}));
+    }
+{% elif lc.kind == "instance_getter_optional" %}
+
+    /** {{ lc.doc }} */
+    std::optional<{{ lc.returns }}> {{ lc.name }}() const {
+        {{ lc.c_struct }} out;
+        if (!::{{ lc.c_function }}({{ fdl_class.handle_field }}, &out)) return std::nullopt;
+        return {{ lc.returns }}(out);
+    }
+{% endif %}
+{% endfor %}
+
+    // --- Builder methods ---
+{% for builder in fdl_class.builders %}
+    /** {{ builder.doc }} */
+    {{ builder.returns }} {{ builder.name }}(
+{% for p in builder.params %}
+        {{ p.decl }}{{ "," if not loop.last else ");" }}
+{% endfor %}
+{% endfor %}
+
+{% if fdl_class.custom_attrs %}
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return {{ fdl_class.ca_prefix }}set_custom_attr_string({{ fdl_class.handle_field }}, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return {{ fdl_class.ca_prefix }}set_custom_attr_int({{ fdl_class.handle_field }}, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return {{ fdl_class.ca_prefix }}set_custom_attr_float({{ fdl_class.handle_field }}, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return {{ fdl_class.ca_prefix }}set_custom_attr_bool({{ fdl_class.handle_field }}, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = {{ fdl_class.ca_prefix }}get_custom_attr_string({{ fdl_class.handle_field }}, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_int({{ fdl_class.handle_field }}, name.c_str(), &out) == 0) return out;
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_float({{ fdl_class.handle_field }}, name.c_str(), &out) == 0) return out;
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_bool({{ fdl_class.handle_field }}, name.c_str(), &out) == 0) return static_cast<bool>(out);
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return {{ fdl_class.ca_prefix }}has_custom_attr({{ fdl_class.handle_field }}, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return {{ fdl_class.ca_prefix }}get_custom_attr_type({{ fdl_class.handle_field }}, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return {{ fdl_class.ca_prefix }}remove_custom_attr({{ fdl_class.handle_field }}, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const {
+        return {{ fdl_class.ca_prefix }}custom_attrs_count({{ fdl_class.handle_field }});
+    }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = {{ fdl_class.ca_prefix }}custom_attr_name_at({{ fdl_class.handle_field }}, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return {{ fdl_class.ca_prefix }}set_custom_attr_point_f64({{ fdl_class.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return {{ fdl_class.ca_prefix }}set_custom_attr_dims_f64({{ fdl_class.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return {{ fdl_class.ca_prefix }}set_custom_attr_dims_i64({{ fdl_class.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_point_f64({{ fdl_class.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_dims_f64({{ fdl_class.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if ({{ fdl_class.ca_prefix }}get_custom_attr_dims_i64({{ fdl_class.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return DimensionsInt(out.width, out.height);
+    }
+{% endif %}
+
+private:
+    {{ fdl_class.handle_type }}* {{ fdl_class.handle_field }};
+};
+
+{% if template_result %}
+// -----------------------------------------------------------------------
+// {{ template_result.class_name }}
+// -----------------------------------------------------------------------
+struct {{ template_result.class_name }} {
+{% for f in template_result.fields %}
+{% if not f.private %}
+    {{ f.cpp_type }} {{ f.name }};
+{% endif %}
+{% endfor %}
+{% if template_result.accessors %}
+
+{% for acc in template_result.accessors %}
+    /** {{ acc.doc }} */
+    {{ acc.returns }} {{ acc.name }}() const;
+{% endfor %}
+{% endif %}
+
+    {{ template_result.class_name }}(
+{% for f in template_result.fields %}
+        {{ f.cpp_type }} {{ f.name }}_{{ "," if not loop.last else ")" }}
+{% endfor %}
+        :
+{% for f in template_result.fields %}
+{% if f.is_move %}
+        {{ "_" if f.private else "" }}{{ f.name }}(std::move({{ f.name }}_)){{ "," if not loop.last else " {}" }}
+{% else %}
+        {{ "_" if f.private else "" }}{{ f.name }}({{ f.name }}_){{ "," if not loop.last else " {}" }}
+{% endif %}
+{% endfor %}
+
+    {{ template_result.class_name }}({{ template_result.class_name }}&&) = default;
+    {{ template_result.class_name }}& operator=({{ template_result.class_name }}&&) = default;
+
+private:
+{% for f in template_result.fields %}
+{% if f.private %}
+    {{ f.cpp_type }} _{{ f.name }};
+{% endif %}
+{% endfor %}
+};
+
+{% endif %}
+{% for cls in ref_classes %}
+// -----------------------------------------------------------------------
+// {{ cls.cpp_name }} — non-owning
+// -----------------------------------------------------------------------
+class {{ cls.cpp_name }} {
+public:
+    explicit {{ cls.cpp_name }}({{ cls.handle_type }}* handle) noexcept : {{ cls.handle_field }}(handle) {}
+
+    // --- Property accessors ---
+{% for prop in cls.properties %}
+{% if prop.kind is defined and prop.kind == "handle_ref" %}
+{% if prop.has_fn %}
+    bool has_{{ prop.name }}() const { return {{ prop.has_fn }}({{ prop.handle_field }}) != 0; }
+{% endif %}
+{% if prop.nullable %}
+    std::optional<{{ prop.ref_class }}> {{ prop.name }}() const;
+{% else %}
+    {{ prop.ref_class }} {{ prop.name }}() const;
+{% endif %}
+{% if prop.setter_fn %}
+    void set_{{ prop.name }}(const std::string& json) {
+        const char* err = {{ prop.setter_fn }}({{ prop.handle_field }}, json.c_str(), json.size());
+        if (err) { std::string msg(err); fdl_free(const_cast<char*>(err)); throw std::runtime_error(msg); }
+    }
+{% endif %}
+{% if prop.remover_fn %}
+    void remove_{{ prop.name }}() { {{ prop.remover_fn }}({{ prop.handle_field }}); }
+{% endif %}
+{% else %}
+{% if prop.has_fn %}
+    bool {{ prop.has_fn.name }}() const { {{ prop.has_fn.body }} }
+{% endif %}
+    {{ prop.return_type }} {{ prop.name }}() const {
+        {{ prop.getter_body }}
+    }
+{% if prop.setter %}
+    void set_{{ prop.name }}({{ prop.setter.type }} value) {
+        {{ prop.setter.body }}
+    }
+{% endif %}
+{% if prop.remover %}
+    void {{ prop.remover.name }}() { {{ prop.remover.body }} }
+{% endif %}
+{% endif %}
+
+{% endfor %}
+    // --- Collection traversal ---
+{% for coll in cls.collections %}
+    uint32_t {{ coll.name }}_count() const { return {{ coll.count_fn }}({{ cls.handle_field }}); }
+    {{ coll.item_class }} {{ coll.singular }}_at(uint32_t i) const;
+{% if coll.find_by_id_fn %}
+    {{ coll.item_class }} {{ coll.singular }}_find_by_id(const std::string& id) const;
+{% endif %}
+{% if coll.find_by_label_fn %}
+    {{ coll.item_class }} {{ coll.singular }}_find_by_label(const std::string& label) const;
+{% endif %}
+{% endfor %}
+
+{% if cls.to_json_fn %}
+    /** Serialize to canonical JSON string. */
+    std::string to_json(int indent = 2) const {
+        char* ptr = {{ cls.to_json_fn }}({{ cls.handle_field }}, indent);
+        if (!ptr) throw std::runtime_error("{{ cls.to_json_fn }} returned NULL");
+        std::string json(ptr);
+        fdl_free(ptr);
+        return json;
+    }
+
+{% endif %}
+    // --- Builder methods ---
+{% for builder in cls.builders %}
+    /** {{ builder.doc }} */
+    {{ builder.returns }} {{ builder.name }}(
+{% for p in builder.params %}
+        {{ p.decl }}{{ "," if not loop.last else ");" }}
+{% endfor %}
+{% endfor %}
+
+{% if cls.lifecycle %}
+    // --- Lifecycle methods ---
+{% for lc in cls.lifecycle %}
+{% if lc.kind == "compound_setter" %}
+    /** {{ lc.doc }} */
+    void {{ lc.name }}(
+{% for p in lc.params %}
+        {{ p.decl }}{{ "," if not loop.last else ");" }}
+{% endfor %}
+{% elif lc.kind == "apply" %}
+    /** {{ lc.doc }} */
+    ::fdl::{{ lc.returns }} {{ lc.name }}(
+{% for p in lc.params %}
+        {{ p.decl }}{{ "," if not loop.last else ")" }}
+{% endfor %}
+    const;
+{% elif lc.kind == "populate" %}
+    /** {{ lc.doc }} */
+    void {{ lc.name }}(
+{% for p in lc.params %}
+        {{ p.decl }}{{ "," if not loop.last else ");" }}
+{% endfor %}
+{% elif lc.kind == "composite_property" %}
+    /** {{ lc.doc }} */
+    {{ lc.returns }} {{ lc.name }}() const {
+        return {{ lc.returns }}{
+{% for key, method in lc.compose_from.items() %}
+            {{ method }}(){{ "," if not loop.last else "" }}
+{% endfor %}
+        };
+    }
+{% elif lc.kind == "instance_getter" %}
+    /** {{ lc.doc }} */
+    {{ lc.returns }} {{ lc.name }}() const {
+        return {{ lc.returns }}(::{{ lc.c_function }}({{ cls.handle_field }}));
+    }
+{% elif lc.kind == "instance_getter_optional" %}
+    /** {{ lc.doc }} */
+    std::optional<{{ lc.returns }}> {{ lc.name }}() const {
+        {{ lc.c_struct }} out;
+        if (!::{{ lc.c_function }}({{ cls.handle_field }}, &out)) return std::nullopt;
+        return {{ lc.returns }}(out);
+    }
+{% elif lc.kind == "validate_json" %}
+    /** {{ lc.doc }} */
+    void {{ lc.name }}() const {
+        auto json = to_json(0);
+        const char* err = ::{{ lc.c_function }}(json.c_str(), json.size());
+        if (err) {
+            std::string msg(err);
+            fdl_free(const_cast<char*>(err));
+            throw std::runtime_error(msg);
+        }
+    }
+{% endif %}
+{% endfor %}
+
+{% endif %}
+{% if cls.custom_attrs %}
+    // --- Custom attributes ---
+
+    /** Set a string custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, const std::string& value) {
+        return {{ cls.ca_prefix }}set_custom_attr_string({{ cls.handle_field }}, name.c_str(), value.c_str());
+    }
+    /** Set an integer custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, int64_t value) {
+        return {{ cls.ca_prefix }}set_custom_attr_int({{ cls.handle_field }}, name.c_str(), value);
+    }
+    /** Set a float custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, double value) {
+        return {{ cls.ca_prefix }}set_custom_attr_float({{ cls.handle_field }}, name.c_str(), value);
+    }
+    /** Set a boolean custom attribute. Returns 0 on success, -1 on type mismatch. */
+    int set_custom_attr(const std::string& name, bool value) {
+        return {{ cls.ca_prefix }}set_custom_attr_bool({{ cls.handle_field }}, name.c_str(), value ? FDL_TRUE : FDL_FALSE);
+    }
+    /** Get a string custom attribute. */
+    std::optional<std::string> get_custom_attr_string(const std::string& name) const {
+        const char* p = {{ cls.ca_prefix }}get_custom_attr_string({{ cls.handle_field }}, name.c_str());
+        return p ? std::optional<std::string>(p) : std::nullopt;
+    }
+    /** Get an integer custom attribute. */
+    std::optional<int64_t> get_custom_attr_int(const std::string& name) const {
+        int64_t out;
+        if ({{ cls.ca_prefix }}get_custom_attr_int({{ cls.handle_field }}, name.c_str(), &out) == 0) return out;
+        return std::nullopt;
+    }
+    /** Get a float custom attribute. */
+    std::optional<double> get_custom_attr_float(const std::string& name) const {
+        double out;
+        if ({{ cls.ca_prefix }}get_custom_attr_float({{ cls.handle_field }}, name.c_str(), &out) == 0) return out;
+        return std::nullopt;
+    }
+    /** Get a boolean custom attribute. */
+    std::optional<bool> get_custom_attr_bool(const std::string& name) const {
+        int out;
+        if ({{ cls.ca_prefix }}get_custom_attr_bool({{ cls.handle_field }}, name.c_str(), &out) == 0) return static_cast<bool>(out);
+        return std::nullopt;
+    }
+    /** Check if a custom attribute exists. */
+    bool has_custom_attr(const std::string& name) const {
+        return {{ cls.ca_prefix }}has_custom_attr({{ cls.handle_field }}, name.c_str()) != 0;
+    }
+    /** Get the type of a custom attribute. */
+    fdl_custom_attr_type_t get_custom_attr_type(const std::string& name) const {
+        return {{ cls.ca_prefix }}get_custom_attr_type({{ cls.handle_field }}, name.c_str());
+    }
+    /** Remove a custom attribute. Returns true if removed. */
+    bool remove_custom_attr(const std::string& name) {
+        return {{ cls.ca_prefix }}remove_custom_attr({{ cls.handle_field }}, name.c_str()) == 0;
+    }
+    /** Return the number of custom attributes. */
+    uint32_t custom_attrs_count() const {
+        return {{ cls.ca_prefix }}custom_attrs_count({{ cls.handle_field }});
+    }
+    /** Return the name of the custom attribute at the given index. */
+    std::string custom_attr_name_at(uint32_t index) const {
+        const char* p = {{ cls.ca_prefix }}custom_attr_name_at({{ cls.handle_field }}, index);
+        return p ? std::string(p) : std::string();
+    }
+    /** @brief Set a PointFloat custom attribute. */
+    int set_custom_attr(const std::string& name, PointFloat value) {
+        fdl_point_f64_t c{value.x(), value.y()};
+        return {{ cls.ca_prefix }}set_custom_attr_point_f64({{ cls.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsFloat custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsFloat value) {
+        fdl_dimensions_f64_t c{value.width(), value.height()};
+        return {{ cls.ca_prefix }}set_custom_attr_dims_f64({{ cls.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Set a DimensionsInt custom attribute. */
+    int set_custom_attr(const std::string& name, DimensionsInt value) {
+        fdl_dimensions_i64_t c{value.width(), value.height()};
+        return {{ cls.ca_prefix }}set_custom_attr_dims_i64({{ cls.handle_field }}, name.c_str(), c);
+    }
+    /** @brief Get a PointFloat custom attribute. */
+    std::optional<PointFloat> get_custom_attr_point_f64(const std::string& name) const {
+        fdl_point_f64_t out{};
+        if ({{ cls.ca_prefix }}get_custom_attr_point_f64({{ cls.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return PointFloat(out.x, out.y);
+    }
+    /** @brief Get a DimensionsFloat custom attribute. */
+    std::optional<DimensionsFloat> get_custom_attr_dims_f64(const std::string& name) const {
+        fdl_dimensions_f64_t out{};
+        if ({{ cls.ca_prefix }}get_custom_attr_dims_f64({{ cls.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return DimensionsFloat(out.width, out.height);
+    }
+    /** @brief Get a DimensionsInt custom attribute. */
+    std::optional<DimensionsInt> get_custom_attr_dims_i64(const std::string& name) const {
+        fdl_dimensions_i64_t out{};
+        if ({{ cls.ca_prefix }}get_custom_attr_dims_i64({{ cls.handle_field }}, name.c_str(), &out) != 0) return std::nullopt;
+        return DimensionsInt(out.width, out.height);
+    }
+
+{% endif %}
+    {{ cls.handle_type }}* get() const noexcept { return {{ cls.handle_field }}; }
+
+private:
+    {{ cls.handle_type }}* {{ cls.handle_field }};
+};
+
+{% endfor %}
+{% for dc in extra_dataclasses %}
+// -----------------------------------------------------------------------
+// {{ dc.class_name }}
+// -----------------------------------------------------------------------
+struct {{ dc.class_name }} {
+{% for f in dc.fields %}
+    {{ f.cpp_type }} {{ f.name }};
+{% endfor %}
+};
+
+{% endfor %}
+// -----------------------------------------------------------------------
+// Inline implementations requiring full class definitions
+// -----------------------------------------------------------------------
+
+// --- Collection traversal ---
+{% for coll in fdl_class.collections %}
+inline {{ coll.item_class }} {{ fdl_class.cpp_name }}::{{ coll.singular }}_at(uint32_t i) const {
+    return {{ coll.item_class }}({{ coll.at_fn }}({{ fdl_class.handle_field }}, i));
+}
+
+{% if coll.find_by_id_fn %}
+inline {{ coll.item_class }} {{ fdl_class.cpp_name }}::{{ coll.singular }}_find_by_id(const std::string& id) const {
+    return {{ coll.item_class }}({{ coll.find_by_id_fn }}({{ fdl_class.handle_field }}, id.c_str()));
+}
+
+{% endif %}
+{% if coll.find_by_label_fn %}
+inline {{ coll.item_class }} {{ fdl_class.cpp_name }}::{{ coll.singular }}_find_by_label(const std::string& label) const {
+    return {{ coll.item_class }}({{ coll.find_by_label_fn }}({{ fdl_class.handle_field }}, label.c_str()));
+}
+
+{% endif %}
+{% endfor %}
+{% for cls in ref_classes %}
+{% for coll in cls.collections %}
+inline {{ coll.item_class }} {{ cls.cpp_name }}::{{ coll.singular }}_at(uint32_t i) const {
+    return {{ coll.item_class }}({{ coll.at_fn }}({{ cls.handle_field }}, i));
+}
+
+{% if coll.find_by_id_fn %}
+inline {{ coll.item_class }} {{ cls.cpp_name }}::{{ coll.singular }}_find_by_id(const std::string& id) const {
+    return {{ coll.item_class }}({{ coll.find_by_id_fn }}({{ cls.handle_field }}, id.c_str()));
+}
+
+{% endif %}
+{% if coll.find_by_label_fn %}
+inline {{ coll.item_class }} {{ cls.cpp_name }}::{{ coll.singular }}_find_by_label(const std::string& label) const {
+    return {{ coll.item_class }}({{ coll.find_by_label_fn }}({{ cls.handle_field }}, label.c_str()));
+}
+
+{% endif %}
+{% endfor %}
+{% endfor %}
+// --- Handle-ref property implementations ---
+{% for prop in fdl_class.properties %}
+{% if prop.kind is defined and prop.kind == "handle_ref" %}
+{% if prop.nullable %}
+inline std::optional<{{ prop.ref_class }}> {{ fdl_class.cpp_name }}::{{ prop.name }}() const {
+{% if prop.has_fn %}
+    if (!{{ prop.has_fn }}({{ prop.handle_field }})) return std::nullopt;
+{% endif %}
+    auto* h = {{ prop.getter_fn }}({{ prop.handle_field }});
+    if (!h) return std::nullopt;
+    return {{ prop.ref_class }}(h);
+}
+{% else %}
+inline {{ prop.ref_class }} {{ fdl_class.cpp_name }}::{{ prop.name }}() const {
+    return {{ prop.ref_class }}({{ prop.getter_fn }}({{ prop.handle_field }}));
+}
+{% endif %}
+
+{% endif %}
+{% endfor %}
+{% for cls in ref_classes %}
+{% for prop in cls.properties %}
+{% if prop.kind is defined and prop.kind == "handle_ref" %}
+{% if prop.nullable %}
+inline std::optional<{{ prop.ref_class }}> {{ cls.cpp_name }}::{{ prop.name }}() const {
+{% if prop.has_fn %}
+    if (!{{ prop.has_fn }}({{ prop.handle_field }})) return std::nullopt;
+{% endif %}
+    auto* h = {{ prop.getter_fn }}({{ prop.handle_field }});
+    if (!h) return std::nullopt;
+    return {{ prop.ref_class }}(h);
+}
+{% else %}
+inline {{ prop.ref_class }} {{ cls.cpp_name }}::{{ prop.name }}() const {
+    return {{ prop.ref_class }}({{ prop.getter_fn }}({{ prop.handle_field }}));
+}
+{% endif %}
+
+{% endif %}
+{% endfor %}
+{% endfor %}
+// --- Builder implementations ---
+{% for builder in fdl_class.builders %}
+inline {{ builder.returns }} {{ fdl_class.cpp_name }}::{{ builder.name }}(
+{% for p in builder.params %}
+    {{ p.impl_decl }}{{ "," if not loop.last else ")" }}
+{% endfor %}
+{
+    auto* handle = {{ builder.c_function }}({{ builder.c_args | join(", ") }});
+    if (!handle) throw std::runtime_error("{{ builder.c_function }} returned NULL");
+    return {{ builder.returns }}(handle);
+}
+
+{% endfor %}
+{% for cls in ref_classes %}
+{% for builder in cls.builders %}
+inline {{ builder.returns }} {{ cls.cpp_name }}::{{ builder.name }}(
+{% for p in builder.params %}
+    {{ p.impl_decl }}{{ "," if not loop.last else ")" }}
+{% endfor %}
+{
+    auto* handle = {{ builder.c_function }}({{ builder.c_args | join(", ") }});
+    if (!handle) throw std::runtime_error("{{ builder.c_function }} returned NULL");
+    return {{ builder.returns }}(handle);
+}
+
+{% endfor %}
+{% for lc in cls.lifecycle %}
+{% if lc.kind == "compound_setter" %}
+inline void {{ cls.cpp_name }}::{{ lc.name }}(
+{% for p in lc.params %}
+    {{ p.impl_decl }}{{ "," if not loop.last else ")" }}
+{% endfor %}
+{
+    {{ lc.c_function }}({{ lc.c_args | join(", ") }});
+}
+
+{% elif lc.kind == "apply" %}
+inline ::fdl::{{ lc.returns }} {{ cls.cpp_name }}::{{ lc.name }}(
+{% for p in lc.params %}
+    {{ p.impl_decl }}{{ "," if not loop.last else ")" }}
+{% endfor %}
+const
+{
+    auto result = {{ lc.c_function }}({{ lc.c_args | join(", ") }});
+
+    if (result.{{ lc.error.error_field }}) {
+        std::string msg(result.{{ lc.error.error_field }});
+        fdl_free(const_cast<char*>(result.{{ lc.error.error_field }}));
+{% for rf in lc.error.result_fields %}
+{% if rf.extract == "handle" %}
+        if (result.{{ rf.source }}) fdl_doc_free(result.{{ rf.source }});
+{% elif rf.extract == "string" %}
+        if (result.{{ rf.source }}) fdl_free(const_cast<char*>(result.{{ rf.source }}));
+{% endif %}
+{# handle_ref: non-owning, no cleanup needed #}
+{% endfor %}
+        throw std::runtime_error(msg);
+    }
+
+    return {{ lc.returns }}{
+{% for rf in lc.error.result_fields %}
+{% if rf.extract == "handle" %}
+        {{ rf.wrap_class }}(result.{{ rf.source }}){{ "," if not loop.last else "};" }}
+{% elif rf.extract == "handle_ref" %}
+        {{ rf.wrap_class }}(result.{{ rf.source }}){{ "," if not loop.last else "};" }}
+{% elif rf.extract == "string" %}
+        [&]{ std::string s(result.{{ rf.source }}); fdl_free(const_cast<char*>(result.{{ rf.source }})); return s; }(){{ "," if not loop.last else "};" }}
+{% elif rf.extract == "scalar" and rf.scalar_type == "bool" %}
+        result.{{ rf.source }} != 0{{ "," if not loop.last else "};" }}
+{% else %}
+        result.{{ rf.source }}{{ "," if not loop.last else "};" }}
+{% endif %}
+{% endfor %}
+}
+
+{% elif lc.kind == "populate" %}
+inline void {{ cls.cpp_name }}::{{ lc.name }}(
+{% for p in lc.params %}
+    {{ p.impl_decl }}{{ "," if not loop.last else ")" }}
+{% endfor %}
+{
+    {{ lc.c_function }}({{ lc.c_args | join(", ") }});
+}
+
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% if template_result and template_result.accessors %}
+// --- TemplateResult accessor implementations ---
+{% for acc in template_result.accessors %}
+inline {{ acc.returns }} {{ template_result.class_name }}::{{ acc.name }}() const { return {{ acc.call_expr }}; }
+{% endfor %}
+
+{% endif %}
+{% for dc in extra_dataclasses %}
+{% if dc.accessors %}
+// --- {{ dc.class_name }} accessor implementations ---
+{% for acc in dc.accessors %}
+inline {{ acc.returns }} {{ dc.class_name }}::{{ acc.name }}() const { return {{ acc.call_expr }}; }
+{% endfor %}
+
+{% endif %}
+{% endfor %}
+{% if value_types %}
+// --- Value type deferred method implementations ---
+{% for vt in value_types %}
+{% for m in vt.deferred_methods %}
+inline {{ m.return_type }} {{ vt.cpp_class }}::{{ m.name }}({{ m.param_list }}) {{ "const " if m.is_const else "" }}{
+    {{ m.body }}
+}
+
+{% endfor %}
+{% if vt.cross_eq_class and vt.cross_eq_body %}
+inline bool {{ vt.cpp_class }}::operator==(const {{ vt.cross_eq_class }}& other) const {
+    return {{ vt.cross_eq_body }};
+}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if aux_json_wrappers %}
+// --- Supporting struct from_c implementations ---
+{% for jw in aux_json_wrappers %}
+{% if jw.class_name == "FileSequence" %}
+inline FileSequence FileSequence::from_c({{ jw.c_struct }}& c) {
+    FileSequence result;
+    result.value = c.value ? std::string(c.value) : std::string();
+    result.idx = c.idx ? std::string(c.idx) : std::string();
+    result.min = c.min;
+    result.max = c.max;
+    return result;
+}
+
+{% elif jw.class_name == "ClipID" %}
+inline ClipID ClipID::from_c({{ jw.c_struct }}& c) {
+    ClipID result;
+{% for f in jw.fields %}
+{% if not f.nullable and not f.is_nested %}
+    result.{{ f.name }} = c.{{ f.name }} ? std::string(c.{{ f.name }}) : std::string();
+{% elif f.nullable and not f.is_nested %}
+    if (c.{{ f.c_has_flag }} && c.{{ f.name }}) result.{{ f.name }} = std::string(c.{{ f.name }});
+{% elif f.nullable and f.is_nested %}
+    if (c.{{ f.c_has_flag }}) result.{{ f.name }} = {{ f.base_type }}::from_c(c.{{ f.name }});
+{% endif %}
+{% endfor %}
+    {{ jw.free_fn }}(&c);
+    return result;
+}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if free_functions %}
+// --- Free functions ---
+{% for ff in free_functions %}
+/** {{ ff.doc }} */
+inline {{ ff.return_type }} {{ ff.cpp_name }}({{ ff.param_list }}) {
+    return ::{{ ff.c_function }}({{ ff.c_args }});
+}
+
+{% endfor %}
+{% endif %}
+{% if c_abi_utils %}
+// --- Utility functions ---
+
+/** Result of resolve_geometry_layer: dimensions + anchor from a geometry path. */
+struct ResolvedLayer {
+    DimensionsFloat dimensions;
+    PointFloat anchor;
+};
+
+{% for util in c_abi_utils %}
+/** {{ util.doc }} */
+inline std::optional<ResolvedLayer> {{ util.cpp_name }}(
+    const CanvasRef& canvas,
+    const FramingDecisionRef& framing,
+    fdl_geometry_path_t path) {
+    fdl_dimensions_f64_t dims;
+    fdl_point_f64_t anchor;
+    int rc = ::{{ util.c_function }}(canvas.get(), framing.get(), path, &dims, &anchor);
+    if (rc != 0) return std::nullopt;
+    return ResolvedLayer{DimensionsFloat(dims), PointFloat(anchor)};
+}
+
+{% endfor %}
+{% endif %}
+{% if has_io_utils %}
+// --- I/O convenience functions ---
+
+/** Parse an FDL document from a JSON string.
+ *  @param json     JSON string to parse.
+ *  @param validate Run schema + semantic validation after parsing (default true).
+ *  @return Parsed FDL document.
+ *  @throws std::runtime_error on parse failure or validation errors.
+ */
+inline {{ fdl_class.cpp_name }} read_from_string(const std::string& json, bool validate = true) {
+    auto doc = {{ fdl_class.cpp_name }}::parse(json);
+    if (validate) {
+        auto errors = doc.validate();
+        if (!errors.empty()) {
+            std::string msg;
+            for (size_t i = 0; i < errors.size(); ++i) {
+                if (i > 0) msg += "; ";
+                msg += errors[i];
+            }
+            throw std::runtime_error(msg);
+        }
+    }
+    return doc;
+}
+
+/** Read an FDL document from a file on disk.
+ *  @param path     Path to the FDL file.
+ *  @param validate Run schema + semantic validation after parsing (default true).
+ *  @return Parsed FDL document.
+ *  @throws std::runtime_error if the file cannot be opened, or on parse/validation errors.
+ */
+inline {{ fdl_class.cpp_name }} read_from_file(const std::string& path, bool validate = true) {
+    std::ifstream ifs(path, std::ios::binary);
+    if (!ifs) {
+        throw std::runtime_error("File not found: " + path);
+    }
+    std::string json((std::istreambuf_iterator<char>(ifs)),
+                      std::istreambuf_iterator<char>());
+    return read_from_string(json, validate);
+}
+
+/** Serialize an FDL document to a JSON string.
+ *  @param doc      The FDL document to serialize.
+ *  @param validate Run schema + semantic validation before serializing (default true).
+ *  @return JSON string.
+ *  @throws std::runtime_error on validation errors.
+ */
+inline std::string write_to_string(const {{ fdl_class.cpp_name }}& doc, bool validate = true) {
+    if (validate) {
+        auto errors = doc.validate();
+        if (!errors.empty()) {
+            std::string msg;
+            for (size_t i = 0; i < errors.size(); ++i) {
+                if (i > 0) msg += "; ";
+                msg += errors[i];
+            }
+            throw std::runtime_error(msg);
+        }
+    }
+    return doc.as_json();
+}
+
+/** Write an FDL document to a file on disk.
+ *  @param doc      The FDL document to serialize.
+ *  @param path     Destination file path.
+ *  @param validate Run schema + semantic validation before writing (default true).
+ *  @throws std::runtime_error on validation errors or if the file cannot be opened.
+ */
+inline void write_to_file(const {{ fdl_class.cpp_name }}& doc, const std::string& path, bool validate = true) {
+    std::string json = write_to_string(doc, validate);
+    std::ofstream ofs(path, std::ios::binary);
+    if (!ofs) {
+        throw std::runtime_error("Cannot open file for writing: " + path);
+    }
+    ofs.write(json.data(), static_cast<std::streamsize>(json.size()));
+}
+
+{% endif %}
+} // namespace fdl
+
+#endif // FDL_HPP

@@ -1,0 +1,33 @@
+{
+  "uuid": "90621863-dca7-4527-a99c-4518b1f1a319",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "Off-Center + Alignment Generator",
+  "canvas_templates": [
+    {
+      "label": "Template: top-center alignment",
+      "id": "src_tl_tpl_tc",
+      "target_dimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "target_anamorphic_squeeze": 1.0,
+      "fit_source": "framing_decision.dimensions",
+      "fit_method": "fit_all",
+      "alignment_method_vertical": "top",
+      "alignment_method_horizontal": "center",
+      "preserve_from_source_canvas": "framing_decision.protection_dimensions",
+      "round": {
+        "even": "even",
+        "mode": "round"
+      },
+      "maximum_dimensions": {
+        "width": 4096,
+        "height": 2400
+      },
+      "pad_to_maximum": false
+    }
+  ]
+}

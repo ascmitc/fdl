@@ -1,0 +1,831 @@
+{
+  "description": "FDL semantic validation golden vectors",
+  "version": "1.0",
+  "vectors": [
+    {
+      "label": "valid_minimal",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000val001",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 0,
+      "expected_errors": []
+    },
+    {
+      "label": "valid_with_effective_dims",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000val002",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ],
+                "effective_dimensions": {
+                  "width": 4096,
+                  "height": 2100
+                },
+                "effective_anchor_point": {
+                  "x": 0.0,
+                  "y": 30.0
+                }
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 0,
+      "expected_errors": []
+    },
+    {
+      "label": "valid_with_protection",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000val003",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    },
+                    "protection_dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "protection_anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 0,
+      "expected_errors": []
+    },
+    {
+      "label": "duplicate_framing_intent_id",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv001",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          },
+          {
+            "label": "Duplicate",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "ID Tree Error: Framing Intent FI_239 (Duplicate): ID duplicated"
+      ]
+    },
+    {
+      "label": "default_fi_not_in_list",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv002",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": [],
+        "default_framing_intent": "NONEXISTENT"
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "ID Tree Error: Default Framing Intent NONEXISTENT: Not in framing_intents"
+      ]
+    },
+    {
+      "label": "duplicate_canvas_id",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv003",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Camera B",
+            "canvases": [
+              {
+                "label": "Duplicate",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 3840,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 3840.0,
+                      "height": 1607.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 276.5
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "ID Tree Error: Context (Camera B) > Canvas CVS_OCF (Duplicate): ID duplicated"
+      ]
+    },
+    {
+      "label": "fd_id_mismatch",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv004",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-WRONG_FI",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "ID Tree Error: Context (Camera A) > Canvas CVS_OCF (OCF) > Framing Decision CVS_OCF-WRONG_FI: ID doesn't match expected CVS_OCF-FI_239"
+      ]
+    },
+    {
+      "label": "source_canvas_not_found",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv005",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "NONEXISTENT",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "ID Tree Error: Source Canvas IDs ['NONEXISTENT'] not in canvases"
+      ]
+    },
+    {
+      "label": "dim_hierarchy_fd_exceeds_canvas",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv006",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 5000.0,
+                      "height": 3000.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "Dimension Hierarchy Error: Context (Camera A) > Canvas CVS_OCF (OCF) > FD CVS_OCF-FI_239: framing decision dimensions (5000.0x3000.0) exceeds canvas dimensions (4096x2160). Required hierarchy: canvas dimensions >= framing decision dimensions"
+      ]
+    },
+    {
+      "label": "negative_anchor_point",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv007",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": -10.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "Schema Error: /contexts/0/canvases/0/framing_decisions/0/anchor_point/x: Minimum value is 0 but found -10.0"
+      ]
+    },
+    {
+      "label": "anchor_exceeds_canvas",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv008",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 5000.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "Anchors Within Canvas Error: Context (Camera A) > Canvas CVS_OCF (OCF) > FD CVS_OCF-FI_239: anchor_point (5000.0, 223.0) exceeds canvas dimensions (4096x2160). Anchor coordinates must be within canvas bounds."
+      ]
+    },
+    {
+      "label": "negative_effective_anchor",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv009",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "FI_239",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ],
+                "effective_dimensions": {
+                  "width": 4000,
+                  "height": 2100
+                },
+                "effective_anchor_point": {
+                  "x": -5.0,
+                  "y": 30.0
+                }
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "Schema Error: /contexts/0/canvases/0/effective_anchor_point/x: Minimum value is 0 but found -5.0"
+      ]
+    },
+    {
+      "label": "fd_references_missing_fi",
+      "input": {
+        "uuid": "00000000-0000-0000-0000-000000inv010",
+        "version": {
+          "major": 2,
+          "minor": 0
+        },
+        "fdl_creator": "test-validation",
+        "framing_intents": [
+          {
+            "label": "2.39:1",
+            "id": "FI_239",
+            "aspect_ratio": {
+              "width": 239,
+              "height": 100
+            },
+            "protection": 0.0
+          }
+        ],
+        "contexts": [
+          {
+            "label": "Camera A",
+            "canvases": [
+              {
+                "label": "OCF",
+                "id": "CVS_OCF",
+                "source_canvas_id": "CVS_OCF",
+                "dimensions": {
+                  "width": 4096,
+                  "height": 2160
+                },
+                "anamorphic_squeeze": 1.0,
+                "framing_decisions": [
+                  {
+                    "label": "2.39:1",
+                    "id": "CVS_OCF-FI_239",
+                    "framing_intent_id": "MISSING_FI",
+                    "dimensions": {
+                      "width": 4096.0,
+                      "height": 1714.0
+                    },
+                    "anchor_point": {
+                      "x": 0.0,
+                      "y": 223.0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "canvas_templates": []
+      },
+      "expected_error_count": 1,
+      "expected_errors": [
+        "ID Tree Error: Context (Camera A) > Canvas CVS_OCF (OCF) > Framing Decision CVS_OCF-FI_239: Framing Intent ID MISSING_FI not in framing_intents"
+      ]
+    }
+  ]
+}

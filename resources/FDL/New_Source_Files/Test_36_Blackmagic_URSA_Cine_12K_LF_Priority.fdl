@@ -1,0 +1,61 @@
+{
+  "uuid": "a4bbc005-9872-4e16-a2c5-4927375da32c",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 1536,
+        "height": 863
+      },
+      "protection": 0.099826388889
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Blackmagic URSA Cine 12K LF",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "12K 16:9",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 12288,
+            "height": 6912
+          },
+          "anamorphic_squeeze": 1.33,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 8326,
+                "height": 6222
+              },
+              "anchor_point": {
+                "x": 1981,
+                "y": 345
+              },
+              "protection_dimensions": {
+                "width": 9250,
+                "height": 6912
+              },
+              "protection_anchor_point": {
+                "x": 1519,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

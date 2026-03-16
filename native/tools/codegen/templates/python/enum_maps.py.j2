@@ -1,0 +1,32 @@
+{# Handwritten Jinja2 template — rendered by generate.py to produce the output .py file. #}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+# ruff: noqa: I001
+"""Enum forward/reverse maps between C uint32 constants and Python StrEnum values."""
+
+from __future__ import annotations
+
+from .constants import (
+{% for enum in enums %}
+    {{ enum.facade_class }},
+{% endfor %}
+)
+from fdl_ffi import (
+{% for enum in enums %}
+{% for val in enum.entries %}
+    {{ val.name }},
+{% endfor %}
+{% endfor %}
+)
+
+{% for enum in enums %}
+
+# {{ enum.idl_name }} ↔ {{ enum.facade_class }}
+{{ enum.map_name }}_FROM_C: dict[int, {{ enum.facade_class }}] = {
+{% for val in enum.entries %}
+    {{ val.name }}: {{ enum.facade_class }}.{{ val.member }},
+{% endfor %}
+}
+{{ enum.map_name }}_TO_C: dict[{{ enum.facade_class }}, int] = {v: k for k, v in {{ enum.map_name }}_FROM_C.items()}
+{% endfor %}

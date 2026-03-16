@@ -1,0 +1,60 @@
+{# Handwritten Jinja2 template — rendered by generate.py to produce the output .py file. #}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+# ruff: noqa: I001
+"""Value type converter functions — C struct ↔ Python value type."""
+
+from __future__ import annotations
+
+{% if types_imports %}
+from .fdl_types import (
+{% for cls in types_imports %}
+    {{ cls }},
+{% endfor %}
+)
+{% endif %}
+{% if rounding_imports %}
+from .rounding import (
+{% for cls in rounding_imports %}
+    {{ cls }},
+{% endfor %}
+)
+{% endif %}
+{% if enum_class_imports %}
+
+from .constants import (
+{% for cls in enum_class_imports %}
+    {{ cls }},
+{% endfor %}
+)
+{% endif %}
+
+{% for vt in value_types %}
+
+def _{{ vt.converter }}(c_struct) -> {{ vt.python_class }}:
+    """Convert {{ vt.c_struct }} to {{ vt.python_class }}."""
+{% if vt.enum_from_c_imports %}
+    from .enum_maps import {{ vt.enum_from_c_imports | join(", ") }}
+
+{% endif %}
+    return {{ vt.python_class }}(
+{% for field in vt.fields %}
+        {{ field.name }}={{ field.from_c_expr }},
+{% endfor %}
+    )
+
+
+def _to_c_{{ vt.converter }}(val: {{ vt.python_class }}):
+    """Convert {{ vt.python_class }} to C {{ vt.c_struct }} struct."""
+    from fdl_ffi import ffi
+{% if vt.enum_to_c_imports %}
+    from .enum_maps import {{ vt.enum_to_c_imports | join(", ") }}
+{% endif %}
+
+    return ffi.new("{{ vt.c_struct }}*", {
+{% for field in vt.fields %}
+        "{{ field.name }}": {{ field.to_c_expr }},
+{% endfor %}
+    })[0]
+{% endfor %}

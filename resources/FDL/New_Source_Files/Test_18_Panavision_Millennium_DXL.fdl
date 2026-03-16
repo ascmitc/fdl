@@ -1,0 +1,61 @@
+{
+  "uuid": "058bd77b-5de5-42f3-9409-dd7576b6f6fd",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 800,
+        "height": 381
+      },
+      "protection": 0.149714285714
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Panavision Millennium DXL",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "8K",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 8000,
+            "height": 4500
+          },
+          "anamorphic_squeeze": 1.8,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 4464,
+                "height": 3826
+              },
+              "anchor_point": {
+                "x": 1768,
+                "y": 337
+              },
+              "protection_dimensions": {
+                "width": 5250,
+                "height": 4500
+              },
+              "protection_anchor_point": {
+                "x": 1375,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

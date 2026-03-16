@@ -1,0 +1,33 @@
+{
+  "uuid": "3E9F94EF-A910-470D-8EC4-B14E551AC6AC",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "Content Hub",
+  "canvas_templates": [
+    {
+      "label": "VFX Pull - Custom",
+      "id": "VX220310",
+      "target_dimensions": {
+        "width": 4000,
+        "height": 2160
+      },
+      "target_anamorphic_squeeze": 1,
+      "fit_source": "framing_decision.dimensions",
+      "fit_method": "height",
+      "alignment_method_vertical": "center",
+      "alignment_method_horizontal": "center",
+      "preserve_from_source_canvas": "framing_decision.dimensions",
+      "maximum_dimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "pad_to_maximum": true,
+      "round": {
+        "even": "even",
+        "mode": "round"
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "uuid": "094a86f8-f00e-48a8-91ba-8805d97e50d3",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 2048,
+        "height": 931
+      },
+      "protection": 0
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Blackmagic URSA Cine 17K 65",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "12K 16:9",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 12288,
+            "height": 6912
+          },
+          "anamorphic_squeeze": 1,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 12288,
+                "height": 5585
+              },
+              "anchor_point": {
+                "x": 0,
+                "y": 663.5
+              },
+              "protection_dimensions": {
+                "width": 12288,
+                "height": 5586
+              },
+              "protection_anchor_point": {
+                "x": 0,
+                "y": 663
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

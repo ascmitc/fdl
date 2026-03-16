@@ -1,0 +1,26 @@
+{# Handwritten Jinja2 template — rendered by generate.py to produce the output .py file. #}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+"""FDL Core version type."""
+
+from __future__ import annotations
+
+
+class {{ class_name }}:
+    """{{ doc }}"""
+
+    __slots__ = ({{ slot_names }})
+
+    def __init__(self, {{ init_params }}) -> None:
+{% for slot in slots %}
+        self.{{ slot.name }} = {{ slot.name }}
+{% endfor %}
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, {{ class_name }}):
+            return NotImplemented
+        return {{ eq_expr }}
+
+    def __repr__(self) -> str:
+        return f"{{ repr_format }}"

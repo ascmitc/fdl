@@ -1,0 +1,47 @@
+{
+  "name": "@asc-mitc/fdl",
+  "version": "0.1.0-dev.11",
+  "description": "Node.js/TypeScript bindings for the ASC Framing Decision List (FDL) library",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "cmake-js compile && tsc",
+    "build:addon": "cmake-js compile",
+    "build:ts": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write 'src/**/*.ts'",
+    "format:check": "prettier --check 'src/**/*.ts'",
+    "typecheck": "tsc --noEmit",
+    "docs": "typedoc"
+  },
+  "dependencies": {
+    "node-addon-api": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "cmake-js": "^7.3.0",
+    "prettier": "^3.0.0",
+    "typedoc": "^0.28.17",
+    "typescript": "^5.4.0",
+    "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist/",
+    "prebuilds/",
+    "src/addon/binding.cc",
+    "src/addon/structs.h",
+    "CMakeLists.txt"
+  ],
+  "license": "Apache-2.0"
+}

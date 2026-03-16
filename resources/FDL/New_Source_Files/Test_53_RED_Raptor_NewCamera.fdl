@@ -1,0 +1,61 @@
+{
+  "uuid": "797688ee-e5e9-4d0e-88e9-b9ac561a405a",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 37,
+        "height": 20
+      },
+      "protection": 0.1
+    }
+  ],
+  "contexts": [
+    {
+      "label": "RED Raptor",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "8K VV",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 8192,
+            "height": 4320
+          },
+          "anamorphic_squeeze": 1,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 7192,
+                "height": 3888
+              },
+              "anchor_point": {
+                "x": 500,
+                "y": 216
+              },
+              "protection_dimensions": {
+                "width": 7992,
+                "height": 4320
+              },
+              "protection_anchor_point": {
+                "x": 100,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

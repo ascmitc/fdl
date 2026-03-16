@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 920" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12">
+  <defs>
+    <style>
+      .title { font-weight: 700; font-size: 13px; fill: #1E293B; }
+      .desc  { fill: #475569; font-size: 11px; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#94A3B8"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="520" height="920" fill="#FFFFFF"/>
+
+  <!-- INPUT -->
+  <rect x="60" y="10" width="400" height="40" rx="8" ry="8" fill="#F0F9FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text class="title" x="260" y="35" text-anchor="middle">INPUT: source_canvas, source_framing, template</text>
+  <line x1="260" y1="50" x2="260" y2="68" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 1 -->
+  <rect x="60" y="70" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="90">Phase 1: Derive Configuration</text>
+  <text class="desc" x="75" y="106">Read template params into local variables</text>
+  <text class="desc" x="75" y="119">Resolve squeeze, alignment, rounding</text>
+  <line x1="260" y1="126" x2="260" y2="144" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 2 -->
+  <rect x="60" y="146" width="400" height="68" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="166">Phase 2: Populate Source Geometry</text>
+  <text class="desc" x="75" y="182">Pass 1: preserve path &#x2192; outer layers</text>
+  <text class="desc" x="75" y="195">Pass 2: fit path &#x2192; inner layers (overwrites overlap)</text>
+  <text class="desc" x="75" y="208">Validate geometry constraints</text>
+  <line x1="260" y1="214" x2="260" y2="232" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 3 -->
+  <rect x="60" y="234" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="254">Phase 3: Fill Hierarchy Gaps</text>
+  <text class="desc" x="75" y="270">Propagate populated dimensions upward</text>
+  <text class="desc" x="75" y="283">Make anchors relative to reference point</text>
+  <line x1="260" y1="290" x2="260" y2="308" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 4 -->
+  <rect x="60" y="310" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="330">Phase 4: Calculate Scale Factor</text>
+  <text class="desc" x="75" y="346">Normalize fit_source and target dimensions</text>
+  <text class="desc" x="75" y="359">Apply fit_method (fit_all / fill / width / height)</text>
+  <line x1="260" y1="366" x2="260" y2="384" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 5 -->
+  <rect x="60" y="386" width="400" height="68" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="406">Phase 5: Normalize, Scale, and Round</text>
+  <text class="desc" x="75" y="422">Apply anamorphic normalization + scale factor</text>
+  <text class="desc" x="75" y="435">Round all values to clean integers</text>
+  <text class="desc" x="75" y="448">Extract scaled_fit, scaled_fit_anchor, scaled_bbox</text>
+  <line x1="260" y1="454" x2="260" y2="472" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 6 -->
+  <rect x="60" y="474" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="494">Phase 6: Output Size + Alignment Shift</text>
+  <text class="desc" x="75" y="510">Determine output canvas size per axis (PAD/CROP/FIT)</text>
+  <text class="desc" x="75" y="523">Calculate content translation via unified formula</text>
+  <line x1="260" y1="530" x2="260" y2="548" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 7 -->
+  <rect x="60" y="550" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="570">Phase 7: Apply Offsets to Anchors</text>
+  <text class="desc" x="75" y="586">Shift all anchors by content translation</text>
+  <text class="desc" x="75" y="599">Produce clamped anchors (&#x2265; 0) and theoretical anchors</text>
+  <line x1="260" y1="606" x2="260" y2="624" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 8 -->
+  <rect x="60" y="626" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="646">Phase 8: Crop to Visible</text>
+  <text class="desc" x="75" y="662">Calculate visible portion of each layer</text>
+  <text class="desc" x="75" y="675">Enforce hierarchy containment</text>
+  <line x1="260" y1="682" x2="260" y2="700" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 9 -->
+  <rect x="60" y="702" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="722">Phase 9: Create Output FDL</text>
+  <text class="desc" x="75" y="738">Build Context, Canvas, FramingDecision, FDL</text>
+  <text class="desc" x="75" y="751">Return TransformationResult</text>
+  <line x1="260" y1="758" x2="260" y2="776" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- OUTPUT -->
+  <rect x="60" y="778" width="400" height="40" rx="8" ry="8" fill="#F0F9FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text class="title" x="260" y="803" text-anchor="middle">OUTPUT: TransformationResult</text>
+</svg>

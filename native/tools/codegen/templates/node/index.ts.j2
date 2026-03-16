@@ -1,0 +1,61 @@
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file index.ts
+ * @brief Public API for @asc-mitc/fdl — re-exports all facade classes, types, and utilities.
+ */
+
+// Facade classes
+{% for cls in classes %}
+export { {{ cls.name }} } from './{{ cls.module }}.js';
+{% endfor %}
+
+// Value types
+export { DimensionsInt, DimensionsFloat, PointFloat, Rect } from './types.js';
+export { RoundStrategy } from './rounding.js';
+
+// Enums and constants
+export {
+{% for e in enums %}
+  {{ e }},
+{% endfor %}
+  FP_REL_TOL,
+  FP_ABS_TOL,
+  ATTR_SCALE_FACTOR,
+  ATTR_CONTENT_TRANSLATION,
+  ATTR_SCALED_BOUNDING_BOX,
+} from './constants.js';
+
+// Version
+export { Version } from './version.js';
+
+// Errors
+{% for e in errors %}
+export { {{ e }} } from './errors.js';
+{% endfor %}
+
+// Custom attribute value type
+export type { CustomAttrValue } from './custom-attrs.js';
+
+// Rounding functions
+export {
+  DEFAULT_ROUNDING_STRATEGY,
+  getRounding,
+  setRounding,
+  fdlRound,
+  calculateScaleFactor,
+} from './rounding.js';
+
+// Utility functions
+export { {{ utils | join(', ') }} } from './utils.js';
+
+// Utility types
+export type { FramingFromIntentResult } from './utils.js';
+
+// Result types
+export type { ResolveCanvasResult } from './context.js';
+export { TemplateResult } from './canvas-template.js';
+
+// FFI availability check
+export { isAvailable } from './ffi/index.js';

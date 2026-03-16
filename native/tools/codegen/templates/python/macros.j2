@@ -1,0 +1,70 @@
+{# Shared Jinja2 macros for Python facade codegen — imported by per-class templates. #}
+{% macro convert_expr(prop) -%}
+{% if prop.converter == "string" -%}
+_decode_str(raw)
+{%- elif prop.converter == "float" -%}
+float(raw)
+{%- elif prop.converter == "int" -%}
+int(raw)
+{%- elif prop.converter == "bool" -%}
+bool(raw)
+{%- elif prop.converter == "dims_i64" -%}
+_dims_i64(raw)
+{%- elif prop.converter == "dims_f64" -%}
+_dims_f64(raw)
+{%- elif prop.converter == "point_f64" -%}
+_point_f64(raw)
+{%- elif prop.converter == "round_strategy" -%}
+_round_strategy(raw)
+{%- elif prop.converter.startswith("enum_") -%}
+{{ prop.enum_from_c }}[raw]
+{%- else -%}
+raw
+{%- endif %}
+{%- endmacro %}
+
+{% macro reverse_convert_expr(prop) -%}
+{% if prop.converter == "string" -%}
+_encode_str(value)
+{%- elif prop.converter == "float" -%}
+float(value)
+{%- elif prop.converter == "int" -%}
+int(value)
+{%- elif prop.converter == "bool" -%}
+int(value)
+{%- elif prop.converter == "dims_i64" -%}
+_to_c_dims_i64(value)
+{%- elif prop.converter == "dims_f64" -%}
+_to_c_dims_f64(value)
+{%- elif prop.converter == "point_f64" -%}
+_to_c_point_f64(value)
+{%- elif prop.converter == "round_strategy" -%}
+_to_c_round_strategy(value)
+{%- elif prop.converter.startswith("enum_") -%}
+{{ prop.enum_to_c }}[value]
+{%- else -%}
+value
+{%- endif %}
+{%- endmacro %}
+
+{% macro dump_value(prop) -%}
+{% if prop.converter == "clip_id" -%}
+v.to_dict()
+{%- elif prop.converter == "dims_i64" -%}
+{"width": v.width, "height": v.height}
+{%- elif prop.converter == "dims_f64" -%}
+{"width": v.width, "height": v.height}
+{%- elif prop.converter == "point_f64" -%}
+{"x": v.x, "y": v.y}
+{%- elif prop.converter == "round_strategy" -%}
+{"even": str(v.even) if v.even else None, "mode": str(v.mode) if v.mode else None}
+{%- elif prop.converter.startswith("enum_") -%}
+v.value if hasattr(v, "value") else str(v)
+{%- elif prop.converter == "bool" -%}
+v
+{%- elif prop.converter == "float" or prop.converter == "int" -%}
+v
+{%- else -%}
+v
+{%- endif %}
+{%- endmacro %}

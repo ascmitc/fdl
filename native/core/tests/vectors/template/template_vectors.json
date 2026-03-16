@@ -1,0 +1,907 @@
+{
+  "description": "Canvas template apply() end-to-end golden vectors",
+  "version": "1.0",
+  "vectors": [
+    {
+      "label": "width_fit_framing_dims",
+      "source_canvas": {
+        "id": "CVS_OCF",
+        "label": "OCF",
+        "source_canvas_id": "CVS_OCF",
+        "dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_OCF-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_HD",
+        "label": "HD",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "width",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": false,
+        "maximum_dimensions": null,
+        "pad_to_maximum": false,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.46875,
+        "scaled_bounding_box": {
+          "width": 1920,
+          "height": 804
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_effective_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "fit_all_canvas_dims",
+      "source_canvas": {
+        "id": "CVS_OCF",
+        "label": "OCF",
+        "source_canvas_id": "CVS_OCF",
+        "dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_OCF-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_UHD",
+        "label": "UHD",
+        "target_dimensions": {
+          "width": 3840,
+          "height": 2160
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "canvas.dimensions",
+        "fit_method": "fit_all",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": false,
+        "maximum_dimensions": null,
+        "pad_to_maximum": false,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.9375,
+        "scaled_bounding_box": {
+          "width": 3840,
+          "height": 2026
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 3840.0,
+          "height": 2026.0
+        },
+        "output_effective_dims": {
+          "width": 3840.0,
+          "height": 2026.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 3840.0,
+          "height": 1608.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 210.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "effective_dims_preserve",
+      "source_canvas": {
+        "id": "CVS_EFF",
+        "label": "OCF with effective",
+        "source_canvas_id": "CVS_EFF",
+        "dimensions": {
+          "width": 5184,
+          "height": 4320
+        },
+        "effective_dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_anchor_point": {
+          "x": 544.0,
+          "y": 1080.0
+        },
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_EFF-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 544.0,
+          "y": 1303.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_EFF",
+        "label": "HD from effective",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "width",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": "canvas.effective_dimensions",
+        "has_maximum_dimensions": false,
+        "maximum_dimensions": null,
+        "pad_to_maximum": false,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.46875,
+        "scaled_bounding_box": {
+          "width": 1920,
+          "height": 1014
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 1920.0,
+          "height": 1014.0
+        },
+        "output_effective_dims": {
+          "width": 1920.0,
+          "height": 1014.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 106.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "max_dims_with_padding",
+      "source_canvas": {
+        "id": "CVS_OCF",
+        "label": "OCF",
+        "source_canvas_id": "CVS_OCF",
+        "dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_OCF-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_PAD",
+        "label": "HD padded",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "width",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": true,
+        "maximum_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "pad_to_maximum": true,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.46875,
+        "scaled_bounding_box": {
+          "width": 1920,
+          "height": 804
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 138.0
+        },
+        "output_canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "output_effective_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 138.0
+        },
+        "output_fd_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 138.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "anamorphic_source",
+      "source_canvas": {
+        "id": "CVS_ANA",
+        "label": "Anamorphic",
+        "source_canvas_id": "CVS_ANA",
+        "dimensions": {
+          "width": 4096,
+          "height": 3432
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 2.0
+      },
+      "source_framing": {
+        "id": "CVS_ANA-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 859.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_HD",
+        "label": "HD",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "width",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": false,
+        "maximum_dimensions": null,
+        "pad_to_maximum": false,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.234375,
+        "scaled_bounding_box": {
+          "width": 1920,
+          "height": 402
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 1920.0,
+          "height": 402.0
+        },
+        "output_effective_dims": {
+          "width": 1920.0,
+          "height": 402.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 1920.0,
+          "height": 402.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "height_fit",
+      "source_canvas": {
+        "id": "CVS_OCF",
+        "label": "OCF",
+        "source_canvas_id": "CVS_OCF",
+        "dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_OCF-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_H",
+        "label": "Height fit",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "height",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": false,
+        "maximum_dimensions": null,
+        "pad_to_maximum": false,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.6301050175029171,
+        "scaled_bounding_box": {
+          "width": 2582,
+          "height": 1080
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 2582.0,
+          "height": 1080.0
+        },
+        "output_effective_dims": {
+          "width": 2582.0,
+          "height": 1080.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 2582.0,
+          "height": 1080.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "fill_fit_crop",
+      "source_canvas": {
+        "id": "CVS_OCF",
+        "label": "OCF",
+        "source_canvas_id": "CVS_OCF",
+        "dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_OCF-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_FILL",
+        "label": "Fill fit",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "fill",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": false,
+        "maximum_dimensions": null,
+        "pad_to_maximum": false,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.6301050175029171,
+        "scaled_bounding_box": {
+          "width": 2582,
+          "height": 1080
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 2582.0,
+          "height": 1080.0
+        },
+        "output_effective_dims": {
+          "width": 2582.0,
+          "height": 1080.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 2582.0,
+          "height": 1080.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "with_protection",
+      "source_canvas": {
+        "id": "CVS_OCF",
+        "label": "OCF",
+        "source_canvas_id": "CVS_OCF",
+        "dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_OCF-FI_239P",
+        "label": "2.39:1+prot",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 3686.4,
+          "height": 1542.68
+        },
+        "anchor_point": {
+          "x": 204.8,
+          "y": 308.66
+        },
+        "protection_dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "protection_anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        }
+      },
+      "template": {
+        "id": "CT_HD",
+        "label": "HD",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "width",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": false,
+        "maximum_dimensions": null,
+        "pad_to_maximum": false,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.5208333333333334,
+        "scaled_bounding_box": {
+          "width": 1922,
+          "height": 804
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 1922.0,
+          "height": 804.0
+        },
+        "output_effective_dims": {
+          "width": 1922.0,
+          "height": 804.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 1922.0,
+          "height": 804.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "left_top_alignment",
+      "source_canvas": {
+        "id": "CVS_OCF",
+        "label": "OCF",
+        "source_canvas_id": "CVS_OCF",
+        "dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_OCF-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_LT",
+        "label": "Left/Top",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "width",
+        "alignment_method_horizontal": "left",
+        "alignment_method_vertical": "top",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": true,
+        "maximum_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "pad_to_maximum": true,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.46875,
+        "scaled_bounding_box": {
+          "width": 1920,
+          "height": 804
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "output_effective_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "right_bottom_alignment",
+      "source_canvas": {
+        "id": "CVS_OCF",
+        "label": "OCF",
+        "source_canvas_id": "CVS_OCF",
+        "dimensions": {
+          "width": 4096,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_OCF-FI_239",
+        "label": "2.39:1",
+        "framing_intent_id": "FI_239",
+        "dimensions": {
+          "width": 4096.0,
+          "height": 1714.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 223.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_RB",
+        "label": "Right/Bottom",
+        "target_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "width",
+        "alignment_method_horizontal": "right",
+        "alignment_method_vertical": "bottom",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": true,
+        "maximum_dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "pad_to_maximum": true,
+        "round": {
+          "even": "even",
+          "mode": "up"
+        }
+      },
+      "new_fd_name": "2.39:1",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 0.46875,
+        "scaled_bounding_box": {
+          "width": 1920,
+          "height": 804
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 276.0
+        },
+        "output_canvas_dims": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "output_effective_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 276.0
+        },
+        "output_fd_dims": {
+          "width": 1920.0,
+          "height": 804.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 276.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    }
+  ]
+}

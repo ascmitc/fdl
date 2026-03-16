@@ -1,0 +1,1113 @@
+{
+  "description": "Dimensions math golden vectors",
+  "version": "1.0",
+  "vectors": [
+    {
+      "op": "normalize",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "width": 4096.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "width": 8192.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "width": 5324.8,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "width": 3840.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "width": 7680.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "width": 4992.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "width": 1920.0,
+        "height": 1080.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "width": 3840.0,
+        "height": 1080.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "width": 2496.0,
+        "height": 1080.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 2048.0,
+        "height": 858.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "width": 2048.0,
+        "height": 858.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 2048.0,
+        "height": 858.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "width": 4096.0,
+        "height": 858.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 2048.0,
+        "height": 858.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "width": 2662.4,
+        "height": 858.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 4096.0,
+        "height": 1716.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "width": 4096.0,
+        "height": 1716.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 4096.0,
+        "height": 1716.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "width": 8192.0,
+        "height": 1716.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 4096.0,
+        "height": 1716.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "width": 5324.8,
+        "height": 1716.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "width": 0.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "width": 0.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "width": 0.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 100.0,
+        "height": 200.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "width": 100.0,
+        "height": 200.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 100.0,
+        "height": 200.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "width": 200.0,
+        "height": 200.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "width": 100.0,
+        "height": 200.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "width": 130.0,
+        "height": 200.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 4096.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 2048.0,
+        "height": 1080.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 6301.538461538461,
+        "height": 4320.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "scale_factor": 0.75,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 1536.0,
+        "height": 1620.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 3840.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 1920.0,
+        "height": 1080.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 5907.692307692308,
+        "height": 4320.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "params": {
+        "scale_factor": 0.75,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 1440.0,
+        "height": 1620.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 1920.0,
+        "height": 1080.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 960.0,
+        "height": 540.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 2953.846153846154,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "scale_factor": 0.75,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 720.0,
+        "height": 810.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 2048.0,
+        "height": 858.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 2048.0,
+        "height": 858.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 2048.0,
+        "height": 858.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 1024.0,
+        "height": 429.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 2048.0,
+        "height": 858.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 3150.7692307692305,
+        "height": 1716.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 2048.0,
+        "height": 858.0
+      },
+      "params": {
+        "scale_factor": 0.75,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 768.0,
+        "height": 643.5
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 4096.0,
+        "height": 1716.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 4096.0,
+        "height": 1716.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 4096.0,
+        "height": 1716.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 2048.0,
+        "height": 858.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 4096.0,
+        "height": 1716.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 6301.538461538461,
+        "height": 3432.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 4096.0,
+        "height": 1716.0
+      },
+      "params": {
+        "scale_factor": 0.75,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 1536.0,
+        "height": 1287.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 0.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 0.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 0.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "params": {
+        "scale_factor": 0.75,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 0.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 100.0,
+        "height": 200.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 100.0,
+        "height": 200.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 100.0,
+        "height": 200.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 50.0,
+        "height": 100.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 100.0,
+        "height": 200.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 153.84615384615384,
+        "height": 400.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "width": 100.0,
+        "height": 200.0
+      },
+      "params": {
+        "scale_factor": 0.75,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 37.5,
+        "height": 150.0
+      }
+    },
+    {
+      "op": "normalize_and_scale",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "input_squeeze": 2.0,
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 4096.0,
+        "height": 1080.0
+      }
+    },
+    {
+      "op": "normalize_and_scale",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "input_squeeze": 1.3,
+        "scale_factor": 1.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 4096.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "normalize_and_scale",
+      "input": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "params": {
+        "input_squeeze": 1.0,
+        "scale_factor": 2.0,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 4096.0,
+        "height": 4320.0
+      }
+    },
+    {
+      "op": "normalize_and_scale",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "input_squeeze": 2.0,
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "width": 1920.0,
+        "height": 540.0
+      }
+    },
+    {
+      "op": "normalize_and_scale",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "input_squeeze": 1.3,
+        "scale_factor": 1.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "width": 1920.0,
+        "height": 1080.0
+      }
+    },
+    {
+      "op": "normalize_and_scale",
+      "input": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "params": {
+        "input_squeeze": 1.0,
+        "scale_factor": 2.0,
+        "target_squeeze": 2.0
+      },
+      "expected": {
+        "width": 1920.0,
+        "height": 2160.0
+      }
+    },
+    {
+      "op": "sub",
+      "input": {
+        "a": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "b": {
+          "width": 3840.0,
+          "height": 2160.0
+        }
+      },
+      "expected": {
+        "width": 256.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "sub",
+      "input": {
+        "a": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "b": {
+          "width": 1920.0,
+          "height": 1080.0
+        }
+      },
+      "expected": {
+        "width": 0.0,
+        "height": 0.0
+      }
+    },
+    {
+      "op": "sub",
+      "input": {
+        "a": {
+          "width": 100.0,
+          "height": 200.0
+        },
+        "b": {
+          "width": 50.0,
+          "height": 100.0
+        }
+      },
+      "expected": {
+        "width": 50.0,
+        "height": 100.0
+      }
+    },
+    {
+      "op": "is_zero",
+      "input": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "expected": true
+    },
+    {
+      "op": "is_zero",
+      "input": {
+        "width": 1.0,
+        "height": 0.0
+      },
+      "expected": false
+    },
+    {
+      "op": "is_zero",
+      "input": {
+        "width": 0.0,
+        "height": 1.0
+      },
+      "expected": false
+    },
+    {
+      "op": "is_zero",
+      "input": {
+        "width": 1.0,
+        "height": 1.0
+      },
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "b": {
+          "width": 4096.0,
+          "height": 2160.0
+        }
+      },
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "b": {
+          "width": 4096.0000001,
+          "height": 2160.0
+        }
+      },
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "width": 4096.0,
+          "height": 2160.0
+        },
+        "b": {
+          "width": 4096.001,
+          "height": 2160.0
+        }
+      },
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "width": 0.0,
+          "height": 0.0
+        },
+        "b": {
+          "width": 0.0,
+          "height": 0.0
+        }
+      },
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "width": 1920.0,
+          "height": 1080.0
+        },
+        "b": {
+          "width": 1920.0,
+          "height": 1080.5
+        }
+      },
+      "expected": false
+    },
+    {
+      "op": "gt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1921, "height": 1080 }
+      },
+      "expected": false
+    },
+    {
+      "op": "gt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1920, "height": 1081 }
+      },
+      "expected": false
+    },
+    {
+      "op": "gt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1921, "height": 1081 }
+      },
+      "expected": false
+    },
+    {
+      "op": "gt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1919, "height": 1080 }
+      },
+      "expected": true
+    },
+    {
+      "op": "gt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1920, "height": 1079 }
+      },
+      "expected": true
+    },
+    {
+      "op": "gt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1920, "height": 1080 }
+      },
+      "expected": false
+    },
+    {
+      "op": "lt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1921, "height": 1080 }
+      },
+      "expected": true
+    },
+    {
+      "op": "lt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1920, "height": 1081 }
+      },
+      "expected": true
+    },
+    {
+      "op": "lt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1921, "height": 1081 }
+      },
+      "expected": true
+    },
+    {
+      "op": "lt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1919, "height": 1080 }
+      },
+      "expected": false
+    },
+    {
+      "op": "lt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1920, "height": 1079 }
+      },
+      "expected": false
+    },
+    {
+      "op": "lt_i64",
+      "input": {
+        "a": { "width": 1920, "height": 1080 },
+        "b": { "width": 1920, "height": 1080 }
+      },
+      "expected": false
+    },
+    {
+      "op": "gt_f64",
+      "input": {
+        "a": { "width": 1920.0, "height": 1080.0 },
+        "b": { "width": 1921.0, "height": 1080.0 }
+      },
+      "expected": false
+    },
+    {
+      "op": "gt_f64",
+      "input": {
+        "a": { "width": 1920.0, "height": 1080.0 },
+        "b": { "width": 1919.0, "height": 1080.0 }
+      },
+      "expected": true
+    },
+    {
+      "op": "gt_f64",
+      "input": {
+        "a": { "width": 1920.0, "height": 1080.0 },
+        "b": { "width": 1920.0, "height": 1080.0 }
+      },
+      "expected": false
+    },
+    {
+      "op": "lt_f64",
+      "input": {
+        "a": { "width": 1920.0, "height": 1080.0 },
+        "b": { "width": 1921.0, "height": 1080.0 }
+      },
+      "expected": true
+    },
+    {
+      "op": "lt_f64",
+      "input": {
+        "a": { "width": 1920.0, "height": 1080.0 },
+        "b": { "width": 1919.0, "height": 1080.0 }
+      },
+      "expected": false
+    },
+    {
+      "op": "lt_f64",
+      "input": {
+        "a": { "width": 1920.0, "height": 1080.0 },
+        "b": { "width": 1920.0, "height": 1080.0 }
+      },
+      "expected": false
+    }
+  ]
+}

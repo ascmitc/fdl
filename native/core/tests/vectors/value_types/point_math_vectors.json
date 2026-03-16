@@ -1,0 +1,1091 @@
+{
+  "description": "Point math golden vectors",
+  "version": "1.0",
+  "vectors": [
+    {
+      "op": "normalize",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "x": 100.0,
+        "y": 200.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "x": 200.0,
+        "y": 200.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "x": 130.0,
+        "y": 200.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "x": -50.0,
+        "y": 75.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "x": -100.0,
+        "y": 75.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "x": -65.0,
+        "y": 75.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "x": 1920.0,
+        "y": 1080.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "x": 3840.0,
+        "y": 1080.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "x": 2496.0,
+        "y": 1080.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "squeeze": 1.0
+      },
+      "expected": {
+        "x": 2048.0,
+        "y": 858.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "squeeze": 2.0
+      },
+      "expected": {
+        "x": 4096.0,
+        "y": 858.0
+      }
+    },
+    {
+      "op": "normalize",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "squeeze": 1.3
+      },
+      "expected": {
+        "x": 2662.4,
+        "y": 858.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": 100.0,
+        "y": 200.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": 50.0,
+        "y": 100.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "x": 153.84615384615384,
+        "y": 400.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": -50.0,
+        "y": 75.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": -25.0,
+        "y": 37.5
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "x": -76.92307692307692,
+        "y": 150.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": 1920.0,
+        "y": 1080.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": 960.0,
+        "y": 540.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "x": 2953.846153846154,
+        "y": 2160.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "scale_factor": 1.0,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": 2048.0,
+        "y": 858.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "scale_factor": 0.5,
+        "target_squeeze": 1.0
+      },
+      "expected": {
+        "x": 1024.0,
+        "y": 429.0
+      }
+    },
+    {
+      "op": "scale",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "scale_factor": 2.0,
+        "target_squeeze": 1.3
+      },
+      "expected": {
+        "x": 3150.7692307692305,
+        "y": 1716.0
+      }
+    },
+    {
+      "op": "add",
+      "input": {
+        "a": {
+          "x": 100.0,
+          "y": 200.0
+        },
+        "b": {
+          "x": 50.0,
+          "y": 75.0
+        }
+      },
+      "expected": {
+        "x": 150.0,
+        "y": 275.0
+      }
+    },
+    {
+      "op": "add",
+      "input": {
+        "a": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "b": {
+          "x": 100.0,
+          "y": 200.0
+        }
+      },
+      "expected": {
+        "x": 100.0,
+        "y": 200.0
+      }
+    },
+    {
+      "op": "add",
+      "input": {
+        "a": {
+          "x": -50.0,
+          "y": 75.0
+        },
+        "b": {
+          "x": 50.0,
+          "y": -75.0
+        }
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "sub",
+      "input": {
+        "a": {
+          "x": 100.0,
+          "y": 200.0
+        },
+        "b": {
+          "x": 50.0,
+          "y": 75.0
+        }
+      },
+      "expected": {
+        "x": 50.0,
+        "y": 125.0
+      }
+    },
+    {
+      "op": "sub",
+      "input": {
+        "a": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "b": {
+          "x": 100.0,
+          "y": 200.0
+        }
+      },
+      "expected": {
+        "x": -100.0,
+        "y": -200.0
+      }
+    },
+    {
+      "op": "sub",
+      "input": {
+        "a": {
+          "x": -50.0,
+          "y": 75.0
+        },
+        "b": {
+          "x": 50.0,
+          "y": -75.0
+        }
+      },
+      "expected": {
+        "x": -100.0,
+        "y": 150.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "scalar": 0.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "scalar": 1.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "scalar": 2.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "scalar": -1.0
+      },
+      "expected": {
+        "x": -0.0,
+        "y": -0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "scalar": 0.5
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "scalar": 0.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "scalar": 1.0
+      },
+      "expected": {
+        "x": 100.0,
+        "y": 200.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "scalar": 2.0
+      },
+      "expected": {
+        "x": 200.0,
+        "y": 400.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "scalar": -1.0
+      },
+      "expected": {
+        "x": -100.0,
+        "y": -200.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "scalar": 0.5
+      },
+      "expected": {
+        "x": 50.0,
+        "y": 100.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "scalar": 0.0
+      },
+      "expected": {
+        "x": -0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "scalar": 1.0
+      },
+      "expected": {
+        "x": -50.0,
+        "y": 75.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "scalar": 2.0
+      },
+      "expected": {
+        "x": -100.0,
+        "y": 150.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "scalar": -1.0
+      },
+      "expected": {
+        "x": 50.0,
+        "y": -75.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "scalar": 0.5
+      },
+      "expected": {
+        "x": -25.0,
+        "y": 37.5
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "scalar": 0.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "scalar": 1.0
+      },
+      "expected": {
+        "x": 1920.0,
+        "y": 1080.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "scalar": 2.0
+      },
+      "expected": {
+        "x": 3840.0,
+        "y": 2160.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "scalar": -1.0
+      },
+      "expected": {
+        "x": -1920.0,
+        "y": -1080.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 1920.0,
+        "y": 1080.0
+      },
+      "params": {
+        "scalar": 0.5
+      },
+      "expected": {
+        "x": 960.0,
+        "y": 540.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "scalar": 0.0
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "scalar": 1.0
+      },
+      "expected": {
+        "x": 2048.0,
+        "y": 858.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "scalar": 2.0
+      },
+      "expected": {
+        "x": 4096.0,
+        "y": 1716.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "scalar": -1.0
+      },
+      "expected": {
+        "x": -2048.0,
+        "y": -858.0
+      }
+    },
+    {
+      "op": "mul_scalar",
+      "input": {
+        "x": 2048.0,
+        "y": 858.0
+      },
+      "params": {
+        "scalar": 0.5
+      },
+      "expected": {
+        "x": 1024.0,
+        "y": 429.0
+      }
+    },
+    {
+      "op": "clamp",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "min_val": 0.0,
+        "max_val": 0.0,
+        "has_min": false,
+        "has_max": false
+      },
+      "expected": {
+        "x": 100.0,
+        "y": 200.0
+      }
+    },
+    {
+      "op": "clamp",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "min_val": 0.0,
+        "max_val": 0.0,
+        "has_min": true,
+        "has_max": false
+      },
+      "expected": {
+        "x": 100.0,
+        "y": 200.0
+      }
+    },
+    {
+      "op": "clamp",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "min_val": 0.0,
+        "max_val": 150.0,
+        "has_min": false,
+        "has_max": true
+      },
+      "expected": {
+        "x": 100.0,
+        "y": 150.0
+      }
+    },
+    {
+      "op": "clamp",
+      "input": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "params": {
+        "min_val": 0.0,
+        "max_val": 150.0,
+        "has_min": true,
+        "has_max": true
+      },
+      "expected": {
+        "x": 100.0,
+        "y": 150.0
+      }
+    },
+    {
+      "op": "clamp",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "min_val": 0.0,
+        "max_val": 100.0,
+        "has_min": true,
+        "has_max": true
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 75.0
+      }
+    },
+    {
+      "op": "clamp",
+      "input": {
+        "x": -50.0,
+        "y": 75.0
+      },
+      "params": {
+        "min_val": -100.0,
+        "max_val": 50.0,
+        "has_min": true,
+        "has_max": true
+      },
+      "expected": {
+        "x": -50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "x": 100.0,
+          "y": 200.0
+        },
+        "b": {
+          "x": 100.0,
+          "y": 200.0
+        }
+      },
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "x": 100.0,
+          "y": 200.0
+        },
+        "b": {
+          "x": 100.0000001,
+          "y": 200.0
+        }
+      },
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "x": 100.0,
+          "y": 200.0
+        },
+        "b": {
+          "x": 100.001,
+          "y": 200.0
+        }
+      },
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "input": {
+        "a": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "b": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "expected": true
+    },
+    {
+      "op": "lt",
+      "input": {
+        "a": { "x": 100.0, "y": 200.0 },
+        "b": { "x": 101.0, "y": 200.0 }
+      },
+      "expected": true
+    },
+    {
+      "op": "lt",
+      "input": {
+        "a": { "x": 100.0, "y": 200.0 },
+        "b": { "x": 100.0, "y": 201.0 }
+      },
+      "expected": true
+    },
+    {
+      "op": "lt",
+      "input": {
+        "a": { "x": 100.0, "y": 200.0 },
+        "b": { "x": 99.0, "y": 200.0 }
+      },
+      "expected": false
+    },
+    {
+      "op": "lt",
+      "input": {
+        "a": { "x": 100.0, "y": 200.0 },
+        "b": { "x": 100.0, "y": 199.0 }
+      },
+      "expected": false
+    },
+    {
+      "op": "lt",
+      "input": {
+        "a": { "x": 100.0, "y": 200.0 },
+        "b": { "x": 100.0, "y": 200.0 }
+      },
+      "expected": false
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{# Handwritten Jinja2 template — rendered by generate.py to produce _rounding.py. #}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+"""FDL Core rounding — RoundStrategy value type and rounding functions."""
+
+from __future__ import annotations
+
+from .constants import {{ enum_imports | join(", ") }}
+{% if type_imports %}
+from .fdl_types import {{ type_imports | join(", ") }}
+{% endif %}
+{% if round_strategy %}
+
+
+class {{ round_strategy.python_class }}:
+    """{{ round_strategy.doc }}"""
+
+    __slots__ = ({{ round_strategy.slot_names }})
+
+    def __init__(self, *, {{ round_strategy.init_params }}) -> None:
+{% for field in round_strategy.fields %}
+{% if field.coerce %}
+        self.{{ field.name }}: {{ field.python_type }} = {{ field.coerce }}({{ field.name }})
+{% else %}
+        self.{{ field.name }}: {{ field.python_type }} = {{ field.name }}
+{% endif %}
+{% endfor %}
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, {{ round_strategy.python_class }}):
+            return NotImplemented
+{% if round_strategy.eq_parts | length == 1 %}
+        return {{ round_strategy.eq_parts[0] }}
+{% else %}
+        return (
+{% for part in round_strategy.eq_parts %}
+            {{ part }}{{ " and" if not loop.last else "" }}
+{% endfor %}
+        )
+{% endif %}
+
+    def __hash__(self) -> int:
+        return hash(({{ round_strategy.hash_fields }}))
+
+    def __iter__(self):
+        return iter(({{ round_strategy.iter_fields }}))
+
+    def __repr__(self) -> str:
+        return f"{{ round_strategy.repr_format }}"
+{% endif %}
+{% for ff in free_functions %}
+
+
+def {{ ff.display_name }}({{ ff.param_sig }}) -> {{ ff.python_return }}:
+    """{{ ff.doc }}"""
+{% if ff.needed_c_structs %}
+    from fdl_ffi import ffi, get_lib
+{% else %}
+    from fdl_ffi import get_lib
+{% endif %}
+{% if ff.needed_converters or ff.needed_enum_maps %}
+
+{% endif %}
+{% if ff.needed_converters %}
+    from .converters import {{ ff.needed_converters | join(", ") }}
+{% endif %}
+{% if ff.needed_enum_maps %}
+    from .enum_maps import {{ ff.needed_enum_maps | join(", ") }}
+{% endif %}
+{% for line in ff.setup_lines %}
+    {{ line }}
+{% endfor %}
+    {{ ff.return_line }}
+{% endfor %}

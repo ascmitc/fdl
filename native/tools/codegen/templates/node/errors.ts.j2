@@ -1,0 +1,19 @@
+{# Jinja2 template — rendered by node_gen.py to produce errors.ts #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file errors.ts
+ * @brief Error classes for FDL operations.
+ */
+
+{% for err in errors %}
+/** {{ err.doc }} */
+export class {{ err.name }} extends {{ err.parent }} {
+  constructor(message?: string) {
+    super(message);
+    this.name = '{{ err.name }}';
+  }
+}
+
+{% endfor %}

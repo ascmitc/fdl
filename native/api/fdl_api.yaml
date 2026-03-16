@@ -1,0 +1,1201 @@
+# -----------------------------------------------------------------------
+# Value types (pass by value, no heap allocation)
+# -----------------------------------------------------------------------
+value_types:
+  fdl_abi_version_t:
+    fields:
+      - { name: major, type: uint32_t }
+      - { name: minor, type: uint32_t }
+      - { name: patch, type: uint32_t }
+
+  fdl_dimensions_i64_t:
+    fields:
+      - { name: width, type: int64_t }
+      - { name: height, type: int64_t }
+    cross_eq: fdl_dimensions_f64_t
+    facade:
+      class_name: DimensionsInt
+      converter: dims_i64
+    methods:
+      - name: is_zero
+        c_function: fdl_dimensions_i64_is_zero
+        returns: bool
+      - name: normalize
+        c_function: fdl_dimensions_i64_normalize
+        params: [{ name: squeeze, type: double }]
+        returns: fdl_dimensions_f64_t
+      - name: duplicate
+        pure: true
+        returns: self
+      - name: format
+        pure: true
+        returns: string
+    operators:
+      - { op: __gt__, c_function: fdl_dimensions_i64_gt, param_type: fdl_dimensions_i64_t, returns: bool }
+      - { op: __lt__, c_function: fdl_dimensions_i64_lt, param_type: fdl_dimensions_i64_t, returns: bool }
+      - { op: __bool__, pure: true, returns: bool }
+
+  fdl_dimensions_f64_t:
+    fields:
+      - { name: width, type: double }
+      - { name: height, type: double }
+    cross_eq: fdl_dimensions_i64_t
+    facade:
+      class_name: DimensionsFloat
+      converter: dims_f64
+    methods:
+      - name: is_zero
+        c_function: fdl_dimensions_is_zero
+        returns: bool
+      - name: normalize
+        c_function: fdl_dimensions_normalize
+        params: [{ name: squeeze, type: double }]
+        returns: fdl_dimensions_f64_t
+      - name: scale
+        c_function: fdl_dimensions_scale
+        params: [{ name: scale_factor, type: double }, { name: target_squeeze, type: double }]
+        returns: fdl_dimensions_f64_t
+      - name: normalize_and_scale
+        c_function: fdl_dimensions_normalize_and_scale
+        params: [{ name: input_squeeze, type: double }, { name: scale_factor, type: double }, { name: target_squeeze, type: double }]
+        returns: fdl_dimensions_f64_t
+      - name: round
+        c_function: fdl_round_dimensions
+        params: [{ name: even, type: rounding_even }, { name: mode, type: rounding_mode }]
+        returns: fdl_dimensions_f64_t
+      - name: clamp_to_dims
+        c_function: fdl_dimensions_clamp_to_dims
+        params: [{ name: clamp_dims, type: fdl_dimensions_f64_t }]
+        returns: fdl_dimensions_f64_t
+        out_params: [{ name: delta, type: fdl_point_f64_t }]
+      - name: duplicate
+        pure: true
+        returns: self
+      - name: format
+        pure: true
+        returns: string
+      - name: to_int
+        pure: true
+        returns: fdl_dimensions_i64_t
+      - name: from_dimensions
+        pure: true
+        kind: classmethod
+        params: [{ name: dims, type: fdl_dimensions_f64_t }]
+        returns: self
+      - name: scale_by
+        pure: true
+        params: [{ name: factor, type: double }]
+    operators:
+      - { op: __sub__, c_function: fdl_dimensions_sub, param_type: fdl_dimensions_f64_t, returns: fdl_dimensions_f64_t }
+      - { op: __lt__, c_function: fdl_dimensions_f64_lt, param_type: fdl_dimensions_f64_t, returns: bool }
+      - { op: __gt__, c_function: fdl_dimensions_f64_gt, param_type: fdl_dimensions_f64_t, returns: bool }
+      - { op: __bool__, pure: true, returns: bool }
+
+  fdl_point_f64_t:
+    fields:
+      - { name: x, type: double }
+      - { name: y, type: double }
+    facade:
+      class_name: PointFloat
+      converter: point_f64
+    methods:
+      - name: is_zero
+        c_function: fdl_point_is_zero
+        returns: bool
+      - name: normalize
+        c_function: fdl_point_normalize
+        params: [{ name: squeeze, type: double }]
+        returns: fdl_point_f64_t
+      - name: scale
+        c_function: fdl_point_scale
+        params: [{ name: scale_factor, type: double }, { name: target_squeeze, type: double }]
+        returns: fdl_point_f64_t
+      - name: normalize_and_scale
+        c_function: fdl_point_normalize_and_scale
+        params: [{ name: input_squeeze, type: double }, { name: scale_factor, type: double }, { name: target_squeeze, type: double }]
+        returns: fdl_point_f64_t
+      - name: clamp
+        c_function: fdl_point_clamp
+        params:
+          - { name: min_val, type: double, nullable: true }
+          - { name: max_val, type: double, nullable: true }
+        returns: fdl_point_f64_t
+      - name: round
+        c_function: fdl_round_point
+        params: [{ name: even, type: rounding_even }, { name: mode, type: rounding_mode }]
+        returns: fdl_point_f64_t
+      - name: format
+        pure: true
+        returns: string
+    operators:
+      - { op: __add__, c_function: fdl_point_add, param_type: fdl_point_f64_t, returns: fdl_point_f64_t }
+      - { op: __iadd__, pure: true, param_type: fdl_point_f64_t, returns: self }
+      - { op: __sub__, c_function: fdl_point_sub, param_type: fdl_point_f64_t, returns: fdl_point_f64_t }
+      - { op: __mul__, c_function: fdl_point_mul_scalar, param_type: scalar_or_point, returns: fdl_point_f64_t }
+      - { op: __lt__, c_function: fdl_point_f64_lt, param_type: fdl_point_f64_t, returns: bool }
+      - { op: __gt__, c_function: fdl_point_f64_gt, param_type: fdl_point_f64_t, returns: bool }
+
+  fdl_rect_t:
+    fields:
+      - { name: x, type: double }
+      - { name: y, type: double }
+      - { name: width, type: double }
+      - { name: height, type: double }
+    facade:
+      class_name: Rect
+      converter: rect
+
+  fdl_round_strategy_t:
+    fields:
+      - { name: even, type: fdl_rounding_even_t }
+      - { name: mode, type: fdl_rounding_mode_t }
+    facade:
+      class_name: RoundStrategy
+      converter: round_strategy
+      defaults:
+        even: EVEN
+        mode: UP
+
+  fdl_geometry_t:
+    fields:
+      - { name: canvas_dims,       type: fdl_dimensions_f64_t }
+      - { name: effective_dims,    type: fdl_dimensions_f64_t }
+      - { name: protection_dims,   type: fdl_dimensions_f64_t }
+      - { name: framing_dims,      type: fdl_dimensions_f64_t }
+      - { name: effective_anchor,  type: fdl_point_f64_t }
+      - { name: protection_anchor, type: fdl_point_f64_t }
+      - { name: framing_anchor,    type: fdl_point_f64_t }
+
+  fdl_from_intent_result_t:
+    fields:
+      - { name: dimensions,                type: fdl_dimensions_f64_t }
+      - { name: anchor_point,              type: fdl_point_f64_t }
+      - { name: has_protection,            type: int }
+      - { name: protection_dimensions,     type: fdl_dimensions_f64_t }
+      - { name: protection_anchor_point,   type: fdl_point_f64_t }
+
+  fdl_parse_result_t:
+    fields:
+      - { name: doc,   type: "fdl_doc_t*" }
+      - { name: error, type: "const char*", ownership: caller_frees }
+
+  fdl_template_result_t:
+    fields:
+      - { name: output_fdl,            type: "fdl_doc_t*" }
+      - { name: context_label,         type: "const char*", ownership: caller_frees }
+      - { name: canvas_id,             type: "const char*", ownership: caller_frees }
+      - { name: framing_decision_id,   type: "const char*", ownership: caller_frees }
+      - { name: error,                 type: "const char*", ownership: caller_frees }
+
+  fdl_resolve_canvas_result_t:
+    fields:
+      - { name: canvas,            type: "fdl_canvas_t*" }
+      - { name: framing_decision,  type: "fdl_framing_decision_t*" }
+      - { name: was_resolved,      type: int }
+      - { name: error,             type: "const char*", ownership: caller_frees }
+
+  # fdl_clip_id_t and fdl_file_sequence_t moved to opaque_types (handle-based)
+
+# -----------------------------------------------------------------------
+# Enums (uint32_t constants)
+# -----------------------------------------------------------------------
+enums:
+  fdl_rounding_mode_t:
+    underlying: uint32_t
+    values:
+      FDL_ROUNDING_MODE_UP: 0
+      FDL_ROUNDING_MODE_DOWN: 1
+      FDL_ROUNDING_MODE_ROUND: 2
+    facade:
+      class_name: RoundingMode
+      prefix: FDL_ROUNDING_MODE_
+    string_values:
+      UP: up
+      DOWN: down
+      ROUND: round
+
+  fdl_rounding_even_t:
+    underlying: uint32_t
+    values:
+      FDL_ROUNDING_EVEN_WHOLE: 0
+      FDL_ROUNDING_EVEN_EVEN: 1
+    facade:
+      class_name: RoundingEven
+      prefix: FDL_ROUNDING_EVEN_
+    string_values:
+      WHOLE: whole
+      EVEN: even
+
+  fdl_geometry_path_t:
+    underlying: uint32_t
+    values:
+      FDL_GEOMETRY_PATH_CANVAS_DIMENSIONS: 0
+      FDL_GEOMETRY_PATH_CANVAS_EFFECTIVE_DIMENSIONS: 1
+      FDL_GEOMETRY_PATH_FRAMING_PROTECTION_DIMENSIONS: 2
+      FDL_GEOMETRY_PATH_FRAMING_DIMENSIONS: 3
+    facade:
+      class_name: GeometryPath
+      prefix: FDL_GEOMETRY_PATH_
+    string_values:
+      CANVAS_DIMENSIONS: "canvas.dimensions"
+      CANVAS_EFFECTIVE_DIMENSIONS: "canvas.effective_dimensions"
+      FRAMING_PROTECTION_DIMENSIONS: "framing_decision.protection_dimensions"
+      FRAMING_DIMENSIONS: "framing_decision.dimensions"
+
+  fdl_fit_method_t:
+    underlying: uint32_t
+    values:
+      FDL_FIT_METHOD_WIDTH: 0
+      FDL_FIT_METHOD_HEIGHT: 1
+      FDL_FIT_METHOD_FIT_ALL: 2
+      FDL_FIT_METHOD_FILL: 3
+    facade:
+      class_name: FitMethod
+      prefix: FDL_FIT_METHOD_
+    string_values:
+      WIDTH: width
+      HEIGHT: height
+      FIT_ALL: fit_all
+      FILL: fill
+
+  fdl_halign_t:
+    underlying: uint32_t
+    values:
+      FDL_HALIGN_LEFT: 0
+      FDL_HALIGN_CENTER: 1
+      FDL_HALIGN_RIGHT: 2
+    facade:
+      class_name: HAlign
+      prefix: FDL_HALIGN_
+    string_values:
+      LEFT: left
+      CENTER: center
+      RIGHT: right
+
+  fdl_valign_t:
+    underlying: uint32_t
+    values:
+      FDL_VALIGN_TOP: 0
+      FDL_VALIGN_CENTER: 1
+      FDL_VALIGN_BOTTOM: 2
+    facade:
+      class_name: VAlign
+      prefix: FDL_VALIGN_
+    string_values:
+      TOP: top
+      CENTER: center
+      BOTTOM: bottom
+
+# -----------------------------------------------------------------------
+# Opaque handle types (pointer-only, no field access)
+# -----------------------------------------------------------------------
+opaque_types:
+  - fdl_doc_t
+  - fdl_context_t
+  - fdl_canvas_t
+  - fdl_framing_decision_t
+  - fdl_framing_intent_t
+  - fdl_canvas_template_t
+  - fdl_clip_id_t
+  - fdl_file_sequence_t
+  - fdl_validation_result_t
+
+# -----------------------------------------------------------------------
+# Object model — maps C ABI functions to class/property/collection/method
+# concepts for facade generation. The flat function list below remains the
+# authoritative source for low-level FFI codegen; this section layers
+# higher-level semantics on top.
+# -----------------------------------------------------------------------
+object_model:
+  classes:
+    FDL:
+      c_handle: fdl_doc_t
+      owns_handle: true
+      custom_attrs: true
+      pydantic_model: FramingDecisionList
+      factory: fdl_doc_create
+      destructor: fdl_doc_free
+      properties:
+        uuid:
+          getter: fdl_doc_get_uuid
+          setter: fdl_doc_set_uuid
+          type: string
+          nullable: true
+        fdl_creator:
+          getter: fdl_doc_get_fdl_creator
+          setter: fdl_doc_set_fdl_creator
+          type: string
+          nullable: true
+        default_framing_intent:
+          getter: fdl_doc_get_default_framing_intent
+          setter: fdl_doc_set_default_framing_intent
+          type: string
+          nullable: true
+        version_major:
+          getter: fdl_doc_get_version_major
+          type: int
+        version_minor:
+          getter: fdl_doc_get_version_minor
+          type: int
+      collections:
+        contexts:
+          item_class: Context
+          count: fdl_doc_contexts_count
+          at: fdl_doc_context_at
+          find_by_label: fdl_doc_context_find_by_label
+          add: fdl_doc_add_context
+        framing_intents:
+          item_class: FramingIntent
+          count: fdl_doc_framing_intents_count
+          at: fdl_doc_framing_intent_at
+          find_by_id: fdl_doc_framing_intent_find_by_id
+          add: fdl_doc_add_framing_intent
+        canvas_templates:
+          item_class: CanvasTemplate
+          count: fdl_doc_canvas_templates_count
+          at: fdl_doc_canvas_template_at
+          find_by_id: fdl_doc_canvas_template_find_by_id
+          add: fdl_doc_add_canvas_template
+      methods:
+        parse:
+          function: fdl_doc_parse_json
+          kind: static_factory
+          returns: self
+          doc: Parse JSON bytes into a facade FDL document.
+          params:
+            - { name: json_bytes, type: bytes }
+          error_handling:
+            pattern: result_struct
+            error_field: error
+            success_field: doc
+            free_fn: fdl_free
+            error_class: validation_error
+        create:
+          function: fdl_doc_create_with_header
+          kind: static_factory
+          returns: self
+          doc: Create a new empty FDL document with header fields.
+          params:
+            - { name: uuid, type: string }
+            - { name: version_major, type: int, default: "2" }
+            - { name: version_minor, type: int, default: "0" }
+            - { name: fdl_creator, type: string, default: '""' }
+            - { name: default_framing_intent, type: string, nullable: true }
+          error_handling:
+            pattern: null_check
+        validate:
+          function: fdl_doc_validate
+          kind: instance
+          doc: Run C-core schema + semantic validation.
+          error_handling:
+            pattern: validation
+            count_fn: fdl_validation_result_error_count
+            at_fn: fdl_validation_result_error_at
+            free_fn: fdl_validation_result_free
+        as_json:
+          function: fdl_doc_to_json
+          kind: instance
+          returns: string_free
+          doc: Serialize to JSON string via C core.
+          params:
+            - { name: indent, type: int, nullable: true, default: "2" }
+        version:
+          kind: composite_property
+          doc: Composite property — FDL version from major/minor.
+          returns: Version
+          compose_from:
+            major: version_major
+            minor: version_minor
+        to_json:
+          function: fdl_doc_to_json
+          kind: instance
+        add_framing_intent:
+          function: fdl_doc_add_framing_intent
+          kind: builder
+          returns: FramingIntent
+          doc: Add a framing intent to the document.
+          params:
+            - { name: id, type: string }
+            - { name: label, type: string }
+            - { name: aspect_ratio, type: fdl_dimensions_i64_t, expand: true }
+            - { name: protection, type: double }
+          error_handling:
+            pattern: null_check
+        add_context:
+          function: fdl_doc_add_context
+          kind: builder
+          returns: Context
+          doc: Add a context to the document.
+          params:
+            - { name: label, type: string }
+            - { name: context_creator, type: string, nullable: true }
+          error_handling:
+            pattern: null_check
+        add_canvas_template:
+          function: fdl_doc_add_canvas_template
+          kind: builder
+          returns: CanvasTemplate
+          doc: Add a canvas template to the document.
+          params:
+            - { name: id, type: string }
+            - { name: label, type: string }
+            - { name: target_dimensions, type: fdl_dimensions_i64_t, expand: true }
+            - { name: target_anamorphic_squeeze, type: double }
+            - { name: fit_source, type: fdl_geometry_path_t }
+            - { name: fit_method, type: fdl_fit_method_t }
+            - { name: alignment_method_horizontal, type: fdl_halign_t }
+            - { name: alignment_method_vertical, type: fdl_valign_t }
+            - { name: round, type: fdl_round_strategy_t }
+          error_handling:
+            pattern: null_check
+      init:
+        depth: 0
+        builder_method: create
+        params:
+          - { name: uuid, type: string, nullable: true }
+          - { name: version_major, type: int, default: "2" }
+          - { name: version_minor, type: int, default: "0" }
+          - { name: fdl_creator, type: string, default: '""' }
+          - { name: default_framing_intent, type: string, nullable: true }
+
+    Context:
+      c_handle: fdl_context_t
+      owns_handle: false
+      custom_attrs: true
+      pydantic_model: ContextModel
+      parent: FDL
+      properties:
+        label:
+          getter: fdl_context_get_label
+          type: string
+        context_creator:
+          getter: fdl_context_get_context_creator
+          type: string
+          nullable: true
+        clip_id:
+          getter: fdl_context_clip_id
+          has: fdl_context_has_clip_id
+          setter: fdl_context_set_clip_id_json
+          remover: fdl_context_remove_clip_id
+          type: handle_ref
+          handle_class: ClipID
+          nullable: true
+      collections:
+        canvases:
+          item_class: Canvas
+          count: fdl_context_canvases_count
+          at: fdl_context_canvas_at
+          find_by_id: fdl_context_find_canvas_by_id
+          add: fdl_context_add_canvas
+      methods:
+        to_json:
+          function: fdl_context_to_json
+          kind: instance
+        add_canvas:
+          function: fdl_context_add_canvas
+          kind: builder
+          returns: Canvas
+          doc: Add a canvas to this context.
+          params:
+            - { name: id, type: string }
+            - { name: label, type: string }
+            - { name: source_canvas_id, type: string }
+            - { name: dimensions, type: fdl_dimensions_i64_t, expand: true }
+            - { name: anamorphic_squeeze, type: double }
+          error_handling:
+            pattern: null_check
+        resolve_canvas_for_dimensions:
+          function: fdl_context_resolve_canvas_for_dimensions
+          kind: instance
+          doc: Find matching canvas when input dimensions differ from selected canvas.
+          returns: ResolveCanvasResult
+          params:
+            - { name: input_dims, type: fdl_dimensions_f64_t }
+            - { name: canvas,     type: handle, source_class: Canvas }
+            - { name: framing,    type: handle, source_class: FramingDecision }
+          error_handling:
+            pattern: result_struct_multi
+            error_field: error
+            error_class: validation_error
+            free_fn: fdl_free
+            fields:
+              - { name: canvas,           source: canvas,           extract: handle_ref, wrap_class: Canvas }
+              - { name: framing_decision, source: framing_decision, extract: handle_ref, wrap_class: FramingDecision }
+              - { name: was_resolved,     source: was_resolved,     extract: scalar, scalar_type: bool }
+      init:
+        depth: 1
+        builder_method: add_context
+        params:
+          - { name: label, type: string }
+          - { name: context_creator, type: string, nullable: true }
+          - { name: canvases, type: ignore }
+
+    Canvas:
+      c_handle: fdl_canvas_t
+      owns_handle: false
+      custom_attrs: true
+      pydantic_model: CanvasModel
+      parent: Context
+      properties:
+        id:
+          getter: fdl_canvas_get_id
+          type: string
+        label:
+          getter: fdl_canvas_get_label
+          type: string
+        source_canvas_id:
+          getter: fdl_canvas_get_source_canvas_id
+          type: string
+        dimensions:
+          getter: fdl_canvas_get_dimensions
+          setter: fdl_canvas_set_dimensions
+          type: fdl_dimensions_i64_t
+        anamorphic_squeeze:
+          getter: fdl_canvas_get_anamorphic_squeeze
+          setter: fdl_canvas_set_anamorphic_squeeze
+          type: double
+        effective_dimensions:
+          getter: fdl_canvas_get_effective_dimensions
+          setter: fdl_canvas_set_effective_dims_only
+          remover: fdl_canvas_remove_effective
+          has: fdl_canvas_has_effective_dimensions
+          type: fdl_dimensions_i64_t
+          nullable: true
+        effective_anchor_point:
+          getter: fdl_canvas_get_effective_anchor_point
+          has: fdl_canvas_has_effective_dimensions
+          type: fdl_point_f64_t
+          nullable: true
+        photosite_dimensions:
+          getter: fdl_canvas_get_photosite_dimensions
+          setter: fdl_canvas_set_photosite_dimensions
+          has: fdl_canvas_has_photosite_dimensions
+          type: fdl_dimensions_i64_t
+          nullable: true
+        physical_dimensions:
+          getter: fdl_canvas_get_physical_dimensions
+          setter: fdl_canvas_set_physical_dimensions
+          has: fdl_canvas_has_physical_dimensions
+          type: fdl_dimensions_f64_t
+          nullable: true
+      collections:
+        framing_decisions:
+          item_class: FramingDecision
+          count: fdl_canvas_framing_decisions_count
+          at: fdl_canvas_framing_decision_at
+          find_by_id: fdl_canvas_find_framing_decision_by_id
+          add: fdl_canvas_add_framing_decision
+      methods:
+        to_json:
+          function: fdl_canvas_to_json
+          kind: instance
+        set_effective:
+          function: fdl_canvas_set_effective_dimensions
+          kind: compound_setter
+          doc: Set effective dimensions and anchor point on this canvas.
+          params:
+            - { name: dims, type: fdl_dimensions_i64_t }
+            - { name: anchor, type: fdl_point_f64_t }
+        get_rect:
+          function: fdl_canvas_get_rect
+          kind: instance_getter
+          returns: fdl_rect_t
+          doc: Get canvas rect as (0, 0, width, height).
+        get_effective_rect:
+          function: fdl_canvas_get_effective_rect
+          kind: instance_getter_optional
+          returns: fdl_rect_t
+          doc: Get effective rect or None if not defined.
+        add_framing_decision:
+          function: fdl_canvas_add_framing_decision
+          kind: builder
+          returns: FramingDecision
+          doc: Add a framing decision to this canvas.
+          params:
+            - { name: id, type: string }
+            - { name: label, type: string }
+            - { name: framing_intent_id, type: string }
+            - { name: dimensions, type: fdl_dimensions_f64_t, expand: true }
+            - { name: anchor_point, type: fdl_point_f64_t, expand: true }
+          error_handling:
+            pattern: null_check
+      init:
+        depth: 2
+        builder_method: add_canvas
+        params:
+          - { name: id, type: string }
+          - { name: label, type: string, default: '""' }
+          - { name: source_canvas_id, type: string }
+          - { name: dimensions, type: fdl_dimensions_i64_t }
+          - { name: anamorphic_squeeze, type: double, default: "1.0" }
+          - { name: effective_dimensions, type: fdl_dimensions_i64_t, nullable: true }
+          - { name: effective_anchor_point, type: fdl_point_f64_t, nullable: true }
+          - { name: photosite_dimensions, type: fdl_dimensions_i64_t, nullable: true }
+          - { name: physical_dimensions, type: fdl_dimensions_f64_t, nullable: true }
+          - { name: framing_decisions, type: ignore }
+        post_setters:
+          - kind: compound
+            method: set_effective
+            condition: effective_dimensions
+            args:
+              dims: effective_dimensions
+              anchor: effective_anchor_point
+          - kind: property
+            property: photosite_dimensions
+          - kind: property
+            property: physical_dimensions
+
+    FramingDecision:
+      c_handle: fdl_framing_decision_t
+      owns_handle: false
+      custom_attrs: true
+      pydantic_model: FramingDecisionModel
+      parent: Canvas
+      properties:
+        id:
+          getter: fdl_framing_decision_get_id
+          type: string
+        label:
+          getter: fdl_framing_decision_get_label
+          type: string
+        framing_intent_id:
+          getter: fdl_framing_decision_get_framing_intent_id
+          type: string
+        dimensions:
+          getter: fdl_framing_decision_get_dimensions
+          setter: fdl_framing_decision_set_dimensions
+          type: fdl_dimensions_f64_t
+        anchor_point:
+          getter: fdl_framing_decision_get_anchor_point
+          setter: fdl_framing_decision_set_anchor_point
+          type: fdl_point_f64_t
+        protection_dimensions:
+          getter: fdl_framing_decision_get_protection_dimensions
+          setter: fdl_framing_decision_set_protection_dimensions
+          remover: fdl_framing_decision_remove_protection
+          has: fdl_framing_decision_has_protection
+          type: fdl_dimensions_f64_t
+          nullable: true
+        protection_anchor_point:
+          getter: fdl_framing_decision_get_protection_anchor_point
+          setter: fdl_framing_decision_set_protection_anchor_point
+          has: fdl_framing_decision_has_protection
+          type: fdl_point_f64_t
+          nullable: true
+      methods:
+        to_json:
+          function: fdl_framing_decision_to_json
+          kind: instance
+        get_rect:
+          function: fdl_framing_decision_get_rect
+          kind: instance_getter
+          returns: fdl_rect_t
+          doc: Get framing rect as (anchor_x, anchor_y, width, height).
+        get_protection_rect:
+          function: fdl_framing_decision_get_protection_rect
+          kind: instance_getter_optional
+          returns: fdl_rect_t
+          doc: Get protection rect or None if not defined.
+        set_protection:
+          function: fdl_framing_decision_set_protection
+          kind: compound_setter
+          doc: Set protection dimensions and anchor point on this framing decision.
+          params:
+            - { name: dims, type: fdl_dimensions_f64_t }
+            - { name: anchor, type: fdl_point_f64_t }
+        adjust_anchor_point:
+          function: fdl_framing_decision_adjust_anchor
+          kind: compound_setter
+          doc: Adjust anchor point based on alignment within canvas.
+          params:
+            - { name: canvas, type: handle, source_class: Canvas }
+            - { name: h_method, type: fdl_halign_t }
+            - { name: v_method, type: fdl_valign_t }
+        adjust_protection_anchor_point:
+          function: fdl_framing_decision_adjust_protection_anchor
+          kind: compound_setter
+          doc: Adjust protection anchor point based on alignment within canvas.
+          params:
+            - { name: canvas, type: handle, source_class: Canvas }
+            - { name: h_method, type: fdl_halign_t }
+            - { name: v_method, type: fdl_valign_t }
+        from_framing_intent:
+          function: fdl_framing_decision_populate_from_intent
+          kind: class_factory
+          doc: Create a FramingDecision from a canvas and framing intent.
+          factory_kwargs:
+            - { name: id, value: '""' }
+            - { name: framing_intent_id, value: "framing_intent.id" }
+          params:
+            - { name: canvas, type: handle, source_class: Canvas }
+            - { name: framing_intent, type: handle, source_class: FramingIntent }
+            - { name: rounding, type: fdl_round_strategy_t, nullable: true, default: "None", global_fallback: get_rounding }
+        populate_from_intent:
+          function: fdl_framing_decision_populate_from_intent
+          kind: compound_setter
+          doc: Populate this framing decision from a canvas and framing intent (in-place).
+          params:
+            - { name: canvas, type: handle, source_class: Canvas }
+            - { name: framing_intent, type: handle, source_class: FramingIntent }
+            - { name: rounding, type: fdl_round_strategy_t, nullable: true, default: "None", global_fallback: get_rounding }
+      init:
+        depth: 3
+        builder_method: add_framing_decision
+        params:
+          - { name: id, type: string }
+          - { name: label, type: string, default: '""' }
+          - { name: framing_intent_id, type: string }
+          - { name: dimensions, type: fdl_dimensions_f64_t, default: "DimensionsFloat(width=0.0, height=0.0)" }
+          - { name: anchor_point, type: fdl_point_f64_t, default: "PointFloat(x=0.0, y=0.0)" }
+          - { name: protection_dimensions, type: fdl_dimensions_f64_t, nullable: true }
+          - { name: protection_anchor_point, type: fdl_point_f64_t, nullable: true }
+        post_setters:
+          - kind: compound
+            method: set_protection
+            condition: protection_dimensions
+            args:
+              dims: protection_dimensions
+              anchor: protection_anchor_point
+
+    FramingIntent:
+      c_handle: fdl_framing_intent_t
+      owns_handle: false
+      custom_attrs: true
+      pydantic_model: FramingIntentModel
+      parent: FDL
+      properties:
+        id:
+          getter: fdl_framing_intent_get_id
+          type: string
+        label:
+          getter: fdl_framing_intent_get_label
+          type: string
+        aspect_ratio:
+          getter: fdl_framing_intent_get_aspect_ratio
+          setter: fdl_framing_intent_set_aspect_ratio
+          type: fdl_dimensions_i64_t
+        protection:
+          getter: fdl_framing_intent_get_protection
+          setter: fdl_framing_intent_set_protection
+          type: double
+      methods:
+        to_json:
+          function: fdl_framing_intent_to_json
+          kind: instance
+      init:
+        depth: 1
+        builder_method: add_framing_intent
+        params:
+          - { name: id, type: string }
+          - { name: label, type: string, default: '""' }
+          - { name: aspect_ratio, type: fdl_dimensions_i64_t }
+          - { name: protection, type: double, default: "0.0" }
+
+    CanvasTemplate:
+      c_handle: fdl_canvas_template_t
+      owns_handle: false
+      custom_attrs: true
+      pydantic_model: CanvasTemplateModel
+      parent: FDL
+      properties:
+        id:
+          getter: fdl_canvas_template_get_id
+          type: string
+        label:
+          getter: fdl_canvas_template_get_label
+          type: string
+        target_dimensions:
+          getter: fdl_canvas_template_get_target_dimensions
+          type: fdl_dimensions_i64_t
+        target_anamorphic_squeeze:
+          getter: fdl_canvas_template_get_target_anamorphic_squeeze
+          type: double
+        fit_source:
+          getter: fdl_canvas_template_get_fit_source
+          type: fdl_geometry_path_t
+        fit_method:
+          getter: fdl_canvas_template_get_fit_method
+          type: fdl_fit_method_t
+        alignment_method_horizontal:
+          getter: fdl_canvas_template_get_alignment_method_horizontal
+          type: fdl_halign_t
+        alignment_method_vertical:
+          getter: fdl_canvas_template_get_alignment_method_vertical
+          type: fdl_valign_t
+        round:
+          getter: fdl_canvas_template_get_round
+          type: fdl_round_strategy_t
+        preserve_from_source_canvas:
+          getter: fdl_canvas_template_get_preserve_from_source_canvas
+          setter: fdl_canvas_template_set_preserve_from_source_canvas
+          has: fdl_canvas_template_has_preserve_from_source_canvas
+          type: fdl_geometry_path_t
+          nullable: true
+        maximum_dimensions:
+          getter: fdl_canvas_template_get_maximum_dimensions
+          setter: fdl_canvas_template_set_maximum_dimensions
+          has: fdl_canvas_template_has_maximum_dimensions
+          type: fdl_dimensions_i64_t
+          nullable: true
+        pad_to_maximum:
+          getter: fdl_canvas_template_get_pad_to_maximum
+          setter: fdl_canvas_template_set_pad_to_maximum
+          type: bool
+      methods:
+        to_json:
+          function: fdl_canvas_template_to_json
+          kind: instance
+        apply:
+          function: fdl_apply_canvas_template
+          kind: instance
+          doc: Apply this canvas template to a source canvas/framing decision.
+          returns: TemplateResult
+          params:
+            - { name: source_canvas,         type: handle, source_class: Canvas }
+            - { name: source_framing,        type: handle, source_class: FramingDecision }
+            - { name: new_canvas_id,         type: string }
+            - { name: new_fd_name,           type: string }
+            - { name: source_context_label,  type: string, nullable: true }
+            - { name: context_creator,       type: string, nullable: true }
+          error_handling:
+            pattern: result_struct_multi
+            error_field: error
+            error_class: validation_error
+            free_fn: fdl_free
+            fields:
+              - { name: fdl,                   source: output_fdl,          extract: handle, wrap_class: FDL }
+              - { name: context_label,         source: context_label,       extract: string, private: true }
+              - { name: canvas_id,             source: canvas_id,           extract: string, private: true }
+              - { name: framing_decision_id,   source: framing_decision_id, extract: string, private: true }
+      init:
+        depth: 1
+        builder_method: add_canvas_template
+        params:
+          - { name: id, type: string }
+          - { name: label, type: string, default: '""' }
+          - { name: target_dimensions, type: fdl_dimensions_i64_t }
+          - { name: target_anamorphic_squeeze, type: double, default: "1.0" }
+          - { name: fit_source, type: fdl_geometry_path_t, default: "GeometryPath.FRAMING_DIMENSIONS" }
+          - { name: fit_method, type: fdl_fit_method_t, default: "FitMethod.WIDTH" }
+          - { name: alignment_method_horizontal, type: fdl_halign_t, default: "HAlign.CENTER" }
+          - { name: alignment_method_vertical, type: fdl_valign_t, default: "VAlign.CENTER" }
+          - { name: round, type: fdl_round_strategy_t, default: "RoundStrategy()" }
+          - { name: preserve_from_source_canvas, type: fdl_geometry_path_t, nullable: true }
+          - { name: maximum_dimensions, type: fdl_dimensions_i64_t, nullable: true }
+          - { name: pad_to_maximum, type: bool, default: "False" }
+        post_setters:
+          - kind: property
+            property: preserve_from_source_canvas
+          - kind: property
+            property: maximum_dimensions
+          - kind: property
+            property: pad_to_maximum
+            always: true
+
+    ClipID:
+      c_handle: fdl_clip_id_t
+      owns_handle: false
+      pydantic_model: ClipIDModel
+      parent: Context
+      custom_attrs: true
+      properties:
+        clip_name:
+          getter: fdl_clip_id_get_clip_name
+          type: string
+        file:
+          getter: fdl_clip_id_get_file
+          has: fdl_clip_id_has_file
+          type: string
+          nullable: true
+        sequence:
+          getter: fdl_clip_id_sequence
+          has: fdl_clip_id_has_sequence
+          type: handle_ref
+          handle_class: FileSequence
+          nullable: true
+      methods:
+        to_json:
+          function: fdl_clip_id_to_json
+          kind: instance
+        validate:
+          function: fdl_clip_id_validate_json
+          kind: validate_json
+          doc: Validate this clip_id for mutual exclusion rules.
+
+    FileSequence:
+      c_handle: fdl_file_sequence_t
+      owns_handle: false
+      pydantic_model: FileSequenceModel
+      parent: ClipID
+      custom_attrs: true
+      properties:
+        value:
+          getter: fdl_file_sequence_get_value
+          type: string
+        idx:
+          getter: fdl_file_sequence_get_idx
+          type: string
+        min:
+          getter: fdl_file_sequence_get_min
+          type: int64_t
+        max:
+          getter: fdl_file_sequence_get_max
+          type: int64_t
+
+# -----------------------------------------------------------------------
+# Function metadata overlay
+# -----------------------------------------------------------------------
+# Annotations for C functions that cannot be derived from fdl_core.h.
+# Signatures and doc strings are parsed from the C header at codegen time.
+# Only functions needing ownership, nullable, or direction:out metadata
+# need entries here.
+# -----------------------------------------------------------------------
+function_metadata:
+  # --- Ownership: caller_frees_with_* ---
+  fdl_doc_create:
+    ownership: caller_frees_with_fdl_doc_free
+  fdl_doc_create_with_header:
+    ownership: caller_frees_with_fdl_doc_free
+    params:
+      default_framing_intent: { nullable: true }
+  fdl_doc_validate:
+    ownership: caller_frees_with_fdl_validation_result_free
+
+  # --- Ownership: caller_frees ---
+  fdl_doc_to_json:
+    ownership: caller_frees
+  fdl_context_to_json:
+    ownership: caller_frees
+  fdl_canvas_to_json:
+    ownership: caller_frees
+  fdl_framing_decision_to_json:
+    ownership: caller_frees
+  fdl_framing_intent_to_json:
+    ownership: caller_frees
+  fdl_canvas_template_to_json:
+    ownership: caller_frees
+  fdl_clip_id_to_json:
+    ownership: caller_frees
+
+  # --- Ownership: caller_frees + nullable return ---
+  fdl_context_get_clip_id:
+    ownership: caller_frees
+    nullable: true
+  fdl_clip_id_validate_json:
+    ownership: caller_frees
+    nullable: true
+
+  # --- Ownership: valid_until_doc_freed ---
+  fdl_doc_add_framing_intent:
+    ownership: valid_until_doc_freed
+  fdl_doc_add_context:
+    ownership: valid_until_doc_freed
+    params:
+      context_creator: { nullable: true }
+  fdl_doc_add_canvas_template:
+    ownership: valid_until_doc_freed
+  fdl_context_add_canvas:
+    ownership: valid_until_doc_freed
+  fdl_canvas_add_framing_decision:
+    ownership: valid_until_doc_freed
+
+  # --- Ownership: valid_until_result_freed + nullable return ---
+  fdl_validation_result_error_at:
+    ownership: valid_until_result_freed
+    nullable: true
+
+  # --- Nullable params (no ownership) ---
+  fdl_doc_free:
+    params:
+      doc: { nullable: true }
+  fdl_template_result_free:
+    params:
+      result: { nullable: true }
+  fdl_validation_result_free:
+    params:
+      result: { nullable: true }
+  fdl_free:
+    params:
+      ptr: { nullable: true }
+  fdl_apply_canvas_template:
+    params:
+      source_context_label: { nullable: true }
+      context_creator: { nullable: true }
+
+  # --- Direction: out params ---
+  fdl_geometry_apply_offset:
+    params:
+      theo_eff: { direction: out }
+      theo_prot: { direction: out }
+      theo_fram: { direction: out }
+  fdl_geometry_get_dims_anchor_from_path:
+    params:
+      out_dims: { direction: out }
+      out_anchor: { direction: out }
+  fdl_resolve_geometry_layer:
+    params:
+      out_dims: { direction: out }
+      out_anchor: { direction: out }
+  fdl_canvas_get_effective_rect:
+    params:
+      out_rect: { direction: out }
+  fdl_framing_decision_get_protection_rect:
+    params:
+      out_rect: { direction: out }
+  fdl_dimensions_clamp_to_dims:
+    params:
+      out_delta: { direction: out }
+
+# -----------------------------------------------------------------------
+# Auxiliary types (error classes, version, etc.)
+# -----------------------------------------------------------------------
+auxiliary_types:
+  errors:
+    - name: FDLError
+      parent: Exception
+      doc: Base error for FDL operations.
+    - name: FDLValidationError
+      parent: FDLError
+      doc: Raised when FDL validation fails.
+
+  version:
+    class_name: Version
+    doc: FDL document version (major, minor).
+    slots:
+      - { name: major, type: int, default: 2 }
+      - { name: minor, type: int, default: 0 }
+
+  dataclasses:
+    TemplateResult:
+      doc: Result of applying a canvas template.
+      fields:
+        - { name: fdl,                   type: object }
+        - { name: context_label,         type: str,   private: true }
+        - { name: canvas_id,             type: str,   private: true }
+        - { name: framing_decision_id,   type: str,   private: true }
+      accessors:
+        - name: context
+          returns: Context
+          doc: The new context created by the template apply.
+          lookup: by_label
+          collection: fdl.contexts
+          key_field: context_label
+        - name: canvas
+          returns: Canvas
+          doc: The new canvas created by the template apply.
+          lookup: by_id
+          collection: context.canvases
+          key_field: canvas_id
+        - name: framing_decision
+          returns: FramingDecision
+          doc: The new framing decision created by the template apply.
+          lookup: by_id
+          collection: canvas.framing_decisions
+          key_field: framing_decision_id
+
+    ResolveCanvasResult:
+      doc: Result of resolving canvas for given input dimensions.
+      fields:
+        - { name: canvas,           type: Canvas }
+        - { name: framing_decision, type: FramingDecision }
+        - { name: was_resolved,     type: bool }
+
+  # json_wrappers: ClipID and FileSequence moved to object_model as handle-based classes
+
+# Free functions exposed as top-level functions in target language bindings
+free_functions:
+  - name: fdl_round
+    display_name: fdl_round
+    c_function: fdl_round
+    doc: Round a single float value according to FDL rounding rules.
+    params:
+      - { name: value, type: f64 }
+      - { name: even, type: rounding_even }
+      - { name: mode, type: rounding_mode }
+    returns: int
+
+  - name: calculate_scale_factor
+    display_name: calculate_scale_factor
+    c_function: fdl_calculate_scale_factor
+    doc: Calculate scale factor based on fit method.
+    params:
+      - { name: fit_norm, type: fdl_dimensions_f64_t }
+      - { name: target_norm, type: fdl_dimensions_f64_t }
+      - { name: fit_method, type: fit_method }
+    returns: float
+
+  - name: abi_version
+    display_name: abi_version
+    c_function: fdl_abi_version
+    module: utils
+    doc: Return the ABI version of the loaded library as (major, minor, patch).
+    params: []
+    returns: fdl_abi_version_t
+
+  - name: compute_framing_from_intent
+    display_name: compute_framing_from_intent
+    c_function: fdl_compute_framing_from_intent
+    module: utils
+    doc: Compute a framing decision from a framing intent without needing existing handles.
+    params:
+      - { name: canvas_dims, type: fdl_dimensions_f64_t }
+      - { name: working_dims, type: fdl_dimensions_f64_t }
+      - { name: squeeze, type: double }
+      - { name: aspect_ratio, type: fdl_dimensions_i64_t }
+      - { name: protection, type: double }
+      - { name: rounding, type: fdl_round_strategy_t }
+    returns: fdl_from_intent_result_t
+
+  - name: make_rect
+    display_name: make_rect
+    c_function: fdl_make_rect
+    module: utils
+    doc: Create a rect from raw coordinates.
+    params:
+      - { name: x, type: double }
+      - { name: y, type: double }
+      - { name: width, type: double }
+      - { name: height, type: double }
+    returns: fdl_rect_t
+
+# -----------------------------------------------------------------------
+# Utility functions (generated per-language)
+# -----------------------------------------------------------------------
+utilities:
+  - name: get_dimensions_from_path
+    kind: c_abi
+    c_function: fdl_resolve_geometry_layer
+    extract: dims
+    doc: Get dimensions from a canvas or framing decision using a GeometryPath string.
+  - name: get_anchor_from_path
+    kind: c_abi
+    c_function: fdl_resolve_geometry_layer
+    extract: anchor
+    doc: Get anchor point from a canvas or framing decision using a GeometryPath string.
+  - name: find_by_id
+    kind: collection_find
+    doc: Find an item in a collection by its id field.
+  - name: find_by_label
+    kind: collection_find
+    doc: Find an item in a collection by its label field.
+  - name: read_from_string
+    kind: io
+    doc: Parse an FDL document from a JSON string.
+  - name: read_from_file
+    kind: io
+    doc: Read an FDL document from a file on disk.
+  - name: write_to_string
+    kind: io
+    doc: Serialize an FDL document to a JSON string.
+  - name: write_to_file
+    kind: io
+    doc: Write an FDL document to a file on disk.
+  - name: set_rounding
+    kind: rounding_state
+    doc: Set the global default rounding strategy.
+  - name: get_rounding
+    kind: rounding_state
+    doc: Get the current global default rounding strategy.
+  - name: DEFAULT_ROUNDING_STRATEGY
+    kind: constant
+    doc: Default rounding strategy (even + up).

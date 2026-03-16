@@ -1,0 +1,61 @@
+{
+  "uuid": "feb4d239-d833-49fb-9c77-bfac120824e7",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 2048,
+        "height": 871
+      },
+      "protection": 0.099609375
+    }
+  ],
+  "contexts": [
+    {
+      "label": "RED EPIC DRAGON 6K S35",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "4K 2:1",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 4096,
+            "height": 2048
+          },
+          "anamorphic_squeeze": 2,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 2166,
+                "height": 1844
+              },
+              "anchor_point": {
+                "x": 965,
+                "y": 102
+              },
+              "protection_dimensions": {
+                "width": 2406,
+                "height": 2048
+              },
+              "protection_anchor_point": {
+                "x": 845,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

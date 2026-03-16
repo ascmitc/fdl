@@ -1,0 +1,405 @@
+{
+  "description": "FDL Pipeline helper function golden vectors",
+  "version": "1.0",
+  "scale_factor": [
+    {
+      "label": "width_wider",
+      "fit_norm": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "target_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "fit_method": "width",
+      "expected": 0.46875
+    },
+    {
+      "label": "width_narrower",
+      "fit_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "target_norm": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "fit_method": "width",
+      "expected": 2.0
+    },
+    {
+      "label": "height_taller",
+      "fit_norm": {
+        "width": 4096.0,
+        "height": 2160.0
+      },
+      "target_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "fit_method": "height",
+      "expected": 0.5
+    },
+    {
+      "label": "fit_all_letterbox",
+      "fit_norm": {
+        "width": 4096.0,
+        "height": 1714.0
+      },
+      "target_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "fit_method": "fit_all",
+      "expected": 0.46875
+    },
+    {
+      "label": "fit_all_pillarbox",
+      "fit_norm": {
+        "width": 2048.0,
+        "height": 2160.0
+      },
+      "target_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "fit_method": "fit_all",
+      "expected": 0.5
+    },
+    {
+      "label": "fill_letterbox",
+      "fit_norm": {
+        "width": 4096.0,
+        "height": 1714.0
+      },
+      "target_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "fit_method": "fill",
+      "expected": 0.6301050175029171
+    },
+    {
+      "label": "fill_pillarbox",
+      "fit_norm": {
+        "width": 2048.0,
+        "height": 2160.0
+      },
+      "target_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "fit_method": "fill",
+      "expected": 0.9375
+    },
+    {
+      "label": "width_identity",
+      "fit_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "target_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "fit_method": "width",
+      "expected": 1.0
+    },
+    {
+      "label": "fit_all_exact",
+      "fit_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "target_norm": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "fit_method": "fit_all",
+      "expected": 1.0
+    },
+    {
+      "label": "anamorphic_norm",
+      "fit_norm": {
+        "width": 5782.4,
+        "height": 3096.0
+      },
+      "target_norm": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "fit_method": "width",
+      "expected": 0.6640841173215274
+    }
+  ],
+  "output_size": [
+    {
+      "label": "fit_no_max",
+      "canvas_size": 1920.0,
+      "max_size": 0.0,
+      "has_max": false,
+      "pad_to_max": false,
+      "expected": 1920.0
+    },
+    {
+      "label": "pad_to_max",
+      "canvas_size": 1920.0,
+      "max_size": 3840.0,
+      "has_max": true,
+      "pad_to_max": true,
+      "expected": 3840.0
+    },
+    {
+      "label": "crop_to_max",
+      "canvas_size": 3840.0,
+      "max_size": 1920.0,
+      "has_max": true,
+      "pad_to_max": false,
+      "expected": 1920.0
+    },
+    {
+      "label": "fit_within_max",
+      "canvas_size": 1920.0,
+      "max_size": 3840.0,
+      "has_max": true,
+      "pad_to_max": false,
+      "expected": 1920.0
+    },
+    {
+      "label": "pad_exact",
+      "canvas_size": 1920.0,
+      "max_size": 1920.0,
+      "has_max": true,
+      "pad_to_max": true,
+      "expected": 1920.0
+    },
+    {
+      "label": "crop_exact",
+      "canvas_size": 1920.0,
+      "max_size": 1920.0,
+      "has_max": true,
+      "pad_to_max": false,
+      "expected": 1920.0
+    }
+  ],
+  "alignment_shift": [
+    {
+      "label": "fit_no_shift",
+      "fit_size": 1920.0,
+      "fit_anchor": 0.0,
+      "output_size": 1920.0,
+      "canvas_size": 1920.0,
+      "target_size": 1920.0,
+      "is_center": true,
+      "align_factor": 0.5,
+      "pad_to_max": false,
+      "expected": 0.0
+    },
+    {
+      "label": "pad_center",
+      "fit_size": 1600.0,
+      "fit_anchor": 160.0,
+      "output_size": 3840.0,
+      "canvas_size": 1920.0,
+      "target_size": 1920.0,
+      "is_center": true,
+      "align_factor": 0.5,
+      "pad_to_max": true,
+      "expected": 960.0
+    },
+    {
+      "label": "pad_left_gap",
+      "fit_size": 1600.0,
+      "fit_anchor": 160.0,
+      "output_size": 3840.0,
+      "canvas_size": 1920.0,
+      "target_size": 1920.0,
+      "is_center": false,
+      "align_factor": 0.0,
+      "pad_to_max": true,
+      "expected": 800.0
+    },
+    {
+      "label": "pad_right_gap",
+      "fit_size": 1600.0,
+      "fit_anchor": 160.0,
+      "output_size": 3840.0,
+      "canvas_size": 1920.0,
+      "target_size": 1920.0,
+      "is_center": false,
+      "align_factor": 1.0,
+      "pad_to_max": true,
+      "expected": 1120.0
+    },
+    {
+      "label": "crop_fit_at_origin",
+      "fit_size": 1920.0,
+      "fit_anchor": 0.0,
+      "output_size": 1920.0,
+      "canvas_size": 2400.0,
+      "target_size": 1920.0,
+      "is_center": true,
+      "align_factor": 0.5,
+      "pad_to_max": false,
+      "expected": 0.0
+    },
+    {
+      "label": "crop_fit_overflows",
+      "fit_size": 2400.0,
+      "fit_anchor": 0.0,
+      "output_size": 1920.0,
+      "canvas_size": 2400.0,
+      "target_size": 1920.0,
+      "is_center": true,
+      "align_factor": 0.5,
+      "pad_to_max": false,
+      "expected": -240.0
+    },
+    {
+      "label": "crop_bbox_overflow_center",
+      "fit_size": 1600.0,
+      "fit_anchor": 400.0,
+      "output_size": 1920.0,
+      "canvas_size": 2400.0,
+      "target_size": 1920.0,
+      "is_center": true,
+      "align_factor": 0.5,
+      "pad_to_max": false,
+      "expected": -240.0
+    },
+    {
+      "label": "crop_bbox_overflow_right",
+      "fit_size": 1600.0,
+      "fit_anchor": 400.0,
+      "output_size": 1920.0,
+      "canvas_size": 2400.0,
+      "target_size": 1920.0,
+      "is_center": false,
+      "align_factor": 1.0,
+      "pad_to_max": false,
+      "expected": -80.0
+    },
+    {
+      "label": "fit_tiny_overflow",
+      "fit_size": 1920.0,
+      "fit_anchor": 0.0,
+      "output_size": 1920.0,
+      "canvas_size": 1920.005,
+      "target_size": 1920.0,
+      "is_center": true,
+      "align_factor": 0.5,
+      "pad_to_max": false,
+      "expected": 0.0
+    },
+    {
+      "label": "pad_center_no_gap",
+      "fit_size": 1920.0,
+      "fit_anchor": 0.0,
+      "output_size": 3840.0,
+      "canvas_size": 1920.0,
+      "target_size": 1800.0,
+      "is_center": false,
+      "align_factor": 0.5,
+      "pad_to_max": true,
+      "expected": 960.0
+    }
+  ],
+  "clamp_to_dims": [
+    {
+      "label": "no_clamp",
+      "dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "clamp_dims": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "expected_dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "expected_delta": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "label": "clamp_both",
+      "dims": {
+        "width": 3840.0,
+        "height": 2160.0
+      },
+      "clamp_dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "expected_dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "expected_delta": {
+        "x": -1920.0,
+        "y": -1080.0
+      }
+    },
+    {
+      "label": "clamp_width_only",
+      "dims": {
+        "width": 3840.0,
+        "height": 1080.0
+      },
+      "clamp_dims": {
+        "width": 1920.0,
+        "height": 2160.0
+      },
+      "expected_dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "expected_delta": {
+        "x": -1920.0,
+        "y": 0.0
+      }
+    },
+    {
+      "label": "clamp_height_only",
+      "dims": {
+        "width": 1920.0,
+        "height": 2160.0
+      },
+      "clamp_dims": {
+        "width": 3840.0,
+        "height": 1080.0
+      },
+      "expected_dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "expected_delta": {
+        "x": 0.0,
+        "y": -1080.0
+      }
+    },
+    {
+      "label": "exact_match",
+      "dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "clamp_dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "expected_dims": {
+        "width": 1920.0,
+        "height": 1080.0
+      },
+      "expected_delta": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ]
+}

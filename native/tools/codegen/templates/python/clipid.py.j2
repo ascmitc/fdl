@@ -1,0 +1,133 @@
+{# Handwritten Jinja2 template — rendered by generate.py to produce the output .py file. #}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+"""FDL Core JSON wrapper types with typed attribute access."""
+
+from __future__ import annotations
+
+from fdl_ffi import ffi
+from dataclasses import dataclass
+{% for wrapper in wrappers %}
+
+{% if wrapper.mutual_exclusion %}
+_{{ wrapper.class_name | upper }}_MUTEX = {{ wrapper.mutual_exclusion }}
+{% endif %}
+
+@dataclass
+class {{ wrapper.class_name }}:
+    """{{ wrapper.doc }}"""
+
+{% for field in wrapper.fields %}
+{% if field.nullable %}
+    {{ field.name }}: {{ field.python_type }} | None = None
+{% else %}
+    {{ field.name }}: {{ field.python_type }}
+{% endif %}
+{% endfor %}
+
+    def __post_init__(self) -> None:
+{% for field in wrapper.fields %}
+{% if field.max_length %}
+        if self.{{ field.name }} is not None and len(self.{{ field.name }}) > {{ field.max_length }}:
+            raise ValueError("{{ field.name }} must be at most {{ field.max_length }} character(s)")
+{% endif %}
+{% if field.min_value is not none %}
+        if self.{{ field.name }} is not None and self.{{ field.name }} < {{ field.min_value }}:
+            raise ValueError("{{ field.name }} must be >= {{ field.min_value }}")
+{% endif %}
+{% endfor %}
+{% if wrapper.mutual_exclusion %}
+        _set = [f for f in _{{ wrapper.class_name | upper }}_MUTEX if getattr(self, f) is not None]
+        if len(_set) > 1:
+            raise ValueError(
+                f"Both {_set[0]} and {_set[1]} attributes are provided, only one is allowed."
+            )
+{% endif %}
+
+{% if wrapper.mutual_exclusion %}
+    def __setattr__(self, name: str, value: object) -> None:
+        super().__setattr__(name, value)
+        if name in _{{ wrapper.class_name | upper }}_MUTEX:
+            _set = [f for f in _{{ wrapper.class_name | upper }}_MUTEX if getattr(self, f, None) is not None]
+            if len(_set) > 1:
+                raise ValueError(
+                    f"Both {_set[0]} and {_set[1]} attributes are provided, only one is allowed."
+                )
+
+{% endif %}
+    @classmethod
+    def from_dict(cls, data: dict) -> {{ wrapper.class_name }}:
+        """Construct from a JSON-decoded dictionary."""
+{% for field in wrapper.fields %}
+{% if field.nested_class %}
+{% if field.nullable %}
+        _raw_{{ field.name }} = data.get("{{ field.name }}")
+        _{{ field.name }} = {{ field.nested_class }}.from_dict(_raw_{{ field.name }}) if isinstance(_raw_{{ field.name }}, dict) else None
+{% else %}
+        _{{ field.name }} = {{ field.nested_class }}.from_dict(data["{{ field.name }}"])
+{% endif %}
+{% endif %}
+{% endfor %}
+        return cls(
+{% for field in wrapper.fields %}
+{% if field.nested_class %}
+            {{ field.name }}=_{{ field.name }},
+{% elif field.nullable %}
+            {{ field.name }}=data.get("{{ field.name }}"),
+{% else %}
+            {{ field.name }}=data["{{ field.name }}"],
+{% endif %}
+{% endfor %}
+        )
+
+    def to_dict(self) -> dict:
+        """Serialize to a JSON-compatible dictionary, excluding None values."""
+        d: dict = {}
+{% for field in wrapper.fields %}
+{% if field.nullable %}
+        if self.{{ field.name }} is not None:
+{% if field.nested_class %}
+            d["{{ field.name }}"] = self.{{ field.name }}.to_dict()
+{% else %}
+            d["{{ field.name }}"] = self.{{ field.name }}
+{% endif %}
+{% else %}
+{% if field.nested_class %}
+        d["{{ field.name }}"] = self.{{ field.name }}.to_dict()
+{% else %}
+        d["{{ field.name }}"] = self.{{ field.name }}
+{% endif %}
+{% endif %}
+{% endfor %}
+        return d
+
+    @classmethod
+    def _from_c(cls, c_struct: object, lib: object) -> {{ wrapper.class_name }}:
+        """Construct from a C {{ wrapper.c_struct }} struct. Frees owned strings."""
+{% for field in wrapper.fields %}
+{% if field.c_has_flag %}
+{% if field.nested_class %}
+        _{{ field.name }} = None
+        if c_struct.{{ field.c_has_flag }}:
+            _{{ field.name }} = {{ field.nested_class }}._from_c(c_struct.{{ field.name }}, lib)
+{% else %}
+        _{{ field.name }}: {{ field.python_type }} | None = None
+        if c_struct.{{ field.c_has_flag }}:
+            _{{ field.name }} = ffi.string(c_struct.{{ field.name }}).decode("utf-8") if c_struct.{{ field.name }} else None
+{% endif %}
+{% elif field.is_string %}
+        _{{ field.name }} = ffi.string(c_struct.{{ field.name }}).decode("utf-8") if c_struct.{{ field.name }} else ""
+{% elif field.is_int %}
+        _{{ field.name }} = int(c_struct.{{ field.name }})
+{% endif %}
+{% endfor %}
+{% if wrapper.free_fn %}
+        lib.{{ wrapper.free_fn }}(ffi.addressof(c_struct))
+{% endif %}
+        return cls(
+{% for field in wrapper.fields %}
+            {{ field.name }}=_{{ field.name }},
+{% endfor %}
+        )
+{% endfor %}

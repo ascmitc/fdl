@@ -1,0 +1,77 @@
+name: Documentation
+
+on:
+  push:
+    branches: [dev, main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "pages-${{ github.ref_name }}"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          lfs: false
+
+      - name: Fetch LFS objects for doc images
+        run: git lfs pull --include="docs/images/*"
+
+      # -- Doxygen (C/C++ API reference) --
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen
+
+      - name: Build Doxygen docs
+        working-directory: native/core
+        run: |
+          mkdir -p docs/api
+          doxygen Doxyfile
+
+      - name: Nest Doxygen output into MkDocs source tree
+        run: |
+          mkdir -p docs/api
+          cp -r native/core/docs/api/html/* docs/api/
+
+      # -- TypeDoc (Node.js/TypeScript API reference) --
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build TypeDoc docs
+        working-directory: native/bindings/node
+        run: |
+          npm install --ignore-scripts
+          npx typedoc
+
+      # -- MkDocs (Python user guide) --
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install Python dependencies
+        run: |
+          uv venv .venv
+          source .venv/bin/activate
+          uv pip install "mkdocs<2" mkdocs-material "mkdocstrings[python]" pymdown-extensions
+
+      - name: Build MkDocs site
+        run: |
+          source .venv/bin/activate
+          mkdocs build --strict --site-dir _site
+
+      # -- Deploy to gh-pages branch --
+      # main -> root (/), dev -> /dev/ subdirectory
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          destination_dir: ${{ github.ref_name == 'main' && '.' || github.ref_name }}
+          keep_files: true

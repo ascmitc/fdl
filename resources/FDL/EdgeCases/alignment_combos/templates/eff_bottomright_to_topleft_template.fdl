@@ -1,0 +1,33 @@
+{
+  "uuid": "5185effd-e0d0-4240-9144-e03f903388d7",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "Effective Dims + Alignment Generator",
+  "canvas_templates": [
+    {
+      "label": "Template: top-left from effective",
+      "id": "eff_br_to_tl",
+      "target_dimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "target_anamorphic_squeeze": 1.0,
+      "fit_source": "canvas.effective_dimensions",
+      "fit_method": "fit_all",
+      "alignment_method_vertical": "top",
+      "alignment_method_horizontal": "left",
+      "preserve_from_source_canvas": "canvas.dimensions",
+      "round": {
+        "even": "even",
+        "mode": "round"
+      },
+      "maximum_dimensions": {
+        "width": 5000,
+        "height": 3500
+      },
+      "pad_to_maximum": false
+    }
+  ]
+}

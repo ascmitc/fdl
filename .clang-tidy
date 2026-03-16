@@ -1,0 +1,80 @@
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+---
+# Checks appropriate for a C++17 shared library exposing a C ABI.
+#
+# Disabled checks rationale:
+#   -modernize-use-trailing-return-type    Too opinionated for a C-ABI project.
+#   -readability-identifier-length         Short names (x, y, pt, fd) are idiomatic for geometry.
+#   -cppcoreguidelines-pro-bounds-*        C ABI uses raw pointer arithmetic.
+#   -cppcoreguidelines-pro-type-reinterpret-cast  Not used, but avoid false positives.
+#   -cppcoreguidelines-owning-memory       C ABI handle pattern manages ownership manually.
+#   -cppcoreguidelines-avoid-c-arrays      C ABI header uses C arrays/pointers.
+#   -modernize-avoid-c-arrays              Alias of above.
+#   -cppcoreguidelines-pro-type-vararg     C ABI extern "C" functions.
+#   -cppcoreguidelines-non-private-member-variables  C-style structs in public header.
+#   -misc-non-private-member-variables-in-classes    Same reason.
+#   -bugprone-easily-swappable-parameters  Too noisy for APIs with multiple same-type params.
+#   -bugprone-macro-parentheses            C ABI macros use type params (HANDLE_TYPE* h);
+#                                          parenthesizing breaks pointer declarations.
+#   -readability-function-cognitive-complexity  Pipeline/geometry functions are inherently complex.
+#   -cppcoreguidelines-init-variables      Conflicts with declaration-near-use style.
+#
+# C ABI compatibility — the following checks are incompatible with a public C
+# ABI header (fdl_core.h) and are disabled project-wide:
+#   -modernize-use-using            C requires typedef struct syntax, not using.
+#   -cppcoreguidelines-macro-usage  C ABI enums/constants must be macros for C consumers.
+#   -misc-include-cleaner           Unstable across clang versions; disagrees on transitive includes.
+#   -misc-no-recursion              Tree-walking (canonical/validation) is inherently recursive.
+#   -readability-function-size      Pipeline/validation functions are complex by nature.
+
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-macro-parentheses,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-type-vararg,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-non-private-member-variables,
+  -cppcoreguidelines-init-variables,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -modernize-avoid-c-arrays,
+  -modernize-use-using,
+  performance-*,
+  readability-*,
+  -readability-identifier-length,
+  -readability-function-cognitive-complexity,
+  -readability-function-size,
+  clang-analyzer-*,
+  misc-*,
+  -misc-non-private-member-variables-in-classes,
+  -misc-include-cleaner,
+  -misc-no-recursion,
+
+WarningsAsErrors: 'readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers,readability-implicit-bool-conversion'
+
+HeaderFilterRegex: 'native/core/(include|src)/.*\.h$'
+
+CheckOptions:
+  - key: readability-magic-numbers.IgnoredIntegerValues
+    value: ''
+  - key: readability-magic-numbers.IgnoredFloatingPointValues
+    value: ''
+  - key: cppcoreguidelines-avoid-magic-numbers.IgnoredIntegerValues
+    value: ''
+  - key: cppcoreguidelines-avoid-magic-numbers.IgnoredFloatingPointValues
+    value: ''
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: 0
+  - key: modernize-use-override.AllowOverrideAndFinal
+    value: false
+  - key: performance-move-const-arg.CheckTriviallyCopyableMove
+    value: true

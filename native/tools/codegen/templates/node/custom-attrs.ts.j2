@@ -1,0 +1,176 @@
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file custom-attrs.ts
+ * @brief Shared custom attribute helpers for all facade classes.
+ *
+ * Each function takes the addon, a handle, and the C prefix string
+ * (e.g. "fdl_doc_") to build the correct C function names.
+ */
+
+import type { NativeAddon } from './ffi/index.js';
+import { PointFloat, DimensionsFloat, DimensionsInt } from './types.js';
+
+/** Custom attribute value type (matches Python parity). */
+export type CustomAttrValue =
+  | string
+  | number
+  | boolean
+  | PointFloat
+  | DimensionsFloat
+  | DimensionsInt;
+
+// Must match FDL_CUSTOM_ATTR_TYPE_* from fdl_core.h
+const ATTR_TYPE_STRING = 1;
+const ATTR_TYPE_INT = 2;
+const ATTR_TYPE_FLOAT = 3;
+const ATTR_TYPE_BOOL = 4;
+const ATTR_TYPE_POINT_F64 = 5;
+const ATTR_TYPE_DIMS_F64 = 6;
+const ATTR_TYPE_DIMS_I64 = 7;
+
+export function caSet(
+  addon: NativeAddon,
+  handle: object,
+  prefix: string,
+  name: string,
+  value: CustomAttrValue,
+): void {
+  // Check complex types first (instanceof before typeof)
+  if (value instanceof PointFloat) {
+    const rc = addon[`${prefix}set_custom_attr_point_f64`](handle, name, {
+      x: value.x,
+      y: value.y,
+    }) as number;
+    if (rc !== 0) throw new Error(`Failed to set custom attribute '${name}' — type mismatch`);
+    return;
+  }
+  if (value instanceof DimensionsFloat) {
+    const rc = addon[`${prefix}set_custom_attr_dims_f64`](handle, name, {
+      width: value.width,
+      height: value.height,
+    }) as number;
+    if (rc !== 0) throw new Error(`Failed to set custom attribute '${name}' — type mismatch`);
+    return;
+  }
+  if (value instanceof DimensionsInt) {
+    const rc = addon[`${prefix}set_custom_attr_dims_i64`](handle, name, {
+      width: value.width,
+      height: value.height,
+    }) as number;
+    if (rc !== 0) throw new Error(`Failed to set custom attribute '${name}' — type mismatch`);
+    return;
+  }
+  if (typeof value === 'string') {
+    addon[`${prefix}set_custom_attr_string`](handle, name, value);
+  } else if (typeof value === 'boolean') {
+    addon[`${prefix}set_custom_attr_bool`](handle, name, value ? 1 : 0);
+  } else if (typeof value === 'number') {
+    if (Number.isInteger(value)) {
+      addon[`${prefix}set_custom_attr_int`](handle, name, value);
+    } else {
+      addon[`${prefix}set_custom_attr_float`](handle, name, value);
+    }
+  } else {
+    throw new TypeError(`Unsupported custom attr type: ${typeof value}`);
+  }
+}
+
+export function caGet(
+  addon: NativeAddon,
+  handle: object,
+  prefix: string,
+  name: string,
+): CustomAttrValue | null {
+  if (!addon[`${prefix}has_custom_attr`](handle, name)) return null;
+  const attrType = addon[`${prefix}get_custom_attr_type`](handle, name) as number;
+  switch (attrType) {
+    case ATTR_TYPE_STRING:
+      return addon[`${prefix}get_custom_attr_string`](handle, name) as string;
+    case ATTR_TYPE_INT: {
+      const out = addon[`${prefix}get_custom_attr_int`](handle, name);
+      return (out as { value: number }).value ?? (out as number);
+    }
+    case ATTR_TYPE_FLOAT: {
+      const out = addon[`${prefix}get_custom_attr_float`](handle, name);
+      return (out as { value: number }).value ?? (out as number);
+    }
+    case ATTR_TYPE_BOOL: {
+      const out = addon[`${prefix}get_custom_attr_bool`](handle, name);
+      const val = (out as { value: number }).value ?? (out as number);
+      return Boolean(val);
+    }
+    case ATTR_TYPE_POINT_F64: {
+      const out = addon[`${prefix}get_custom_attr_point_f64`](handle, name) as {
+        _return: number;
+        value: { x: number; y: number };
+      };
+      if (out._return !== 0) return null;
+      return new PointFloat(out.value.x, out.value.y);
+    }
+    case ATTR_TYPE_DIMS_F64: {
+      const out = addon[`${prefix}get_custom_attr_dims_f64`](handle, name) as {
+        _return: number;
+        value: { width: number; height: number };
+      };
+      if (out._return !== 0) return null;
+      return new DimensionsFloat(out.value.width, out.value.height);
+    }
+    case ATTR_TYPE_DIMS_I64: {
+      const out = addon[`${prefix}get_custom_attr_dims_i64`](handle, name) as {
+        _return: number;
+        value: { width: number; height: number };
+      };
+      if (out._return !== 0) return null;
+      return new DimensionsInt(out.value.width, out.value.height);
+    }
+    default:
+      return null;
+  }
+}
+
+export function caHas(
+  addon: NativeAddon,
+  handle: object,
+  prefix: string,
+  name: string,
+): boolean {
+  return Boolean(addon[`${prefix}has_custom_attr`](handle, name));
+}
+
+export function caRemove(
+  addon: NativeAddon,
+  handle: object,
+  prefix: string,
+  name: string,
+): boolean {
+  // C returns 0 on success (removed), -1 if not found
+  const rc = addon[`${prefix}remove_custom_attr`](handle, name) as number;
+  return rc === 0;
+}
+
+export function caCount(
+  addon: NativeAddon,
+  handle: object,
+  prefix: string,
+): number {
+  return addon[`${prefix}custom_attrs_count`](handle) as number;
+}
+
+export function caGetAll(
+  addon: NativeAddon,
+  handle: object,
+  prefix: string,
+): Record<string, CustomAttrValue> {
+  const count = caCount(addon, handle, prefix);
+  const result: Record<string, CustomAttrValue> = {};
+  for (let i = 0; i < count; i++) {
+    const name = addon[`${prefix}custom_attr_name_at`](handle, i) as string;
+    if (name) {
+      const val = caGet(addon, handle, prefix, name);
+      if (val !== null) result[name] = val;
+    }
+  }
+  return result;
+}

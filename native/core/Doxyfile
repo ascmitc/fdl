@@ -1,0 +1,54 @@
+# Doxyfile for FDL Core Library
+# Generate with: doxygen Doxyfile (from native/core/)
+# Or via CMake:  cmake --build build --target docs
+
+PROJECT_NAME           = "FDL Core Library"
+PROJECT_BRIEF          = "ASC Framing Decision List — C/C++ Reference Implementation"
+PROJECT_NUMBER         =
+
+OUTPUT_DIRECTORY       = docs/api
+
+# Input sources
+INPUT                  = include/fdl src mainpage.md
+FILE_PATTERNS          = *.h *.hpp *.cpp *.md
+USE_MDFILE_AS_MAINPAGE = mainpage.md
+RECURSIVE              = YES
+EXCLUDE_PATTERNS       = */build/*
+
+# Extraction settings
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+
+# Documentation style
+JAVADOC_AUTOBRIEF      = YES
+QT_AUTOBRIEF           = NO
+MULTILINE_CPP_IS_BRIEF = NO
+TAB_SIZE               = 4
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+# Warnings — strict mode to catch undocumented items
+WARN_IF_UNDOCUMENTED   = YES
+WARN_NO_PARAMDOC       = YES
+WARN_IF_DOC_ERROR      = YES
+
+# Output formats
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+HTML_OUTPUT            = html
+HTML_COLORSTYLE        = LIGHT
+
+# Sorting — keep declaration order for readability
+SORT_MEMBER_DOCS       = NO
+SORT_BRIEF_DOCS        = NO
+SORT_GROUP_NAMES       = NO
+
+# Graphs — disabled (no Graphviz dependency)
+HAVE_DOT               = NO
+CLASS_GRAPH            = NO
+
+# Preprocessing
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+PREDEFINED             = FDL_API=

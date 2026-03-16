@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+#
+# Install:  pre-commit install
+# Run all:  pre-commit run --all-files
+# Update:   pre-commit autoupdate
+
+repos:
+  # ── General file hygiene ──────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+        exclude: '^resources/'
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=500]
+
+  # ── Python: ruff lint + format ────────────────────────────────────────
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.1
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  # ── uv.lock: block non-public registry URLs ──────────────────────────
+  - repo: local
+    hooks:
+      - id: check-uv-lock-registry
+        name: check uv.lock for private registries
+        language: script
+        entry: scripts/check_uv_lock.sh
+        files: '^uv\.lock$'
+        types: [file]
+
+  # ── Docs: ASCII-only markdown ────────────────────────────────────────
+  - repo: local
+    hooks:
+      - id: check-docs-ascii
+        name: check docs for non-ASCII characters
+        language: python
+        entry: python scripts/check_docs_ascii.py
+        files: '^docs/.*\.md$'
+        types: [file]
+
+  # ── C++: clang-format ─────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v19.1.7
+    hooks:
+      - id: clang-format
+        files: '^native/(core/(src|include|tests)|bindings/cpp)/.*\.(cpp|h|hpp)$'

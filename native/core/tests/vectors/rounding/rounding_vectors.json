@@ -1,0 +1,1566 @@
+{
+  "description": "fdl_round() golden vectors \u2014 all combos of value x mode x even",
+  "version": "1.0",
+  "vectors": [
+    {
+      "input": {
+        "value": 0.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 1.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 1.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 1.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 1.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 1.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 1.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 1.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 3
+    },
+    {
+      "input": {
+        "value": 2.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 4
+    },
+    {
+      "input": {
+        "value": 2.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 2.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 3.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 3
+    },
+    {
+      "input": {
+        "value": 3.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 4
+    },
+    {
+      "input": {
+        "value": 3.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 3
+    },
+    {
+      "input": {
+        "value": 3.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 3.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 3
+    },
+    {
+      "input": {
+        "value": 3.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 4
+    },
+    {
+      "input": {
+        "value": 19.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 19
+    },
+    {
+      "input": {
+        "value": 19.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 19.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 19
+    },
+    {
+      "input": {
+        "value": 19.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 18
+    },
+    {
+      "input": {
+        "value": 19.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 19
+    },
+    {
+      "input": {
+        "value": 19.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 19.456
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 19.456
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 19.456
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 19
+    },
+    {
+      "input": {
+        "value": 19.456
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 18
+    },
+    {
+      "input": {
+        "value": 19.456
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 19
+    },
+    {
+      "input": {
+        "value": 19.456
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 19.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 19.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 19.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 19
+    },
+    {
+      "input": {
+        "value": 19.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 18
+    },
+    {
+      "input": {
+        "value": 19.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 19.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 20.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 21
+    },
+    {
+      "input": {
+        "value": 20.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 22
+    },
+    {
+      "input": {
+        "value": 20.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 20.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 20.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 20.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 20
+    },
+    {
+      "input": {
+        "value": 79.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 79
+    },
+    {
+      "input": {
+        "value": 79.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 79.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 79
+    },
+    {
+      "input": {
+        "value": 79.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 78
+    },
+    {
+      "input": {
+        "value": 79.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 79
+    },
+    {
+      "input": {
+        "value": 79.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 79.456
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 79.456
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 79.456
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 79
+    },
+    {
+      "input": {
+        "value": 79.456
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 78
+    },
+    {
+      "input": {
+        "value": 79.456
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 79
+    },
+    {
+      "input": {
+        "value": 79.456
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 79.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 79.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 79.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 79
+    },
+    {
+      "input": {
+        "value": 79.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 78
+    },
+    {
+      "input": {
+        "value": 79.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 79.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 80.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 81
+    },
+    {
+      "input": {
+        "value": 80.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 82
+    },
+    {
+      "input": {
+        "value": 80.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 80.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 80.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": 80.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 80
+    },
+    {
+      "input": {
+        "value": -3.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": -4
+    },
+    {
+      "input": {
+        "value": -3.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": -4
+    },
+    {
+      "input": {
+        "value": -3.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": -3
+    },
+    {
+      "input": {
+        "value": -3.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": -2
+    },
+    {
+      "input": {
+        "value": -3.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": -4
+    },
+    {
+      "input": {
+        "value": -3.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": -4
+    },
+    {
+      "input": {
+        "value": -19.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": -19
+    },
+    {
+      "input": {
+        "value": -19.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -19.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": -19
+    },
+    {
+      "input": {
+        "value": -19.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": -18
+    },
+    {
+      "input": {
+        "value": -19.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": -19
+    },
+    {
+      "input": {
+        "value": -19.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -19.456
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -19.456
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -19.456
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": -19
+    },
+    {
+      "input": {
+        "value": -19.456
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": -18
+    },
+    {
+      "input": {
+        "value": -19.456
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": -19
+    },
+    {
+      "input": {
+        "value": -19.456
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -19.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -19.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -19.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": -19
+    },
+    {
+      "input": {
+        "value": -19.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": -18
+    },
+    {
+      "input": {
+        "value": -19.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -19.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -20.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": -21
+    },
+    {
+      "input": {
+        "value": -20.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": -22
+    },
+    {
+      "input": {
+        "value": -20.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -20.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -20.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": -20.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": -20
+    },
+    {
+      "input": {
+        "value": 0.1
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 0.1
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 0.1
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.1
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.1
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.1
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.9
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 0.9
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 0.9
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.9
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 0.9
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 0.9
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 1.1
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.1
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.1
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 1.1
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 1.1
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 1.1
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.9
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.9
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.9
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "value": 1.9
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 0
+    },
+    {
+      "input": {
+        "value": 1.9
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 1.9
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 2
+    },
+    {
+      "input": {
+        "value": 100.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.0
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.0
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.0
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 101
+    },
+    {
+      "input": {
+        "value": 100.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 102
+    },
+    {
+      "input": {
+        "value": 100.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 100.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 101.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "whole"
+      },
+      "expected": 102
+    },
+    {
+      "input": {
+        "value": 101.5
+      },
+      "params": {
+        "mode": "up",
+        "even": "even"
+      },
+      "expected": 102
+    },
+    {
+      "input": {
+        "value": 101.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "whole"
+      },
+      "expected": 101
+    },
+    {
+      "input": {
+        "value": 101.5
+      },
+      "params": {
+        "mode": "down",
+        "even": "even"
+      },
+      "expected": 100
+    },
+    {
+      "input": {
+        "value": 101.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "whole"
+      },
+      "expected": 102
+    },
+    {
+      "input": {
+        "value": 101.5
+      },
+      "params": {
+        "mode": "round",
+        "even": "even"
+      },
+      "expected": 102
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "uuid": "a1e650f6-5463-4ac4-9da0-7dd39afcc5af",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 3024,
+        "height": 1265
+      },
+      "protection": 0.100041511
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Sony VENICE",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "6K FF",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 6048,
+            "height": 4032
+          },
+          "anamorphic_squeeze": 2,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 4336,
+                "height": 3628
+              },
+              "anchor_point": {
+                "x": 856,
+                "y": 202
+              },
+              "protection_dimensions": {
+                "width": 4818,
+                "height": 4032
+              },
+              "protection_anchor_point": {
+                "x": 615,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

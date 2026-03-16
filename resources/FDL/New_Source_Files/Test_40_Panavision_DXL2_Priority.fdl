@@ -1,0 +1,61 @@
+{
+  "uuid": "0c993823-7ba9-4beb-8722-de76122edcc7",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 3840,
+        "height": 1607
+      },
+      "protection": 0.09996125532700001
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Panavision DXL2",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "8K",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 7680,
+            "height": 4320
+          },
+          "anamorphic_squeeze": 2,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 4646,
+                "height": 3888
+              },
+              "anchor_point": {
+                "x": 1517,
+                "y": 216
+              },
+              "protection_dimensions": {
+                "width": 5162,
+                "height": 4320
+              },
+              "protection_anchor_point": {
+                "x": 1259,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+{# Handwritten Jinja2 template — rendered by generate.py to produce the output .py file. #}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+"""FDL Core value types — lightweight data classes (no Pydantic)."""
+
+from __future__ import annotations
+
+import math
+{% if enum_imports %}
+
+from .constants import {{ enum_imports | join(", ") }}
+{% endif %}
+
+def _load_fp_tolerances() -> tuple[float, float]:
+    from fdl_ffi import get_lib
+
+    lib = get_lib()
+    return lib.fdl_fp_rel_tol(), lib.fdl_fp_abs_tol()
+
+
+_FP_REL_TOL, _FP_ABS_TOL = _load_fp_tolerances()
+del _load_fp_tolerances
+
+{% for vt in value_types %}
+
+class {{ vt.python_class }}:
+    """{{ vt.doc }}"""
+
+    __slots__ = ({{ vt.slot_names }})
+
+    def __init__(self, *, {{ vt.init_params }}) -> None:
+{% for field in vt.fields %}
+{% if field.coerce %}
+        self.{{ field.name }}: {{ field.python_type }} = {{ field.coerce }}({{ field.name }})
+{% else %}
+        self.{{ field.name }}: {{ field.python_type }} = {{ field.name }}
+{% endif %}
+{% endfor %}
+
+    def __eq__(self, other: object) -> bool:
+{% if vt.cross_eq_class %}
+        if isinstance(other, {{ vt.cross_eq_class }}):
+            return (
+{% for f in vt.fields %}
+                math.isclose(float(self.{{ f.name }}), float(other.{{ f.name }}), rel_tol=_FP_REL_TOL, abs_tol=_FP_ABS_TOL){{ " and" if not loop.last else "" }}
+{% endfor %}
+            )
+{% endif %}
+        if not isinstance(other, {{ vt.python_class }}):
+            return NotImplemented
+{% if vt.eq_parts | length == 1 %}
+        return {{ vt.eq_parts[0] }}
+{% else %}
+        return (
+{% for part in vt.eq_parts %}
+            {{ part }}{{ " and" if not loop.last else "" }}
+{% endfor %}
+        )
+{% endif %}
+
+    def __hash__(self) -> int:
+        return hash(({{ vt.hash_fields }}))
+
+    def __iter__(self):
+        return iter(({{ vt.iter_fields }}))
+
+    def __repr__(self) -> str:
+        return f"{{ vt.repr_format }}"
+{% for m in vt.methods %}
+{% if m.pure %}
+{% if m.kind == "classmethod" %}
+
+    @classmethod
+{% if m.name == "from_dimensions" %}
+    def from_dimensions(cls, {{ m.params[0].name }}: {{ m.params[0].python_type }}) -> {{ m.python_return }}:
+        """Create {{ m.python_class }} from any Dimensions instance."""
+        return cls({% for fn in m.field_names %}{{ fn }}=float({{ m.params[0].name }}.{{ fn }}){{ ", " if not loop.last else "" }}{% endfor %})
+{% endif %}
+{% elif m.name == "duplicate" %}
+
+    def duplicate(self) -> {{ m.python_return }}:
+        """Create a duplicate of this value."""
+        return {{ m.python_class }}({% for fn in m.field_names %}{{ fn }}=self.{{ fn }}{{ ", " if not loop.last else "" }}{% endfor %})
+{% elif m.name == "format" %}
+
+    def format(self) -> str:
+{% if m.field_names[0] == "width" %}
+        """Format as 'W x H', using ints when whole numbers, else 2 decimal places."""
+        w, h = self.width, self.height
+        if w == int(w) and h == int(h):
+            return f"{int(w)} x {int(h)}"
+        return f"{w:.2f} x {h:.2f}"
+{% elif m.field_names[0] == "x" %}
+        """Format as '(X, Y)', using ints when whole numbers, else 2 decimal places."""
+        if self.x == int(self.x) and self.y == int(self.y):
+            return f"({int(self.x)}, {int(self.y)})"
+        return f"({self.x:.2f}, {self.y:.2f})"
+{% endif %}
+{% elif m.name == "to_int" %}
+
+    def to_int(self) -> {{ m.python_return }}:
+        """Convert to integer dimensions by truncation."""
+        return {{ m.python_return }}({% for fn in m.field_names %}{{ fn }}=int(self.{{ fn }}){{ ", " if not loop.last else "" }}{% endfor %})
+{% elif m.name == "scale_by" %}
+
+    def scale_by(self, factor: float) -> None:
+        """Scale the dimensions by the provided factor (in-place)."""
+        self.width = self.width * factor
+        self.height = self.height * factor
+{% endif %}
+{% else %}
+
+    def {{ m.name }}(self{% for p in m.params %}, {{ p.name }}: {{ p.python_type }}{% if p.nullable %} = None{% endif %}{% endfor %}) -> {{ m.python_return }}:
+        from fdl_ffi import ffi, get_lib
+{% if m.needed_enum_maps %}
+
+        from .enum_maps import {{ m.needed_enum_maps | join(", ") }}
+{% endif %}
+        _c = ffi.new("{{ m.c_struct }}*", {{ "{" }}{% for fn in m.field_names %}"{{ fn }}": self.{{ fn }}{{ ", " if not loop.last else "" }}{% endfor %}{{ "}" }})[0]
+{% for line in m.setup_lines %}
+        {{ line }}
+{% endfor %}
+        {{ m.return_expr }}
+{% endif %}
+{% endfor %}
+{% for op in vt.operators %}
+{% if op.pure %}
+{% if op.op == "__bool__" %}
+
+    def __bool__(self) -> bool:
+        return not self.is_zero()
+{% elif op.op == "__lt__" %}
+
+    def __lt__(self, other: {{ op.param_python_type }}) -> bool:
+{% if vt.fields[0].name == "width" %}
+        return self.width < other.width or self.height < other.height
+{% else %}
+        return bool(self.x < other.x or self.y < other.y)
+{% endif %}
+{% elif op.op == "__gt__" %}
+
+    def __gt__(self, other: {{ op.param_python_type }}) -> bool:
+{% if vt.fields[0].name == "width" %}
+        return self.width > other.width or self.height > other.height
+{% else %}
+        return bool(self.x > other.x or self.y > other.y)
+{% endif %}
+{% elif op.op == "__iadd__" %}
+
+    def __iadd__(self, other: {{ op.param_python_type }}) -> {{ op.python_return }}:
+{% for fn in op.field_names %}
+        self.{{ fn }} += other.{{ fn }}
+{% endfor %}
+        return self
+{% endif %}
+{% elif op.param_type == "scalar_or_point" %}
+
+    def {{ op.op }}(self, other: PointFloat | float) -> {{ op.python_return }}:
+        from fdl_ffi import ffi, get_lib
+        _c = ffi.new("{{ op.c_struct }}*", {{ "{" }}{% for fn in op.field_names %}"{{ fn }}": self.{{ fn }}{{ ", " if not loop.last else "" }}{% endfor %}{{ "}" }})[0]
+        if isinstance(other, int | float):
+            _r = get_lib().{{ op.c_function }}(_c, float(other))
+        elif isinstance(other, PointFloat):
+            return PointFloat(x=float(self.x) * float(other.x), y=float(self.y) * float(other.y))
+        else:
+            raise TypeError(f"Cannot multiply PointFloat with {type(other)}")
+        return PointFloat(x=_r.x, y=_r.y)
+{% else %}
+
+    def {{ op.op }}(self, other: {{ op.param_python_type }}) -> {{ op.python_return }}:
+        from fdl_ffi import ffi, get_lib
+        _c = ffi.new("{{ op.c_struct }}*", {{ "{" }}{% for fn in op.field_names %}"{{ fn }}": self.{{ fn }}{{ ", " if not loop.last else "" }}{% endfor %}{{ "}" }})[0]
+        _c_other = ffi.new("{{ op.param_type }}*", {{ "{" }}{% for fn in op.field_names %}"{{ fn }}": other.{{ fn }}{{ ", " if not loop.last else "" }}{% endfor %}{{ "}" }})[0]
+        _r = get_lib().{{ op.c_function }}(_c, _c_other)
+{% if op.python_return == "DimensionsFloat" %}
+        return DimensionsFloat(width=_r.width, height=_r.height)
+{% elif op.python_return == "PointFloat" %}
+        return PointFloat(x=_r.x, y=_r.y)
+{% elif op.python_return == "bool" %}
+        return bool(_r)
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endfor %}

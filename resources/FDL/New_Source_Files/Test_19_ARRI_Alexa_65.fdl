@@ -1,0 +1,61 @@
+{
+  "uuid": "ad9d6cce-452e-4867-a901-4e5e41433bdd",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 3290,
+        "height": 1741
+      },
+      "protection": 0.099826086957
+    }
+  ],
+  "contexts": [
+    {
+      "label": "ARRI Alexa 65",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "6500",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 6580,
+            "height": 5020
+          },
+          "anamorphic_squeeze": 1.65,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 5176,
+                "height": 4518
+              },
+              "anchor_point": {
+                "x": 702,
+                "y": 251
+              },
+              "protection_dimensions": {
+                "width": 5750,
+                "height": 5020
+              },
+              "protection_anchor_point": {
+                "x": 415,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "uuid": "eb6c5b3a-4272-4bfa-9585-89466181a889",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 721,
+        "height": 405
+      },
+      "protection": 0.099861303745
+    }
+  ],
+  "contexts": [
+    {
+      "label": "RED Komodo",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "6K S35",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 6048,
+            "height": 3240
+          },
+          "anamorphic_squeeze": 1,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 5192,
+                "height": 2916
+              },
+              "anchor_point": {
+                "x": 428,
+                "y": 162
+              },
+              "protection_dimensions": {
+                "width": 5768,
+                "height": 3240
+              },
+              "protection_anchor_point": {
+                "x": 140,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theasc.com/society/ascmitc/asc-framing-decision-list.schema.json",
+  "title": "ASC Framing Decision List",
+  "description": "ASC Framing Decision List",
+  "type": "object",
+  "properties": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version": {
+      "type": "object",
+      "properties": {
+        "major": {
+          "type": "integer",
+          "const": 0
+        },
+        "minor": {
+          "type": "integer",
+          "const": 1
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "additionalProperties": false
+    },
+    "fdl_creator": {
+      "type": "string"
+    },
+    "default_framing_intent": {
+      "$ref": "#/$defs/fdl_id"
+    },
+    "framing_intents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/$defs/fdl_id"
+          },
+          "aspect_ratio": {
+            "$ref": "#/$defs/dimensions_int"
+          },
+          "protection": {
+            "type": "number",
+            "minimum": 0,
+            "default": 0
+          }
+        },
+        "required": [
+          "id",
+          "aspect_ratio"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "contexts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "context_creator": {
+            "type": "string"
+          },
+          "canvases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "id": {
+                  "$ref": "#/$defs/fdl_id"
+                },
+                "source_canvas_id": {
+                  "$ref": "#/$defs/fdl_id"
+                },
+                "dimensions": {
+                  "$ref": "#/$defs/dimensions_int"
+                },
+                "effective_dimensions": {
+                  "$ref": "#/$defs/dimensions_int"
+                },
+                "effective_anchor_point": {
+                  "$ref": "#/$defs/point_float"
+                },
+                "photosite_dimensions": {
+                  "$ref": "#/$defs/dimensions_int"
+                },
+                "physical_dimensions": {
+                  "$ref": "#/$defs/dimensions_float"
+                },
+                "anamorphic_squeeze": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 1.0
+                },
+                "framing_decisions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "$ref": "#/$defs/fdl_id_framing_decision"
+                      },
+                      "framing_intent_id": {
+                        "$ref": "#/$defs/fdl_id"
+                      },
+                      "dimensions": {
+                        "$ref": "#/$defs/dimensions_float"
+                      },
+                      "anchor_point": {
+                        "$ref": "#/$defs/point_float"
+                      },
+                      "protection_dimensions": {
+                        "$ref": "#/$defs/dimensions_float"
+                      },
+                      "protection_anchor_point": {
+                        "$ref": "#/$defs/point_float"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "framing_intent_id",
+                      "dimensions",
+                      "anchor_point"
+                    ],
+                    "dependentRequired": {
+                      "protection_dimensions": ["protection_anchor_point"]
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "source_canvas_id",
+                "dimensions"
+              ],
+              "dependentRequired": {
+                "effective_dimensions": ["effective_anchor_point"]
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "canvas_templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/$defs/fdl_id"
+          },
+          "target_dimensions": {
+            "$ref": "#/$defs/dimensions_int"
+          },
+          "target_anamorphic_squeeze": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "fit_source": {
+            "type": "string",
+            "enum": [
+              "framing_decision.dimensions",
+              "framing_decision.protection_dimensions",
+              "canvas.dimensions",
+              "canvas.effective_dimensions"
+            ]
+          },
+          "fit_method": {
+            "type": "string",
+            "enum": [
+              "width",
+              "height",
+              "fit_all",
+              "fill"
+            ]
+          },
+          "alignment_method_vertical": {
+            "type": "string",
+            "enum": [
+              "top",
+              "center",
+              "bottom"
+            ],
+            "default": "center"
+          },
+          "alignment_method_horizontal": {
+            "type": "string",
+            "enum": [
+              "left",
+              "center",
+              "right"
+            ],
+            "default": "center"
+          },
+          "preserve_from_source_canvas": {
+            "type": "string",
+            "enum": [
+              "none",
+              "framing_decision.dimensions",
+              "framing_decision.protection_dimensions",
+              "canvas.dimensions",
+              "canvas.effective_dimensions"
+            ],
+            "default": "none"
+          },
+          "maximum_dimensions": {
+            "$ref": "#/$defs/dimensions_int"
+          },
+          "pad_to_maximum": {
+            "type": "boolean",
+            "default": false
+          },
+          "round": {
+            "type": "object",
+            "properties": {
+              "even": {
+                "type": "string",
+                "enum": [
+                  "whole",
+                  "even"
+                ],
+                "default": "even"
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "up",
+                  "down",
+                  "round"
+                ],
+                "default": "up"
+              }
+            },
+            "required": [
+              "even",
+              "mode"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "target_dimensions",
+          "target_anamorphic_squeeze",
+          "fit_source",
+          "fit_method"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "uuid",
+    "version"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "fdl_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[A-Za-z0-9_]+$"
+    },
+    "fdl_id_framing_decision": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 65,
+      "pattern": "^[A-Za-z0-9_]+-[A-Za-z0-9_]+$"
+    },
+    "dimensions_int": {
+      "properties": {
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "width",
+        "height"
+      ],
+      "additionalProperties": false
+    },
+    "dimensions_float": {
+      "properties": {
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "width",
+        "height"
+      ],
+      "additionalProperties": false
+    },
+    "point_float": {
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

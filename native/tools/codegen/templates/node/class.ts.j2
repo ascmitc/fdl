@@ -1,0 +1,734 @@
+{# Jinja2 template — rendered once per facade class to produce a per-class .ts file. #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+
+{% for imp in imports.type_imports %}
+import type { {{ imp.names | join(', ') }} } from '{{ imp.module }}';
+{% endfor %}
+{% for imp in imports.value_imports %}
+import { {{ imp.names | join(', ') }} } from '{{ imp.module }}';
+{% endfor %}
+import type { NativeAddon } from './ffi/index.js';
+import { getAddon } from './ffi/index.js';
+{% if cls.owns_handle %}
+import { OwnedHandle{% if cls.collections %}, CollectionWrapper{% endif %} } from './base.js';
+{% else %}
+import { HandleWrapper, OwnedHandle{% if cls.collections %}, CollectionWrapper{% endif %} } from './base.js';
+{% endif %}
+{% if imports.converter_imports %}
+import { {{ imports.converter_imports | join(', ') }} } from './converters.js';
+{% endif %}
+{% if imports.enum_map_imports %}
+import { {{ imports.enum_map_imports | join(', ') }} } from './enum-maps.js';
+{% endif %}
+{% if cls.custom_attrs %}
+import {
+  type CustomAttrValue,
+  caGetAll,
+  caCount,
+  caGet,
+  caHas,
+  caRemove,
+  caSet,
+} from './custom-attrs.js';
+{% endif %}
+{% if imports.runtime_enum_imports %}
+import { {{ imports.runtime_enum_imports | join(', ') }} } from './constants.js';
+{% endif %}
+{% if imports.error_imports %}
+import { {{ imports.error_imports | join(', ') }} } from './errors.js';
+{% endif %}
+{% if imports.rounding_imports %}
+import { {{ imports.rounding_imports | join(', ') }} } from './rounding.js';
+{% endif %}
+{% for imp in imports.lazy_class_imports %}
+import { {{ imp.cls }} } from './{{ imp.module }}.js';
+{% endfor %}
+
+{% if cls.inline_interfaces %}
+{% for iface in cls.inline_interfaces %}
+{% if iface.accessors %}
+export class {{ iface.name }} {
+{% for f in iface.fields %}
+{% if f.private %}
+  /** @internal */
+{% endif %}
+  {{ f.name }}: {{ f.type }};
+{% endfor %}
+
+  constructor(
+{% for f in iface.fields %}
+    {{ f.name }}: {{ f.type }},
+{% endfor %}
+  ) {
+{% for f in iface.fields %}
+    this.{{ f.name }} = {{ f.name }};
+{% endfor %}
+  }
+
+{% for f in iface.fields %}
+{% if f.private %}
+  /** Public accessor for {{ f.name }}. */
+  get {{ f.name | to_camel }}(): {{ f.type }} {
+    return this.{{ f.name }};
+  }
+{% endif %}
+{% endfor %}
+
+{% for acc in iface.accessors %}
+  /** {{ acc.doc }} */
+  get {{ acc.name }}(): {{ acc.returns }} | null {
+{% set parts = acc.collection.split('.') %}
+{% if parts | length == 2 %}
+{% set root = parts[0] %}
+{% set coll = parts[1] %}
+{% if root != 'fdl' %}
+    const _parent = this.{{ root }};
+    if (!_parent) return null;
+{% endif %}
+{% if acc.lookup == 'by_label' %}
+    for (const item of {% if root == 'fdl' %}this.{{ root }}.{{ coll }}{% else %}_parent.{{ coll }}{% endif %}) {
+      if (item.label === this._{{ acc.key_field }}) return item;
+    }
+{% elif acc.lookup == 'by_id' %}
+    for (const item of {% if root == 'fdl' %}this.{{ root }}.{{ coll }}{% else %}_parent.{{ coll }}{% endif %}) {
+      if (item.id === this._{{ acc.key_field }}) return item;
+    }
+{% endif %}
+{% endif %}
+    return null;
+  }
+
+{% endfor %}
+}
+
+{% else %}
+export interface {{ iface.name }} {
+{% for f in iface.fields %}
+{% if f.private %}
+  /** @internal */
+{% endif %}
+  {{ f.name }}: {{ f.type }};
+{% endfor %}
+}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+export class {{ cls.name }} extends {{ 'OwnedHandle' if cls.owns_handle else 'HandleWrapper' }} {
+{% if cls.owns_handle %}
+  /** @internal */
+  static override _fromHandle(handle: object, _docRef: OwnedHandle | null): {{ cls.name }} {
+    return new {{ cls.name }}(handle, '{{ cls.free_fn }}');
+  }
+
+{% else %}
+  /** @internal */
+  static override _fromHandle(handle: object, docRef: OwnedHandle | null): {{ cls.name }} {
+    return new {{ cls.name }}(handle, docRef);
+  }
+
+{% endif %}
+{% if cls.init %}
+{% if cls.init.depth == 0 %}
+  constructor(opts: {
+{% for p in cls.init.params %}
+{% if p.ignore %}
+    {{ p.name }}?: object;
+{% elif p.optional %}
+    {{ p.name }}?: {{ p.ts_type }};
+{% else %}
+    {{ p.name }}: {{ p.ts_type }};
+{% endif %}
+{% endfor %}
+  });
+  /** @internal */
+  constructor(handle: object, freeFn: string);
+  constructor(first: unknown, freeFn?: string) {
+    if (typeof freeFn === 'string') {
+      super(first as object, freeFn);
+      return;
+    }
+    const opts = first as {
+{% for p in cls.init.params %}
+      {{ p.name }}{% if p.optional %}?{% endif %}: {{ p.ts_type }};
+{% endfor %}
+    };
+    const addon = getAddon();
+{% for p in cls.init.params %}
+{% if p.name == 'uuid' and p.default == 'null' %}
+    const _{{ p.name }} = opts.{{ p.name }} ?? crypto.randomUUID();
+{% elif p.default is not none and not p.ignore %}
+    const _{{ p.name }} = opts.{{ p.name }} ?? {{ p.default }};
+{% endif %}
+{% endfor %}
+    const handle = addon.{{ cls.init.builder_fn }}(
+{% for arg in cls.init.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+    if (!handle) throw new Error('{{ cls.init.builder_fn }} returned NULL');
+    super(handle, '{{ cls.free_fn }}');
+{% for ps in cls.init.post_setters %}
+{% if ps.kind == 'compound' %}
+    if (opts.{{ ps.condition }} !== undefined && opts.{{ ps.condition }} !== null) {
+      this.{{ ps.method }}(
+{% for arg in ps.args %}
+{% if arg.default %}
+        opts.{{ arg.param }} ?? {{ arg.default }},
+{% else %}
+        opts.{{ arg.param }},
+{% endif %}
+{% endfor %}
+      );
+    }
+{% elif ps.kind == 'property' %}
+{% if ps.always %}
+    this.{{ ps.property }} = opts.{{ ps.property }}{% if ps.prop_default is not none %} ?? {{ ps.prop_default }}{% endif %};
+{% else %}
+    if (opts.{{ ps.property }} !== undefined && opts.{{ ps.property }} !== null) {
+      this.{{ ps.property }} = opts.{{ ps.property }};
+    }
+{% endif %}
+{% endif %}
+{% endfor %}
+  }
+
+{% else %}{# depth >= 1 #}
+  constructor(opts: {
+{% for p in cls.init.params %}
+{% if p.ignore %}
+    {{ p.name }}?: object;
+{% elif p.optional %}
+    {{ p.name }}?: {{ p.ts_type }};
+{% else %}
+    {{ p.name }}: {{ p.ts_type }};
+{% endif %}
+{% endfor %}
+  });
+  /** @internal */
+  constructor(handle: object, docRef: OwnedHandle | null);
+  constructor(first: unknown, docRef?: OwnedHandle | null) {
+    if (docRef !== undefined) {
+      super(first as object, docRef);
+      return;
+    }
+    const opts = first as {
+{% for p in cls.init.params %}
+      {{ p.name }}{% if p.optional %}?{% endif %}: {{ p.ts_type }};
+{% endfor %}
+    };
+    const addon = getAddon();
+{% for p in cls.init.params %}
+{% if p.default is not none and not p.ignore %}
+    const _{{ p.name }} = opts.{{ p.name }} ?? {{ p.default }};
+{% endif %}
+{% endfor %}
+    const docH = addon.fdl_doc_create_with_header(
+      '00000000-0000-0000-0000-000000000000', 2, 0, '_', null,
+    );
+    const backing = FDL._fromHandle(docH, null);
+{% if cls.init.depth >= 2 %}
+    const ctxH = addon.fdl_doc_add_context(docH, '_', null);
+{% endif %}
+{% if cls.init.depth >= 3 %}
+    const canvasH = addon.fdl_context_add_canvas(ctxH, '_', '_', '_', 1, 1, 1.0);
+{% endif %}
+    const handle = addon.{{ cls.init.builder_fn }}(
+      {{ cls.init.parent_handle }},
+{% for arg in cls.init.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+    if (!handle) throw new Error('{{ cls.init.builder_fn }} returned NULL');
+    super(handle, backing);
+{% for ps in cls.init.post_setters %}
+{% if ps.kind == 'compound' %}
+    if (opts.{{ ps.condition }} !== undefined && opts.{{ ps.condition }} !== null) {
+      this.{{ ps.method }}(
+{% for arg in ps.args %}
+{% if arg.default %}
+        opts.{{ arg.param }} ?? {{ arg.default }},
+{% else %}
+        opts.{{ arg.param }},
+{% endif %}
+{% endfor %}
+      );
+    }
+{% elif ps.kind == 'property' %}
+{% if ps.always %}
+    this.{{ ps.property }} = opts.{{ ps.property }}{% if ps.prop_default is not none %} ?? {{ ps.prop_default }}{% endif %};
+{% else %}
+    if (opts.{{ ps.property }} !== undefined && opts.{{ ps.property }} !== null) {
+      this.{{ ps.property }} = opts.{{ ps.property }};
+    }
+{% endif %}
+{% endif %}
+{% endfor %}
+  }
+
+{% endif %}
+{% endif %}
+{% for prop in cls.properties %}
+  /** {{ prop.name }} */
+  get {{ prop.name }}(): {{ prop.ts_type }} {
+    this._checkHandle();
+{% if prop.nullable and prop.has_fn %}
+    if (!this._addon.{{ prop.has_fn }}(this._handle)) return null;
+{% endif %}
+{% if prop.converter == 'handleRef' %}
+    const handle = this._addon.{{ prop.getter_fn }}(this._handle);
+    if (!handle) return null;
+    return {{ prop.handle_class }}._fromHandle(handle, this._docRef!);
+{% elif prop.converter == 'jsonValue' %}
+    const raw = this._addon.{{ prop.getter_fn }}(this._handle);
+    if (raw === null) return null;
+    return JSON.parse(raw as string);
+{% elif prop.converter.startswith('enum') %}
+    const raw = this._addon.{{ prop.getter_fn }}(this._handle);
+    return {{ prop.enum_from_c }}.get(raw as number){% if prop.nullable %} ?? null{% else %}!{% endif %};
+{% elif prop.converter in ('dimsI64', 'dimsF64', 'pointF64', 'rect', 'roundStrategy') %}
+    const raw = this._addon.{{ prop.getter_fn }}(this._handle);
+    return {{ imports.converter_fn_map[prop.converter] }}(raw);
+{% else %}
+    const raw = this._addon.{{ prop.getter_fn }}(this._handle);
+{% if prop.converter == 'boolean' %}
+    return Boolean(raw);
+{% elif prop.converter == 'number' %}
+    return raw as number;
+{% elif prop.converter == 'string' %}
+{% if prop.nullable %}
+    return raw as string | null;
+{% else %}
+    return raw as string;
+{% endif %}
+{% else %}
+    return raw as {{ prop.ts_type }};
+{% endif %}
+{% endif %}
+  }
+
+{% if prop.setter_fn %}
+{% if prop.converter == 'handleRef' %}
+  set {{ prop.name }}(value: {{ prop.handle_class }} | Record<string, unknown> | null) {
+    this._checkHandle();
+    if (value === null) {
+      this._addon.{{ prop.remover_fn }}(this._handle);
+      return;
+    }
+    const json = typeof value === 'object' && '_handle' in value
+      ? JSON.stringify((value as any).asDict())
+      : JSON.stringify(value);
+    const err = this._addon.{{ prop.setter_fn }}(this._handle, json, json.length);
+    if (err) throw new Error(err as string);
+  }
+
+{% elif prop.remover_fn %}
+  set {{ prop.name }}(value: {{ prop.ts_type.replace(' | null', '') }} | null) {
+    this._checkHandle();
+    if (value === null) {
+      this._addon.{{ prop.remover_fn }}(this._handle);
+      return;
+    }
+{% if prop.converter.startswith('enum') %}
+    this._addon.{{ prop.setter_fn }}(this._handle, {{ prop.enum_to_c }}.get(value)!);
+{% elif prop.converter in ('dimsI64', 'dimsF64', 'pointF64', 'rect', 'roundStrategy') %}
+    this._addon.{{ prop.setter_fn }}(this._handle, {{ imports.converter_to_fn_map[prop.converter] }}(value));
+{% else %}
+    this._addon.{{ prop.setter_fn }}(this._handle, value);
+{% endif %}
+  }
+
+{% else %}
+  set {{ prop.name }}(value: {{ prop.ts_type.replace(' | null', '') }}) {
+    this._checkHandle();
+{% if prop.converter == 'boolean' %}
+    this._addon.{{ prop.setter_fn }}(this._handle, value ? 1 : 0);
+{% elif prop.converter.startswith('enum') %}
+    this._addon.{{ prop.setter_fn }}(this._handle, {{ prop.enum_to_c }}.get(value)!);
+{% elif prop.converter in ('dimsI64', 'dimsF64', 'pointF64', 'rect', 'roundStrategy') %}
+    this._addon.{{ prop.setter_fn }}(this._handle, {{ imports.converter_to_fn_map[prop.converter] }}(value));
+{% else %}
+    this._addon.{{ prop.setter_fn }}(this._handle, value);
+{% endif %}
+  }
+
+{% endif %}
+{% endif %}
+{% endfor %}
+{% for coll in cls.collections %}
+  /** {{ coll.name }} collection */
+  get {{ coll.name }}(): CollectionWrapper<{{ coll.item_class }}> {
+    this._checkHandle();
+    return new CollectionWrapper<{{ coll.item_class }}>(
+      this._handle,
+      this._docRef!,
+      '{{ coll.count_fn }}',
+      '{{ coll.at_fn }}',
+      (h: object, d: import('./base.js').OwnedHandle) => {{ coll.item_class }}._fromHandle(h, d),
+{% if coll.find_by_id_fn %}
+      '{{ coll.find_by_id_fn }}',
+{% else %}
+      undefined,
+{% endif %}
+{% if coll.find_by_label_fn %}
+      '{{ coll.find_by_label_fn }}',
+{% endif %}
+    );
+  }
+
+{% endfor %}
+{% if cls.identity_attr %}
+  equals(other: {{ cls.name }} | string): boolean {
+    if (typeof other === 'string') return this.{{ cls.identity_attr }} === other;
+    return this.{{ cls.identity_attr }} === other.{{ cls.identity_attr }};
+  }
+
+{% endif %}
+{% if cls.to_json_fn %}
+  asDict(): Record<string, unknown> {
+    this._checkHandle();
+    const json = this._addon.{{ cls.to_json_fn }}(this._handle, 0);
+    if (!json) throw new Error('{{ cls.to_json_fn }} returned NULL');
+    return JSON.parse(json as string);
+  }
+
+  asJson(indent = 0): string {
+    this._checkHandle();
+    const json = this._addon.{{ cls.to_json_fn }}(this._handle, indent);
+    if (!json) throw new Error('{{ cls.to_json_fn }} returned NULL');
+    return json as string;
+  }
+
+  toJSON(): Record<string, unknown> {
+    return this.asDict();
+  }
+
+{% elif not cls.to_json_fn and cls.properties and not cls.collections %}
+  asDict(): Record<string, unknown> {
+    this._checkHandle();
+    const d: Record<string, unknown> = {};
+{% for prop in cls.properties %}
+{% if prop.nullable %}
+    const _v_{{ prop.name }} = this.{{ prop.name }};
+    if (_v_{{ prop.name }} !== null && _v_{{ prop.name }} !== undefined) {
+      d['{{ prop.py_name }}'] = _v_{{ prop.name }};
+    }
+{% else %}
+    d['{{ prop.py_name }}'] = this.{{ prop.name }};
+{% endif %}
+{% endfor %}
+    return d;
+  }
+
+  asJson(indent = 0): string {
+    return JSON.stringify(this.asDict(), null, indent || undefined);
+  }
+
+  toJSON(): Record<string, unknown> {
+    return this.asDict();
+  }
+
+{% endif %}
+{% for builder in cls.builders %}
+{% if builder.doc %}
+  /** {{ builder.doc }} */
+{% endif %}
+  {{ builder.name }}(
+{% for p in builder.params %}
+    {{ p.name }}{% if p.default is not none %}: {{ p.ts_type }} = {{ p.default }}{% else %}: {{ p.ts_type }}{% endif %},
+{% endfor %}
+  ): {{ builder.returns }} {
+    this._checkHandle();
+    const handle = this._addon.{{ builder.c_function }}(
+      this._handle,
+{% for arg in builder.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+{% if builder.error_pattern == 'null_check' %}
+    if (!handle) throw new Error('{{ builder.c_function }} returned NULL');
+{% endif %}
+    return {{ builder.returns }}._fromHandle(handle, this._docRef!);
+  }
+
+{% endfor %}
+{% for method in cls.lifecycle %}
+{% if method.kind == 'alias' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  {{ method.name }}(): void {
+    this.{{ method.alias_of }}();
+  }
+
+{% elif method.kind == 'composite_property' %}
+  get {{ method.name }}(): {{ method.returns }} {
+    return new {{ method.returns }}(
+{% for field, source in method.compose_from.items() %}
+      this.{{ source }},
+{% endfor %}
+    );
+  }
+
+{% elif method.kind == 'compound_setter' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  {{ method.name }}(
+{% for p in method.params %}
+    {{ p.name }}{% if p.default is not none %}: {{ p.ts_type }} = {{ p.default }}{% else %}: {{ p.ts_type }}{% endif %},
+{% endfor %}
+  ): void {
+    this._checkHandle();
+{% for p in method.params %}
+{% if p.global_fallback is defined and p.global_fallback %}
+    if ({{ p.name }} === null) {
+      {{ p.name }} = {{ p.global_fallback }}();
+    }
+{% endif %}
+{% endfor %}
+    this._addon.{{ method.c_function }}(
+      this._handle,
+{% for arg in method.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+  }
+
+{% elif method.kind == 'static_factory' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  static {{ method.name }}(
+{% for p in method.params %}
+{% if p.type_key == 'bytes' %}
+    {{ p.name }}{% if p.default is not none %}: string | Buffer = {{ p.default }}{% else %}: string | Buffer{% endif %},
+{% else %}
+    {{ p.name }}{% if p.default is not none %}: {{ p.ts_type }} = {{ p.default }}{% else %}: {{ p.ts_type }}{% endif %},
+{% endif %}
+{% endfor %}
+  ): {{ cls.name }} {
+    const addon = getAddon();
+{% for p in method.params %}
+{% if p.type_key == 'bytes' %}
+    const _{{ p.name }} = typeof {{ p.name }} === 'string' ? {{ p.name }} : {{ p.name }}.toString('utf-8');
+{% endif %}
+{% endfor %}
+{% if method.error and method.error.pattern == 'result_struct' %}
+    const result = addon.{{ method.c_function }}(
+{% for arg in method.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+    if (result.{{ method.error.error_field }}) {
+      const msg = result.{{ method.error.error_field }} as string;
+      throw new {{ method.error.error_class }}(msg);
+    }
+    return {{ cls.name }}._fromHandle(result.{{ method.error.success_field }}, null);
+{% elif method.error and method.error.pattern == 'null_check' %}
+    const handle = addon.{{ method.c_function }}(
+{% for arg in method.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+    if (!handle) throw new Error('{{ method.c_function }} returned NULL');
+    return {{ cls.name }}._fromHandle(handle, null);
+{% endif %}
+  }
+
+{% elif method.kind == 'class_factory' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  static {{ method.name }}(
+{% for p in method.params %}
+    {{ p.name }}{% if p.default is not none %}: {{ p.ts_type }} = {{ p.default }}{% else %}: {{ p.ts_type }}{% endif %},
+{% endfor %}
+  ): {{ cls.name }} {
+{% for p in method.params %}
+{% if p.global_fallback is defined and p.global_fallback %}
+    if ({{ p.name }} === null) {
+      {{ p.name }} = {{ p.global_fallback }}();
+    }
+{% endif %}
+{% endfor %}
+    const instance = new {{ cls.name }}({
+{% for kw in method.factory_kwargs %}
+      {{ kw.name }}: {{ kw.value }},
+{% endfor %}
+    });
+    instance._addon.{{ method.c_function }}(
+      instance._handle,
+{% for arg in method.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+    return instance;
+  }
+
+{% elif method.kind == 'instance' and method.error and method.error.pattern == 'validation' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  {{ method.name }}(): void {
+    this._checkHandle();
+    const vr = this._addon.{{ method.c_function }}(this._handle);
+    try {
+      const count = this._addon.{{ method.error.count_fn }}(vr) as number;
+      if (count > 0) {
+        const errors: string[] = [];
+        for (let i = 0; i < count; i++) {
+          const msg = this._addon.{{ method.error.at_fn }}(vr, i);
+          if (msg) errors.push(msg as string);
+        }
+        throw new FDLValidationError('Validation failed!\n' + errors.join('\n'));
+      }
+    } finally {
+      this._addon.{{ method.error.free_fn }}(vr);
+    }
+  }
+
+{% elif method.kind == 'instance' and method.returns == 'string_free' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  {{ method.name }}(
+{% for p in method.params %}
+    {{ p.name }}{% if p.default is not none %}: {{ p.ts_type }} = {{ p.default }}{% else %}: {{ p.ts_type }}{% endif %},
+{% endfor %}
+  ): string {
+    this._checkHandle();
+    const result = this._addon.{{ method.c_function }}(
+      this._handle,
+{% for arg in method.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+    if (!result) throw new Error('{{ method.c_function }} returned NULL');
+    return result as string;
+  }
+
+{% elif method.kind == 'instance' and method.error and method.error.pattern == 'result_struct_multi' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  {{ method.name }}(
+{% for p in method.params %}
+    {{ p.name }}{% if p.default is not none %}: {{ p.ts_type }} = {{ p.default }}{% else %}: {{ p.ts_type }}{% endif %},
+{% endfor %}
+  ): {{ method.returns }} {
+    this._checkHandle();
+    const result = this._addon.{{ method.c_function }}(
+      this._handle,
+{% for arg in method.addon_args %}
+      {{ arg }},
+{% endfor %}
+    );
+    if (result.{{ method.error.error_field }}) {
+      const msg = result.{{ method.error.error_field }} as string;
+      throw new {{ method.error.error_class }}(msg);
+    }
+{% for field in method.error.result_fields %}
+{% if field.extract == 'handle' %}
+    const _{{ field.name }} = {{ field.wrap_class }}._fromHandle(result.{{ field.source }}, null);
+{% elif field.extract == 'handle_ref' %}
+    const _{{ field.name }} = {{ field.wrap_class }}._fromHandle(result.{{ field.source }}, this._docRef!);
+{% elif field.extract == 'scalar' and field.scalar_type == 'bool' %}
+    const _{{ field.name }} = Boolean(result.{{ field.source }});
+{% elif field.extract == 'scalar' %}
+    const _{{ field.name }} = result.{{ field.source }} as number;
+{% elif field.extract == 'value_type' %}
+    const _{{ field.name }} = {{ field.converter }}(result.{{ field.source }});
+{% elif field.extract == 'string' %}
+    const _{{ field.name }} = result.{{ field.source }} as string;
+{% endif %}
+{% endfor %}
+{% if method.returns in cls.class_result_types %}
+    return new {{ method.returns }}(
+{% for field in method.error.result_fields %}
+      _{{ field.name }},
+{% endfor %}
+    );
+{% else %}
+    return {
+{% for field in method.error.result_fields %}
+{% if field.private %}
+      _{{ field.name }}: _{{ field.name }},
+{% else %}
+      {{ field.name }}: _{{ field.name }},
+{% endif %}
+{% endfor %}
+    };
+{% endif %}
+  }
+
+{% elif method.kind == 'validate_json' %}
+  {{ method.name }}(): void {
+    this._checkHandle();
+    const json = this._addon.{{ cls.to_json_fn }}(this._handle, 0);
+    if (!json) throw new Error('{{ cls.to_json_fn }} returned NULL');
+    const err = this._addon.{{ method.c_function }}(json as string, (json as string).length);
+    if (err) {
+      throw new FDLValidationError(err as string);
+    }
+  }
+
+{% elif method.kind == 'instance_getter' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  {{ method.name }}(): {{ method.returns }} {
+    this._checkHandle();
+    const raw = this._addon.{{ method.c_function }}(this._handle);
+    return {{ method.converter_fn }}(raw);
+  }
+
+{% elif method.kind == 'instance_getter_optional' %}
+{% if method.doc %}
+  /** {{ method.doc }} */
+{% endif %}
+  {{ method.name }}(): {{ method.returns }} | null {
+    this._checkHandle();
+    const raw = this._addon.{{ method.c_function }}(this._handle);
+    if (!raw || raw._return === 0) return null;
+    return {{ method.converter_fn }}(raw);
+  }
+
+{% endif %}
+{% endfor %}
+{% if cls.custom_attrs %}
+  private static readonly _CA_PREFIX = '{{ cls.ca_prefix }}';
+
+  setCustomAttr(name: string, value: CustomAttrValue): void {
+    this._checkHandle();
+    caSet(this._addon, this._handle, {{ cls.name }}._CA_PREFIX, name, value);
+  }
+
+  getCustomAttr(name: string): CustomAttrValue | null {
+    this._checkHandle();
+    return caGet(this._addon, this._handle, {{ cls.name }}._CA_PREFIX, name);
+  }
+
+  hasCustomAttr(name: string): boolean {
+    this._checkHandle();
+    return caHas(this._addon, this._handle, {{ cls.name }}._CA_PREFIX, name);
+  }
+
+  removeCustomAttr(name: string): boolean {
+    this._checkHandle();
+    return caRemove(this._addon, this._handle, {{ cls.name }}._CA_PREFIX, name);
+  }
+
+  get customAttrsCount(): number {
+    this._checkHandle();
+    return caCount(this._addon, this._handle, {{ cls.name }}._CA_PREFIX);
+  }
+
+  get customAttrs(): Record<string, CustomAttrValue> {
+    this._checkHandle();
+    return caGetAll(this._addon, this._handle, {{ cls.name }}._CA_PREFIX);
+  }
+{% endif %}
+}

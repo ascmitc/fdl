@@ -1,0 +1,679 @@
+{# Handwritten Jinja2 template — rendered once per facade class to produce a per-class .py file. #}
+{% import "python/macros.j2" as macros %}
+# SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+# SPDX-License-Identifier: Apache-2.0
+# AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+# ruff: noqa: I001
+"""FDL Core {{ cls.name }} facade."""
+
+from __future__ import annotations
+
+{% if imports.needs_ffi %}
+from fdl_ffi import ffi
+{% endif %}
+{% if imports.needs_json %}
+import json
+{% endif %}
+
+{% if imports.type_imports %}
+from .fdl_types import {{ imports.type_imports | join(", ") }}
+{% endif %}
+{% if imports.rounding_imports %}
+from .rounding import {{ imports.rounding_imports | join(", ") }}
+{% endif %}
+
+from .base import (
+{% for name in imports.base_imports %}
+    {{ name }},
+{% endfor %}
+)
+{% if imports.converter_imports %}
+from .converters import (
+{% for name in imports.converter_imports %}
+    {{ name }},
+{% endfor %}
+)
+{% endif %}
+{% if imports.enum_map_imports %}
+from .enum_maps import (
+{% for name in imports.enum_map_imports %}
+    {{ name }},
+{% endfor %}
+)
+{% endif %}
+{% if imports.needs_version %}
+from .header import Version
+{% endif %}
+{% if cls.custom_attrs %}
+from ._custom_attrs import (
+    _all as _ca_all,
+    _count as _ca_count,
+    _get as _ca_get,
+    _has as _ca_has,
+    _remove as _ca_remove,
+    _set as _ca_set,
+)
+{% endif %}
+{% if cls.inline_dataclasses %}
+from dataclasses import dataclass
+{% endif %}
+{% if imports.runtime_enums %}
+from .constants import (
+{% for name in imports.runtime_enums %}
+    {{ name }},
+{% endfor %}
+)
+{% endif %}
+{% if imports.type_check_enums or imports.type_check_classes or cls.pydantic_model %}
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+{% if imports.type_check_enums %}
+    from .constants import (
+{% for name in imports.type_check_enums %}
+        {{ name }},
+{% endfor %}
+    )
+{% endif %}
+{% for tc in imports.type_check_classes %}
+    from .{{ tc.module }} import {{ tc.cls }}
+{% endfor %}
+{% if cls.pydantic_model %}
+    from .models import {{ cls.pydantic_model }}
+{% endif %}
+{% endif %}
+
+
+{% for dc in cls.inline_dataclasses %}
+@dataclass
+class {{ dc.class_name }}:
+    """{{ dc.doc }}"""
+
+{% for field in dc.fields %}
+{% if field.private %}
+    _{{ field.name }}: {{ field.type }}
+{% else %}
+    {{ field.name }}: {{ field.type }}
+{% endif %}
+{% endfor %}
+{% if dc.accessors %}
+{% for acc in dc.accessors %}
+
+    @property
+    def {{ acc.name }}(self):
+        """{{ acc.doc }}"""
+        for item in {{ acc.on_expr }}:
+{% if acc.lookup_fn == "find_by_label" %}
+            if item.label == self._{{ acc.key_field }}:
+{% else %}
+            if item.id == self._{{ acc.key_field }}:
+{% endif %}
+                return item
+        return None
+{% endfor %}
+{% endif %}
+
+
+{% endfor %}
+class {{ cls.name }}({{ "OwnedHandle" if cls.owns_handle else "HandleWrapper" }}):
+    """{{ cls.name }} facade wrapping a C {{ cls.handle_type }} handle."""
+
+{% if cls.init %}
+    def __init__(
+        self,
+        *,
+{% for p in cls.init.params %}
+{% if p.ignore %}
+        {{ p.name }}: object = None,
+{% elif p.default %}
+        {{ p.name }}: {{ p.python_type }} = {{ p.default }},
+{% else %}
+        {{ p.name }}: {{ p.python_type }},
+{% endif %}
+{% endfor %}
+    ) -> None:
+        from fdl_ffi import get_lib
+
+        lib = get_lib()
+{% if cls.init.depth == 0 %}
+        import uuid as _uuid_mod
+
+        if uuid is None:
+            uuid = str(_uuid_mod.uuid4())
+        handle = lib.{{ cls.init.builder_fn }}(
+{% for arg in cls.init.builder_c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+        if not handle:
+            raise RuntimeError("{{ cls.init.builder_fn }} returned NULL")
+        OwnedHandle.__init__(self, handle, lib)
+{% else %}
+{% for lazy in cls.init.lazy_imports %}
+        from .{{ lazy.module }} import {{ lazy.cls }}
+{% endfor %}
+        _doc_h = lib.fdl_doc_create_with_header(
+            b"00000000-0000-0000-0000-000000000000", 2, 0, b"_", ffi.NULL,
+        )
+        _backing = FDL._from_handle(_doc_h, lib)
+{% if cls.init.depth >= 2 %}
+        _ctx_h = lib.fdl_doc_add_context(_doc_h, b"_", ffi.NULL)
+{% endif %}
+{% if cls.init.depth >= 3 %}
+        _canvas_h = lib.fdl_context_add_canvas(_ctx_h, b"_", b"_", b"_", 1, 1, 1.0)
+{% endif %}
+        handle = lib.{{ cls.init.builder_fn }}(
+            {{ cls.init.parent_handle }},
+{% for arg in cls.init.builder_c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+        if not handle:
+            raise RuntimeError("{{ cls.init.builder_fn }} returned NULL")
+        HandleWrapper.__init__(self, handle, lib, _backing)
+{% endif %}
+{% for ps in cls.init.post_setters %}
+{% if ps.kind == "compound" %}
+        if {{ ps.condition }} is not None:
+            self.{{ ps.method }}(
+{% for arg in ps.args %}
+{% if arg.default %}
+                {{ arg.name }}={{ arg.param }} or {{ arg.default }},
+{% else %}
+                {{ arg.name }}={{ arg.param }},
+{% endif %}
+{% endfor %}
+            )
+{% elif ps.kind == "property" %}
+{% if ps.always %}
+        self.{{ ps.property }} = {{ ps.property }}
+{% else %}
+        if {{ ps.property }} is not None:
+            self.{{ ps.property }} = {{ ps.property }}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% endif %}
+{% for prop in cls.properties %}
+    @property
+    def {{ prop.name }}(self) -> {{ prop.python_type }}:
+        self._check_handle()
+{% if prop.nullable and prop.has_fn %}
+        if not self._lib.{{ prop.has_fn }}(self._handle):
+            return None
+{% endif %}
+{% if prop.converter == "handle_ref" %}
+        from .{{ prop.handle_class_module }} import {{ prop.handle_class }}
+        handle = self._lib.{{ prop.getter_fn }}(self._handle)
+        if not handle:
+            return None
+        return {{ prop.handle_class }}._from_handle(handle, self._lib, self._doc_ref)
+{% elif prop.converter == "json_value" %}
+        raw = self._lib.{{ prop.getter_fn }}(self._handle)
+        json_str = _decode_str_free(raw, self._lib)
+        if json_str is None:
+            return None
+        return json.loads(json_str)
+{% else %}
+        raw = self._lib.{{ prop.getter_fn }}(self._handle)
+        return {{ macros.convert_expr(prop) }}
+{% endif %}
+
+{% if prop.setter_fn %}
+{% if prop.converter == "handle_ref" %}
+    @{{ prop.name }}.setter
+    def {{ prop.name }}(self, value: {{ prop.handle_class }} | dict | None) -> None:
+        self._check_handle()
+        if value is None:
+            self._lib.{{ prop.remover_fn }}(self._handle)
+            return
+        if isinstance(value, dict):
+            _json = json.dumps(value).encode("utf-8")
+        else:
+            _json = json.dumps(value.as_dict()).encode("utf-8")
+        _err = self._lib.{{ prop.setter_fn }}(self._handle, _json, len(_json))
+        if _err:
+            _msg = ffi.string(_err).decode("utf-8")
+            self._lib.fdl_free(_err)
+            raise ValueError(_msg)
+
+{% elif prop.remover_fn %}
+    @{{ prop.name }}.setter
+    def {{ prop.name }}(self, value: {{ prop.python_type.replace(' | None', '') }} | None) -> None:
+        self._check_handle()
+        if value is None:
+            self._lib.{{ prop.remover_fn }}(self._handle)
+            return
+        self._lib.{{ prop.setter_fn }}(self._handle, {{ macros.reverse_convert_expr(prop) }})
+
+{% else %}
+    @{{ prop.name }}.setter
+    def {{ prop.name }}(self, value: {{ prop.python_type.replace(' | None', '') }}) -> None:
+        self._check_handle()
+        self._lib.{{ prop.setter_fn }}(self._handle, {{ macros.reverse_convert_expr(prop) }})
+
+{% endif %}
+{% endif %}
+{% endfor %}
+{% for coll in cls.collections %}
+    @property
+    def {{ coll.name }}(self) -> CollectionWrapper[{{ coll.item_class }}]:
+        self._check_handle()
+{% if coll.lazy_import %}
+        from .{{ coll.lazy_import.module }} import {{ coll.lazy_import.cls }}
+{% endif %}
+        return CollectionWrapper(
+            lib=self._lib,
+            parent_handle=self._handle,
+            item_cls={{ coll.item_class }},
+            count_fn=self._lib.{{ coll.count_fn }},
+            at_fn=self._lib.{{ coll.at_fn }},
+{% if coll.find_by_id_fn %}
+            find_by_id_fn=self._lib.{{ coll.find_by_id_fn }},
+{% else %}
+            find_by_id_fn=None,
+{% endif %}
+{% if coll.find_by_label_fn %}
+            find_by_label_fn=self._lib.{{ coll.find_by_label_fn }},
+{% else %}
+            find_by_label_fn=None,
+{% endif %}
+            doc_ref=self._doc_ref,
+        )
+
+{% endfor %}
+{% if cls.identity_attr %}
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, {{ cls.name }}):
+            return self.{{ cls.identity_attr }} == other.{{ cls.identity_attr }}
+        if isinstance(other, str):
+            return self.{{ cls.identity_attr }} == other
+        return NotImplemented
+
+    def __hash__(self):
+        return hash((self.{{ cls.identity_attr }},))
+
+{% endif %}
+    def as_dict(self) -> dict:
+{% if cls.to_json_fn %}
+        self._check_handle()
+        json_ptr = self._lib.{{ cls.to_json_fn }}(self._handle, 0)
+        if not json_ptr:
+            raise RuntimeError("{{ cls.to_json_fn }} returned NULL")
+        result = json.loads(ffi.string(json_ptr))
+        self._lib.fdl_free(json_ptr)
+        return result
+{% else %}
+        d: dict = {}
+{% for prop in cls.properties %}
+{% if prop.nullable %}
+        _v_{{ prop.name }} = self.{{ prop.name }}
+        if _v_{{ prop.name }} is not None:
+            v = _v_{{ prop.name }}
+            d["{{ prop.name }}"] = {{ macros.dump_value(prop) }}
+{% else %}
+        v = self.{{ prop.name }}
+        d["{{ prop.name }}"] = {{ macros.dump_value(prop) }}
+{% endif %}
+{% endfor %}
+{% for coll in cls.collections %}
+        _items_{{ coll.name }} = [item.as_dict() for item in self.{{ coll.name }}]
+        if _items_{{ coll.name }}:
+            d["{{ coll.name }}"] = _items_{{ coll.name }}
+{% endfor %}
+        return d
+{% endif %}
+
+{% if cls.pydantic_model %}
+    def to_model(self) -> {{ cls.pydantic_model }}:
+        """Convert to a Pydantic ``{{ cls.pydantic_model }}`` instance.
+
+        Returns a pure-data Pydantic model suitable for serialization,
+        API responses, and interoperability with web frameworks.
+        """
+        from .models import {{ cls.pydantic_model }}
+
+        return {{ cls.pydantic_model }}.model_validate(self.as_dict())
+
+{% if cls.owns_handle %}
+    @classmethod
+    def from_model(cls, model: {{ cls.pydantic_model }}) -> {{ cls.name }}:
+        """Create an ``{{ cls.name }}`` facade from a Pydantic model.
+
+        Parses the model's JSON representation through the C core,
+        producing a fully validated, handle-backed facade object.
+        """
+        json_bytes = model.model_dump_json(by_alias=True).encode("utf-8")
+        return cls.parse(json_bytes)
+
+{% else %}
+    @classmethod
+    def from_model(cls, model: {{ cls.pydantic_model }}) -> {{ cls.name }}:
+        """Create a standalone ``{{ cls.name }}`` facade from a Pydantic model.
+
+        Note: Creates a temporary backing document. The returned object
+        is self-contained but not attached to any parent FDL document.
+        """
+        d = model.model_dump(exclude_none=True)
+{% for conv in cls.from_model_conversions %}
+        if "{{ conv.name }}" in d:
+            d["{{ conv.name }}"] = {{ conv.value_type }}(**d["{{ conv.name }}"])
+{% endfor %}
+        return cls(**d)
+
+{% endif %}
+{% endif %}
+{% for builder in cls.builders %}
+    def {{ builder.name }}(
+        self,
+{% for p in builder.params %}
+        {{ p.name }}: {{ p.python_type }}{% if p.default %} = {{ p.default }}{% endif %},
+{% endfor %}
+    ) -> {{ builder.returns }}:
+        """{{ builder.doc }}"""
+        self._check_handle()
+{% if builder.lazy_import %}
+        from .{{ builder.lazy_import.module }} import {{ builder.lazy_import.cls }}
+{% endif %}
+        handle = self._lib.{{ builder.c_function }}(
+            self._handle,
+{% for arg in builder.c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+{% if builder.error_pattern == "null_check" %}
+        if not handle:
+            raise RuntimeError("{{ builder.c_function }} returned NULL")
+{% endif %}
+        return {{ builder.returns }}._from_handle(handle, self._lib, self._doc_ref)
+
+{% endfor %}
+{% for method in cls.lifecycle %}
+{% if method.kind == "alias" %}
+    def {{ method.name }}(self) -> None:
+        """{{ method.doc }}"""
+        self.{{ method.alias_of }}()
+
+{% elif method.kind == "composite_property" %}
+    @property
+    def {{ method.name }}(self) -> {{ method.returns }}:
+        """{{ method.doc }}"""
+        return {{ method.returns }}(
+{% for field, source in method.compose_from.items() %}
+            {{ field }}=self.{{ source }},
+{% endfor %}
+        )
+
+{% elif method.kind == "compound_setter" %}
+    def {{ method.name }}(
+        self,
+{% for p in method.params %}
+        {{ p.name }}: {{ p.python_type }}{% if p.default %} = {{ p.default }}{% endif %},
+{% endfor %}
+    ) -> None:
+        """{{ method.doc }}"""
+        self._check_handle()
+{% for p in method.params %}
+{% if p.global_fallback is defined and p.global_fallback %}
+        if {{ p.name }} is None:
+            from .utils import {{ p.global_fallback }}
+
+            {{ p.name }} = {{ p.global_fallback }}()
+{% endif %}
+{% endfor %}
+        self._lib.{{ method.c_function }}(
+            self._handle,
+{% for arg in method.c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+
+{% elif method.kind == "static_factory" %}
+    @classmethod
+    def {{ method.name }}(
+        cls,
+{% for p in method.params %}
+        {{ p.name }}: {{ p.python_type }}{% if p.default %} = {{ p.default }}{% endif %},
+{% endfor %}
+    ) -> {{ cls.name }}:
+        """{{ method.doc }}"""
+        from fdl_ffi import get_lib
+
+        lib = get_lib()
+{% if method.error and method.error.pattern == "result_struct" %}
+        result = lib.{{ method.c_function }}(
+{% for arg in method.c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+        if result.{{ method.error.error_field }}:
+            msg = ffi.string(result.{{ method.error.error_field }}).decode("utf-8")
+            lib.{{ method.error.free_fn }}(result.{{ method.error.error_field }})
+            raise {{ method.error.error_class }}(msg)
+        return cls._from_handle(result.{{ method.error.success_field }}, lib)
+{% elif method.error and method.error.pattern == "null_check" %}
+        handle = lib.{{ method.c_function }}(
+{% for arg in method.c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+        if not handle:
+            raise RuntimeError("{{ method.c_function }} returned NULL")
+        return cls._from_handle(handle, lib)
+{% endif %}
+
+{% elif method.kind == "class_factory" %}
+    @classmethod
+    def {{ method.name }}(
+        cls,
+{% for p in method.params %}
+        {{ p.name }}: {{ p.python_type }}{% if p.default %} = {{ p.default }}{% endif %},
+{% endfor %}
+    ) -> {{ cls.name }}:
+        """{{ method.doc }}"""
+{% for p in method.params %}
+{% if p.global_fallback is defined and p.global_fallback %}
+        if {{ p.name }} is None:
+            from .utils import {{ p.global_fallback }}
+
+            {{ p.name }} = {{ p.global_fallback }}()
+{% endif %}
+{% endfor %}
+        instance = cls(
+{% for kw in method.factory_kwargs %}
+            {{ kw.name }}={{ kw.value }},
+{% endfor %}
+        )
+        instance._lib.{{ method.c_function }}(
+            instance._handle,
+{% for arg in method.c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+        return instance
+
+{% elif method.kind == "instance" and method.error and method.error.pattern == "validation" %}
+    def {{ method.name }}(self) -> None:
+        """{{ method.doc }}"""
+        self._check_handle()
+        vr = self._lib.{{ method.c_function }}(self._handle)
+        try:
+            count = self._lib.{{ method.error.count_fn }}(vr)
+            if count > 0:
+                errors = []
+                for i in range(count):
+                    msg_ptr = self._lib.{{ method.error.at_fn }}(vr, i)
+                    if msg_ptr:
+                        errors.append(ffi.string(msg_ptr).decode("utf-8"))
+                from .errors import FDLValidationError
+
+                raise FDLValidationError("Validation failed!\n" + "\n".join(errors))
+        finally:
+            self._lib.{{ method.error.free_fn }}(vr)
+
+{% elif method.kind == "instance" and method.returns == "string_free" %}
+    def {{ method.name }}(
+        self,
+{% for p in method.params %}
+        {{ p.name }}: {{ p.python_type }}{% if p.default %} = {{ p.default }}{% endif %},
+{% endfor %}
+        **kwargs,
+    ) -> str:
+        """{{ method.doc }}"""
+        self._check_handle()
+        json_ptr = self._lib.{{ method.c_function }}(
+            self._handle,
+{% for arg in method.c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+        if not json_ptr:
+            raise RuntimeError("{{ method.c_function }} returned NULL")
+        result = ffi.string(json_ptr).decode("utf-8")
+        self._lib.fdl_free(json_ptr)
+        return result
+
+{% elif method.kind == "instance" and method.error and method.error.pattern == "result_struct_multi" %}
+    def {{ method.name }}(
+        self,
+{% for p in method.params %}
+        {{ p.name }}: {{ p.python_type }}{% if p.default %} = {{ p.default }}{% endif %},
+{% endfor %}
+    ) -> {{ method.returns }}:
+        """{{ method.doc }}"""
+        self._check_handle()
+{% for lazy in method.lazy_imports %}
+        from .{{ lazy.module }} import {{ lazy.cls }}
+{% endfor %}
+        result = self._lib.{{ method.c_function }}(
+            self._handle,
+{% for arg in method.c_args %}
+            {{ arg }},
+{% endfor %}
+        )
+        if result.{{ method.error.error_field }}:
+            msg = ffi.string(result.{{ method.error.error_field }}).decode("utf-8")
+            self._lib.{{ method.error.free_fn }}(result.{{ method.error.error_field }})
+            raise {{ method.error.error_class }}(msg)
+{% for field in method.error.result_fields %}
+{% if field.extract == "handle" %}
+        _{{ field.name }} = {{ field.wrap_class }}._from_handle(result.{{ field.source }}, self._lib)
+{% elif field.extract == "handle_ref" %}
+        _{{ field.name }} = {{ field.wrap_class }}._from_handle(result.{{ field.source }}, self._lib, self._doc_ref)
+{% elif field.extract == "scalar" %}
+        _{{ field.name }} = {{ field.scalar_type }}(result.{{ field.source }})
+{% elif field.extract == "value_type" %}
+        _{{ field.name }} = _{{ field.converter }}(result.{{ field.source }})
+{% elif field.extract == "string" %}
+        _{{ field.name }} = ffi.string(result.{{ field.source }}).decode("utf-8")
+        self._lib.fdl_free(result.{{ field.source }})
+{% endif %}
+{% endfor %}
+        return {{ method.returns }}(
+{% for field in method.error.result_fields %}
+{% if field.private %}
+            _{{ field.name }}=_{{ field.name }},
+{% else %}
+            {{ field.name }}=_{{ field.name }},
+{% endif %}
+{% endfor %}
+        )
+
+{% elif method.kind == "validate_json" %}
+    def {{ method.name }}(self) -> None:
+        """{{ method.doc }}"""
+        self._check_handle()
+        json_ptr = self._lib.{{ cls.to_json_fn }}(self._handle, 0)
+        if not json_ptr:
+            raise RuntimeError("{{ cls.to_json_fn }} returned NULL")
+        _json_bytes = ffi.string(json_ptr)
+        self._lib.fdl_free(json_ptr)
+        _err = self._lib.{{ method.c_function }}(_json_bytes, len(_json_bytes))
+        if _err:
+            _msg = ffi.string(_err).decode("utf-8")
+            self._lib.fdl_free(_err)
+            from .errors import FDLValidationError
+
+            raise FDLValidationError(_msg)
+
+{% elif method.kind == "instance_getter" %}
+    def {{ method.name }}(self) -> {{ method.returns }}:
+        """{{ method.doc }}"""
+        self._check_handle()
+        raw = self._lib.{{ method.c_function }}(self._handle)
+        return {{ method.converter_fn }}(raw)
+
+{% elif method.kind == "instance_getter_optional" %}
+    def {{ method.name }}(self) -> {{ method.returns }} | None:
+        """{{ method.doc }}"""
+        self._check_handle()
+        out = ffi.new("{{ method.c_struct }}*")
+        if not self._lib.{{ method.c_function }}(self._handle, out):
+            return None
+        return {{ method.converter_fn }}(out)
+
+{% endif %}
+{% endfor %}
+{% if cls.custom_attrs %}
+    _CA_PREFIX = "{{ cls.ca_prefix }}"
+
+    def set_custom_attr(self, name: str, value: str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt) -> None:
+        """Set a custom attribute. Type is inferred from value.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+            value: Attribute value (str, int, float, bool, PointFloat, DimensionsFloat, or DimensionsInt).
+
+        Raises:
+            TypeError: If value is not str, int, float, bool, PointFloat, DimensionsFloat, or DimensionsInt.
+            ValueError: If an attribute with the same name exists with a different type.
+        """
+        self._check_handle()
+        _ca_set(self._lib, self._handle, self._CA_PREFIX, name, value)
+
+    def get_custom_attr(self, name: str) -> str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt | None:
+        """Get a custom attribute value by name.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+
+        Returns:
+            The attribute value, or None if not found.
+        """
+        self._check_handle()
+        return _ca_get(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def has_custom_attr(self, name: str) -> bool:
+        """Check if a custom attribute exists.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+        """
+        self._check_handle()
+        return _ca_has(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def remove_custom_attr(self, name: str) -> bool:
+        """Remove a custom attribute.
+
+        Args:
+            name: Attribute name (without ``_`` prefix).
+
+        Returns:
+            True if the attribute was removed, False if it was not found.
+        """
+        self._check_handle()
+        return _ca_remove(self._lib, self._handle, self._CA_PREFIX, name)
+
+    def custom_attrs_count(self) -> int:
+        """Return the number of custom attributes on this object."""
+        self._check_handle()
+        return _ca_count(self._lib, self._handle, self._CA_PREFIX)
+
+    @property
+    def custom_attrs(self) -> dict[str, str | int | float | bool | PointFloat | DimensionsFloat | DimensionsInt]:
+        """Return all custom attributes as a dictionary."""
+        self._check_handle()
+        return _ca_all(self._lib, self._handle, self._CA_PREFIX)
+{% endif %}

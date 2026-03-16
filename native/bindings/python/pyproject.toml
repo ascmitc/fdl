@@ -1,0 +1,39 @@
+[project]
+name = "asc-fdl"
+version = "0.1.0-dev.11"
+description = "Python CFFI bindings and wrapper for libfdl_core"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = ["cffi>=1.16", "pydantic>=2.0,<3"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-xdist>=3.0",
+    "mktestdocs>=0.2.0",
+    "build>=1.0",
+]
+
+[project.scripts]
+fdl-validate = "fdl.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["fdl_ffi*", "fdl*"]
+
+[tool.setuptools.package-data]
+fdl_ffi = ["libfdl_core.dylib", "libfdl_core.so", "fdl_core.dll", "fdl_core_decl.h"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:pytest-qt"
+
+[tool.ruff]
+line-length = 140
+src = ["fdl", "tests"]
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "UP", "RUF"]

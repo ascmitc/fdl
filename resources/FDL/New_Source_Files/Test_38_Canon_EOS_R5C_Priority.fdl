@@ -1,0 +1,61 @@
+{
+  "uuid": "0d3f160c-047f-41f6-8dcb-975156918759",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "ASC FDL Tools",
+  "default_framing_intent": "1",
+  "framing_intents": [
+    {
+      "label": "",
+      "id": "1",
+      "aspect_ratio": {
+        "width": 3089,
+        "height": 2160
+      },
+      "protection": 0.1
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Canon EOS R5C",
+      "context_creator": "ASC FDL Tools",
+      "canvases": [
+        {
+          "label": "8K",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 7680,
+            "height": 4320
+          },
+          "anamorphic_squeeze": 1,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-1",
+              "framing_intent_id": "1",
+              "dimensions": {
+                "width": 5560,
+                "height": 3888
+              },
+              "anchor_point": {
+                "x": 1060,
+                "y": 216
+              },
+              "protection_dimensions": {
+                "width": 6178,
+                "height": 4320
+              },
+              "protection_anchor_point": {
+                "x": 751,
+                "y": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
