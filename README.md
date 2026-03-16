@@ -10,7 +10,7 @@ ASC FDL’s are a set of instructions for how to view content in any application
 _________________
 1-SHEET:
 
-This is the first [document](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_One-Sheet-20210807.pdf) you should read.
+This is the first [document](https://github.com/ascmitc/fdl/blob/main/docs/ASCFDL_One-Sheet-20210807.pdf) you should read.
 This is a very brief introduction to what the FDL is and the problem it has set out to solve.
 
 
@@ -18,7 +18,7 @@ This is a very brief introduction to what the FDL is and the problem it has set 
 _________________
 USER GUIDE:
 
-This is a [document](https://ascmitc.github.io/fdl/dev/docs/ASCFDL_UserGuide_v2.0.PDF) intended for end users to better understand how the FDL could be used within their workflows.
+This is a [document](https://github.com/ascmitc/fdl/blob/main/docs/ASCFDL_UserGuide_v2.0.pdf) intended for end users to better understand how the FDL could be used within their workflows.
 This will also be a great reference for implementers to better understand the intention behind FDL usability.
 
 
@@ -26,23 +26,30 @@ This will also be a great reference for implementers to better understand the in
 _______________________________
 GETTING ACCESS TO SAMPLE MEDIA:
 
-Sample data sets including reference images and associated source/result FDL data, can be found in [resources](https://github.com/ascmitc/fdl/tree/dev/resources/FDL).
+The latest ScenariosForImplementors, including reference images and associated source/result FDL data, can be found on the [releases](https://github.com/ascmitc/fdl/releases) page.
 
-After compiling the code, an interface has been provided that allows you to view framing charts, configure settings, and instantly see the expected outcome both visually and as the resulting FDL JSON.  
+The FDL Viewer is a desktop application that allows you to view framing charts, configure settings, and instantly see the expected outcome both visually and as the resulting FDL JSON. Precompiled binaries for macOS, Windows, and Linux are available on the [releases](https://github.com/ascmitc/fdl/releases) page.
 
 
 
 _________________
 SPECIFICATION:
 
-This is the technical [specification](https://ascmitc.github.io/fdl/dev/Specification/ASCFDL_Specification_v2.0.pdf/) for implementers.
+This is the technical [specification](https://github.com/ascmitc/fdl/blob/main/Specification/ASCFDL_Specification_v2.0.1.pdf) for implementers.
 
 
 
 _____________________
 IMPLIMENTATION GUIDE:
 
-For anyone looking to implement the ASCFDL into their tooling, [a guide](https://ascmitc.github.io/fdl/dev/FDL_Template_Implementer_Guide/) has been created to offer helpful information.
+For anyone looking to implement the ASCFDL into their tooling, [a guide](https://ascmitc.github.io/fdl/FDL_Template_Implementer_Guide/) has been created to offer helpful information.
+
+
+
+_________________
+DOCUMENTATION:
+
+Full documentation is available at [ascmitc.github.io/fdl](https://ascmitc.github.io/fdl/). There you will find tutorials, system architecture overviews, API references for Python, TypeScript, and C++, template application algorithms, and guides for implementers.
 
 
 
