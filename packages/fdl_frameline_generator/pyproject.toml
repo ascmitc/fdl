@@ -1,6 +1,6 @@
 [project]
 name = "asc-fdl-frameline-generator"
-version = "0.1.0-dev.11"
+version = "1.0.0"
 description = "Generate frameline overlay images from FDL files (EXR/PNG/TIFF via OIIO, plus SVG vector output)"
 license = "Apache-2.0"
 requires-python = ">=3.10"
