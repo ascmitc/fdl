@@ -19,13 +19,13 @@ the full picture.
 ### Python
 
 ```shell
-pip install fdl
+pip install asc-fdl
 ```
 
 ### TypeScript / Node.js
 
 ```shell
-npm install fdl
+npm install @asc-mitc/fdl
 ```
 
 ### C++
@@ -60,7 +60,7 @@ Link against `libfdl_core` (built via CMake from `native/core/`).
 | [C ABI Design](c_abi.md) | Native interface contract for binding authors |
 | [Template Application](FDL_Apply_Template_Logic.md) | Algorithm overview and formula reference |
 | [Template Implementer Guide](FDL_Template_Implementer_Guide.md) | Deep-dive with worked examples |
-| [Application Packages](packages.md) | fdl-imaging, fdl-frameline-generator, fdl-viewer |
+| [Application Packages](packages.md) | asc-fdl-imaging, asc-fdl-frameline-generator, asc-fdl-viewer |
 | [Contributing](contributions.md) | How to contribute, lint, test, and submit PRs |
 
 ## Examples

@@ -7,7 +7,7 @@ raster output (EXR, PNG, TIFF, JPG, DPX) via OpenImageIO and vector output
 ## Install
 
 ```shell
-pip install fdl-frameline-generator
+pip install asc-fdl-frameline-generator
 ```
 
 Requires [OpenImageIO](https://github.com/AcademySoftwareFoundation/OpenImageIO)
@@ -155,8 +155,8 @@ svg_doc.write("output.svg")
 | `svg_backend.py` | `SvgDocument` -- vector SVG output backend |
 | `colors.py` | Color constants and RGBA utilities |
 | `cli.py` | `fdl-frameline` command-line interface |
-| `primitives.py` | Re-exports drawing primitives from `fdl-imaging` |
-| `text.py` | Re-exports text utilities from `fdl-imaging` |
+| `primitives.py` | Re-exports drawing primitives from `asc-fdl-imaging` |
+| `text.py` | Re-exports text utilities from `asc-fdl-imaging` |
 
 The rendering pipeline:
 
@@ -167,7 +167,7 @@ The rendering pipeline:
 5. Write output in the requested format
 
 Drawing primitives and text rendering are delegated to the
-[fdl-imaging](fdl_imaging.md) package.
+[asc-fdl-imaging](fdl_imaging.md) package.
 
 ## Source
 

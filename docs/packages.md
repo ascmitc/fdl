@@ -1,13 +1,13 @@
 # Application Packages
 
-Beyond the core `fdl` library, the project includes three application packages
+Beyond the core `asc-fdl` library, the project includes three application packages
 in the `packages/` directory. Each is a standalone Python package within the
 uv workspace.
 
 ```
-fdl-viewer -------------+
-                        +---> fdl-imaging ---> fdl (core)
-fdl-frameline-generator +
+asc-fdl-viewer -------------+
+                            +---> asc-fdl-imaging ---> asc-fdl (core)
+asc-fdl-frameline-generator +
 ```
 
 ## [Frameline Generator](fdl_frameline_generator.md)
@@ -16,7 +16,7 @@ Generates pixel-accurate frameline overlay images from FDL files. Supports
 EXR, PNG, TIFF, SVG, and more.
 
 ```shell
-pip install fdl-frameline-generator
+pip install asc-fdl-frameline-generator
 fdl-frameline input.fdl output.png
 ```
 
@@ -27,7 +27,7 @@ cropping, extraction, template transformation, drawing primitives, and
 pixel-level image comparison. Used by both the frameline generator and viewer.
 
 ```shell
-pip install fdl-imaging
+pip install asc-fdl-imaging
 ```
 
 ## [FDL Viewer](fdl_viewer.md)
@@ -37,13 +37,13 @@ interactively. Displays source and output canvases with geometry overlays,
 supports template application, image overlay, and side-by-side comparison.
 
 ```shell
-pip install fdl-viewer
+pip install asc-fdl-viewer
 fdl-viewer
 ```
 
 ## Core CLI: fdl-validate
 
-The core `fdl` package also provides a command-line validation tool:
+The core `asc-fdl` package also provides a command-line validation tool:
 
 ```shell
 fdl-validate scene.fdl              # validate a single file

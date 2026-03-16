@@ -6,13 +6,13 @@ Provides image cropping/extraction, template transformations, drawing
 primitives, text rendering, and pixel-level image comparison.
 
 This is a **library-only** package -- no CLI. It is used programmatically by
-[fdl-frameline-generator](fdl_frameline_generator.md) and
-[fdl-viewer](fdl_viewer.md).
+[asc-fdl-frameline-generator](fdl_frameline_generator.md) and
+[asc-fdl-viewer](fdl_viewer.md).
 
 ## Install
 
 ```shell
-pip install fdl-imaging
+pip install asc-fdl-imaging
 ```
 
 Requires OpenImageIO to be available on the system.
@@ -117,12 +117,12 @@ assert result.passed, result.message
 ## Package Relationships
 
 ```
-fdl-viewer -------------+
-                        +---> fdl-imaging ---> fdl (core)
-fdl-frameline-generator +
+asc-fdl-viewer -------------+
+                            +---> asc-fdl-imaging ---> asc-fdl (core)
+asc-fdl-frameline-generator +
 ```
 
-`fdl-imaging` is the shared foundation: the frameline generator delegates all
+`asc-fdl-imaging` is the shared foundation: the frameline generator delegates all
 drawing primitives and text rendering to it, and the viewer uses it for image
 loading, processing, and visual QC comparison.
 

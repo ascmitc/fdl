@@ -72,7 +72,7 @@ This repository contains the ASC FDL reference implementation: a native C librar
 │   │   ├── src/                     #   Implementation (parsing, validation, geometry, pipeline, templates)
 │   │   └── tests/                   #   Catch2 C++ unit tests with JSON test vectors
 │   ├── bindings/
-│   │   ├── python/                  # fdl — Python ctypes bindings & facade
+│   │   ├── python/                  # asc-fdl — Python ctypes bindings & facade
 │   │   │   ├── fdl/                 #   FDL, Canvas, Context, FramingDecision, etc.
 │   │   │   ├── fdl_ffi/             #   Low-level ctypes FFI loader and function declarations
 │   │   │   └── tests/              #   Python unit tests (351 tests)
@@ -82,13 +82,13 @@ This repository contains the ASC FDL reference implementation: a native C librar
 │   └── tools/                       # Code generation and test vector extraction scripts
 │
 ├── packages/                        # Python application packages
-│   ├── fdl_imaging/                 # fdl-imaging — FDL-based image processing (OpenImageIO)
+│   ├── fdl_imaging/                 # asc-fdl-imaging — FDL-based image processing (OpenImageIO)
 │   │   ├── src/fdl_imaging/         #   Image extraction, resizing, comparison utilities
 │   │   └── tests/                   #   Image processing tests (6 tests)
-│   ├── fdl_frameline_generator/     # fdl-frameline-generator — frameline overlay generation
+│   ├── fdl_frameline_generator/     # asc-fdl-frameline-generator — frameline overlay generation
 │   │   ├── src/fdl_frameline_generator/  # EXR/PNG/TIFF/SVG frameline rendering
 │   │   └── tests/                   #   Renderer + regression tests (157 tests)
-│   └── fdl_viewer/                  # fdl-viewer — PySide6 desktop application
+│   └── fdl_viewer/                  # asc-fdl-viewer — PySide6 desktop application
 │       ├── src/fdl_viewer/          #   MVC architecture (models, views, controllers)
 │       └── tests/                   #   UI, controller, model, and visual QC tests (130+ tests)
 │
@@ -106,13 +106,13 @@ This repository contains the ASC FDL reference implementation: a native C librar
 
 **`libfdl_core`** (`native/core/`) — The core engine, written in C++ and exposed via a C ABI. Handles FDL parsing, serialization (JSON), schema validation (Draft 2020-12 via jsoncons), geometry calculations, canvas resolution pipeline, and template application. Built with CMake.
 
-**`fdl`** (`native/bindings/python/`) — Python package providing a high-level facade over `libfdl_core` via ctypes. Classes include `FDL`, `Canvas`, `Context`, `FramingIntent`, `FramingDecision`, and `CanvasTemplate`. Also provides rounding strategies, validation, and a `fdl-validate` CLI tool.
+**`asc-fdl`** (`native/bindings/python/`) — Python package providing a high-level facade over `libfdl_core` via ctypes. Classes include `FDL`, `Canvas`, `Context`, `FramingIntent`, `FramingDecision`, and `CanvasTemplate`. Also provides rounding strategies, validation, and a `fdl-validate` CLI tool.
 
-**`fdl-imaging`** (`packages/fdl_imaging/`) — Image processing utilities using OpenImageIO. Extracts framing regions from source images based on FDL geometry and produces output images matching target canvas dimensions.
+**`asc-fdl-imaging`** (`packages/fdl_imaging/`) — Image processing utilities using OpenImageIO. Extracts framing regions from source images based on FDL geometry and produces output images matching target canvas dimensions.
 
-**`fdl-frameline-generator`** (`packages/fdl_frameline_generator/`) — Generates frameline overlay images from FDL files. Supports EXR, PNG, TIFF (via OIIO), and SVG vector output. Includes a `fdl-frameline` CLI tool.
+**`asc-fdl-frameline-generator`** (`packages/fdl_frameline_generator/`) — Generates frameline overlay images from FDL files. Supports EXR, PNG, TIFF (via OIIO), and SVG vector output. Includes a `fdl-frameline` CLI tool.
 
-**`fdl-viewer`** (`packages/fdl_viewer/`) — A PySide6 desktop application for interactively viewing, transforming, and exporting FDL files. Supports source/output scene visualization with HUD overlays, template-based transforms, and image export. Built with an MVC architecture.
+**`asc-fdl-viewer`** (`packages/fdl_viewer/`) — A PySide6 desktop application for interactively viewing, transforming, and exporting FDL files. Supports source/output scene visualization with HUD overlays, template-based transforms, and image export. Built with an MVC architecture.
 
 -----------------------------------------
 
@@ -124,7 +124,7 @@ This repository contains the ASC FDL reference implementation: a native C librar
 - **uv** (Python package manager) — [install instructions](https://docs.astral.sh/uv/getting-started/installation/)
 - **CMake** 3.20+
 - **C++ compiler** with C++17 support (Clang, GCC, or MSVC)
-- **OpenImageIO** 2.4+ (required by `fdl-imaging` and `fdl-frameline-generator`)
+- **OpenImageIO** 2.4+ (required by `asc-fdl-imaging` and `asc-fdl-frameline-generator`)
 
 ### Clone the Repository
 
@@ -175,7 +175,7 @@ This produces `native/core/build/libfdl_core.dylib` (macOS), `libfdl_core.so` (L
 uv sync --extra dev
 ```
 
-This installs the full workspace (`fdl`, `fdl-imaging`, `fdl-frameline-generator`, `fdl-viewer`) in editable mode along with test dependencies (pytest, pytest-xdist, pytest-qt, pytest-cov, mktestdocs).
+This installs the full workspace (`asc-fdl`, `asc-fdl-imaging`, `asc-fdl-frameline-generator`, `asc-fdl-viewer`) in editable mode along with test dependencies (pytest, pytest-xdist, pytest-qt, pytest-cov, mktestdocs).
 
 ### Run the Tests
 
@@ -247,7 +247,7 @@ lint --> test (macOS, Windows, Linux) --> build_artifacts --> publish_release
 |-----|---------|-------------|
 | **Lint** | All pushes/PRs | Runs `ruff check` and `ruff format --check` on Ubuntu |
 | **Test** | After lint passes | Codegen, native build + C++ tests, Python tests (all 4 suites) on 3 platforms |
-| **Build Artifacts** | Nightly, manual, or tag push | Builds platform-specific wheels (`fdl`, `fdl-imaging`, `fdl-frameline-generator`, `fdl-viewer`) and standalone FDL Viewer app (PyInstaller) |
+| **Build Artifacts** | Nightly, manual, or tag push | Builds platform-specific wheels (`asc-fdl`, `asc-fdl-imaging`, `asc-fdl-frameline-generator`, `asc-fdl-viewer`) and standalone FDL Viewer app (PyInstaller) |
 | **Publish Release** | Tag push (`v*`) on main | Creates a GitHub Release and uploads all artifacts |
 
 ### Caching

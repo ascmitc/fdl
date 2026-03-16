@@ -6,7 +6,7 @@ ASC FDL (Framing Decision List) files interactively.
 ## Install & Launch
 
 ```shell
-pip install fdl-viewer
+pip install asc-fdl-viewer
 
 fdl-viewer                     # launch empty
 fdl-viewer path/to/scene.fdl   # launch with file pre-loaded
