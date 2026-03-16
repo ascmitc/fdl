@@ -96,6 +96,27 @@ jobs:
         working-directory: native/bindings/node
 
   # ---------------------------------------------------------------------------
+  # Verify Tag — ensure set_version.py was run before tagging
+  # ---------------------------------------------------------------------------
+  verify_tag:
+    name: Verify Tag Versions
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip on non-tag runs
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: echo "Not a tag push — skipping version check."
+      - uses: actions/checkout@v6
+        if: startsWith(github.ref, 'refs/tags/')
+      - uses: actions/setup-python@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          python-version: '3.12'
+      - name: Verify all package versions match tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: python scripts/verify_version.py "${GITHUB_REF_NAME#v}"
+
+  # ---------------------------------------------------------------------------
   # Tests — gate for all downstream jobs
   # ---------------------------------------------------------------------------
   test:
@@ -242,7 +263,7 @@ jobs:
   # ---------------------------------------------------------------------------
   build_artifacts:
     name: Build Artifacts (${{ matrix.os }})
-    needs: test
+    needs: [test, verify_tag]
     if: >-
       github.event_name == 'schedule' ||
       github.event_name == 'workflow_dispatch' ||
@@ -512,7 +533,7 @@ jobs:
   # ---------------------------------------------------------------------------
   package_scenarios:
     name: Package Scenario Resources
-    needs: test
+    needs: [test, verify_tag]
     if: >-
       github.event_name == 'schedule' ||
       github.event_name == 'workflow_dispatch' ||
@@ -741,3 +762,4 @@ jobs:
         with:
           packages-dir: dist/
           password: ${{ secrets.PYPI_TOKEN }}
+          attestations: false
