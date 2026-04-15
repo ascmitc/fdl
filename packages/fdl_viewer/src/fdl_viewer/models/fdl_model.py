@@ -288,7 +288,12 @@ class FDLModel(QObject):
         List[str]
             The list of framing decision labels (or IDs if no label).
         """
-        return [fd.label or fd.id for fd in self.framing_decisions]
+        fi_labels: dict[str, str] = {}
+        if self._fdl:
+            for fi in self._fdl.framing_intents:
+                if fi.label:
+                    fi_labels[fi.id] = fi.label
+        return [fd.label or fi_labels.get(fd.framing_intent_id, "") or fd.id for fd in self.framing_decisions]
 
     @property
     def current_framing_decision(self) -> FramingDecision | None:
