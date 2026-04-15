@@ -419,7 +419,17 @@ fdl_template_result_t apply_canvas_template(
     auto max_h = static_cast<double>(max_dims_i.height);
     bool const pad_to_max = fdl_canvas_template_get_pad_to_maximum(tmpl) != 0;
 
-    fdl_round_strategy_t const rounding = fdl_canvas_template_get_round(tmpl);
+    fdl_round_strategy_t rounding = fdl_canvas_template_get_round(tmpl);
+
+    // When no explicit "round" field (NONE sentinel) and the output canvas
+    // is NOT guaranteed integer by pad_to_maximum + maximum_dimensions,
+    // fall back to the spec default (even/round) so canvas.dimensions are
+    // properly rounded to integers.  When pad_to_maximum IS set, the canvas
+    // is always integer from maximum_dimensions, so inner geometry can stay
+    // float — this is the #36 scenario.
+    if (rounding.mode == FDL_ROUNDING_MODE_NONE && !(has_max_dims && pad_to_max)) {
+        rounding = {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_ROUND};
+    }
 
     fdl_dimensions_i64_t const target_dims_i = fdl_canvas_template_get_target_dimensions(tmpl);
     fdl_dimensions_f64_t const target_dims = {

@@ -239,6 +239,63 @@ class TestApplyTemplateWithRounding:
 
 
 # ---------------------------------------------------------------------------
+# Context-dependent default: no pad_to_max → rounding applied automatically
+# ---------------------------------------------------------------------------
+
+class TestContextDependentRoundingDefault:
+    """When round is omitted and pad_to_max is NOT set, the pipeline
+    should fall back to spec-default rounding (even/round) to keep
+    canvas.dimensions integer."""
+
+    def test_no_pad_no_round_still_rounds(self):
+        """Without pad_to_max, omitting round should still produce integer dims."""
+        doc = _build_source_fdl()
+        template = CanvasTemplate(
+            id="T",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            fit_source=GeometryPath.FRAMING_DIMENSIONS,
+            fit_method=FitMethod.WIDTH,
+            preserve_from_source_canvas=GeometryPath.CANVAS_DIMENSIONS,
+        )
+        fd = _apply_template(doc, template)
+        assert fd.dimensions.width == int(fd.dimensions.width)
+        assert fd.dimensions.height == int(fd.dimensions.height)
+
+    def test_pad_to_max_no_round_preserves_floats(self):
+        """With pad_to_max, omitting round should preserve fractional dims."""
+        doc = _build_source_fdl()
+        template = CanvasTemplate(
+            id="T",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            fit_source=GeometryPath.FRAMING_DIMENSIONS,
+            fit_method=FitMethod.WIDTH,
+            preserve_from_source_canvas=GeometryPath.CANVAS_DIMENSIONS,
+            maximum_dimensions=DimensionsInt(width=1920, height=1080),
+            pad_to_maximum=True,
+        )
+        fd = _apply_template(doc, template)
+        assert fd.dimensions.height != int(fd.dimensions.height), (
+            "pad_to_max with no round should preserve fractional inner dims"
+        )
+
+    def test_max_dims_without_pad_still_rounds(self):
+        """maximum_dimensions alone (without pad_to_max) should still round."""
+        doc = _build_source_fdl()
+        template = CanvasTemplate(
+            id="T",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            fit_source=GeometryPath.FRAMING_DIMENSIONS,
+            fit_method=FitMethod.WIDTH,
+            preserve_from_source_canvas=GeometryPath.CANVAS_DIMENSIONS,
+            maximum_dimensions=DimensionsInt(width=1920, height=1080),
+            pad_to_maximum=False,
+        )
+        fd = _apply_template(doc, template)
+        assert fd.dimensions.width == int(fd.dimensions.width)
+        assert fd.dimensions.height == int(fd.dimensions.height)
+
+
+# ---------------------------------------------------------------------------
 # Different rounding modes produce distinct results
 # ---------------------------------------------------------------------------
 
