@@ -52,11 +52,17 @@ int64_t fdl_round(double value, fdl_rounding_even_t even, fdl_rounding_mode_t mo
 
 fdl_dimensions_f64_t fdl_round_dimensions(
     fdl_dimensions_f64_t dims, fdl_rounding_even_t even, fdl_rounding_mode_t mode) {
+    if (mode == FDL_ROUNDING_MODE_NONE) {
+        return dims;
+    }
     return {
         static_cast<double>(fdl_round(dims.width, even, mode)),
         static_cast<double>(fdl_round(dims.height, even, mode))};
 }
 
 fdl_point_f64_t fdl_round_point(fdl_point_f64_t point, fdl_rounding_even_t even, fdl_rounding_mode_t mode) {
+    if (mode == FDL_ROUNDING_MODE_NONE) {
+        return point;
+    }
     return {static_cast<double>(fdl_round(point.x, even, mode)), static_cast<double>(fdl_round(point.y, even, mode))};
 }

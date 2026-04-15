@@ -165,8 +165,11 @@ ojson make_canvas_template(
     ct.insert_or_assign("fit_method", fit_method_to_string(fit_method));
     ct.insert_or_assign("alignment_method_horizontal", halign_to_string(halign));
     ct.insert_or_assign("alignment_method_vertical", valign_to_string(valign));
-    ct.insert_or_assign(
-        "round", make_round_strategy(rounding_even_to_string(rounding.even), rounding_mode_to_string(rounding.mode)));
+    if (rounding.mode != FDL_ROUNDING_MODE_NONE) {
+        ct.insert_or_assign(
+            "round",
+            make_round_strategy(rounding_even_to_string(rounding.even), rounding_mode_to_string(rounding.mode)));
+    }
     return ct;
 }
 

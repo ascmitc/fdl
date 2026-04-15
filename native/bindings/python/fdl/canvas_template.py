@@ -104,7 +104,7 @@ class CanvasTemplate(HandleWrapper):
         fit_method: FitMethod = FitMethod.WIDTH,
         alignment_method_horizontal: HAlign = HAlign.CENTER,
         alignment_method_vertical: VAlign = VAlign.CENTER,
-        round: RoundStrategy = RoundStrategy(),
+        round: RoundStrategy = RoundStrategy.NONE,
         preserve_from_source_canvas: GeometryPath | None = None,
         maximum_dimensions: DimensionsInt | None = None,
         pad_to_maximum: bool = False,

@@ -134,6 +134,10 @@ fdl_geometry_t geometry_normalize_and_scale(
 
 fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy) {
 
+    if (strategy.mode == FDL_ROUNDING_MODE_NONE) {
+        return geo;
+    }
+
     return {
         fdl_round_dimensions(geo.canvas_dims, strategy.even, strategy.mode),
         fdl_round_dimensions(geo.effective_dims, strategy.even, strategy.mode),

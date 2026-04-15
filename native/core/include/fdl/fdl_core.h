@@ -134,6 +134,7 @@ typedef uint64_t fdl_rounding_mode_t;
 #define FDL_ROUNDING_MODE_UP 0    /**< Always round up (ceiling). */
 #define FDL_ROUNDING_MODE_DOWN 1  /**< Always round down (floor). */
 #define FDL_ROUNDING_MODE_ROUND 2 /**< Round to nearest (half-to-even). */
+#define FDL_ROUNDING_MODE_NONE 3  /**< No rounding — preserve float values. */
 
 /** Rounding even — whether to snap results to even numbers. */
 typedef uint64_t fdl_rounding_even_t;
@@ -1322,9 +1323,16 @@ FDL_API fdl_dimensions_i64_t fdl_canvas_template_get_maximum_dimensions(const fd
  * @return FDL_TRUE if output should be padded to maximum dimensions, FDL_FALSE otherwise. */
 FDL_API int fdl_canvas_template_get_pad_to_maximum(const fdl_canvas_template_t* ct);
 
-/** Get the rounding strategy.
+/** Check whether the template has an explicit rounding strategy.
  * @param ct  Canvas template handle.
- * @return Rounding strategy (even + mode). */
+ * @return Non-zero if a "round" field is present in the JSON. */
+FDL_API int fdl_canvas_template_has_round(const fdl_canvas_template_t* ct);
+
+/** Get the rounding strategy.
+ * Returns {0, FDL_ROUNDING_MODE_NONE} when no "round" field is present,
+ * meaning the template requests no rounding (float values preserved).
+ * @param ct  Canvas template handle.
+ * @return Rounding strategy (even + mode), or NONE sentinel when absent. */
 FDL_API fdl_round_strategy_t fdl_canvas_template_get_round(const fdl_canvas_template_t* ct);
 
 /* -----------------------------------------------------------------------

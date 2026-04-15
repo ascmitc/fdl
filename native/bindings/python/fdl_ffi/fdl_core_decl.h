@@ -51,6 +51,7 @@ typedef uint64_t fdl_rounding_mode_t;
 #define FDL_ROUNDING_MODE_UP 0
 #define FDL_ROUNDING_MODE_DOWN 1
 #define FDL_ROUNDING_MODE_ROUND 2
+#define FDL_ROUNDING_MODE_NONE 3
 
 typedef uint64_t fdl_rounding_even_t;
 #define FDL_ROUNDING_EVEN_WHOLE 0
@@ -386,6 +387,8 @@ int fdl_canvas_template_has_maximum_dimensions(const fdl_canvas_template_t* ct);
 fdl_dimensions_i64_t fdl_canvas_template_get_maximum_dimensions(const fdl_canvas_template_t* ct);
 
 int fdl_canvas_template_get_pad_to_maximum(const fdl_canvas_template_t* ct);
+
+int fdl_canvas_template_has_round(const fdl_canvas_template_t* ct);
 
 fdl_round_strategy_t fdl_canvas_template_get_round(const fdl_canvas_template_t* ct);
 

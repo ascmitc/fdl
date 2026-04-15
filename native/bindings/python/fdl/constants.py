@@ -18,6 +18,7 @@ class RoundingMode(_StrEnum):
     UP = "up"
     DOWN = "down"
     ROUND = "round"
+    NONE = "none"
 
 
 class RoundingEven(_StrEnum):

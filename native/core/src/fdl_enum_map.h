@@ -125,6 +125,9 @@ inline fdl_rounding_mode_t rounding_mode_from_string(std::string_view s) {
     if (s == "round") {
         return FDL_ROUNDING_MODE_ROUND;
     }
+    if (s == "none") {
+        return FDL_ROUNDING_MODE_NONE;
+    }
     return FDL_ROUNDING_MODE_ROUND; // default
 }
 
@@ -232,6 +235,8 @@ inline const char* rounding_mode_to_string(fdl_rounding_mode_t m) {
         return "up";
     case FDL_ROUNDING_MODE_DOWN:
         return "down";
+    case FDL_ROUNDING_MODE_NONE:
+        return "none";
     default:
         return "round";
     }

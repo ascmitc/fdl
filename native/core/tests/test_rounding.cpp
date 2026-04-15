@@ -17,6 +17,9 @@ static fdl_rounding_mode_t parse_mode(const std::string& s) {
     if (s == "down") {
         return FDL_ROUNDING_MODE_DOWN;
     }
+    if (s == "none") {
+        return FDL_ROUNDING_MODE_NONE;
+    }
     return FDL_ROUNDING_MODE_ROUND;
 }
 

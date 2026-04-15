@@ -377,6 +377,8 @@ class TestFacadeRoundTrip:
 
         for even in RoundingEven:
             for mode in RoundingMode:
+                if mode == RoundingMode.NONE:
+                    continue
                 doc = FDL(uuid="test-uuid")
                 ct = doc.add_canvas_template(
                     id=f"CT_{even}_{mode}",
@@ -393,6 +395,22 @@ class TestFacadeRoundTrip:
                 result = ct.round
                 assert result.even == even, f"even={even}: got {result.even}"
                 assert result.mode == mode, f"mode={mode}: got {result.mode}"
+
+        # NONE mode: round field is omitted from JSON, read-back returns NONE sentinel
+        doc = FDL(uuid="test-uuid-none")
+        ct = doc.add_canvas_template(
+            id="CT_none",
+            label="Test",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            target_anamorphic_squeeze=1.0,
+            fit_source=GeometryPath.FRAMING_DIMENSIONS,
+            fit_method=FitMethod.WIDTH,
+            alignment_method_horizontal=HAlign.CENTER,
+            alignment_method_vertical=VAlign.CENTER,
+            round=RoundStrategy(even=RoundingEven.WHOLE, mode=RoundingMode.NONE),
+        )
+        result = ct.round
+        assert result.mode == RoundingMode.NONE, f"NONE mode: got {result.mode}"
 
     def test_dimensions_i64_facade(self):
         """Facade round-trip for DimensionsInt."""

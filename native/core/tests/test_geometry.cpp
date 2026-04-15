@@ -108,6 +108,8 @@ TEST_CASE("Geometry round matches Python golden vectors", "[geometry][round]") {
                 strategy.mode = FDL_ROUNDING_MODE_UP;
             } else if (mode_str == "down") {
                 strategy.mode = FDL_ROUNDING_MODE_DOWN;
+            } else if (mode_str == "none") {
+                strategy.mode = FDL_ROUNDING_MODE_NONE;
             } else {
                 strategy.mode = FDL_ROUNDING_MODE_ROUND;
             }

@@ -10,6 +10,7 @@ export enum RoundingMode {
   UP = "up",
   DOWN = "down",
   ROUND = "round",
+  NONE = "none",
 }
 
 export enum RoundingEven {

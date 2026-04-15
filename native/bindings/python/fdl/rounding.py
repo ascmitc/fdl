@@ -10,13 +10,29 @@ from .fdl_types import DimensionsFloat
 
 
 class RoundStrategy:
-    """Lightweight RoundStrategy value type."""
+    """Lightweight RoundStrategy value type.
+
+    When ``mode`` is ``RoundingMode.NONE``, no rounding is applied and all
+    geometry values pass through unchanged as floats. This is the default
+    when a canvas template omits the ``round`` field.
+    """
 
     __slots__ = ("even", "mode")
+
+    NONE: RoundStrategy  # class-level sentinel, assigned below
 
     def __init__(self, *, even: RoundingEven = RoundingEven.EVEN, mode: RoundingMode = RoundingMode.UP) -> None:
         self.even: RoundingEven = even
         self.mode: RoundingMode = mode
+
+    @property
+    def is_none(self) -> bool:
+        """True when this strategy represents 'no rounding'."""
+        return self.mode == RoundingMode.NONE
+
+    def __bool__(self) -> bool:
+        """False when strategy is NONE (no rounding), True otherwise."""
+        return self.mode != RoundingMode.NONE
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, RoundStrategy):
@@ -30,7 +46,12 @@ class RoundStrategy:
         return iter((self.even, self.mode))
 
     def __repr__(self) -> str:
+        if self.is_none:
+            return "RoundStrategy.NONE"
         return f"RoundStrategy(even={self.even!r}, mode={self.mode!r})"
+
+
+RoundStrategy.NONE = RoundStrategy(even=RoundingEven.WHOLE, mode=RoundingMode.NONE)
 
 
 def fdl_round(value: float, even: str, mode: str) -> int:

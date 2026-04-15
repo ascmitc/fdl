@@ -39,9 +39,13 @@ fdl_geometry_t geometry_normalize_and_scale(
 
 /**
  * @brief Round all 7 fields of the geometry using the given strategy.
+ *
+ * When @p strategy.mode is FDL_ROUNDING_MODE_NONE, returns @p geo unchanged
+ * (no rounding applied). This supports templates that omit the "round" field.
+ *
  * @param geo       Input geometry.
  * @param strategy  Rounding strategy (even + mode).
- * @return Geometry with all fields rounded.
+ * @return Geometry with all fields rounded, or unmodified when mode is NONE.
  */
 fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy);
 

@@ -35,6 +35,7 @@ ffi.cdef(_DECL_PATH.read_text(encoding="utf-8"))
 FDL_ROUNDING_MODE_UP = 0
 FDL_ROUNDING_MODE_DOWN = 1
 FDL_ROUNDING_MODE_ROUND = 2
+FDL_ROUNDING_MODE_NONE = 3
 
 # fdl_rounding_even_t
 FDL_ROUNDING_EVEN_WHOLE = 0

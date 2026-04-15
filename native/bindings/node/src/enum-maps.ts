@@ -20,6 +20,7 @@ export const ROUNDING_MODE_FROM_C: Map<number, RoundingMode> = new Map([
   [0, RoundingMode.UP],
   [1, RoundingMode.DOWN],
   [2, RoundingMode.ROUND],
+  [3, RoundingMode.NONE],
 ]);
 export const ROUNDING_MODE_TO_C: Map<RoundingMode, number> = new Map(
   [...ROUNDING_MODE_FROM_C].map(([k, v]) => [v, k]),

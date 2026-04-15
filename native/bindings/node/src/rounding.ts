@@ -19,10 +19,17 @@ import { DimensionsFloat } from "./types.js";
 // RoundStrategy
 // -----------------------------------------------------------------------
 
-/** Rounding strategy: combination of even/odd and direction. */
+/** Rounding strategy: combination of even/odd and direction.
+ *
+ * When mode is RoundingMode.NONE, no rounding is applied and all
+ * geometry values pass through unchanged as floats.
+ */
 export class RoundStrategy {
   even: RoundingEven;
   mode: RoundingMode;
+
+  /** Sentinel: no rounding applied. */
+  static readonly NONE = new RoundStrategy(RoundingEven.WHOLE, RoundingMode.NONE);
 
   constructor(
     even: RoundingEven = RoundingEven.EVEN,
@@ -30,6 +37,11 @@ export class RoundStrategy {
   ) {
     this.even = even;
     this.mode = mode;
+  }
+
+  /** True when this strategy represents 'no rounding'. */
+  get isNone(): boolean {
+    return this.mode === RoundingMode.NONE;
   }
 
   equals(other: RoundStrategy): boolean {
@@ -41,10 +53,12 @@ export class RoundStrategy {
   }
 
   toString(): string {
+    if (this.isNone) return "RoundStrategy.NONE";
     return `RoundStrategy(even=${this.even}, mode=${this.mode})`;
   }
 
-  toJSON(): Record<string, unknown> {
+  toJSON(): Record<string, unknown> | undefined {
+    if (this.isNone) return undefined;
     return { even: this.even, mode: this.mode };
   }
 }

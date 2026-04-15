@@ -155,7 +155,7 @@ export class CanvasTemplate extends HandleWrapper {
       opts.alignmentMethodHorizontal ?? HAlign.CENTER;
     const _alignmentMethodVertical =
       opts.alignmentMethodVertical ?? VAlign.CENTER;
-    const _round = opts.round ?? new RoundStrategy();
+    const _round = opts.round ?? RoundStrategy.NONE;
     const _preserveFromSourceCanvas = opts.preserveFromSourceCanvas ?? null;
     const _maximumDimensions = opts.maximumDimensions ?? null;
     const _padToMaximum = opts.padToMaximum ?? false;
