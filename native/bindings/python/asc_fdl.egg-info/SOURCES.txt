@@ -37,6 +37,7 @@ fdl/testing/template_tests.py
 fdl_ffi/__init__.py
 fdl_ffi/_loader.py
 fdl_ffi/fdl_core_decl.h
+fdl_ffi/libfdl_core.dylib
 tests/test_canvas.py
 tests/test_cli.py
 tests/test_clipid.py
@@ -51,7 +52,9 @@ tests/test_ffi_smoke.py
 tests/test_framing_decision.py
 tests/test_kwargs_construction.py
 tests/test_models.py
+tests/test_optional_rounding.py
 tests/test_rounding.py
+tests/test_struct_abi.py
 tests/test_templates_error_validation.py
 tests/test_templates_parameterized.py
 tests/test_thread_safety.py

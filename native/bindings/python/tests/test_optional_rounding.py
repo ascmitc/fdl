@@ -2,9 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 """Tests for optional rounding in FDL canvas templates.
 
-Verifies that templates can omit the ``round`` field to preserve fractional
-pixel values for inner geometry (framing dimensions, protection dimensions,
-and their anchors), while canvas dimensions remain integer.
+Per FDL spec 7.4.12, ``round`` applies only to ``canvas.dimensions``; inner
+geometry (framing dimensions, protection dimensions, anchors) is never rounded
+and remains float. ``canvas.effective_dimensions`` is ceiled to integer where
+present. When ``round`` is omitted from JSON, the C accessor returns the spec
+default ``even`` / ``up``. When ``pad_to_maximum=true`` with ``maximum_dimensions``,
+``round`` has no effect on sizing (canvas is already integer from max dims).
 
 See: https://github.com/ascmitc/fdl/issues/36
 """
@@ -18,22 +21,19 @@ from fdl import (
     FDL,
     Canvas,
     CanvasTemplate,
-    Context,
     DimensionsFloat,
     DimensionsInt,
     FramingDecision,
-    FramingIntent,
     PointFloat,
     RoundStrategy,
+    TemplateResult,
     read_from_string,
 )
 from fdl.constants import (
     FitMethod,
     GeometryPath,
-    HAlign,
     RoundingEven,
     RoundingMode,
-    VAlign,
 )
 
 
@@ -73,13 +73,23 @@ def _build_source_fdl() -> FDL:
     return doc
 
 
-def _apply_template(doc: FDL, template: CanvasTemplate) -> FramingDecision:
-    """Apply a CanvasTemplate to the first canvas/FD in doc, return the result FD."""
+def _apply_template(doc: FDL, template: CanvasTemplate) -> TemplateResult:
+    """Apply a CanvasTemplate to the first canvas/FD in doc; return full result."""
     ctx = doc.contexts[0]
     canvas = ctx.canvases[0]
     fd = canvas.framing_decisions[0]
-    result = template.apply(canvas, fd, "OUT", "1", ctx.label, "Test")
-    return result.framing_decision
+    return template.apply(canvas, fd, "OUT", "1", ctx.label, "Test")
+
+
+def _assert_canvas_dimensions_integer(canvas: Canvas) -> None:
+    assert canvas.dimensions.width == int(canvas.dimensions.width)
+    assert canvas.dimensions.height == int(canvas.dimensions.height)
+
+
+def _assert_framing_float(fd: FramingDecision) -> None:
+    assert fd.dimensions.height != int(fd.dimensions.height), (
+        "Framing height should be fractional (inner geometry is not rounded)"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -105,17 +115,20 @@ class TestRoundStrategyNone:
 
 
 # ---------------------------------------------------------------------------
-# CanvasTemplate default is NONE
+# CanvasTemplate: accessor spec default when round omitted
 # ---------------------------------------------------------------------------
 
 class TestCanvasTemplateDefaultRound:
 
-    def test_default_round_is_none(self):
+    def test_accessor_spec_default_when_round_omitted(self):
+        """C accessor returns even/up (spec 7.4.12 default) when round is omitted."""
         ct = CanvasTemplate(
             id="T",
             target_dimensions=DimensionsInt(width=1920, height=1080),
         )
-        assert ct.round.is_none
+        assert not ct.round.is_none
+        assert ct.round.even == RoundingEven.EVEN
+        assert ct.round.mode == RoundingMode.UP
 
     def test_explicit_round_is_preserved(self):
         ct = CanvasTemplate(
@@ -127,11 +140,14 @@ class TestCanvasTemplateDefaultRound:
         assert ct.round.even == RoundingEven.EVEN
         assert ct.round.mode == RoundingMode.ROUND
 
-    def test_no_round_omitted_from_as_dict(self):
+    def test_round_omitted_from_as_dict_when_canonical_default(self):
+        """Serialization may omit ``round`` when it matches the spec default; accessor still reports even/up."""
         ct = CanvasTemplate(
             id="T",
             target_dimensions=DimensionsInt(width=1920, height=1080),
         )
+        assert ct.round.even == RoundingEven.EVEN
+        assert ct.round.mode == RoundingMode.UP
         d = ct.as_dict()
         assert "round" not in d
 
@@ -148,14 +164,14 @@ class TestCanvasTemplateDefaultRound:
 
 
 # ---------------------------------------------------------------------------
-# Template application: NO rounding preserves float inner dimensions
+# Template application: inner geometry stays float
 # ---------------------------------------------------------------------------
 
 class TestApplyTemplateNoRounding:
-    """John Quartel's scenario from issue #36: Alexa LF → HD dailies, no rounding."""
+    """John Quartel's scenario from issue #36: Alexa LF → HD dailies, pad to max."""
 
     def test_framing_dimensions_are_float(self):
-        """With no rounding, framing dimensions should have fractional values."""
+        """Framing dimensions stay fractional (round does not affect inner geometry)."""
         doc = _build_source_fdl()
         template = CanvasTemplate(
             id="E",
@@ -167,15 +183,14 @@ class TestApplyTemplateNoRounding:
             maximum_dimensions=DimensionsInt(width=1920, height=1080),
             pad_to_maximum=True,
         )
-        fd = _apply_template(doc, template)
+        result = _apply_template(doc, template)
+        fd = result.framing_decision
 
         assert fd.dimensions.width == pytest.approx(1920.0, abs=0.01)
-        assert fd.dimensions.height != int(fd.dimensions.height), (
-            "Framing height should be fractional (not rounded)"
-        )
+        _assert_framing_float(fd)
 
     def test_framing_anchor_is_float(self):
-        """With no rounding, anchor y should be fractional."""
+        """Anchors stay fractional when inner geometry is not rounded."""
         doc = _build_source_fdl()
         template = CanvasTemplate(
             id="E",
@@ -187,7 +202,8 @@ class TestApplyTemplateNoRounding:
             maximum_dimensions=DimensionsInt(width=1920, height=1080),
             pad_to_maximum=True,
         )
-        fd = _apply_template(doc, template)
+        result = _apply_template(doc, template)
+        fd = result.framing_decision
 
         assert fd.anchor_point.y != int(fd.anchor_point.y), (
             "Framing anchor Y should be fractional (not rounded)"
@@ -195,13 +211,13 @@ class TestApplyTemplateNoRounding:
 
 
 # ---------------------------------------------------------------------------
-# Template application: WITH rounding rounds all geometry fields
+# pad_to_max + max_dims: explicit round does not change sizing (inner still float)
 # ---------------------------------------------------------------------------
 
 class TestApplyTemplateWithRounding:
-    """Same scenario but with explicit even/round — all values should be integer."""
+    """With pad_to_maximum + maximum_dimensions, round is ignored for canvas sizing."""
 
-    def test_framing_dimensions_are_integer(self):
+    def test_framing_dimensions_are_float_even_with_explicit_round(self):
         doc = _build_source_fdl()
         template = CanvasTemplate(
             id="E",
@@ -214,12 +230,13 @@ class TestApplyTemplateWithRounding:
             pad_to_maximum=True,
             round=RoundStrategy(even=RoundingEven.EVEN, mode=RoundingMode.ROUND),
         )
-        fd = _apply_template(doc, template)
+        result = _apply_template(doc, template)
+        fd = result.framing_decision
 
-        assert fd.dimensions.width == int(fd.dimensions.width)
-        assert fd.dimensions.height == int(fd.dimensions.height)
+        assert fd.dimensions.width == pytest.approx(1920.0, abs=0.01)
+        _assert_framing_float(fd)
 
-    def test_framing_anchor_is_integer(self):
+    def test_framing_anchor_is_float_even_with_explicit_round(self):
         doc = _build_source_fdl()
         template = CanvasTemplate(
             id="E",
@@ -232,23 +249,22 @@ class TestApplyTemplateWithRounding:
             pad_to_maximum=True,
             round=RoundStrategy(even=RoundingEven.EVEN, mode=RoundingMode.ROUND),
         )
-        fd = _apply_template(doc, template)
+        result = _apply_template(doc, template)
+        fd = result.framing_decision
 
-        assert fd.anchor_point.x == int(fd.anchor_point.x)
-        assert fd.anchor_point.y == int(fd.anchor_point.y)
+        assert fd.anchor_point.y != int(fd.anchor_point.y), (
+            "Framing anchor Y should stay fractional (inner geometry is not rounded)"
+        )
 
 
 # ---------------------------------------------------------------------------
-# Context-dependent default: no pad_to_max → rounding applied automatically
+# Canvas dimensions integer; framing dimensions float
 # ---------------------------------------------------------------------------
 
 class TestContextDependentRoundingDefault:
-    """When round is omitted and pad_to_max is NOT set, the pipeline
-    should fall back to spec-default rounding (even/round) to keep
-    canvas.dimensions integer."""
+    """Round applies to canvas.dimensions only; framing stays float."""
 
-    def test_no_pad_no_round_still_rounds(self):
-        """Without pad_to_max, omitting round should still produce integer dims."""
+    def test_no_pad_no_round_canvas_integer_framing_float(self):
         doc = _build_source_fdl()
         template = CanvasTemplate(
             id="T",
@@ -257,12 +273,12 @@ class TestContextDependentRoundingDefault:
             fit_method=FitMethod.WIDTH,
             preserve_from_source_canvas=GeometryPath.CANVAS_DIMENSIONS,
         )
-        fd = _apply_template(doc, template)
-        assert fd.dimensions.width == int(fd.dimensions.width)
-        assert fd.dimensions.height == int(fd.dimensions.height)
+        result = _apply_template(doc, template)
+        _assert_canvas_dimensions_integer(result.canvas)
+        _assert_framing_float(result.framing_decision)
 
     def test_pad_to_max_no_round_preserves_floats(self):
-        """With pad_to_max, omitting round should preserve fractional dims."""
+        """With pad_to_max, omitting round should preserve fractional framing dims."""
         doc = _build_source_fdl()
         template = CanvasTemplate(
             id="T",
@@ -273,13 +289,13 @@ class TestContextDependentRoundingDefault:
             maximum_dimensions=DimensionsInt(width=1920, height=1080),
             pad_to_maximum=True,
         )
-        fd = _apply_template(doc, template)
+        result = _apply_template(doc, template)
+        fd = result.framing_decision
         assert fd.dimensions.height != int(fd.dimensions.height), (
-            "pad_to_max with no round should preserve fractional inner dims"
+            "pad_to_max with no effective round should preserve fractional inner dims"
         )
 
-    def test_max_dims_without_pad_still_rounds(self):
-        """maximum_dimensions alone (without pad_to_max) should still round."""
+    def test_max_dims_without_pad_canvas_integer_framing_float(self):
         doc = _build_source_fdl()
         template = CanvasTemplate(
             id="T",
@@ -290,17 +306,17 @@ class TestContextDependentRoundingDefault:
             maximum_dimensions=DimensionsInt(width=1920, height=1080),
             pad_to_maximum=False,
         )
-        fd = _apply_template(doc, template)
-        assert fd.dimensions.width == int(fd.dimensions.width)
-        assert fd.dimensions.height == int(fd.dimensions.height)
+        result = _apply_template(doc, template)
+        _assert_canvas_dimensions_integer(result.canvas)
+        _assert_framing_float(result.framing_decision)
 
 
 # ---------------------------------------------------------------------------
-# Different rounding modes produce distinct results
+# Different rounding modes affect canvas.dimensions (not inner geometry)
 # ---------------------------------------------------------------------------
 
 class TestRoundingModeVariations:
-    """Verify that different rounding strategies produce different results."""
+    """Use pad_to_maximum=False so round applies to canvas dimensions."""
 
     @pytest.fixture
     def source_fdl(self):
@@ -313,36 +329,56 @@ class TestRoundingModeVariations:
             fit_source=GeometryPath.FRAMING_DIMENSIONS,
             fit_method=FitMethod.WIDTH,
             preserve_from_source_canvas=GeometryPath.CANVAS_DIMENSIONS,
-            maximum_dimensions=DimensionsInt(width=1920, height=1080),
-            pad_to_maximum=True,
+            pad_to_maximum=False,
             round=RoundStrategy(even=even, mode=mode),
         )
         return _apply_template(doc, template)
 
-    def test_even_up_vs_even_down(self, source_fdl):
-        fd_up = self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.UP)
-        fd_down = self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.DOWN)
-        assert fd_up.dimensions.height >= fd_down.dimensions.height
+    def test_even_up_vs_even_down_canvas_dims(self, source_fdl):
+        r_up = self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.UP)
+        r_down = self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.DOWN)
+        assert r_up.canvas.dimensions.height >= r_down.canvas.dimensions.height
 
-    def test_whole_up_vs_whole_down(self, source_fdl):
-        fd_up = self._apply_with_rounding(source_fdl, RoundingEven.WHOLE, RoundingMode.UP)
-        fd_down = self._apply_with_rounding(source_fdl, RoundingEven.WHOLE, RoundingMode.DOWN)
-        assert fd_up.dimensions.height >= fd_down.dimensions.height
+    def test_whole_up_vs_whole_down_canvas_dims(self, source_fdl):
+        r_up = self._apply_with_rounding(source_fdl, RoundingEven.WHOLE, RoundingMode.UP)
+        r_down = self._apply_with_rounding(source_fdl, RoundingEven.WHOLE, RoundingMode.DOWN)
+        assert r_up.canvas.dimensions.height >= r_down.canvas.dimensions.height
 
-    def test_none_vs_even_round_differ(self, source_fdl):
-        """No-rounding result should differ from even/round for fractional values."""
-        template_none = CanvasTemplate(
+    def test_default_even_up_matches_accessor_explicit_even_up_canvas(self, source_fdl):
+        """Template without ``round`` uses spec default even/up; matches explicit even/up."""
+        template_default = CanvasTemplate(
             id="T",
             target_dimensions=DimensionsInt(width=1920, height=1080),
             fit_source=GeometryPath.FRAMING_DIMENSIONS,
             fit_method=FitMethod.WIDTH,
             preserve_from_source_canvas=GeometryPath.CANVAS_DIMENSIONS,
-            maximum_dimensions=DimensionsInt(width=1920, height=1080),
-            pad_to_maximum=True,
+            pad_to_maximum=False,
         )
-        fd_none = _apply_template(source_fdl, template_none)
-        fd_round = self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.ROUND)
-        assert fd_none.dimensions.height != fd_round.dimensions.height
+        template_explicit_up = CanvasTemplate(
+            id="T",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            fit_source=GeometryPath.FRAMING_DIMENSIONS,
+            fit_method=FitMethod.WIDTH,
+            preserve_from_source_canvas=GeometryPath.CANVAS_DIMENSIONS,
+            pad_to_maximum=False,
+            round=RoundStrategy(even=RoundingEven.EVEN, mode=RoundingMode.UP),
+        )
+        r_default = _apply_template(source_fdl, template_default)
+        r_explicit = _apply_template(source_fdl, template_explicit_up)
+        assert r_default.canvas.dimensions == r_explicit.canvas.dimensions
+        assert r_default.framing_decision.dimensions.height == pytest.approx(
+            r_explicit.framing_decision.dimensions.height, abs=1e-6
+        )
+
+    def test_even_up_vs_even_round_inner_geometry_matches(self, source_fdl):
+        """Framing dims match across modes; canvas dims may or may not differ for a given fixture."""
+        r_up = self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.UP)
+        r_round = self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.ROUND)
+        assert r_up.framing_decision.dimensions.height == pytest.approx(
+            r_round.framing_decision.dimensions.height, abs=1e-6
+        )
+        _assert_canvas_dimensions_integer(r_up.canvas)
+        _assert_canvas_dimensions_integer(r_round.canvas)
 
     @pytest.mark.parametrize(
         ("even", "mode"),
@@ -355,11 +391,9 @@ class TestRoundingModeVariations:
             (RoundingEven.WHOLE, RoundingMode.ROUND),
         ],
     )
-    def test_all_rounding_modes_produce_integer_dimensions(self, source_fdl, even, mode):
-        """All rounding modes should round dimensions to integers."""
-        fd = self._apply_with_rounding(source_fdl, even, mode)
-        assert fd.dimensions.width == int(fd.dimensions.width)
-        assert fd.dimensions.height == int(fd.dimensions.height)
+    def test_canvas_dimensions_integer_all_modes(self, source_fdl, even, mode):
+        result = self._apply_with_rounding(source_fdl, even, mode)
+        _assert_canvas_dimensions_integer(result.canvas)
 
     @pytest.mark.parametrize(
         ("even", "mode"),
@@ -369,11 +403,17 @@ class TestRoundingModeVariations:
             (RoundingEven.EVEN, RoundingMode.ROUND),
         ],
     )
-    def test_even_rounding_produces_integer_anchors(self, source_fdl, even, mode):
-        """Even rounding produces even dimensions, so (canvas - dim)/2 is integer."""
-        fd = self._apply_with_rounding(source_fdl, even, mode)
-        assert fd.anchor_point.x == int(fd.anchor_point.x)
-        assert fd.anchor_point.y == int(fd.anchor_point.y)
+    def test_framing_dimensions_remain_float_all_modes(self, source_fdl, even, mode):
+        result = self._apply_with_rounding(source_fdl, even, mode)
+        _assert_framing_float(result.framing_decision)
+
+    def test_distinct_rounding_modes_can_change_canvas_height(self, source_fdl):
+        heights = {
+            self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.UP).canvas.dimensions.height,
+            self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.DOWN).canvas.dimensions.height,
+            self._apply_with_rounding(source_fdl, RoundingEven.EVEN, RoundingMode.ROUND).canvas.dimensions.height,
+        }
+        assert len(heights) > 1
 
 
 # ---------------------------------------------------------------------------
@@ -383,7 +423,7 @@ class TestRoundingModeVariations:
 class TestJsonRoundTrip:
 
     def test_parse_template_without_round(self):
-        """An FDL JSON with a canvas_template that omits 'round' should parse OK."""
+        """JSON omitting ``round`` yields spec default even/up on the accessor."""
         fdl_json = {
             "uuid": "00000000-0000-0000-0000-000000000001",
             "version": {"major": 2, "minor": 0},
@@ -406,7 +446,8 @@ class TestJsonRoundTrip:
         doc = read_from_string(json.dumps(fdl_json))
         templates = doc.canvas_templates
         assert len(templates) == 1
-        assert templates[0].round.is_none
+        assert templates[0].round.even == RoundingEven.EVEN
+        assert templates[0].round.mode == RoundingMode.UP
 
     def test_parse_template_with_round(self):
         """An FDL JSON with an explicit 'round' field should parse it."""

@@ -21,6 +21,7 @@
 #include "fdl_constants.h"
 #include "fdl_doc.h"
 #include "fdl_enum_map.h"
+#include "fdl_geometry.h"
 
 #include <algorithm>
 #include <cmath>
@@ -421,15 +422,16 @@ fdl_template_result_t apply_canvas_template(
 
     fdl_round_strategy_t rounding = fdl_canvas_template_get_round(tmpl);
 
-    // When no explicit "round" field (NONE sentinel) and the output canvas
-    // is NOT guaranteed integer by pad_to_maximum + maximum_dimensions,
-    // fall back to the spec default (even/round) so canvas.dimensions are
-    // properly rounded to integers.  When pad_to_maximum IS set, the canvas
-    // is always integer from maximum_dimensions, so inner geometry can stay
-    // float — this is the #36 scenario.
-    if (rounding.mode == FDL_ROUNDING_MODE_NONE && !(has_max_dims && pad_to_max)) {
-        rounding = {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_ROUND};
+    // Spec 7.4.12: when "round" is omitted (NONE sentinel), use the spec
+    // default: even/up.  Canvas dimensions are always rounded to integer.
+    if (rounding.mode == FDL_ROUNDING_MODE_NONE) {
+        rounding = {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP};
     }
+
+    // Spec 7.4.12: "If maximum_dimensions is defined and pad_to_maximum =
+    // true, then round has no effect due to maximum_dimensions already being
+    // defined."  Skip rounding entirely — canvas dims will come from max_dims.
+    bool const skip_round = has_max_dims && pad_to_max;
 
     fdl_dimensions_i64_t const target_dims_i = fdl_canvas_template_get_target_dimensions(tmpl);
     fdl_dimensions_f64_t const target_dims = {
@@ -498,7 +500,9 @@ fdl_template_result_t apply_canvas_template(
 
     // --- Phase 5: Scale and round ---
     geometry = fdl_geometry_normalize_and_scale(geometry, input_squeeze, scale_factor, target_squeeze);
-    geometry = fdl_geometry_round(geometry, rounding);
+    if (!skip_round) {
+        geometry = fdl_geometry_round(geometry, rounding);
+    }
 
     // Extract scaled values BEFORE crop
     fdl_dimensions_f64_t scaled_fit;
@@ -547,6 +551,10 @@ fdl_template_result_t apply_canvas_template(
 
     // --- Phase 9: Crop ---
     geometry = fdl_geometry_crop(geometry, theo_eff, theo_prot, theo_fram);
+
+    // canvas.effective_dimensions is integer-typed in the FDL schema.
+    // Ceil after crop so the final values maintain effective >= inner dims.
+    geometry = geometry_ceil_effective(geometry);
 
     // --- Phase 10: Build output FDL document ---
     return build_template_output_document(

@@ -396,7 +396,8 @@ class TestFacadeRoundTrip:
                 assert result.even == even, f"even={even}: got {result.even}"
                 assert result.mode == mode, f"mode={mode}: got {result.mode}"
 
-        # NONE mode: round field is omitted from JSON, read-back returns NONE sentinel
+        # NONE mode: round field is omitted from JSON; accessor returns spec
+        # default (even/up) per spec 7.4.12, not NONE.
         doc = FDL(uuid="test-uuid-none")
         ct = doc.add_canvas_template(
             id="CT_none",
@@ -410,7 +411,8 @@ class TestFacadeRoundTrip:
             round=RoundStrategy(even=RoundingEven.WHOLE, mode=RoundingMode.NONE),
         )
         result = ct.round
-        assert result.mode == RoundingMode.NONE, f"NONE mode: got {result.mode}"
+        assert result.even == RoundingEven.EVEN, f"NONE→default even: got {result.even}"
+        assert result.mode == RoundingMode.UP, f"NONE→default mode: got {result.mode}"
 
     def test_dimensions_i64_facade(self):
         """Facade round-trip for DimensionsInt."""

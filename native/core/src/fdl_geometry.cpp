@@ -10,7 +10,7 @@
  * - **Gap-filling**: Propagates populated dimensions upward to fill missing layers.
  *   Protection is never auto-filled from framing (by spec).
  * - **Normalize+scale**: Applies anamorphic correction and uniform scaling.
- * - **Round**: Rounds all 7 fields (4 dimensions + 3 anchors) per strategy.
+ * - **Round**: Rounds canvas_dims per strategy; ceils effective_dims to integer.
  * - **Offset**: Translates anchors for alignment, tracking theoretical positions.
  * - **Crop**: Clips dimensions to visible portion within canvas bounds,
  *   enforcing the hierarchy invariant.
@@ -133,20 +133,27 @@ fdl_geometry_t geometry_normalize_and_scale(
 }
 
 fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy) {
+    // Per spec 7.4.12: "round is only applicable to the canvas.dimensions
+    // of the output canvas and shall not affect calculated fit_source,
+    // target_dimensions, nor target_anamorphic_squeeze values."
+    geo.canvas_dims = fdl_round_dimensions(geo.canvas_dims, strategy.even, strategy.mode);
+    return geo;
+}
 
-    if (strategy.mode == FDL_ROUNDING_MODE_NONE) {
-        return geo;
-    }
-
-    return {
-        fdl_round_dimensions(geo.canvas_dims, strategy.even, strategy.mode),
-        fdl_round_dimensions(geo.effective_dims, strategy.even, strategy.mode),
-        fdl_round_dimensions(geo.protection_dims, strategy.even, strategy.mode),
-        fdl_round_dimensions(geo.framing_dims, strategy.even, strategy.mode),
-        fdl_round_point(geo.effective_anchor, strategy.even, strategy.mode),
-        fdl_round_point(geo.protection_anchor, strategy.even, strategy.mode),
-        fdl_round_point(geo.framing_anchor, strategy.even, strategy.mode),
-    };
+fdl_geometry_t geometry_ceil_effective(fdl_geometry_t geo) {
+    // canvas.effective_dimensions is integer-typed in the FDL schema.
+    // Ceil to integer, ensuring effective >= all inner dimensions to
+    // maintain the hierarchy constraint (effective >= protection >= framing).
+    auto max_inner_w = std::max({geo.effective_dims.width,
+                                  geo.protection_dims.width,
+                                  geo.framing_dims.width});
+    auto max_inner_h = std::max({geo.effective_dims.height,
+                                  geo.protection_dims.height,
+                                  geo.framing_dims.height});
+    geo.effective_dims = {
+        std::max(std::ceil(geo.effective_dims.width), std::ceil(max_inner_w)),
+        std::max(std::ceil(geo.effective_dims.height), std::ceil(max_inner_h))};
+    return geo;
 }
 
 fdl_geometry_t geometry_apply_offset(

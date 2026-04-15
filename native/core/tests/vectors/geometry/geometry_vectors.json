@@ -646,28 +646,28 @@
           "height": 2162
         },
         "effective_dims": {
-          "width": 4002,
-          "height": 2102
+          "width": 4000.5,
+          "height": 2100.5
         },
         "protection_dims": {
-          "width": 3902,
-          "height": 1702
+          "width": 3900.1,
+          "height": 1700.9
         },
         "framing_dims": {
-          "width": 3802,
-          "height": 1602
+          "width": 3800.3,
+          "height": 1600.7
         },
         "effective_anchor": {
-          "x": 50,
-          "y": 32
+          "x": 48.5,
+          "y": 30.5
         },
         "protection_anchor": {
-          "x": 52,
-          "y": 202
+          "x": 50.3,
+          "y": 200.7
         },
         "framing_anchor": {
-          "x": 102,
-          "y": 252
+          "x": 100.1,
+          "y": 250.9
         }
       }
     },
@@ -711,28 +711,28 @@
           "height": 2160
         },
         "effective_dims": {
-          "width": 4000,
-          "height": 2100
+          "width": 4000.5,
+          "height": 2100.5
         },
         "protection_dims": {
-          "width": 3900,
-          "height": 1700
+          "width": 3900.1,
+          "height": 1700.9
         },
         "framing_dims": {
-          "width": 3800,
-          "height": 1600
+          "width": 3800.3,
+          "height": 1600.7
         },
         "effective_anchor": {
-          "x": 48,
-          "y": 30
+          "x": 48.5,
+          "y": 30.5
         },
         "protection_anchor": {
-          "x": 50,
-          "y": 200
+          "x": 50.3,
+          "y": 200.7
         },
         "framing_anchor": {
-          "x": 100,
-          "y": 250
+          "x": 100.1,
+          "y": 250.9
         }
       }
     },
@@ -776,28 +776,28 @@
           "height": 2160
         },
         "effective_dims": {
-          "width": 4000,
-          "height": 2100
+          "width": 4000.5,
+          "height": 2100.5
         },
         "protection_dims": {
-          "width": 3900,
-          "height": 1700
+          "width": 3900.1,
+          "height": 1700.9
         },
         "framing_dims": {
-          "width": 3800,
-          "height": 1600
+          "width": 3800.3,
+          "height": 1600.7
         },
         "effective_anchor": {
-          "x": 48,
-          "y": 30
+          "x": 48.5,
+          "y": 30.5
         },
         "protection_anchor": {
-          "x": 50,
-          "y": 200
+          "x": 50.3,
+          "y": 200.7
         },
         "framing_anchor": {
-          "x": 100,
-          "y": 250
+          "x": 100.1,
+          "y": 250.9
         }
       }
     },

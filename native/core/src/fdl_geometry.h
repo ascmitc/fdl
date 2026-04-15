@@ -38,16 +38,28 @@ fdl_geometry_t geometry_normalize_and_scale(
     fdl_geometry_t geo, double source_squeeze, double scale_factor, double target_squeeze);
 
 /**
- * @brief Round all 7 fields of the geometry using the given strategy.
+ * @brief Round canvas_dims per strategy; ceil effective_dims to integer.
  *
- * When @p strategy.mode is FDL_ROUNDING_MODE_NONE, returns @p geo unchanged
- * (no rounding applied). This supports templates that omit the "round" field.
+ * Per spec 7.4.12, "round" applies only to canvas.dimensions.
+ * canvas.effective_dimensions is also integer-typed in the schema, so it
+ * is rounded up (ceil to whole) to maintain the hierarchy constraint
+ * effective >= protection >= framing.  Inner geometry (protection,
+ * framing dims/anchors) stays float.
  *
  * @param geo       Input geometry.
- * @param strategy  Rounding strategy (even + mode).
- * @return Geometry with all fields rounded, or unmodified when mode is NONE.
+ * @param strategy  Rounding strategy (even + mode) for canvas_dims.
+ * @return Geometry with canvas_dims rounded; all other fields unchanged.
  */
 fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy);
+
+/**
+ * @brief Ceil effective_dims to integer, maintaining hierarchy.
+ *
+ * canvas.effective_dimensions is integer-typed in the FDL schema.
+ * Ensures effective >= ceil of all inner dimensions.
+ * Call AFTER crop to account for cropped values.
+ */
+fdl_geometry_t geometry_ceil_effective(fdl_geometry_t geo);
 
 /**
  * @brief Apply offset to all anchors, clamping to canvas bounds.

@@ -840,7 +840,7 @@ int fdl_canvas_template_has_round(const fdl_canvas_template_t* ct) {
 }
 
 fdl_round_strategy_t fdl_canvas_template_get_round(const fdl_canvas_template_t* ct) {
-    fdl_round_strategy_t result = {FDL_ROUNDING_EVEN_WHOLE, FDL_ROUNDING_MODE_NONE};
+    fdl_round_strategy_t result = {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP};
     if (ct == nullptr) {
         return result;
     }

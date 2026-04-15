@@ -23,6 +23,10 @@ fdl_geometry_t fdl_geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strat
     return fdl::detail::geometry_round(geo, strategy);
 }
 
+fdl_geometry_t fdl_geometry_ceil_effective(fdl_geometry_t geo) {
+    return fdl::detail::geometry_ceil_effective(geo);
+}
+
 fdl_geometry_t fdl_geometry_apply_offset(
     fdl_geometry_t geo,
     fdl_point_f64_t offset,
