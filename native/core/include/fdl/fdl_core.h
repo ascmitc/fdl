@@ -266,6 +266,9 @@ fdl_dimensions_scale(fdl_dimensions_f64_t dims, double scale_factor, double targ
  * Normalize and scale in one step.
  *
  * Equivalent to fdl_dimensions_scale(fdl_dimensions_normalize(dims, input_squeeze), ...).
+ * When higher precision is needed (e.g., template application), use the internal
+ * ratio-based variant which keeps numerator/denominator separate to avoid
+ * IEEE 754 rounding errors in the scale factor.
  *
  * @param dims            Dimensions to transform.
  * @param input_squeeze   Source anamorphic squeeze factor.
@@ -448,6 +451,9 @@ FDL_API int fdl_point_is_zero(fdl_point_f64_t point);
 /**
  * Normalize and scale a point in one step.
  *
+ * When higher precision is needed (e.g., template application), use the internal
+ * ratio-based variant which keeps numerator/denominator separate.
+ *
  * @param point          Point to transform.
  * @param input_squeeze  Source anamorphic squeeze factor.
  * @param scale_factor   Scale multiplier.
@@ -523,6 +529,8 @@ FDL_API fdl_geometry_t fdl_geometry_fill_hierarchy_gaps(fdl_geometry_t geo, fdl_
  * Normalize and scale all 7 fields of the geometry.
  *
  * Applies anamorphic normalization and scaling to all dimension and anchor fields.
+ * Internally uses ratio-based arithmetic (denominator=1.0) to preserve precision.
+ * For template application, use the internal ratio variant directly.
  *
  * @param geo             Geometry to transform.
  * @param source_squeeze  Source anamorphic squeeze factor.

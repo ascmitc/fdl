@@ -689,7 +689,7 @@
       "expected": {
         "scale_factor": 0.5208333333333334,
         "scaled_bounding_box": {
-          "width": 1922,
+          "width": 1920,
           "height": 804
         },
         "content_translation": {
@@ -697,11 +697,11 @@
           "y": 0.0
         },
         "output_canvas_dims": {
-          "width": 1922.0,
+          "width": 1920.0,
           "height": 804.0
         },
         "output_effective_dims": {
-          "width": 1922.0,
+          "width": 1920.0,
           "height": 804.0
         },
         "output_effective_anchor": {
@@ -709,7 +709,7 @@
           "y": 0.0
         },
         "output_fd_dims": {
-          "width": 1922.0,
+          "width": 1920.0,
           "height": 804.0
         },
         "output_fd_anchor": {

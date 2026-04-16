@@ -9,7 +9,9 @@
  *
  * - **Gap-filling**: Propagates populated dimensions upward to fill missing layers.
  *   Protection is never auto-filled from framing (by spec).
- * - **Normalize+scale**: Applies anamorphic correction and uniform scaling.
+ * - **Normalize+scale**: Applies anamorphic correction and uniform scaling using
+ *   ratio-based arithmetic (multiply before divide) to preserve precision for
+ *   scale factors that are not exactly representable in IEEE 754.
  * - **Round**: Rounds all 7 fields (4 dimensions + 3 anchors) per strategy.
  * - **Offset**: Translates anchors for alignment, tracking theoretical positions.
  * - **Crop**: Clips dimensions to visible portion within canvas bounds,
@@ -27,16 +29,20 @@ namespace fdl::detail {
 namespace {
 
 /**
- * @brief Normalize a point for squeeze then apply uniform scale.
- * @param pt              Input point.
- * @param squeeze         Source anamorphic squeeze factor.
- * @param scale           Uniform scale factor.
- * @param target_squeeze  Target anamorphic squeeze factor.
- * @return The normalized and scaled point.
+ * @brief Normalize and scale dimensions using ratio (num/den) for precision.
  */
-fdl_point_f64_t point_normalize_and_scale(fdl_point_f64_t pt, double squeeze, double scale, double target_squeeze) {
+fdl_dimensions_f64_t dims_normalize_and_scale_ratio(
+    fdl_dimensions_f64_t dims, double input_squeeze, double num, double den, double target_squeeze) {
+    return {(dims.width * input_squeeze * num) / (den * target_squeeze), (dims.height * num) / den};
+}
+
+/**
+ * @brief Normalize and scale a point using ratio (num/den) for precision.
+ */
+fdl_point_f64_t point_normalize_and_scale_ratio(
+    fdl_point_f64_t pt, double squeeze, double num, double den, double target_squeeze) {
     fdl_point_f64_t const normalized = fdl_point_normalize(pt, squeeze);
-    return fdl_point_scale(normalized, scale, target_squeeze);
+    return {(normalized.x * num) / (den * target_squeeze), (normalized.y * num) / den};
 }
 
 /**
@@ -118,17 +124,28 @@ fdl_geometry_t geometry_fill_hierarchy_gaps(fdl_geometry_t geo, fdl_point_f64_t 
     };
 }
 
-fdl_geometry_t geometry_normalize_and_scale(
-    fdl_geometry_t geo, double source_squeeze, double scale_factor, double target_squeeze) {
+fdl_geometry_t geometry_normalize_and_scale_ratio(
+    fdl_geometry_t geo,
+    double source_squeeze,
+    double scale_numerator,
+    double scale_denominator,
+    double target_squeeze) {
 
     return {
-        fdl_dimensions_normalize_and_scale(geo.canvas_dims, source_squeeze, scale_factor, target_squeeze),
-        fdl_dimensions_normalize_and_scale(geo.effective_dims, source_squeeze, scale_factor, target_squeeze),
-        fdl_dimensions_normalize_and_scale(geo.protection_dims, source_squeeze, scale_factor, target_squeeze),
-        fdl_dimensions_normalize_and_scale(geo.framing_dims, source_squeeze, scale_factor, target_squeeze),
-        point_normalize_and_scale(geo.effective_anchor, source_squeeze, scale_factor, target_squeeze),
-        point_normalize_and_scale(geo.protection_anchor, source_squeeze, scale_factor, target_squeeze),
-        point_normalize_and_scale(geo.framing_anchor, source_squeeze, scale_factor, target_squeeze),
+        dims_normalize_and_scale_ratio(
+            geo.canvas_dims, source_squeeze, scale_numerator, scale_denominator, target_squeeze),
+        dims_normalize_and_scale_ratio(
+            geo.effective_dims, source_squeeze, scale_numerator, scale_denominator, target_squeeze),
+        dims_normalize_and_scale_ratio(
+            geo.protection_dims, source_squeeze, scale_numerator, scale_denominator, target_squeeze),
+        dims_normalize_and_scale_ratio(
+            geo.framing_dims, source_squeeze, scale_numerator, scale_denominator, target_squeeze),
+        point_normalize_and_scale_ratio(
+            geo.effective_anchor, source_squeeze, scale_numerator, scale_denominator, target_squeeze),
+        point_normalize_and_scale_ratio(
+            geo.protection_anchor, source_squeeze, scale_numerator, scale_denominator, target_squeeze),
+        point_normalize_and_scale_ratio(
+            geo.framing_anchor, source_squeeze, scale_numerator, scale_denominator, target_squeeze),
     };
 }
 

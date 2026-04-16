@@ -466,6 +466,13 @@ calculate_scale_factor(fit_norm, target_norm, fit_method):
 
 Apply the scale factor to **all** dimensions and anchors uniformly, then round.
 
+> **Precision note**: The scale factor `target / fit` may not be exactly
+> representable in IEEE 754 (e.g., `3840/6560 = 24/41`). To avoid rounding
+> errors, the implementation keeps the scale factor as a ratio
+> (numerator / denominator) and computes `(value x numerator) / denominator`
+> instead of `value x (numerator / denominator)`. This ensures intermediate
+> products are exact for integer inputs that fit within 2^53.
+
 ```
 geometry = fdl_geometry_normalize_and_scale(geometry,
     source_squeeze  = input_squeeze,
@@ -477,16 +484,16 @@ geometry = fdl_geometry_round(geometry, round_strategy)
 
 **The Normalize-and-Scale Formula** (per ASC FDL spec 7.4.5):
 
-For dimensions:
+For dimensions (internally computed as ratio for precision):
 ```
-width_out  = (width_in  x source_squeeze x scale_factor) / target_squeeze
-height_out = height_in x scale_factor
+width_out  = (width_in  x source_squeeze x scale_numerator) / (scale_denominator x target_squeeze)
+height_out = (height_in x scale_numerator) / scale_denominator
 ```
 
 For anchor points:
 ```
-x_out = (x_in x source_squeeze x scale_factor) / target_squeeze
-y_out = y_in x scale_factor
+x_out = (x_in x source_squeeze x scale_numerator) / (scale_denominator x target_squeeze)
+y_out = (y_in x scale_numerator) / scale_denominator
 ```
 
 **Rounding Configuration** (`RoundStrategy`):
