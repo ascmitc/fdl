@@ -133,7 +133,21 @@ class SelectionController(QObject):
             return
 
         framings = self._fdl_model.framing_decisions
-        fd_list = [(fd.id, fd.label or fd.id) for fd in framings]
+
+        # Build framing_intent label lookup for display fallback
+        fi_labels: dict[str, str] = {}
+        if self._fdl_model and self._fdl_model.fdl:
+            for fi in self._fdl_model.fdl.framing_intents:
+                if fi.label:
+                    fi_labels[fi.id] = fi.label
+
+        def _resolve_label(fd: object) -> str:
+            if fd.label:
+                return fd.label
+            intent_label = fi_labels.get(fd.framing_intent_id, "")
+            return intent_label or fd.id
+
+        fd_list = [(fd.id, _resolve_label(fd)) for fd in framings]
         self.framings_updated.emit(fd_list)
 
         # Auto-select first if available
