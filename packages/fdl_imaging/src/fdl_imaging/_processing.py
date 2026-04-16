@@ -18,7 +18,6 @@ from fdl import (
     Context,
     FramingDecision,
     find_by_id,
-    find_by_label,
     get_anchor_from_path,
     get_dimensions_from_path,
     read_from_file,
@@ -41,7 +40,7 @@ def _check_raster_output(output_path: Path) -> None:
 
 def get_fdl_components(
     fdl: FDL,
-    context_id: str,
+    context_index: int,
     canvas_id: str,
     framing_decision_id: str,
 ) -> tuple[Context, Canvas, FramingDecision]:
@@ -52,8 +51,8 @@ def get_fdl_components(
     ----------
     fdl : FDL
         The FDL object to search in
-    context_id : str
-        The context label (contexts use label as identifier)
+    context_index : int
+        The context index in the contexts array
     canvas_id : str
         The canvas ID to find
     framing_decision_id : str
@@ -69,15 +68,15 @@ def get_fdl_components(
     ValueError
         If any component is not found
     """
-    # Context uses label as identifier
-    context = find_by_label(fdl.contexts, context_id)
-    if context is None:
-        raise ValueError(f"No context with label '{context_id}'")
+    contexts = fdl.contexts
+    if context_index < 0 or context_index >= len(contexts):
+        raise ValueError(f"Context index {context_index} out of range")
+    context = contexts[context_index]
 
     # Find canvas by ID
     canvas = find_by_id(context.canvases, canvas_id)
     if canvas is None:
-        raise ValueError(f"No canvas with id '{canvas_id}' in context '{context_id}'")
+        raise ValueError(f"No canvas with id '{canvas_id}' in context index {context_index}")
 
     # Find framing decision by ID
     framing_decision = find_by_id(canvas.framing_decisions, framing_decision_id)

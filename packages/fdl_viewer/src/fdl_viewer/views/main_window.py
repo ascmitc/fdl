@@ -444,23 +444,24 @@ class MainWindow(QMainWindow):
             self._show_error("No template configured")
             return
 
-        context_label, canvas_id, fd_id = (
+        context_index, canvas_id, fd_id = (
             self._app_state.selected_context,
             self._app_state.selected_canvas,
             self._app_state.selected_framing,
         )
 
-        if not context_label or not canvas_id or not fd_id:
+        if context_index < 0 or not canvas_id or not fd_id:
             self._show_error("Please select a context, canvas, and framing decision")
             return
 
         try:
-            result = self._transform_controller.apply_template(source.fdl, template, context_label, canvas_id, fd_id)
+            result = self._transform_controller.apply_template(source.fdl, template, context_index, canvas_id, fd_id)
 
             if result:
                 output_model = FDLModel(result.fdl)
                 # Auto-select the output context/canvas/framing for visualization
-                output_model.set_selection(result.context.label, result.canvas.id, result.framing_decision.id)
+                # Output FDL has a single context at index 0
+                output_model.set_selection(0, result.canvas.id, result.framing_decision.id)
                 self._app_state.set_output_fdl(output_model)
                 self._app_state.set_transform_result(result)
 
@@ -476,7 +477,7 @@ class MainWindow(QMainWindow):
                 if self._current_image_path:
                     self._transform_and_display_output_image(
                         source.fdl,
-                        context_label,
+                        context_index,
                         canvas_id,
                         fd_id,
                         template,
@@ -520,7 +521,7 @@ class MainWindow(QMainWindow):
     def _transform_and_display_output_image(
         self,
         source_fdl,
-        context_label: str,
+        context_index: int,
         canvas_id: str,
         fd_id: str,
         template,
@@ -535,8 +536,8 @@ class MainWindow(QMainWindow):
         ----------
         source_fdl : FDL
             The source FDL object
-        context_label : str
-            The selected context label
+        context_index : int
+            The selected context index
         canvas_id : str
             The selected canvas ID
         fd_id : str
@@ -552,7 +553,7 @@ class MainWindow(QMainWindow):
         """
         try:
             # Get source canvas and framing decision
-            _context, source_canvas, source_framing = get_fdl_components(source_fdl, context_label, canvas_id, fd_id)
+            _context, source_canvas, source_framing = get_fdl_components(source_fdl, context_index, canvas_id, fd_id)
 
             # Create a temporary file for the output image
             with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp_file:
@@ -792,10 +793,10 @@ class MainWindow(QMainWindow):
                 filter_name = AppSettings().get_image_filter()
 
             source_fdl = self._app_state.source_fdl.fdl
-            context_label = self._app_state.selected_context
+            context_index = self._app_state.selected_context
             canvas_id = self._app_state.selected_canvas
             fd_id = self._app_state.selected_framing
-            _context, source_canvas, source_framing = get_fdl_components(source_fdl, context_label, canvas_id, fd_id)
+            _context, source_canvas, source_framing = get_fdl_components(source_fdl, context_index, canvas_id, fd_id)
             template = self._app_state.current_template
             Path(output_path).parent.mkdir(parents=True, exist_ok=True)
             from fdl import ATTR_CONTENT_TRANSLATION, ATTR_SCALED_BOUNDING_BOX
@@ -913,7 +914,7 @@ class MainWindow(QMainWindow):
             export_config = dialog.get_export_config()
 
             # Get selection info
-            context_label = self._app_state.selected_context
+            context_index = self._app_state.selected_context
             canvas_id = self._app_state.selected_canvas
             framing_id = self._app_state.selected_framing
 
@@ -934,7 +935,7 @@ class MainWindow(QMainWindow):
                 template_fdl=template_fdl_model.fdl,
                 output_fdl=output_fdl.fdl,
                 source_image_path=self._current_image_path if export_config["include_image"] else None,
-                context_label=context_label,
+                context_index=context_index,
                 canvas_id=canvas_id,
                 framing_id=framing_id,
                 input_dims=input_dims,

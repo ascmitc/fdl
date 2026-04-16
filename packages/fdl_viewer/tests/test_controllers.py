@@ -70,12 +70,12 @@ class TestTransformController:
 
     def test_validate_selection_missing_fdl(self, transform_controller):
         """Test validation fails with no FDL."""
-        is_valid, error = transform_controller.validate_selection(None, "context1", "canvas1", "framing1")
+        is_valid, error = transform_controller.validate_selection(None, 0, "canvas1", "framing1")
         assert not is_valid
         assert "No source FDL" in error
 
     def test_validate_selection_missing_context(self, transform_controller, sample_source_fdl_path):
-        """Test validation fails with missing context."""
+        """Test validation fails with out-of-range context index."""
         if not sample_source_fdl_path.exists():
             pytest.skip("Sample file not found")
 
@@ -83,9 +83,9 @@ class TestTransformController:
 
         fdl = read_from_file(sample_source_fdl_path)
 
-        is_valid, error = transform_controller.validate_selection(fdl, "nonexistent", "canvas1", "framing1")
+        is_valid, error = transform_controller.validate_selection(fdl, 999, "canvas1", "framing1")
         assert not is_valid
-        assert "Context not found" in error
+        assert "Context index" in error
 
     def test_validate_selection_valid(self, transform_controller, sample_source_fdl_path):
         """Test validation passes with valid selections."""
@@ -104,7 +104,7 @@ class TestTransformController:
         if not framing:
             pytest.skip("No framing decision in source")
 
-        is_valid, error = transform_controller.validate_selection(fdl, context.label, canvas.id, framing.id)
+        is_valid, error = transform_controller.validate_selection(fdl, 0, canvas.id, framing.id)
         assert is_valid
         assert error == ""
 
@@ -141,7 +141,7 @@ class TestTransformController:
         transform_controller.apply_template(
             source_fdl=source_fdl,
             template=template,
-            context_label=context.label,
+            context_index=0,
             canvas_id=canvas.id,
             framing_decision_id=framing.id,
         )
@@ -180,14 +180,12 @@ class TestSelectionController:
 
         selection_controller.set_fdl_model(model)
 
-        # Get a context label
-        context_label = fdl.contexts[0].label
-        selection_controller.select_context(context_label)
+        # Select first context by index
+        selection_controller.select_context(0)
 
         # Should be able to get selected context
         selected = selection_controller.get_selected_context()
         assert selected is not None
-        assert selected.label == context_label
 
     def test_select_canvas(self, qapp, app_state, selection_controller, sample_source_fdl_path):
         """Test selecting a canvas."""
@@ -202,10 +200,10 @@ class TestSelectionController:
         selection_controller.set_fdl_model(model)
 
         # Select context first
-        context = fdl.contexts[0]
-        selection_controller.select_context(context.label)
+        selection_controller.select_context(0)
 
         # Select canvas
+        context = fdl.contexts[0]
         canvas = context.canvases[0]
         selection_controller.select_canvas(canvas.id)
 
@@ -227,10 +225,10 @@ class TestSelectionController:
         selection_controller.set_fdl_model(model)
 
         # After setting model, selection should auto-cascade
-        context_label, canvas_id, _framing_id = selection_controller.get_current_selection()
+        context_index, canvas_id, _framing_id = selection_controller.get_current_selection()
 
         # Should have at least context and canvas selected
-        assert context_label != ""
+        assert context_index >= 0
         assert canvas_id != ""
 
 

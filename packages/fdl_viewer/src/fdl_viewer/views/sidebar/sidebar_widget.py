@@ -244,7 +244,7 @@ class SidebarWidget(QWidget):
             self._app_state.selected_framing,
         )
 
-        enabled = source is not None and template is not None and bool(context) and bool(canvas) and bool(framing)
+        enabled = source is not None and template is not None and context >= 0 and bool(canvas) and bool(framing)
         self._transform_button.setEnabled(enabled)
 
         # Update button text and style based on template modification state

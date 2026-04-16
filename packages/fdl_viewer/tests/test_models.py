@@ -33,8 +33,8 @@ class TestAppState:
         assert app_state.source_fdl is None
         assert app_state.template_fdl is None
         assert app_state.output_fdl is None
-        # Selection values default to empty string, not None
-        assert app_state.selected_context == ""
+        # Context defaults to -1 (no selection), canvas/framing default to empty string
+        assert app_state.selected_context == -1
         assert app_state.selected_canvas == ""
         assert app_state.selected_framing == ""
         assert app_state.active_tab == 0
@@ -103,7 +103,7 @@ class TestAppState:
         """Test resetting state via reset_instance."""
         mock_model = MagicMock(spec=FDLModel)
         app_state.set_source_fdl(mock_model)
-        app_state.set_selection("ctx", "canvas", "framing")
+        app_state.set_selection(0, "canvas", "framing")
 
         # Reset instance creates a fresh state
         AppState.reset_instance()
@@ -112,7 +112,7 @@ class TestAppState:
         assert new_state.source_fdl is None
         assert new_state.template_fdl is None
         assert new_state.output_fdl is None
-        assert new_state.selected_context == ""
+        assert new_state.selected_context == -1
 
 
 class TestFDLModel:

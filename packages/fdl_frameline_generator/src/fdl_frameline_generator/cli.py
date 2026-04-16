@@ -393,11 +393,38 @@ def main(args: list[str] | None = None) -> int:
         if parsed_args.framing:
             print(f"  Framing: {parsed_args.framing}")
 
+    # Resolve context argument: try label first, then index
+    context_index = None
+    if parsed_args.context is not None:
+        from fdl import read_from_file
+
+        fdl = read_from_file(parsed_args.input)
+
+        # First, try to match as a context label
+        for i, ctx in enumerate(fdl.contexts):
+            if ctx.label == parsed_args.context:
+                context_index = i
+                break
+
+        # If no label match, try as a numeric index
+        if context_index is None:
+            if parsed_args.context.isdigit():
+                context_index = int(parsed_args.context)
+            else:
+                print(f"Error: '{parsed_args.context}' is not a valid context label or index")
+                return 1
+
+        # Validate index is in range
+        num_contexts = len(fdl.contexts)
+        if context_index < 0 or context_index >= num_contexts:
+            print(f"Error: Context index {context_index} out of range (0-{num_contexts - 1})")
+            return 1
+
     try:
         success = renderer.render_from_fdl(
             fdl_path=parsed_args.input,
             output_path=parsed_args.output,
-            context_label=parsed_args.context,
+            context_index=context_index,
             canvas_id=parsed_args.canvas,
             framing_id=parsed_args.framing,
         )

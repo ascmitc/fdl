@@ -322,7 +322,7 @@ class TestRenderer:
         renderer = FramelineRenderer()
         buf = renderer.render_to_buffer(
             sample_fdl,
-            context_label="Test Context",
+            context_index=0,
             canvas_id="canvas1",
             framing_id="canvas1-TEST01",
         )
@@ -381,11 +381,11 @@ class TestRenderer:
         assert not buf.has_error
 
     def test_render_invalid_context(self, sample_fdl):
-        """Test that invalid context raises error."""
+        """Test that invalid context index raises error."""
         renderer = FramelineRenderer()
 
-        with pytest.raises(ValueError, match="not found"):
-            renderer.render_to_buffer(sample_fdl, context_label="Nonexistent")
+        with pytest.raises(ValueError, match="out of range"):
+            renderer.render_to_buffer(sample_fdl, context_index=999)
 
     def test_render_invalid_canvas(self, sample_fdl):
         """Test that invalid canvas raises error."""
@@ -394,7 +394,7 @@ class TestRenderer:
         with pytest.raises(ValueError, match="not found"):
             renderer.render_to_buffer(
                 sample_fdl,
-                context_label="Test Context",
+                context_index=0,
                 canvas_id="nonexistent",
             )
 
@@ -405,7 +405,7 @@ class TestRenderer:
         with pytest.raises(ValueError, match="not found"):
             renderer.render_to_buffer(
                 sample_fdl,
-                context_label="Test Context",
+                context_index=0,
                 canvas_id="canvas1",
                 framing_id="nonexistent",
             )

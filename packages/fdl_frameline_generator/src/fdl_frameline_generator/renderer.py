@@ -19,7 +19,6 @@ from fdl import (
     Context,
     FramingDecision,
     find_by_id,
-    find_by_label,
     read_from_file,
 )
 from OpenImageIO import FLOAT, ImageBuf, ImageBufAlgo, ImageSpec
@@ -267,7 +266,7 @@ class FramelineRenderer:
         self,
         fdl_path: str | Path,
         output_path: str | Path,
-        context_label: str | None = None,
+        context_index: int | None = None,
         canvas_id: str | None = None,
         framing_id: str | None = None,
     ) -> bool:
@@ -280,8 +279,8 @@ class FramelineRenderer:
             Path to the input FDL file.
         output_path : str or Path
             Path for the output image file.
-        context_label : str, optional
-            Context label to use. If None, uses the first context.
+        context_index : int, optional
+            Context index to use. If None, uses the first context.
         canvas_id : str, optional
             Canvas ID to use. If None, uses the first canvas.
         framing_id : str, optional
@@ -308,7 +307,7 @@ class FramelineRenderer:
             raise FileNotFoundError(f"FDL file not found: {fdl_path}")
 
         fdl = read_from_file(fdl_path)
-        _context, canvas, framing = self._get_fdl_components(fdl, context_label, canvas_id, framing_id)
+        _context, canvas, framing = self._get_fdl_components(fdl, context_index, canvas_id, framing_id)
 
         if output_path.suffix.lower() == ".svg":
             return self._render_and_write_svg(canvas, framing, output_path)
@@ -321,7 +320,7 @@ class FramelineRenderer:
         self,
         fdl: FDL,
         output_path: str | Path,
-        context_label: str | None = None,
+        context_index: int | None = None,
         canvas_id: str | None = None,
         framing_id: str | None = None,
     ) -> bool:
@@ -334,8 +333,8 @@ class FramelineRenderer:
             The FDL object containing framing data.
         output_path : str or Path
             Path for the output image file. Use .svg extension for vector output.
-        context_label : str, optional
-            Context label to use. If None, uses the first context.
+        context_index : int, optional
+            Context index to use. If None, uses the first context.
         canvas_id : str, optional
             Canvas ID to use. If None, uses the first canvas.
         framing_id : str, optional
@@ -355,7 +354,7 @@ class FramelineRenderer:
         """
         output_path = Path(output_path)
 
-        _context, canvas, framing = self._get_fdl_components(fdl, context_label, canvas_id, framing_id)
+        _context, canvas, framing = self._get_fdl_components(fdl, context_index, canvas_id, framing_id)
 
         if output_path.suffix.lower() == ".svg":
             return self._render_and_write_svg(canvas, framing, output_path)
@@ -367,7 +366,7 @@ class FramelineRenderer:
     def render_to_buffer(
         self,
         fdl: FDL,
-        context_label: str | None = None,
+        context_index: int | None = None,
         canvas_id: str | None = None,
         framing_id: str | None = None,
     ) -> ImageBuf:
@@ -378,8 +377,8 @@ class FramelineRenderer:
         ----------
         fdl : FDL
             The FDL object containing framing data.
-        context_label : str, optional
-            Context label to use. If None, uses the first context.
+        context_index : int, optional
+            Context index to use. If None, uses the first context.
         canvas_id : str, optional
             Canvas ID to use. If None, uses the first canvas.
         framing_id : str, optional
@@ -395,7 +394,7 @@ class FramelineRenderer:
         ValueError
             If the specified context, canvas, or framing decision is not found.
         """
-        _context, canvas, framing = self._get_fdl_components(fdl, context_label, canvas_id, framing_id)
+        _context, canvas, framing = self._get_fdl_components(fdl, context_index, canvas_id, framing_id)
 
         buf = self._create_image_buffer(canvas)
         self._render_all_layers(buf, canvas, framing)
@@ -405,7 +404,7 @@ class FramelineRenderer:
     def render_to_svg(
         self,
         fdl: FDL,
-        context_label: str | None = None,
+        context_index: int | None = None,
         canvas_id: str | None = None,
         framing_id: str | None = None,
     ) -> str:
@@ -416,8 +415,8 @@ class FramelineRenderer:
         ----------
         fdl : FDL
             The FDL object containing framing data.
-        context_label : str, optional
-            Context label to use. If None, uses the first context.
+        context_index : int, optional
+            Context index to use. If None, uses the first context.
         canvas_id : str, optional
             Canvas ID to use. If None, uses the first canvas.
         framing_id : str, optional
@@ -428,7 +427,7 @@ class FramelineRenderer:
         str
             The rendered SVG document as a string.
         """
-        _context, canvas, framing = self._get_fdl_components(fdl, context_label, canvas_id, framing_id)
+        _context, canvas, framing = self._get_fdl_components(fdl, context_index, canvas_id, framing_id)
         doc = self._build_svg_document(canvas, framing)
         return doc.to_string()
 
@@ -659,7 +658,7 @@ class FramelineRenderer:
     def _get_fdl_components(
         self,
         fdl: FDL,
-        context_label: str | None,
+        context_index: int | None,
         canvas_id: str | None,
         framing_id: str | None,
     ) -> tuple[Context, Canvas, FramingDecision]:
@@ -670,8 +669,8 @@ class FramelineRenderer:
         ----------
         fdl : FDL
             The FDL object to extract components from.
-        context_label : str or None
-            Context label to find. If None, uses first context.
+        context_index : int or None
+            Context index to use. If None, uses first context.
         canvas_id : str or None
             Canvas ID to find. If None, uses first canvas.
         framing_id : str or None
@@ -687,10 +686,11 @@ class FramelineRenderer:
         ValueError
             If the FDL has no contexts, or if specified components are not found.
         """
-        if context_label:
-            context = find_by_label(fdl.contexts, context_label)
-            if context is None:
-                raise ValueError(f"Context with label '{context_label}' not found")
+        if context_index is not None:
+            contexts = fdl.contexts
+            if context_index < 0 or context_index >= len(contexts):
+                raise ValueError(f"Context index {context_index} out of range")
+            context = contexts[context_index]
         else:
             if not fdl.contexts:
                 raise ValueError("FDL has no contexts")

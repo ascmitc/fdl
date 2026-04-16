@@ -58,7 +58,7 @@ class TestEndToEndWorkflow:
         transform_controller.apply_template(
             source_fdl=source_model.fdl,
             template=template,
-            context_label=context.label,
+            context_index=0,
             canvas_id=canvas.id,
             framing_decision_id=framing.id,
         )

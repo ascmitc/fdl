@@ -14,7 +14,6 @@ from fdl import (
     Context,
     FramingDecision,
     find_by_id,
-    find_by_label,
 )
 from PySide6.QtCore import QObject, QPointF, QRectF, Signal
 
@@ -48,12 +47,12 @@ class FDLModel(QObject):
     --------
     >>> model = FDLModel(loaded_fdl)
     >>> model.fdl_changed.connect(on_fdl_changed)
-    >>> model.set_selection("Context Label", "canvas_id", "fd_id")
+    >>> model.set_selection(0, "canvas_id", "fd_id")
     """
 
     # Signals
     fdl_changed = Signal()
-    context_changed = Signal(str)
+    context_changed = Signal(int)
     canvas_changed = Signal(str)
     framing_decision_changed = Signal(str)
 
@@ -71,7 +70,7 @@ class FDLModel(QObject):
         super().__init__(parent)
         self._fdl: FDL | None = fdl
         self._file_path: str = ""
-        self._selected_context_label: str = ""
+        self._selected_context_index: int = -1
         self._selected_canvas_id: str = ""
         self._selected_framing_id: str = ""
 
@@ -97,7 +96,7 @@ class FDLModel(QObject):
             The FDL dataclass to wrap.
         """
         self._fdl = fdl
-        self._selected_context_label = ""
+        self._selected_context_index = -1
         self._selected_canvas_id = ""
         self._selected_framing_id = ""
         self.fdl_changed.emit()
@@ -155,7 +154,7 @@ class FDLModel(QObject):
         List[str]
             The list of context labels.
         """
-        return [ctx.label for ctx in self.contexts]
+        return [ctx.label or str(i) for i, ctx in enumerate(self.contexts)]
 
     @property
     def current_context(self) -> Context | None:
@@ -167,23 +166,26 @@ class FDLModel(QObject):
         Context or None
             The selected context, or None if not selected.
         """
-        if not self._selected_context_label or self._fdl is None:
+        if self._selected_context_index < 0 or self._fdl is None:
             return None
-        return find_by_label(self._fdl.contexts, self._selected_context_label)
+        contexts = self._fdl.contexts
+        if self._selected_context_index < len(contexts):
+            return contexts[self._selected_context_index]
+        return None
 
-    def set_context(self, label: str) -> None:
+    def set_context(self, index: int) -> None:
         """
-        Set the selected context by label.
+        Set the selected context by index.
 
         Parameters
         ----------
-        label : str
-            The context label.
+        index : int
+            The context index in the contexts array.
         """
-        self._selected_context_label = label
+        self._selected_context_index = index
         self._selected_canvas_id = ""
         self._selected_framing_id = ""
-        self.context_changed.emit(label)
+        self.context_changed.emit(index)
 
     # Canvas operations
     @property
@@ -344,23 +346,23 @@ class FDLModel(QObject):
         return None
 
     # Combined selection
-    def set_selection(self, context_label: str, canvas_id: str, fd_id: str) -> None:
+    def set_selection(self, context_index: int, canvas_id: str, fd_id: str) -> None:
         """
         Set the complete selection.
 
         Parameters
         ----------
-        context_label : str
-            The context label.
+        context_index : int
+            The context index in the contexts array.
         canvas_id : str
             The canvas ID.
         fd_id : str
             The framing decision ID.
         """
-        self._selected_context_label = context_label
+        self._selected_context_index = context_index
         self._selected_canvas_id = canvas_id
         self._selected_framing_id = fd_id
-        self.context_changed.emit(context_label)
+        self.context_changed.emit(context_index)
         self.canvas_changed.emit(canvas_id)
         self.framing_decision_changed.emit(fd_id)
 
@@ -374,7 +376,7 @@ class FDLModel(QObject):
         tuple
             (context_label, canvas_id, framing_id)
         """
-        return (self._selected_context_label, self._selected_canvas_id, self._selected_framing_id)
+        return (self._selected_context_index, self._selected_canvas_id, self._selected_framing_id)
 
     # Canvas templates
     @property
