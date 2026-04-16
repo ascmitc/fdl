@@ -101,7 +101,7 @@ class UnitTestExportController(QObject):
         template_fdl: FDL,
         output_fdl: FDL,
         source_image_path: str | None,
-        context_label: str,
+        context_index: int,
         canvas_id: str,
         framing_id: str,
         input_dims: tuple[float, float],
@@ -124,8 +124,8 @@ class UnitTestExportController(QObject):
             The transformed output FDL.
         source_image_path : str, optional
             Path to the source image (if any).
-        context_label : str
-            The selected context label.
+        context_index : int
+            The selected context index.
         canvas_id : str
             The selected canvas ID.
         framing_id : str
@@ -178,6 +178,9 @@ class UnitTestExportController(QObject):
             result_fdl_name = f"Scen{scenario_number}-RESULT-{base_name}.fdl"
             result_fdl_dest = results_dir / result_fdl_name
             write_to_file(output_fdl, result_fdl_dest)
+
+            # Resolve context index to label for test config generation
+            context_label = source_fdl.contexts[context_index].label if context_index < len(source_fdl.contexts) else ""
 
             # Generate scenario config code
             config_code = self.generate_scenario_config_code(

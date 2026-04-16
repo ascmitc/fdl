@@ -64,7 +64,7 @@ class AppState(QObject):
     output_fdl_changed = Signal(object)  # FDLModel or None
 
     # Selection signals
-    selection_changed = Signal(str, str, str)  # context_label, canvas_id, framing_id
+    selection_changed = Signal(int, str, str)  # context_index, canvas_id, framing_id
     template_modified_changed = Signal(bool)
 
     # UI state signals
@@ -104,7 +104,7 @@ class AppState(QObject):
         self._output_fdl: FDLModel | None = None
 
         # Selection state
-        self._selected_context: str = ""
+        self._selected_context: int = -1
         self._selected_canvas: str = ""
         self._selected_framing: str = ""
 
@@ -206,8 +206,8 @@ class AppState(QObject):
 
     # Selection
     @property
-    def selected_context(self) -> str:
-        """Get the selected context label."""
+    def selected_context(self) -> int:
+        """Get the selected context index."""
         return self._selected_context
 
     @property
@@ -220,14 +220,14 @@ class AppState(QObject):
         """Get the selected framing decision ID."""
         return self._selected_framing
 
-    def set_selection(self, context: str, canvas: str, framing: str) -> None:
+    def set_selection(self, context: int, canvas: str, framing: str) -> None:
         """
         Set the current selection.
 
         Parameters
         ----------
-        context : str
-            The context label.
+        context : int
+            The context index.
         canvas : str
             The canvas ID.
         framing : str

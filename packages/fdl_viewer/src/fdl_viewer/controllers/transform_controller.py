@@ -13,7 +13,6 @@ from fdl import (
     CanvasTemplate,
     TemplateResult,
     find_by_id,
-    find_by_label,
 )
 from PySide6.QtCore import QObject, Signal
 
@@ -65,7 +64,7 @@ class TransformController(QObject):
         self,
         source_fdl: FDL,
         template: CanvasTemplate,
-        context_label: str,
+        context_index: int,
         canvas_id: str,
         framing_decision_id: str,
         new_fd_name: str = "",
@@ -80,8 +79,8 @@ class TransformController(QObject):
             The source FDL to transform.
         template : CanvasTemplate
             The template to apply.
-        context_label : str
-            The label of the context to use.
+        context_index : int
+            The index of the context to use.
         canvas_id : str
             The ID of the canvas to use.
         framing_decision_id : str
@@ -104,10 +103,11 @@ class TransformController(QObject):
         self.transform_started.emit()
 
         try:
-            # Find the source context
-            context = find_by_label(source_fdl.contexts, context_label)
-            if context is None:
-                raise ValueError(f"Context not found: {context_label}")
+            # Find the source context by index
+            contexts = source_fdl.contexts
+            if context_index < 0 or context_index >= len(contexts):
+                raise ValueError(f"Context index {context_index} out of range")
+            context = contexts[context_index]
 
             # Find the source canvas
             canvas = find_by_id(context.canvases, canvas_id)
@@ -141,7 +141,7 @@ class TransformController(QObject):
     def validate_selection(
         self,
         source_fdl: FDL,
-        context_label: str,
+        context_index: int,
         canvas_id: str,
         framing_decision_id: str,
     ) -> tuple[bool, str]:
@@ -152,8 +152,8 @@ class TransformController(QObject):
         ----------
         source_fdl : FDL
             The source FDL.
-        context_label : str
-            The context label.
+        context_index : int
+            The context index.
         canvas_id : str
             The canvas ID.
         framing_decision_id : str
@@ -167,9 +167,10 @@ class TransformController(QObject):
         if not source_fdl:
             return False, "No source FDL"
 
-        context = find_by_label(source_fdl.contexts, context_label)
-        if context is None:
-            return False, f"Context not found: {context_label}"
+        contexts = source_fdl.contexts
+        if context_index < 0 or context_index >= len(contexts):
+            return False, f"Context index {context_index} out of range"
+        context = contexts[context_index]
 
         canvas = find_by_id(context.canvases, canvas_id)
         if canvas is None:

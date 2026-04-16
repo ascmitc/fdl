@@ -30,10 +30,11 @@ class TestImageProcessing(BaseFDLTestCase):
         canvas = self.get_component_from_fdl(fdl, "canvas", label="Open Gate RAW", context=context)
         fd = self.get_component_from_fdl(fdl, "framing_decision", label="1.78-1 Framing", canvas=canvas)
 
-        # Test get_fdl_components function
+        # Test get_fdl_components function — resolve label to index
+        context_index = next(i for i, c in enumerate(fdl.contexts) if c.label == "RED Monstro")
         resolved_context, resolved_canvas, resolved_fd = get_fdl_components(
             fdl,
-            context_id="RED Monstro",
+            context_index=context_index,
             canvas_id=canvas.id,
             framing_decision_id=fd.id,
         )
@@ -43,13 +44,13 @@ class TestImageProcessing(BaseFDLTestCase):
         self.assertEqual(resolved_fd.id, fd.id)
 
     def test_get_fdl_components_invalid_context(self):
-        """Test that invalid context raises ValueError."""
+        """Test that invalid context index raises ValueError."""
         fdl_path = self.get_resources_folder() / "Source_OCF" / "Source_FDLs" / "A_5184x4320_2_20percentSafe.fdl"
         fdl = read_from_file(fdl_path)
 
         with self.assertRaises(ValueError) as cm:
-            get_fdl_components(fdl, "NonExistent", "1", "1-1")
-        self.assertIn("No context with label", str(cm.exception))
+            get_fdl_components(fdl, 999, "1", "1-1")
+        self.assertIn("Context index", str(cm.exception))
 
     def test_process_image_with_fdl_tif(self):
         """Test processing a TIF image with FDL."""
@@ -72,7 +73,7 @@ class TestImageProcessing(BaseFDLTestCase):
                 input_path=source_tif,
                 output_path=output_path,
                 fdl=source_fdl,
-                context_id=context.label,
+                context_index=next(i for i, c in enumerate(fdl.contexts) if c.label == context.label),
                 canvas_id=canvas.id,
                 framing_decision_id=fd.id,
                 use_protection=True,
@@ -115,7 +116,7 @@ class TestImageProcessing(BaseFDLTestCase):
                 input_path=source_tif,
                 output_path=output_path,
                 fdl=source_fdl,
-                context_id=context.label,
+                context_index=next(i for i, c in enumerate(fdl.contexts) if c.label == context.label),
                 canvas_id=canvas.id,
                 framing_decision_id=fd.id,
                 filter_name="triangle",
@@ -160,7 +161,7 @@ class TestImageProcessing(BaseFDLTestCase):
                 input_path=source_tif,
                 output_path=output_path,
                 fdl=source_fdl,
-                context_id=context.label,
+                context_index=next(i for i, c in enumerate(fdl.contexts) if c.label == context.label),
                 canvas_id=canvas.id,
                 framing_decision_id=fd.id,
                 output_width=target_width,
@@ -203,7 +204,7 @@ class TestImageProcessing(BaseFDLTestCase):
                     input_path=source_tif,
                     output_path=output_path,
                     fdl=other_fdl_path,
-                    context_id=context.label,
+                    context_index=next(i for i, c in enumerate(fdl.contexts) if c.label == context.label),
                     canvas_id=canvas.id,
                     framing_decision_id=fd.id,
                 )

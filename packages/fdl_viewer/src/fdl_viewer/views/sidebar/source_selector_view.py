@@ -32,14 +32,14 @@ class SourceSelectorView(QWidget):
     Attributes
     ----------
     context_selected : Signal
-        Emitted when a context is selected (label).
+        Emitted when a context is selected (index).
     canvas_selected : Signal
         Emitted when a canvas is selected (id).
     framing_selected : Signal
         Emitted when a framing decision is selected (id).
     """
 
-    context_selected = Signal(str)
+    context_selected = Signal(int)
     canvas_selected = Signal(str)
     framing_selected = Signal(str)
 
@@ -99,15 +99,17 @@ class SourceSelectorView(QWidget):
 
     def _connect_signals(self) -> None:
         """Connect signals."""
-        self._context_combo.currentTextChanged.connect(self._on_context_changed)
+        self._context_combo.currentIndexChanged.connect(self._on_context_changed)
         self._canvas_combo.currentIndexChanged.connect(self._on_canvas_changed)
         self._framing_combo.currentIndexChanged.connect(self._on_framing_changed)
 
-    @Slot(str)
-    def _on_context_changed(self, text: str) -> None:
+    @Slot(int)
+    def _on_context_changed(self, index: int) -> None:
         """Handle context selection change."""
-        if text:
-            self.context_selected.emit(text)
+        if index >= 0:
+            context_index = self._context_combo.currentData()
+            if context_index is not None:
+                self.context_selected.emit(context_index)
 
     @Slot(int)
     def _on_canvas_changed(self, index: int) -> None:
@@ -126,21 +128,22 @@ class SourceSelectorView(QWidget):
                 self.framing_selected.emit(fd_id)
 
     @Slot(list)
-    def set_contexts(self, labels: list[str]) -> None:
+    def set_contexts(self, contexts: list[tuple[int, str]]) -> None:
         """
         Set the available contexts.
 
         Parameters
         ----------
-        labels : List[str]
-            The list of context labels.
+        contexts : List[Tuple[int, str]]
+            List of (index, display_label) tuples.
         """
         self._context_combo.blockSignals(True)
         self._context_combo.clear()
-        self._context_combo.addItems(labels)
+        for index, display_label in contexts:
+            self._context_combo.addItem(display_label, index)
         self._context_combo.blockSignals(False)
 
-        if labels:
+        if contexts:
             self._context_combo.setCurrentIndex(0)
 
     @Slot(list)

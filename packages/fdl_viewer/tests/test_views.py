@@ -355,13 +355,13 @@ class TestSourceSelectorView:
 
         widget = SourceSelectorView()
 
-        # Get context labels from FDL and set them
-        context_labels = [ctx.label for ctx in fdl.contexts]
-        widget.set_contexts(context_labels)
+        # Get context list as (index, display_label) tuples
+        context_list = [(i, ctx.label or str(i)) for i, ctx in enumerate(fdl.contexts)]
+        widget.set_contexts(context_list)
 
         # Should have contexts populated
         assert widget._context_combo.count() > 0
-        assert widget._context_combo.count() == len(context_labels)
+        assert widget._context_combo.count() == len(context_list)
 
 
 class TestTemplateEditorView:
