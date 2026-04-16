@@ -180,10 +180,14 @@ The scale factor is then determined by the `fit_method`:
 
 Apply the scale factor to **all** dimensions and anchors uniformly.
 
+> **Precision note**: The scale factor is kept internally as a ratio
+> (numerator / denominator) to avoid IEEE 754 precision loss. The computation
+> uses `(value x numerator) / denominator` instead of `value x (num / den)`.
+
 **Normalize and scale** (per value):
 
 ```
-scaled_value = (source_value * source_squeeze * scale_factor) / target_squeeze
+scaled_value = (source_value * source_squeeze * scale_numerator) / (scale_denominator * target_squeeze)
 ```
 
 This converts from source pixel space through square-pixel space to target

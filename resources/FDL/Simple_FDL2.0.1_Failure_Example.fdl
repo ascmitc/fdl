@@ -1,0 +1,123 @@
+{
+  "uuid": "00000000-0000-0000-0000-000000000000",
+  "version": {
+    "major": 2,
+    "minor": 0
+  },
+  "fdl_creator": "FDL Viewer",
+  "default_framing_intent": "A",
+  "framing_intents": [
+    {
+      "label": "2.39",
+      "id": "A",
+      "aspect_ratio": {
+        "width": 1920,
+        "height": 804
+      },
+      "protection": 0.0
+    }
+  ],
+  "contexts": [
+    {
+      "label": "Custom Template",
+      "context_creator": "FDL Viewer",
+      "canvases": [
+        {
+          "label": "",
+          "id": "1",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 6560,
+            "height": 3100
+          },
+          "anamorphic_squeeze": 1.0,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "1-A",
+              "framing_intent_id": "A",
+              "dimensions": {
+                "width": 6560.0,
+                "height": 2747.0
+              },
+              "anchor_point": {
+                "x": 0.0,
+                "y": 176.5
+              },
+              "protection_dimensions": {
+                "width": 6560.0,
+                "height": 3100.0
+              },
+              "protection_anchor_point": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "label": "Custom Template: A265_6560x3100_PA10_100 ",
+          "id": "9d9f8757f8f04622977793007ca5b9",
+          "source_canvas_id": "1",
+          "dimensions": {
+            "width": 3838,
+            "height": 1608
+          },
+          "effective_dimensions": {
+            "width": 3838,
+            "height": 1608
+          },
+          "effective_anchor_point": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "anamorphic_squeeze": 1.0,
+          "framing_decisions": [
+            {
+              "label": "",
+              "id": "9d9f8757f8f04622977793007ca5b9-A",
+              "framing_intent_id": "A",
+              "dimensions": {
+                "width": 3838.0,
+                "height": 1608.0
+              },
+              "anchor_point": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          ],
+          "_scale_factor": 0.5853658536585366,
+          "_content_translation": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "_scaled_bounding_box": {
+            "width": 3838.0,
+            "height": 1608.0
+          }
+        }
+      ]
+    }
+  ],
+  "canvas_templates": [
+    {
+      "label": "Custom Template",
+      "id": "custom_template",
+      "target_dimensions": {
+        "width": 3840,
+        "height": 1608
+      },
+      "target_anamorphic_squeeze": 1.0,
+      "fit_source": "framing_decision.dimensions",
+      "fit_method": "width",
+      "alignment_method_vertical": "bottom",
+      "alignment_method_horizontal": "right",
+      "preserve_from_source_canvas": "framing_decision.dimensions",
+      "round": {
+        "even": "even",
+        "mode": "down"
+      }
+    }
+  ]
+}

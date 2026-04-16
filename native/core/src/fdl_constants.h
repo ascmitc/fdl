@@ -31,7 +31,8 @@ constexpr double kCenterDivisor = 2.0;
 
 /** @name Identity / default values
  *  @{ */
-constexpr double kIdentitySqueeze = 1.0; /**< No anamorphic distortion (1:1 squeeze). */
+constexpr double kIdentitySqueeze = 1.0;     /**< No anamorphic distortion (1:1 squeeze). */
+constexpr double kIdentityDenominator = 1.0; /**< Identity denominator for ratio-based scaling (num / 1.0 = num). */
 /** @} */
 
 /** @name Banker's rounding constants

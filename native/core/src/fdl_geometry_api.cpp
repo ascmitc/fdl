@@ -16,7 +16,8 @@ fdl_geometry_t fdl_geometry_fill_hierarchy_gaps(fdl_geometry_t geo, fdl_point_f6
 
 fdl_geometry_t fdl_geometry_normalize_and_scale(
     fdl_geometry_t geo, double source_squeeze, double scale_factor, double target_squeeze) {
-    return fdl::detail::geometry_normalize_and_scale(geo, source_squeeze, scale_factor, target_squeeze);
+    return fdl::detail::geometry_normalize_and_scale_ratio(
+        geo, source_squeeze, scale_factor, fdl::constants::kIdentityDenominator, target_squeeze);
 }
 
 fdl_geometry_t fdl_geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy) {

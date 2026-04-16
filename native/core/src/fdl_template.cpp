@@ -21,6 +21,8 @@
 #include "fdl_constants.h"
 #include "fdl_doc.h"
 #include "fdl_enum_map.h"
+#include "fdl_geometry.h"
+#include "fdl_pipeline.h"
 
 #include <algorithm>
 #include <cmath>
@@ -484,10 +486,14 @@ fdl_template_result_t apply_canvas_template(
     // --- Calculate scale factor ---
     fdl_dimensions_f64_t const fit_norm = fdl_dimensions_normalize(fit_dims, input_squeeze);
     fdl_dimensions_f64_t const target_norm = fdl_dimensions_normalize(target_dims, target_squeeze);
-    double const scale_factor = fdl_calculate_scale_factor(fit_norm, target_norm, fit_method);
+    auto const scale_ratio = fdl::detail::calculate_scale_ratio(fit_norm, target_norm, fit_method);
+    double const scale_factor = scale_ratio.numerator / scale_ratio.denominator;
 
     // --- Phase 5: Scale and round ---
-    geometry = fdl_geometry_normalize_and_scale(geometry, input_squeeze, scale_factor, target_squeeze);
+    // Use ratio-based scaling: (value * numerator) / denominator preserves precision
+    // for integer inputs, avoiding IEEE 754 rounding errors in the scale factor.
+    geometry = fdl::detail::geometry_normalize_and_scale_ratio(
+        geometry, input_squeeze, scale_ratio.numerator, scale_ratio.denominator, target_squeeze);
     geometry = fdl_geometry_round(geometry, rounding);
 
     // Extract scaled values BEFORE crop

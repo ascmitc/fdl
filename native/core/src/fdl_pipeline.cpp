@@ -32,6 +32,28 @@ double calculate_scale_factor(
     }
 }
 
+scale_ratio_t calculate_scale_ratio(
+    fdl_dimensions_f64_t fit_norm, fdl_dimensions_f64_t target_norm, fdl_fit_method_t fit_method) {
+
+    double const w_ratio = target_norm.width / fit_norm.width;
+    double const h_ratio = target_norm.height / fit_norm.height;
+
+    switch (fit_method) {
+    case FDL_FIT_METHOD_FIT_ALL:
+        return (w_ratio <= h_ratio) ? scale_ratio_t{target_norm.width, fit_norm.width}
+                                    : scale_ratio_t{target_norm.height, fit_norm.height};
+    case FDL_FIT_METHOD_FILL:
+        return (w_ratio >= h_ratio) ? scale_ratio_t{target_norm.width, fit_norm.width}
+                                    : scale_ratio_t{target_norm.height, fit_norm.height};
+    case FDL_FIT_METHOD_WIDTH:
+        return {target_norm.width, fit_norm.width};
+    case FDL_FIT_METHOD_HEIGHT:
+        return {target_norm.height, fit_norm.height};
+    default:
+        return {0.0, fdl::constants::kIdentityDenominator};
+    }
+}
+
 double output_size_for_axis(double canvas_size, double max_size, bool has_max, bool pad_to_max) {
 
     if (has_max && pad_to_max) {

@@ -15,6 +15,20 @@
 namespace fdl::detail {
 
 /**
+ * @brief Scale factor represented as numerator / denominator.
+ *
+ * Keeping the ratio split avoids the precision loss inherent in computing
+ * a single double when the quotient is not exactly representable in IEEE 754.
+ * The scaling pipeline computes (value * numerator) / denominator instead of
+ * value * (numerator / denominator), which is exact for integer inputs that
+ * fit within 2^53.
+ */
+struct scale_ratio_t {
+    double numerator;
+    double denominator;
+};
+
+/**
  * @brief Calculate scale factor based on fit method.
  * @param fit_norm    Normalized fit-source dimensions.
  * @param target_norm Normalized target dimensions.
@@ -22,6 +36,20 @@ namespace fdl::detail {
  * @return Scale factor (always > 0).
  */
 double calculate_scale_factor(
+    fdl_dimensions_f64_t fit_norm, fdl_dimensions_f64_t target_norm, fdl_fit_method_t fit_method);
+
+/**
+ * @brief Calculate scale ratio (numerator/denominator) based on fit method.
+ *
+ * Returns the numerator and denominator separately so that downstream
+ * scaling can multiply before dividing, preserving precision.
+ *
+ * @param fit_norm    Normalized fit-source dimensions.
+ * @param target_norm Normalized target dimensions.
+ * @param fit_method  Fit method (width, height, fill, fit_all).
+ * @return Scale ratio with separate numerator and denominator.
+ */
+scale_ratio_t calculate_scale_ratio(
     fdl_dimensions_f64_t fit_norm, fdl_dimensions_f64_t target_norm, fdl_fit_method_t fit_method);
 
 /**
