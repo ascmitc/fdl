@@ -90,7 +90,7 @@ def process_image_with_fdl(
     input_path: str | Path,
     output_path: str | Path,
     fdl: str | Path | FDL,
-    context_id: str,
+    context_index: int,
     canvas_id: str,
     framing_decision_id: str,
     use_protection: bool = True,
@@ -111,8 +111,8 @@ def process_image_with_fdl(
         Path where the processed image will be saved
     fdl : str, Path, or FDL
         The FDL file path or FDL object containing framing decisions
-    context_id : str
-        The context label to use
+    context_index : int
+        The context index in the contexts array
     canvas_id : str
         The canvas ID to use
     framing_decision_id : str
@@ -144,7 +144,7 @@ def process_image_with_fdl(
         fdl = read_from_file(fdl)
 
     # Get FDL components
-    _context, canvas, framing_decision = get_fdl_components(fdl, context_id, canvas_id, framing_decision_id)
+    _context, canvas, framing_decision = get_fdl_components(fdl, context_index, canvas_id, framing_decision_id)
 
     # Load the input image
     input_buf = ImageBuf(str(input_path))
@@ -208,7 +208,7 @@ def process_image_with_fdl_template(
     source_fdl: str | Path | FDL,
     template_fdl: str | Path | FDL,
     template_id: str,
-    context_id: str,
+    context_index: int,
     canvas_id: str,
     framing_decision_id: str,
     filter_name: str = "lanczos3",
@@ -237,8 +237,8 @@ def process_image_with_fdl_template(
         The template FDL file path or object containing canvas templates
     template_id : str
         The template ID to use
-    context_id : str
-        The context label to use
+    context_index : int
+        The context index in the contexts array
     canvas_id : str
         The canvas ID to use
     framing_decision_id : str
@@ -260,7 +260,7 @@ def process_image_with_fdl_template(
         template_fdl = read_from_file(template_fdl)
 
     # Get source FDL components
-    context, canvas, framing_decision = get_fdl_components(source_fdl, context_id, canvas_id, framing_decision_id)
+    context, canvas, framing_decision = get_fdl_components(source_fdl, context_index, canvas_id, framing_decision_id)
 
     # Find template
     template = find_by_id(template_fdl.canvas_templates, template_id)
@@ -301,7 +301,7 @@ def extract_framing_region(
     input_path: str | Path,
     output_path: str | Path,
     fdl: str | Path | FDL,
-    context_id: str,
+    context_index: int,
     canvas_id: str,
     framing_decision_id: str,
     output_width: int | None = None,
@@ -322,8 +322,8 @@ def extract_framing_region(
         Path where the processed image will be saved
     fdl : str, Path, or FDL
         The FDL file path or FDL object
-    context_id : str
-        The context label to use
+    context_index : int
+        The context index in the contexts array
     canvas_id : str
         The canvas ID to use
     framing_decision_id : str
@@ -349,7 +349,7 @@ def extract_framing_region(
         fdl = read_from_file(fdl)
 
     # Get FDL components
-    _context, _canvas, framing_decision = get_fdl_components(fdl, context_id, canvas_id, framing_decision_id)
+    _context, _canvas, framing_decision = get_fdl_components(fdl, context_index, canvas_id, framing_decision_id)
 
     # Load the input image
     input_buf = ImageBuf(str(input_path))

@@ -8,6 +8,7 @@ Extends BaseFDLTestCase with image processing and comparison capabilities.
 
 from pathlib import Path
 
+from fdl import read_from_file
 from fdl.testing.base import BaseFDLTestCase
 
 from fdl_imaging import process_image_with_fdl_template
@@ -78,13 +79,17 @@ class BaseFDLImagingTestCase(BaseFDLTestCase):
             output_ext = source_image.suffix
         output_path = self.get_outputs_folder() / f"{test_name}_processed{output_ext}"
 
+        # Resolve context label to index
+        source_fdl = read_from_file(source_fdl_path)
+        context_index = next(i for i, c in enumerate(source_fdl.contexts) if c.label == context_label)
+
         process_image_with_fdl_template(
             input_path=source_image,
             output_path=output_path,
-            source_fdl=source_fdl_path,
+            source_fdl=source_fdl,
             template_fdl=template_fdl_path,
             template_id=template_id,
-            context_id=context_label,
+            context_index=context_index,
             canvas_id=canvas_id,
             framing_decision_id=framing_decision_id,
             filter_name=filter_name,
