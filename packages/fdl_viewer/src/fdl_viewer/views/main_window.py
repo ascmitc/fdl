@@ -788,9 +788,9 @@ class MainWindow(QMainWindow):
             return False
         try:
             if filter_name is None:
-                from fdl_viewer.utils.settings import AppSettings
+                from fdl_viewer.utils.settings import Settings
 
-                filter_name = AppSettings().get_image_filter()
+                filter_name = Settings().get_image_filter()
 
             source_fdl = self._app_state.source_fdl.fdl
             context_index = self._app_state.selected_context
