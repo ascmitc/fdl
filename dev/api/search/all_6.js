@@ -4,7 +4,7 @@ var searchData=
   ['geometry_5fcrop_1',['geometry_crop',['../fdl__geometry_8cpp.html#a1e46f5b5c929c0cf5a04df1b50a8a1b4',1,'fdl::detail']]],
   ['geometry_5ffill_5fhierarchy_5fgaps_2',['geometry_fill_hierarchy_gaps',['../fdl__geometry_8cpp.html#aa655c6639a24f1a7e05295658f2251a4',1,'fdl::detail']]],
   ['geometry_5fget_5fdims_5fanchor_5ffrom_5fpath_3',['geometry_get_dims_anchor_from_path',['../fdl__geometry_8cpp.html#a337f79ae53e54313b8fd2f0405dc568c',1,'fdl::detail']]],
-  ['geometry_5fnormalize_5fand_5fscale_4',['geometry_normalize_and_scale',['../fdl__geometry_8cpp.html#a85c93d803ff3c4daa0b944fb979fd5e6',1,'fdl::detail']]],
+  ['geometry_5fnormalize_5fand_5fscale_5fratio_4',['geometry_normalize_and_scale_ratio',['../fdl__geometry_8cpp.html#a76d440d1ca4991bbd17a4b897c07e6b1',1,'fdl::detail']]],
   ['geometry_5fpath_5ffrom_5fstring_5',['geometry_path_from_string',['../fdl__enum__map_8h.html#ab7d6ae3d736efbdac2df1a5a59b11ed0',1,'fdl::detail']]],
   ['geometry_5fpath_5fto_5fstring_6',['geometry_path_to_string',['../fdl__enum__map_8h.html#aa818df4722976c15371bfca1c4a357ba',1,'fdl::detail']]],
   ['geometry_5fround_7',['geometry_round',['../fdl__geometry_8cpp.html#aa18ffd3d213525615be5b287598f1abf',1,'fdl::detail']]],

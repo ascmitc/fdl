@@ -3095,6 +3095,14 @@ alignment.</p>
 <p><strong>C API</strong>: <code>fdl_geometry_normalize_and_scale()</code> + <code>fdl_geometry_round()</code>
 <strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code></p>
 <p>Apply the scale factor to <strong>all</strong> dimensions and anchors uniformly, then round.</p>
+<blockquote>
+<p><strong>Precision note</strong>: The scale factor <code>target / fit</code> may not be exactly
+representable in IEEE 754 (e.g., <code>3840/6560 = 24/41</code>). To avoid rounding
+errors, the implementation keeps the scale factor as a ratio
+(numerator / denominator) and computes <code>(value x numerator) / denominator</code>
+instead of <code>value x (numerator / denominator)</code>. This ensures intermediate
+products are exact for integer inputs that fit within 2^53.</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code>geometry = fdl_geometry_normalize_and_scale(geometry,
     source_squeeze  = input_squeeze,
     scale_factor    = scale_factor,
@@ -3103,13 +3111,13 @@ alignment.</p>
 geometry = fdl_geometry_round(geometry, round_strategy)
 </code></pre></div>
 <p><strong>The Normalize-and-Scale Formula</strong> (per ASC FDL spec 7.4.5):</p>
-<p>For dimensions:
-<div class="highlight"><pre><span></span><code>width_out  = (width_in  x source_squeeze x scale_factor) / target_squeeze
-height_out = height_in x scale_factor
+<p>For dimensions (internally computed as ratio for precision):
+<div class="highlight"><pre><span></span><code>width_out  = (width_in  x source_squeeze x scale_numerator) / (scale_denominator x target_squeeze)
+height_out = (height_in x scale_numerator) / scale_denominator
 </code></pre></div></p>
 <p>For anchor points:
-<div class="highlight"><pre><span></span><code>x_out = (x_in x source_squeeze x scale_factor) / target_squeeze
-y_out = y_in x scale_factor
+<div class="highlight"><pre><span></span><code>x_out = (x_in x source_squeeze x scale_numerator) / (scale_denominator x target_squeeze)
+y_out = (y_in x scale_numerator) / scale_denominator
 </code></pre></div></p>
 <p><strong>Rounding Configuration</strong> (<code>RoundStrategy</code>):</p>
 <table>

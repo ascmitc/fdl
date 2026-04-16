@@ -75,6 +75,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">fdl_pipeline.h File Reference</div></div>
 </div><!--header-->
@@ -86,11 +87,20 @@ $(function() {
 </div>
 <p><a href="fdl__pipeline_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfdl_1_1detail_1_1scale__ratio__t.html">fdl::detail::scale_ratio_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale factor represented as numerator / denominator.  <a href="structfdl_1_1detail_1_1scale__ratio__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a9f95ebe5dc0724da527c411d25bd7873" id="r_a9f95ebe5dc0724da527c411d25bd7873"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__pipeline_8cpp.html#a9f95ebe5dc0724da527c411d25bd7873">fdl::detail::calculate_scale_factor</a> (<a class="el" href="structfdl__dimensions__f64__t.html">fdl_dimensions_f64_t</a> fit_norm, <a class="el" href="structfdl__dimensions__f64__t.html">fdl_dimensions_f64_t</a> target_norm, <a class="el" href="fdl__core_8h.html#a6cccad8765f94aef6152fd51bab4e1cf">fdl_fit_method_t</a> fit_method)</td></tr>
 <tr class="memdesc:a9f95ebe5dc0724da527c411d25bd7873"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate scale factor based on fit method.  <br /></td></tr>
 <tr class="separator:a9f95ebe5dc0724da527c411d25bd7873"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a749f95f1be75adc7e56361e36ce0f118" id="r_a749f95f1be75adc7e56361e36ce0f118"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structfdl_1_1detail_1_1scale__ratio__t.html">scale_ratio_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__pipeline_8cpp.html#a749f95f1be75adc7e56361e36ce0f118">fdl::detail::calculate_scale_ratio</a> (<a class="el" href="structfdl__dimensions__f64__t.html">fdl_dimensions_f64_t</a> fit_norm, <a class="el" href="structfdl__dimensions__f64__t.html">fdl_dimensions_f64_t</a> target_norm, <a class="el" href="fdl__core_8h.html#a6cccad8765f94aef6152fd51bab4e1cf">fdl_fit_method_t</a> fit_method)</td></tr>
+<tr class="memdesc:a749f95f1be75adc7e56361e36ce0f118"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate scale ratio (numerator/denominator) based on fit method.  <br /></td></tr>
+<tr class="separator:a749f95f1be75adc7e56361e36ce0f118"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b94db6991367154a76b292b160cabf8" id="r_a2b94db6991367154a76b292b160cabf8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__pipeline_8cpp.html#a2b94db6991367154a76b292b160cabf8">fdl::detail::output_size_for_axis</a> (double canvas_size, double max_size, bool has_max, bool pad_to_max)</td></tr>
 <tr class="memdesc:a2b94db6991367154a76b292b160cabf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine output canvas size for a single axis.  <br /></td></tr>
 <tr class="separator:a2b94db6991367154a76b292b160cabf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,6 +157,52 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Scale factor (always &gt; 0). </dd></dl>
+
+</div>
+</div>
+<a id="a749f95f1be75adc7e56361e36ce0f118" name="a749f95f1be75adc7e56361e36ce0f118"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a749f95f1be75adc7e56361e36ce0f118">&#9670;&#160;</a></span>calculate_scale_ratio()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">scale_ratio_t fdl::detail::calculate_scale_ratio </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structfdl__dimensions__f64__t.html">fdl_dimensions_f64_t</a>&#160;</td>
+          <td class="paramname"><em>fit_norm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structfdl__dimensions__f64__t.html">fdl_dimensions_f64_t</a>&#160;</td>
+          <td class="paramname"><em>target_norm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="fdl__core_8h.html#a6cccad8765f94aef6152fd51bab4e1cf">fdl_fit_method_t</a>&#160;</td>
+          <td class="paramname"><em>fit_method</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculate scale ratio (numerator/denominator) based on fit method. </p>
+<p>Returns the numerator and denominator separately so that downstream scaling can multiply before dividing, preserving precision.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fit_norm</td><td>Normalized fit-source dimensions. </td></tr>
+    <tr><td class="paramname">target_norm</td><td>Normalized target dimensions. </td></tr>
+    <tr><td class="paramname">fit_method</td><td>Fit method (width, height, fill, fit_all). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Scale ratio with separate numerator and denominator. </dd></dl>
 
 </div>
 </div>

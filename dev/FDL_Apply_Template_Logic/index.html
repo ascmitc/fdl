@@ -1850,8 +1850,13 @@ anamorphic squeeze factors to produce square-pixel equivalents (via
 <p><strong>C API</strong>: <code>fdl_geometry_normalize_and_scale()</code> + <code>fdl_geometry_round()</code>
 <strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code></p>
 <p>Apply the scale factor to <strong>all</strong> dimensions and anchors uniformly.</p>
+<blockquote>
+<p><strong>Precision note</strong>: The scale factor is kept internally as a ratio
+(numerator / denominator) to avoid IEEE 754 precision loss. The computation
+uses <code>(value x numerator) / denominator</code> instead of <code>value x (num / den)</code>.</p>
+</blockquote>
 <p><strong>Normalize and scale</strong> (per value):</p>
-<div class="highlight"><pre><span></span><code>scaled_value = (source_value * source_squeeze * scale_factor) / target_squeeze
+<div class="highlight"><pre><span></span><code>scaled_value = (source_value * source_squeeze * scale_numerator) / (scale_denominator * target_squeeze)
 </code></pre></div>
 <p>This converts from source pixel space through square-pixel space to target
 pixel space in one operation.</p>

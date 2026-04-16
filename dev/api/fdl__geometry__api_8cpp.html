@@ -206,7 +206,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Normalize and scale all 7 fields of the geometry. </p>
-<p>Applies anamorphic normalization and scaling to all dimension and anchor fields.</p>
+<p>Applies anamorphic normalization and scaling to all dimension and anchor fields. Internally uses ratio-based arithmetic (denominator=1.0) to preserve precision. For template application, use the internal ratio variant directly.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">geo</td><td>Geometry to transform. </td></tr>

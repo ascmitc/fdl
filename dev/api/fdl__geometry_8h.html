@@ -91,9 +91,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aa655c6639a24f1a7e05295658f2251a4" id="r_aa655c6639a24f1a7e05295658f2251a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__geometry_8cpp.html#aa655c6639a24f1a7e05295658f2251a4">fdl::detail::geometry_fill_hierarchy_gaps</a> (<a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a> geo, <a class="el" href="structfdl__point__f64__t.html">fdl_point_f64_t</a> anchor_offset)</td></tr>
 <tr class="memdesc:aa655c6639a24f1a7e05295658f2251a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill gaps in the geometry hierarchy by propagating populated dimensions upward.  <br /></td></tr>
 <tr class="separator:aa655c6639a24f1a7e05295658f2251a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85c93d803ff3c4daa0b944fb979fd5e6" id="r_a85c93d803ff3c4daa0b944fb979fd5e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__geometry_8cpp.html#a85c93d803ff3c4daa0b944fb979fd5e6">fdl::detail::geometry_normalize_and_scale</a> (<a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a> geo, double source_squeeze, double scale_factor, double target_squeeze)</td></tr>
-<tr class="memdesc:a85c93d803ff3c4daa0b944fb979fd5e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalize and scale all 7 fields (4 dimensions + 3 anchors) of the geometry.  <br /></td></tr>
-<tr class="separator:a85c93d803ff3c4daa0b944fb979fd5e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d440d1ca4991bbd17a4b897c07e6b1" id="r_a76d440d1ca4991bbd17a4b897c07e6b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__geometry_8cpp.html#a76d440d1ca4991bbd17a4b897c07e6b1">fdl::detail::geometry_normalize_and_scale_ratio</a> (<a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a> geo, double source_squeeze, double scale_numerator, double scale_denominator, double target_squeeze)</td></tr>
+<tr class="memdesc:a76d440d1ca4991bbd17a4b897c07e6b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalize and scale using a ratio (numerator/denominator) for precision.  <br /></td></tr>
+<tr class="separator:a76d440d1ca4991bbd17a4b897c07e6b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa18ffd3d213525615be5b287598f1abf" id="r_aa18ffd3d213525615be5b287598f1abf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__geometry_8cpp.html#aa18ffd3d213525615be5b287598f1abf">fdl::detail::geometry_round</a> (<a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a> geo, <a class="el" href="structfdl__round__strategy__t.html">fdl_round_strategy_t</a> strategy)</td></tr>
 <tr class="memdesc:aa18ffd3d213525615be5b287598f1abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Round all 7 fields of the geometry using the given strategy.  <br /></td></tr>
 <tr class="separator:aa18ffd3d213525615be5b287598f1abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,7 +109,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Internal geometry operations on the 4-layer FDL dimension hierarchy. </p>
-<p>Provides gap-filling, normalize+scale, rounding, offset, and cropping operations used by the template application pipeline. </p>
+<p>Provides gap-filling, ratio-based normalize+scale, rounding, offset, and cropping operations used by the template application pipeline. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="aa655c6639a24f1a7e05295658f2251a4" name="aa655c6639a24f1a7e05295658f2251a4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa655c6639a24f1a7e05295658f2251a4">&#9670;&#160;</a></span>geometry_fill_hierarchy_gaps()</h2>
@@ -150,14 +150,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a85c93d803ff3c4daa0b944fb979fd5e6" name="a85c93d803ff3c4daa0b944fb979fd5e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85c93d803ff3c4daa0b944fb979fd5e6">&#9670;&#160;</a></span>geometry_normalize_and_scale()</h2>
+<a id="a76d440d1ca4991bbd17a4b897c07e6b1" name="a76d440d1ca4991bbd17a4b897c07e6b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76d440d1ca4991bbd17a4b897c07e6b1">&#9670;&#160;</a></span>geometry_normalize_and_scale_ratio()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a> fdl::detail::geometry_normalize_and_scale </td>
+          <td class="memname"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a> fdl::detail::geometry_normalize_and_scale_ratio </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a>&#160;</td>
           <td class="paramname"><em>geo</em>, </td>
@@ -172,7 +172,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>scale_factor</em>, </td>
+          <td class="paramname"><em>scale_numerator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>scale_denominator</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -188,12 +194,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Normalize and scale all 7 fields (4 dimensions + 3 anchors) of the geometry. </p>
+<p>Normalize and scale using a ratio (numerator/denominator) for precision. </p>
+<p>Computes (value * numerator) / denominator instead of value * (num/den) to preserve precision for integer inputs.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">geo</td><td>Input geometry. </td></tr>
     <tr><td class="paramname">source_squeeze</td><td>Source anamorphic squeeze. </td></tr>
-    <tr><td class="paramname">scale_factor</td><td>Uniform scale factor to apply. </td></tr>
+    <tr><td class="paramname">scale_numerator</td><td>Numerator of the scale ratio. </td></tr>
+    <tr><td class="paramname">scale_denominator</td><td>Denominator of the scale ratio. </td></tr>
     <tr><td class="paramname">target_squeeze</td><td>Target anamorphic squeeze. </td></tr>
   </table>
   </dd>

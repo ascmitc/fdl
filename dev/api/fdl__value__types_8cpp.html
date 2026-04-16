@@ -341,7 +341,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Normalize and scale in one step. </p>
-<p>Equivalent to fdl_dimensions_scale(fdl_dimensions_normalize(dims, input_squeeze), ...).</p>
+<p>Equivalent to fdl_dimensions_scale(fdl_dimensions_normalize(dims, input_squeeze), ...). When higher precision is needed (e.g., template application), use the internal ratio-based variant which keeps numerator/denominator separate to avoid IEEE 754 rounding errors in the scale factor.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dims</td><td>Dimensions to transform. </td></tr>
@@ -1027,6 +1027,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Normalize and scale a point in one step. </p>
+<p>When higher precision is needed (e.g., template application), use the internal ratio-based variant which keeps numerator/denominator separate.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">point</td><td>Point to transform. </td></tr>

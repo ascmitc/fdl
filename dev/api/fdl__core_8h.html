@@ -1781,7 +1781,7 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fdl_file_sequence
 </div><div class="memdoc">
 
 <p>Normalize and scale in one step. </p>
-<p>Equivalent to fdl_dimensions_scale(fdl_dimensions_normalize(dims, input_squeeze), ...).</p>
+<p>Equivalent to fdl_dimensions_scale(fdl_dimensions_normalize(dims, input_squeeze), ...). When higher precision is needed (e.g., template application), use the internal ratio-based variant which keeps numerator/denominator separate to avoid IEEE 754 rounding errors in the scale factor.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dims</td><td>Dimensions to transform. </td></tr>
@@ -2467,6 +2467,7 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fdl_file_sequence
 </div><div class="memdoc">
 
 <p>Normalize and scale a point in one step. </p>
+<p>When higher precision is needed (e.g., template application), use the internal ratio-based variant which keeps numerator/denominator separate.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">point</td><td>Point to transform. </td></tr>
@@ -2714,7 +2715,7 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fdl_file_sequence
 </div><div class="memdoc">
 
 <p>Normalize and scale all 7 fields of the geometry. </p>
-<p>Applies anamorphic normalization and scaling to all dimension and anchor fields.</p>
+<p>Applies anamorphic normalization and scaling to all dimension and anchor fields. Internally uses ratio-based arithmetic (denominator=1.0) to preserve precision. For template application, use the internal ratio variant directly.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">geo</td><td>Geometry to transform. </td></tr>
