@@ -150,16 +150,55 @@ fdl_geometry_t geometry_normalize_and_scale_ratio(
 }
 
 fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy) {
+    // Per spec 7.4.12: "round" applies to canvas.dimensions. We also round
+    // canvas.effective_dimensions which is integer-typed in the schema.
+    // Inner geometry (protection, framing dims/anchors) stays float.
+    geo.canvas_dims = fdl_round_dimensions(geo.canvas_dims, strategy.even, strategy.mode);
+    geo.effective_dims = fdl_round_dimensions(geo.effective_dims, strategy.even, strategy.mode);
+    return geo;
+}
 
-    return {
-        fdl_round_dimensions(geo.canvas_dims, strategy.even, strategy.mode),
-        fdl_round_dimensions(geo.effective_dims, strategy.even, strategy.mode),
-        fdl_round_dimensions(geo.protection_dims, strategy.even, strategy.mode),
-        fdl_round_dimensions(geo.framing_dims, strategy.even, strategy.mode),
-        fdl_round_point(geo.effective_anchor, strategy.even, strategy.mode),
-        fdl_round_point(geo.protection_anchor, strategy.even, strategy.mode),
-        fdl_round_point(geo.framing_anchor, strategy.even, strategy.mode),
-    };
+fdl_geometry_t geometry_round_effective_post_crop(fdl_geometry_t geo, fdl_round_strategy_t strategy) {
+    // After crop, effective_dims may be fractional (crop does
+    // min(dims, canvas - anchor) where anchor is float).  The FDL schema
+    // requires canvas.effective_dimensions to be integer, so re-round here
+    // with the template's strategy.
+    //
+    // When rounding shifts the effective size by `delta = rounded - float`,
+    // the effective area grows/shrinks around its left/top edge (the anchor).
+    // To keep the rounded effective area centered on the *original* float
+    // effective area, shift the anchor by -delta/2.  Clamp the anchor at 0
+    // so compensation never pushes the effective area outside the canvas on
+    // the left/top.
+    fdl_dimensions_f64_t const float_eff = geo.effective_dims;
+
+    geo.effective_dims = fdl_round_dimensions(geo.effective_dims, strategy.even, strategy.mode);
+
+    // Enforce hierarchy: effective >= ceil(max(inner dims)).
+    // If rounding DOWN (or the base rounding) made effective smaller than
+    // inner dims, bump it up using the template's even constraint with UP.
+    auto min_w = std::ceil(std::max(geo.protection_dims.width, geo.framing_dims.width));
+    auto min_h = std::ceil(std::max(geo.protection_dims.height, geo.framing_dims.height));
+
+    if (geo.effective_dims.width < min_w) {
+        fdl_dimensions_f64_t floor_dims = {min_w, geo.effective_dims.height};
+        geo.effective_dims.width = fdl_round_dimensions(floor_dims, strategy.even, FDL_ROUNDING_MODE_UP).width;
+    }
+    if (geo.effective_dims.height < min_h) {
+        fdl_dimensions_f64_t floor_dims = {geo.effective_dims.width, min_h};
+        geo.effective_dims.height = fdl_round_dimensions(floor_dims, strategy.even, FDL_ROUNDING_MODE_UP).height;
+    }
+
+    // Half-delta compensation on the effective anchor.  Clamp to keep the
+    // rounded effective area within the canvas: x in [0, canvas_w - eff_w].
+    double const delta_w = geo.effective_dims.width - float_eff.width;
+    double const delta_h = geo.effective_dims.height - float_eff.height;
+    double const max_x = std::max(0.0, geo.canvas_dims.width - geo.effective_dims.width);
+    double const max_y = std::max(0.0, geo.canvas_dims.height - geo.effective_dims.height);
+    geo.effective_anchor.x = std::min(max_x, std::max(0.0, geo.effective_anchor.x - delta_w / 2.0));
+    geo.effective_anchor.y = std::min(max_y, std::max(0.0, geo.effective_anchor.y - delta_h / 2.0));
+
+    return geo;
 }
 
 fdl_geometry_t geometry_apply_offset(

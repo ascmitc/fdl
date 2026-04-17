@@ -24,6 +24,10 @@ fdl_geometry_t fdl_geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strat
     return fdl::detail::geometry_round(geo, strategy);
 }
 
+fdl_geometry_t fdl_geometry_round_effective_post_crop(fdl_geometry_t geo, fdl_round_strategy_t strategy) {
+    return fdl::detail::geometry_round_effective_post_crop(geo, strategy);
+}
+
 fdl_geometry_t fdl_geometry_apply_offset(
     fdl_geometry_t geo,
     fdl_point_f64_t offset,

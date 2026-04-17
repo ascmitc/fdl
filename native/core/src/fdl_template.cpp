@@ -423,6 +423,11 @@ fdl_template_result_t apply_canvas_template(
 
     fdl_round_strategy_t const rounding = fdl_canvas_template_get_round(tmpl);
 
+    // Spec 7.4.12: "If maximum_dimensions is defined and pad_to_maximum =
+    // true, then round has no effect due to maximum_dimensions already being
+    // defined."  Skip rounding entirely — canvas dims will come from max_dims.
+    bool const skip_round = has_max_dims && pad_to_max;
+
     fdl_dimensions_i64_t const target_dims_i = fdl_canvas_template_get_target_dimensions(tmpl);
     fdl_dimensions_f64_t const target_dims = {
         static_cast<double>(target_dims_i.width), static_cast<double>(target_dims_i.height)};
@@ -494,7 +499,9 @@ fdl_template_result_t apply_canvas_template(
     // for integer inputs, avoiding IEEE 754 rounding errors in the scale factor.
     geometry = fdl::detail::geometry_normalize_and_scale_ratio(
         geometry, input_squeeze, scale_ratio.numerator, scale_ratio.denominator, target_squeeze);
-    geometry = fdl_geometry_round(geometry, rounding);
+    if (!skip_round) {
+        geometry = fdl_geometry_round(geometry, rounding);
+    }
 
     // Extract scaled values BEFORE crop
     fdl_dimensions_f64_t scaled_fit;
@@ -543,6 +550,10 @@ fdl_template_result_t apply_canvas_template(
 
     // --- Phase 9: Crop ---
     geometry = fdl_geometry_crop(geometry, theo_eff, theo_prot, theo_fram);
+
+    // canvas.effective_dimensions is integer-typed in the FDL schema.
+    // Re-round after crop with the template strategy, enforcing hierarchy.
+    geometry = fdl::detail::geometry_round_effective_post_crop(geometry, rounding);
 
     // --- Phase 10: Build output FDL document ---
     return build_template_output_document(
