@@ -10,7 +10,11 @@ from .fdl_types import DimensionsFloat
 
 
 class RoundStrategy:
-    """Lightweight RoundStrategy value type."""
+    """Lightweight RoundStrategy value type.
+
+    Defaults match FDL spec §7.4.12: ``even=EVEN`` and ``mode=UP`` —
+    the values applied when a canvas template omits the ``round`` field.
+    """
 
     __slots__ = ("even", "mode")
 

@@ -387,6 +387,8 @@ fdl_dimensions_i64_t fdl_canvas_template_get_maximum_dimensions(const fdl_canvas
 
 int fdl_canvas_template_get_pad_to_maximum(const fdl_canvas_template_t* ct);
 
+int fdl_canvas_template_has_round(const fdl_canvas_template_t* ct);
+
 fdl_round_strategy_t fdl_canvas_template_get_round(const fdl_canvas_template_t* ct);
 
 int fdl_resolve_geometry_layer(

@@ -394,6 +394,22 @@ class TestFacadeRoundTrip:
                 assert result.even == even, f"even={even}: got {result.even}"
                 assert result.mode == mode, f"mode={mode}: got {result.mode}"
 
+        # round=None: field still emitted with spec-default {EVEN, UP}.
+        doc = FDL(uuid="test-uuid-default")
+        ct = doc.add_canvas_template(
+            id="CT_default",
+            label="Test",
+            target_dimensions=DimensionsInt(width=1920, height=1080),
+            target_anamorphic_squeeze=1.0,
+            fit_source=GeometryPath.FRAMING_DIMENSIONS,
+            fit_method=FitMethod.WIDTH,
+            alignment_method_horizontal=HAlign.CENTER,
+            alignment_method_vertical=VAlign.CENTER,
+        )
+        result = ct.round
+        assert result.even == RoundingEven.EVEN, f"default even: got {result.even}"
+        assert result.mode == RoundingMode.UP, f"default mode: got {result.mode}"
+
     def test_dimensions_i64_facade(self):
         """Facade round-trip for DimensionsInt."""
         from fdl import FDL, DimensionsInt

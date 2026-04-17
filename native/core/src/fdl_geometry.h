@@ -43,12 +43,38 @@ fdl_geometry_t geometry_normalize_and_scale_ratio(
     fdl_geometry_t geo, double source_squeeze, double scale_numerator, double scale_denominator, double target_squeeze);
 
 /**
- * @brief Round all 7 fields of the geometry using the given strategy.
+ * @brief Round canvas_dims and effective_dims per strategy.
+ *
+ * Per spec 7.4.12, "round" applies to canvas.dimensions.
+ * canvas.effective_dimensions is also integer-typed in the schema and is
+ * rounded with the same strategy for consistency.  Inner geometry
+ * (protection, framing dims/anchors) stays float.
+ *
  * @param geo       Input geometry.
  * @param strategy  Rounding strategy (even + mode).
- * @return Geometry with all fields rounded.
+ * @return Geometry with canvas_dims and effective_dims rounded.
  */
 fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy);
+
+/**
+ * @brief Re-round effective_dims after crop, enforcing hierarchy and
+ *        compensating the effective anchor.
+ *
+ * After crop, effective_dims may be fractional again.  This function:
+ *   1. Re-rounds effective_dims using the template strategy.
+ *   2. Enforces hierarchy (effective >= ceil(max inner dims)), bumping up
+ *      with the strategy's even constraint if rounding went DOWN.
+ *   3. Applies half-delta compensation to effective_anchor so the rounded
+ *      effective area stays centered on the original float effective area.
+ *      The compensated anchor is clamped to [0, canvas - effective_dim]
+ *      to keep the effective area inside the canvas.
+ *
+ * @param geo       Input geometry (post-crop).
+ * @param strategy  Rounding strategy (even + mode).
+ * @return Geometry with effective_dims rounded, hierarchy maintained, and
+ *         effective_anchor compensated.
+ */
+fdl_geometry_t geometry_round_effective_post_crop(fdl_geometry_t geo, fdl_round_strategy_t strategy);
 
 /**
  * @brief Apply offset to all anchors, clamping to canvas bounds.

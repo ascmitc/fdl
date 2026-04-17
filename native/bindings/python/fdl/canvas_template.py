@@ -104,11 +104,15 @@ class CanvasTemplate(HandleWrapper):
         fit_method: FitMethod = FitMethod.WIDTH,
         alignment_method_horizontal: HAlign = HAlign.CENTER,
         alignment_method_vertical: VAlign = VAlign.CENTER,
-        round: RoundStrategy = RoundStrategy(),
+        round: RoundStrategy | None = None,
         preserve_from_source_canvas: GeometryPath | None = None,
         maximum_dimensions: DimensionsInt | None = None,
         pad_to_maximum: bool = False,
     ) -> None:
+        # FDL spec §7.4.12: default rounding when omitted is {EVEN, UP}.
+        if round is None:
+            round = RoundStrategy()
+
         from fdl_ffi import get_lib
 
         lib = get_lib()
