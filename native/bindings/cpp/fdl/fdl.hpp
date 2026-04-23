@@ -425,7 +425,7 @@ public:
         fdl_fit_method_t fit_method,
         fdl_halign_t alignment_method_horizontal,
         fdl_valign_t alignment_method_vertical,
-        const fdl_round_strategy_t& round);
+        const fdl_round_strategy_t& round = {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP});
 
     // --- Custom attributes ---
 
@@ -1029,10 +1029,14 @@ public:
     void adjust_protection_anchor_point(const CanvasRef& canvas, fdl_halign_t h_method, fdl_valign_t v_method);
     /** Create a FramingDecision from a canvas and framing intent. */
     void from_framing_intent(
-        const CanvasRef& canvas, const FramingIntentRef& framing_intent, const fdl_round_strategy_t& rounding);
+        const CanvasRef& canvas,
+        const FramingIntentRef& framing_intent,
+        const fdl_round_strategy_t& rounding = {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP});
     /** Populate this framing decision from a canvas and framing intent (in-place). */
     void populate_from_intent(
-        const CanvasRef& canvas, const FramingIntentRef& framing_intent, const fdl_round_strategy_t& rounding);
+        const CanvasRef& canvas,
+        const FramingIntentRef& framing_intent,
+        const fdl_round_strategy_t& rounding = {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP});
 
     // --- Custom attributes ---
 

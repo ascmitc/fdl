@@ -79,11 +79,11 @@
               "framing_intent_id": "1", 
               "dimensions": {
                 "width": 4000.0, 
-                "height": 1675.6465517241381
+                "height": 1675.646551724138
               }, 
               "anchor_point": {
                 "x": 0.0, 
-                "y": 0.0
+                "y": 0.17672413793104624
               }
             }
           ], 
@@ -94,7 +94,7 @@
           }, 
           "_scaled_bounding_box": {
             "width": 4000.0, 
-            "height": 1676.0
+            "height": 1675.646551724138
           }
         }
       ]

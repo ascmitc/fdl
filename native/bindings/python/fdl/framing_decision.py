@@ -54,14 +54,18 @@ class FramingDecision(HandleWrapper):
         id: str,
         label: str = "",
         framing_intent_id: str,
-        dimensions: DimensionsFloat = DimensionsFloat(width=0.0, height=0.0),
-        anchor_point: PointFloat = PointFloat(x=0.0, y=0.0),
+        dimensions: DimensionsFloat | None = None,
+        anchor_point: PointFloat | None = None,
         protection_dimensions: DimensionsFloat | None = None,
         protection_anchor_point: PointFloat | None = None,
     ) -> None:
         from fdl_ffi import get_lib
 
         lib = get_lib()
+        if dimensions is None:
+            dimensions = DimensionsFloat(width=0.0, height=0.0)
+        if anchor_point is None:
+            anchor_point = PointFloat(x=0.0, y=0.0)
         from .fdl import FDL
 
         _doc_h = lib.fdl_doc_create_with_header(

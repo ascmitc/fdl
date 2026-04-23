@@ -259,11 +259,9 @@ class FDL(OwnedHandle):
     ) -> CanvasTemplate:
         """Add a canvas template to the document."""
         self._check_handle()
-        from .canvas_template import CanvasTemplate
-
-        # FDL spec §7.4.12: default rounding when omitted is {EVEN, UP}.
         if round is None:
             round = RoundStrategy()
+        from .canvas_template import CanvasTemplate
 
         handle = self._lib.fdl_doc_add_canvas_template(
             self._handle,

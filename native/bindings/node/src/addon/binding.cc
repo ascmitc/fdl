@@ -366,7 +366,8 @@ Napi::Value Wrap_fdl_canvas_template_get_preserve_from_source_canvas(const Napi:
     return Napi::Number::New(env, static_cast<uint32_t>(_r));
 }
 
-// Get the rounding strategy.
+// Get the rounding strategy. Returns the spec-default {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP} when no "round"
+// field is present (FDL spec §7.4.12).
 Napi::Value Wrap_fdl_canvas_template_get_round(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
@@ -403,6 +404,14 @@ Napi::Value Wrap_fdl_canvas_template_has_preserve_from_source_canvas(const Napi:
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
     auto _r = fdl_canvas_template_has_preserve_from_source_canvas(ct);
+    return Napi::Number::New(env, static_cast<double>(_r));
+}
+
+// Check whether the template has an explicit rounding strategy.
+Napi::Value Wrap_fdl_canvas_template_has_round(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
+    auto _r = fdl_canvas_template_has_round(ct);
     return Napi::Number::New(env, static_cast<double>(_r));
 }
 
@@ -1430,7 +1439,8 @@ Napi::Value Wrap_fdl_geometry_normalize_and_scale(const Napi::CallbackInfo& info
     return GeometryToObject(env, _r);
 }
 
-// Round all 7 fields of the geometry.
+// Round integer-typed schema fields and symmetrically absorb deltas into anchors.  Intended to run once at the end of
+// the template pipeline (post-crop).
 Napi::Value Wrap_fdl_geometry_round(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_geometry_t geo = ObjectToGeometry(info[0].As<Napi::Object>());
@@ -3333,6 +3343,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(
         "fdl_canvas_template_has_preserve_from_source_canvas",
         Napi::Function::New(env, Wrap_fdl_canvas_template_has_preserve_from_source_canvas));
+    exports.Set("fdl_canvas_template_has_round", Napi::Function::New(env, Wrap_fdl_canvas_template_has_round));
     exports.Set(
         "fdl_canvas_template_set_maximum_dimensions",
         Napi::Function::New(env, Wrap_fdl_canvas_template_set_maximum_dimensions));

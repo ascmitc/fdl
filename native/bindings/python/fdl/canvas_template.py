@@ -109,13 +109,11 @@ class CanvasTemplate(HandleWrapper):
         maximum_dimensions: DimensionsInt | None = None,
         pad_to_maximum: bool = False,
     ) -> None:
-        # FDL spec §7.4.12: default rounding when omitted is {EVEN, UP}.
-        if round is None:
-            round = RoundStrategy()
-
         from fdl_ffi import get_lib
 
         lib = get_lib()
+        if round is None:
+            round = RoundStrategy()
         from .fdl import FDL
 
         _doc_h = lib.fdl_doc_create_with_header(

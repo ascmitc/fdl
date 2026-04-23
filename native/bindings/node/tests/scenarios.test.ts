@@ -39,6 +39,32 @@ function isClose(a: number, b: number): boolean {
   return Math.abs(a - b) <= Math.max(FP_REL_TOL * Math.max(Math.abs(a), Math.abs(b)), FP_ABS_TOL);
 }
 
+// Deep tolerance-aware equality. Mirrors the Python side, where compound value
+// types (PointFloat, DimensionsFloat, ...) define a tolerance-aware __eq__, so
+// nested floats inside custom_attrs compare with math.isclose semantics rather
+// than strict bit-equality.
+function isCloseDeep(expected: unknown, actual: unknown): boolean {
+  if (typeof expected === 'number' && typeof actual === 'number') {
+    if (Number.isNaN(expected) && Number.isNaN(actual)) return true;
+    return isClose(expected, actual);
+  }
+  if (Array.isArray(expected) && Array.isArray(actual)) {
+    if (expected.length !== actual.length) return false;
+    return expected.every((e, i) => isCloseDeep(e, actual[i]));
+  }
+  if (expected && actual && typeof expected === 'object' && typeof actual === 'object') {
+    const ek = Object.keys(expected as Record<string, unknown>);
+    const ak = Object.keys(actual as Record<string, unknown>);
+    if (ek.length !== ak.length) return false;
+    for (const k of ek) {
+      if (!Object.prototype.hasOwnProperty.call(actual, k)) return false;
+      if (!isCloseDeep((expected as Record<string, unknown>)[k], (actual as Record<string, unknown>)[k])) return false;
+    }
+    return true;
+  }
+  return Object.is(expected, actual);
+}
+
 function expectDimsIntEqual(label: string, expected: DimensionsInt, actual: DimensionsInt): void {
   expect(actual.width, `${label}.width`).toBe(expected.width);
   expect(actual.height, `${label}.height`).toBe(expected.height);
@@ -163,6 +189,11 @@ function compareCustomAttrs(
     const av = actualAttrs[key];
     if (typeof ev === 'number' && typeof av === 'number') {
       expect(isClose(ev, av), `${prefix}.customAttrs['${key}']: expected ${ev}, got ${av}`).toBe(true);
+    } else if (ev !== null && av !== null && typeof ev === 'object' && typeof av === 'object') {
+      expect(
+        isCloseDeep(ev, av),
+        `${prefix}.customAttrs['${key}']: expected ${JSON.stringify(ev)}, got ${JSON.stringify(av)}`,
+      ).toBe(true);
     } else {
       expect(av, `${prefix}.customAttrs['${key}']`).toEqual(ev);
     }
