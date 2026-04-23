@@ -153,7 +153,13 @@ std::string safe_copy(const char* s) {
  * @param geometry              Final transformed geometry after all pipeline phases.
  * @param scale_factor          Computed scale factor (stored as custom attribute).
  * @param content_translation   Content translation shift (stored as custom attribute).
+ *                              Unrounded float by design — captured post-scale, pre-round;
+ *                              intentionally not quantized so downstream consumers can place
+ *                              content with sub-pixel precision.
  * @param scaled_bounding_box   Scaled bounding box before output sizing (stored as custom attribute).
+ *                              Unrounded float by design — captured post-scale, pre-round to
+ *                              preserve the exact scaled canvas extent; may not match the
+ *                              integer canvas.dimensions that the round step produces.
  * @param target_squeeze        Resolved target anamorphic squeeze (0 already replaced with input squeeze).
  * @return Template result with output FDL and metadata, or error string on failure.
  */
@@ -512,6 +518,10 @@ fdl_template_result_t apply_canvas_template(
     fdl_dimensions_f64_t scaled_fit;
     fdl_point_f64_t scaled_fit_anchor;
     fdl_geometry_get_dims_anchor_from_path(&geometry, fit_source, &scaled_fit, &scaled_fit_anchor);
+    // Stored as `_scaled_bounding_box` custom attribute — unrounded float by
+    // design.  Captured here (post-scale, pre-round) so downstream consumers
+    // see the exact scaled canvas extent, independent of the final rounded
+    // canvas.dimensions.
     fdl_dimensions_f64_t const scaled_bounding_box = geometry.canvas_dims;
 
     // --- Phases 6-8: Output canvas size and content translation ---
@@ -544,6 +554,9 @@ fdl_template_result_t apply_canvas_template(
         af_v,
         pad_to_max ? FDL_TRUE : FDL_FALSE);
 
+    // Stored as `_content_translation` custom attribute — unrounded float by
+    // design.  Sub-pixel precision preserves the exact alignment shift so
+    // downstream consumers can place content without re-quantizing.
     fdl_point_f64_t const content_translation = {shift_x, shift_y};
     geometry.canvas_dims = {out_w, out_h};
 

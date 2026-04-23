@@ -421,13 +421,16 @@ class TestRoundingModeVariations:
             (RoundingEven.EVEN, RoundingMode.ROUND),
         ],
     )
-    def test_even_rounding_produces_even_effective_dims(self, source_fdl, even, mode):
-        """When even=EVEN, effective_dims width and height are both even numbers."""
+    def test_even_rounding_produces_even_canvas_dims(self, source_fdl, even, mode):
+        """When even=EVEN, canvas_dims width and height are both even numbers.
+
+        Note: effective_dims is always `ceil(effective_float)` and does NOT
+        respect even/mode (see plan: always-ceil effective trade-off).
+        """
         result = self._apply_with_rounding(source_fdl, even, mode)
-        eff = result.canvas.effective_dimensions
-        if eff is not None:
-            assert eff.width % 2 == 0, f"effective width {eff.width} is not even"
-            assert eff.height % 2 == 0, f"effective height {eff.height} is not even"
+        cd = result.canvas.dimensions
+        assert cd.width % 2 == 0, f"canvas width {cd.width} is not even"
+        assert cd.height % 2 == 0, f"canvas height {cd.height} is not even"
 
     @pytest.mark.parametrize(
         ("even", "mode"),

@@ -82,7 +82,7 @@
                 "height": 2160.0
               }, 
               "anchor_point": {
-                "x": 213.33333333333331, 
+                "x": 212.99999999999986, 
                 "y": 120.0
               }, 
               "protection_dimensions": {
@@ -101,7 +101,7 @@
             "y": 0.0
           }, 
           "_scaled_bounding_box": {
-            "width": 4266.0, 
+            "width": 4266.666666666667, 
             "height": 2400.0
           }
         }

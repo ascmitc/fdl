@@ -64,11 +64,11 @@
             "height": 5000
           }, 
           "effective_dimensions": {
-            "width": 5158, 
+            "width": 5157, 
             "height": 2160
           }, 
           "effective_anchor_point": {
-            "x": 421.0, 
+            "x": 421.5, 
             "y": 1420.0
           }, 
           "anamorphic_squeeze": 1.0, 
