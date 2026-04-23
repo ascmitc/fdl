@@ -150,53 +150,81 @@ fdl_geometry_t geometry_normalize_and_scale_ratio(
 }
 
 fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy) {
-    // Per spec 7.4.12: "round" applies to canvas.dimensions. We also round
-    // canvas.effective_dimensions which is integer-typed in the schema.
-    // Inner geometry (protection, framing dims/anchors) stays float.
-    geo.canvas_dims = fdl_round_dimensions(geo.canvas_dims, strategy.even, strategy.mode);
-    geo.effective_dims = fdl_round_dimensions(geo.effective_dims, strategy.even, strategy.mode);
-    return geo;
-}
-
-fdl_geometry_t geometry_round_effective_post_crop(fdl_geometry_t geo, fdl_round_strategy_t strategy) {
-    // After crop, effective_dims may be fractional (crop does
-    // min(dims, canvas - anchor) where anchor is float).  The FDL schema
-    // requires canvas.effective_dimensions to be integer, so re-round here
-    // with the template's strategy.
+    // Round integer-typed schema fields (canvas.dimensions,
+    // canvas.effective_dimensions) and symmetrically absorb the resulting
+    // rounding deltas into anchor positions.  Inner dimensions (protection,
+    // framing) and all anchors remain float per the "fractional pixels"
+    // model.
     //
-    // When rounding shifts the effective size by `delta = rounded - float`,
-    // the effective area grows/shrinks around its left/top edge (the anchor).
-    // To keep the rounded effective area centered on the *original* float
-    // effective area, shift the anchor by -delta/2.  Clamp the anchor at 0
-    // so compensation never pushes the effective area outside the canvas on
-    // the left/top.
+    // Called once at the end of the template pipeline (post-crop).  Every
+    // anchor at this point already encodes the template's intent (scale,
+    // alignment, padding, crop); the rounding delta is a purely artifactual
+    // change required by the schema's integer typing.  Distribute it
+    // symmetrically (delta/2) on both sides so it introduces no directional
+    // bias.
+    //
+    // Steps:
+    //   1. Round canvas_dims; shift ALL anchors by +canvas_delta/2 so the
+    //      content stays centered within the rounded canvas.
+    //   2. Round effective_dims and enforce hierarchy (effective >= ceil(max
+    //      inner dims), effective <= canvas).
+    //   3. Shift effective_anchor by -effective_delta/2 so the rounded
+    //      effective rectangle stays centered on its pre-round position.
+    //   4. Clamp all anchors to [0, canvas - dim] to keep every layer inside
+    //      the canvas.  At a canvas boundary the symmetric distribution
+    //      degrades gracefully to one-sided.
+    fdl_dimensions_f64_t const float_canvas = geo.canvas_dims;
     fdl_dimensions_f64_t const float_eff = geo.effective_dims;
 
+    // 1) Canvas round + symmetric shift of all anchors.
+    geo.canvas_dims = fdl_round_dimensions(geo.canvas_dims, strategy.even, strategy.mode);
+    double const canvas_dw = geo.canvas_dims.width - float_canvas.width;
+    double const canvas_dh = geo.canvas_dims.height - float_canvas.height;
+    geo.effective_anchor.x += canvas_dw / 2.0;
+    geo.effective_anchor.y += canvas_dh / 2.0;
+    geo.protection_anchor.x += canvas_dw / 2.0;
+    geo.protection_anchor.y += canvas_dh / 2.0;
+    geo.framing_anchor.x += canvas_dw / 2.0;
+    geo.framing_anchor.y += canvas_dh / 2.0;
+
+    // 2) Effective round + hierarchy enforcement.
     geo.effective_dims = fdl_round_dimensions(geo.effective_dims, strategy.even, strategy.mode);
 
-    // Enforce hierarchy: effective >= ceil(max(inner dims)).
-    // If rounding DOWN (or the base rounding) made effective smaller than
-    // inner dims, bump it up using the template's even constraint with UP.
-    auto min_w = std::ceil(std::max(geo.protection_dims.width, geo.framing_dims.width));
-    auto min_h = std::ceil(std::max(geo.protection_dims.height, geo.framing_dims.height));
-
+    double const min_w = std::ceil(std::max(geo.protection_dims.width, geo.framing_dims.width));
+    double const min_h = std::ceil(std::max(geo.protection_dims.height, geo.framing_dims.height));
     if (geo.effective_dims.width < min_w) {
-        fdl_dimensions_f64_t floor_dims = {min_w, geo.effective_dims.height};
+        fdl_dimensions_f64_t const floor_dims = {min_w, 0.0};
         geo.effective_dims.width = fdl_round_dimensions(floor_dims, strategy.even, FDL_ROUNDING_MODE_UP).width;
     }
     if (geo.effective_dims.height < min_h) {
-        fdl_dimensions_f64_t floor_dims = {geo.effective_dims.width, min_h};
+        fdl_dimensions_f64_t const floor_dims = {0.0, min_h};
         geo.effective_dims.height = fdl_round_dimensions(floor_dims, strategy.even, FDL_ROUNDING_MODE_UP).height;
     }
+    // Upper bound: effective <= canvas (schema invariant).  Clamp here so
+    // edge-case bump-ups (odd max_dims + even rounding, or float noise in
+    // inner dims) can never produce effective > canvas.
+    geo.effective_dims.width = std::min(geo.effective_dims.width, geo.canvas_dims.width);
+    geo.effective_dims.height = std::min(geo.effective_dims.height, geo.canvas_dims.height);
 
-    // Half-delta compensation on the effective anchor.  Clamp to keep the
-    // rounded effective area within the canvas: x in [0, canvas_w - eff_w].
-    double const delta_w = geo.effective_dims.width - float_eff.width;
-    double const delta_h = geo.effective_dims.height - float_eff.height;
-    double const max_x = std::max(0.0, geo.canvas_dims.width - geo.effective_dims.width);
-    double const max_y = std::max(0.0, geo.canvas_dims.height - geo.effective_dims.height);
-    geo.effective_anchor.x = std::min(max_x, std::max(0.0, geo.effective_anchor.x - delta_w / 2.0));
-    geo.effective_anchor.y = std::min(max_y, std::max(0.0, geo.effective_anchor.y - delta_h / 2.0));
+    // 3) Symmetric shift of effective_anchor to absorb effective delta.
+    double const eff_dw = geo.effective_dims.width - float_eff.width;
+    double const eff_dh = geo.effective_dims.height - float_eff.height;
+    geo.effective_anchor.x -= eff_dw / 2.0;
+    geo.effective_anchor.y -= eff_dh / 2.0;
+
+    // 4) Clamp all anchors to [0, canvas - dim] so every layer stays inside
+    //    the canvas.  Falls back to one-sided absorption at canvas edges.
+    auto clamp_anchor = [](double a, double dim, double canvas_dim) {
+        double const max_a = std::max(0.0, canvas_dim - dim);
+        return std::min(max_a, std::max(0.0, a));
+    };
+    geo.effective_anchor.x = clamp_anchor(geo.effective_anchor.x, geo.effective_dims.width, geo.canvas_dims.width);
+    geo.effective_anchor.y = clamp_anchor(geo.effective_anchor.y, geo.effective_dims.height, geo.canvas_dims.height);
+    geo.protection_anchor.x = clamp_anchor(geo.protection_anchor.x, geo.protection_dims.width, geo.canvas_dims.width);
+    geo.protection_anchor.y =
+        clamp_anchor(geo.protection_anchor.y, geo.protection_dims.height, geo.canvas_dims.height);
+    geo.framing_anchor.x = clamp_anchor(geo.framing_anchor.x, geo.framing_dims.width, geo.canvas_dims.width);
+    geo.framing_anchor.y = clamp_anchor(geo.framing_anchor.y, geo.framing_dims.height, geo.canvas_dims.height);
 
     return geo;
 }

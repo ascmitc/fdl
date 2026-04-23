@@ -9,7 +9,6 @@ sys.path.insert(0, "../../../../packages/fdl/src")
 
 from fdl.canvastemplate import Geometry
 from fdl.common import DimensionsFloat, PointFloat
-from fdl.rounding import RoundStrategy
 
 
 def dims(w: float, h: float) -> DimensionsFloat:
@@ -247,6 +246,84 @@ def generate_normalize_and_scale():
 
 
 # ---- round vectors ----
+#
+# NOTE: The C++ fdl_geometry_round implementation has diverged from the Python
+# Geometry.round() reference.  The C++ version rounds only the integer-typed
+# schema fields (canvas_dims, effective_dims), keeps inner dims + all anchors
+# float, and symmetrically absorbs the rounding deltas into anchor shifts:
+#
+#   - canvas delta:    ALL anchors += canvas_delta / 2
+#   - effective delta: effective_anchor -= effective_delta / 2
+#   - effective clamped to [ceil(max inner), canvas]; all anchors clamped to
+#     [0, canvas - dim].
+#
+# The helper `_round_like_cpp` below implements that contract so the generated
+# vectors stay in sync with the C++ behavior.  The Python Geometry.round()
+# method is intentionally not used for these vectors.
+
+
+def _round_scalar(value: float, even: str, mode: str) -> int:
+    from fdl.rounding import fdl_round
+    return fdl_round(value, even=even, mode=mode)
+
+
+def _round_like_cpp(g: Geometry, even: str, mode: str) -> Geometry:
+    float_canvas = (g.canvas_dims.width, g.canvas_dims.height)
+    float_eff = (g.effective_dims.width, g.effective_dims.height)
+
+    # 1) Round canvas; shift all anchors by +canvas_delta / 2.
+    new_canvas = dims(_round_scalar(g.canvas_dims.width, even, mode), _round_scalar(g.canvas_dims.height, even, mode))
+    canvas_dw = new_canvas.width - float_canvas[0]
+    canvas_dh = new_canvas.height - float_canvas[1]
+    eff_ax = g.effective_anchor.x + canvas_dw / 2.0
+    eff_ay = g.effective_anchor.y + canvas_dh / 2.0
+    prot_ax = g.protection_anchor.x + canvas_dw / 2.0
+    prot_ay = g.protection_anchor.y + canvas_dh / 2.0
+    fram_ax = g.framing_anchor.x + canvas_dw / 2.0
+    fram_ay = g.framing_anchor.y + canvas_dh / 2.0
+
+    # 2) Round effective; enforce hierarchy (effective >= ceil(max inner), <= canvas).
+    import math
+    eff_w = float(_round_scalar(g.effective_dims.width, even, mode))
+    eff_h = float(_round_scalar(g.effective_dims.height, even, mode))
+    min_w = math.ceil(max(g.protection_dims.width, g.framing_dims.width))
+    min_h = math.ceil(max(g.protection_dims.height, g.framing_dims.height))
+    if eff_w < min_w:
+        eff_w = float(_round_scalar(min_w, even, "up"))
+    if eff_h < min_h:
+        eff_h = float(_round_scalar(min_h, even, "up"))
+    eff_w = min(eff_w, new_canvas.width)
+    eff_h = min(eff_h, new_canvas.height)
+
+    # 3) Shift effective_anchor by -eff_delta / 2.
+    eff_dw = eff_w - float_eff[0]
+    eff_dh = eff_h - float_eff[1]
+    eff_ax -= eff_dw / 2.0
+    eff_ay -= eff_dh / 2.0
+
+    # 4) Clamp all anchors to [0, canvas - dim].
+    def _clamp(a: float, dim: float, canvas_dim: float) -> float:
+        max_a = max(0.0, canvas_dim - dim)
+        return min(max_a, max(0.0, a))
+
+    eff_ax = _clamp(eff_ax, eff_w, new_canvas.width)
+    eff_ay = _clamp(eff_ay, eff_h, new_canvas.height)
+    prot_ax = _clamp(prot_ax, g.protection_dims.width, new_canvas.width)
+    prot_ay = _clamp(prot_ay, g.protection_dims.height, new_canvas.height)
+    fram_ax = _clamp(fram_ax, g.framing_dims.width, new_canvas.width)
+    fram_ay = _clamp(fram_ay, g.framing_dims.height, new_canvas.height)
+
+    return Geometry(
+        canvas_dims=new_canvas,
+        effective_dims=dims(eff_w, eff_h),
+        protection_dims=g.protection_dims,
+        framing_dims=g.framing_dims,
+        effective_anchor=pt(eff_ax, eff_ay),
+        protection_anchor=pt(prot_ax, prot_ay),
+        framing_anchor=pt(fram_ax, fram_ay),
+    )
+
+
 def generate_round():
     vectors = []
 
@@ -260,39 +337,35 @@ def generate_round():
         protection_anchor=pt(50.3, 200.7),
         framing_anchor=pt(100.1, 250.9),
     )
-    rs = RoundStrategy(even="even", mode="up")
-    result = g.round(rs)
     vectors.append(
         {
             "label": "round_even_up",
             "input": ser_geo(g),
             "even": "even",
             "mode": "up",
-            "expected": ser_geo(result),
+            "expected": ser_geo(_round_like_cpp(g, "even", "up")),
         }
     )
 
     # Case 2: Round with whole/down
-    result2 = g.round(RoundStrategy(even="whole", mode="down"))
     vectors.append(
         {
             "label": "round_whole_down",
             "input": ser_geo(g),
             "even": "whole",
             "mode": "down",
-            "expected": ser_geo(result2),
+            "expected": ser_geo(_round_like_cpp(g, "whole", "down")),
         }
     )
 
     # Case 3: Round with even/round
-    result3 = g.round(RoundStrategy(even="even", mode="round"))
     vectors.append(
         {
             "label": "round_even_round",
             "input": ser_geo(g),
             "even": "even",
             "mode": "round",
-            "expected": ser_geo(result3),
+            "expected": ser_geo(_round_like_cpp(g, "even", "round")),
         }
     )
 
