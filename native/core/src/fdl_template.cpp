@@ -425,8 +425,11 @@ fdl_template_result_t apply_canvas_template(
 
     // Spec 7.4.12: "If maximum_dimensions is defined and pad_to_maximum =
     // true, then round has no effect due to maximum_dimensions already being
-    // defined."  Skip rounding entirely — canvas dims will come from max_dims.
-    bool const skip_round = has_max_dims && pad_to_max;
+    // defined."  In the deferred-rounding pipeline this is satisfied
+    // automatically: canvas_dims is set to max_dims (integer) before the
+    // final geometry_round, so its rounding delta is zero and no anchor
+    // shift occurs.  Effective_dims may still require integerization and is
+    // rounded normally.
 
     fdl_dimensions_i64_t const target_dims_i = fdl_canvas_template_get_target_dimensions(tmpl);
     fdl_dimensions_f64_t const target_dims = {
@@ -494,14 +497,16 @@ fdl_template_result_t apply_canvas_template(
     auto const scale_ratio = fdl::detail::calculate_scale_ratio(fit_norm, target_norm, fit_method);
     double const scale_factor = scale_ratio.numerator / scale_ratio.denominator;
 
-    // --- Phase 5: Scale and round ---
+    // --- Phase 5: Scale (no rounding yet) ---
     // Use ratio-based scaling: (value * numerator) / denominator preserves precision
     // for integer inputs, avoiding IEEE 754 rounding errors in the scale factor.
+    //
+    // Rounding is deferred to a single step at the end of the pipeline
+    // (after crop).  Keeping all fields float through alignment/offset/crop
+    // avoids intermediate quantization and lets the final round absorb
+    // schema-integer deltas symmetrically via anchor shifts.
     geometry = fdl::detail::geometry_normalize_and_scale_ratio(
         geometry, input_squeeze, scale_ratio.numerator, scale_ratio.denominator, target_squeeze);
-    if (!skip_round) {
-        geometry = fdl_geometry_round(geometry, rounding);
-    }
 
     // Extract scaled values BEFORE crop
     fdl_dimensions_f64_t scaled_fit;
@@ -551,9 +556,18 @@ fdl_template_result_t apply_canvas_template(
     // --- Phase 9: Crop ---
     geometry = fdl_geometry_crop(geometry, theo_eff, theo_prot, theo_fram);
 
-    // canvas.effective_dimensions is integer-typed in the FDL schema.
-    // Re-round after crop with the template strategy, enforcing hierarchy.
-    geometry = fdl::detail::geometry_round_effective_post_crop(geometry, rounding);
+    // --- Phase 9b: Round integer-typed schema fields at the end ---
+    // Rounds canvas_dims and effective_dims, absorbs the deltas symmetrically
+    // into anchor positions (delta/2), enforces hierarchy, and clamps anchors
+    // inside the canvas.
+    //
+    // Note: when pad_to_maximum + maximum_dimensions is active, canvas_dims
+    // is already integer (taken from max_dims) so its rounding delta is zero
+    // and no anchor shift occurs on that axis — matching spec 7.4.12's
+    // "round has no effect" semantics for canvas.  Inner effective_dims may
+    // still be fractional from float cropping and gets integerized here as
+    // required by the schema.
+    geometry = fdl_geometry_round(geometry, rounding);
 
     // --- Phase 10: Build output FDL document ---
     return build_template_output_document(

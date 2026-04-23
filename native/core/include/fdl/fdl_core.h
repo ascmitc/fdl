@@ -542,35 +542,35 @@ FDL_API fdl_geometry_t
 fdl_geometry_normalize_and_scale(fdl_geometry_t geo, double source_squeeze, double scale_factor, double target_squeeze);
 
 /**
- * Round canvas_dims and effective_dims per template strategy.
+ * Round integer-typed schema fields and symmetrically absorb deltas into
+ * anchors.  Intended to run once at the end of the template pipeline
+ * (post-crop).
  *
- * Per FDL spec 7.4.12, the rounding strategy applies to canvas.dimensions.
- * canvas.effective_dimensions is integer-typed in the schema and is rounded
- * with the same strategy for consistency.  Inner geometry
- * (protection, framing dims/anchors) remains float.
+ * Per FDL spec 7.4.12 the rounding strategy applies to canvas.dimensions;
+ * the schema also types canvas.effective_dimensions as integer so both are
+ * rounded here.  Inner geometry (protection, framing dims and all anchors)
+ * remains float per the fractional-pixels model.
  *
- * @param geo       Geometry to round.
+ * The anchors at this stage already encode all template intent (scale,
+ * alignment, padding, crop); the rounding deltas are pure schema-integer
+ * artifacts and are distributed symmetrically (delta/2) so they introduce
+ * no directional bias:
+ *
+ *   - canvas delta: shift ALL anchors by +delta/2 (keep content centered
+ *     within the rounded canvas).
+ *   - effective delta: shift effective_anchor by -delta/2 (keep the
+ *     rounded effective rectangle centered on its pre-round extent).
+ *
+ * Hierarchy is enforced post-round (effective >= ceil(max inner dims),
+ * effective <= canvas) and all anchors are clamped to [0, canvas - dim].
+ * At canvas boundaries the symmetric distribution degrades to one-sided
+ * via clamping.
+ *
+ * @param geo       Geometry to round (typically post-crop with float fields).
  * @param strategy  Rounding strategy (even + mode).
- * @return Geometry with canvas_dims and effective_dims rounded.
+ * @return Geometry with canvas/effective rounded and anchors compensated.
  */
 FDL_API fdl_geometry_t fdl_geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy);
-
-/**
- * Re-round effective_dims after crop, enforcing hierarchy and compensating
- * the effective anchor.
- *
- * After crop, effective_dims may be fractional.  This rounds with the
- * template strategy, enforces effective >= ceil(max inner dims), and
- * applies a half-delta shift to effective_anchor so the rounded effective
- * area stays centered on the original float effective area (clamped to
- * stay within canvas bounds).
- *
- * @param geo       Post-crop geometry.
- * @param strategy  Rounding strategy (even + mode).
- * @return Geometry with effective_dims rounded and effective_anchor compensated.
- */
-FDL_API fdl_geometry_t
-fdl_geometry_round_effective_post_crop(fdl_geometry_t geo, fdl_round_strategy_t strategy);
 
 /**
  * Apply offset to all anchors, clamping to canvas bounds.
