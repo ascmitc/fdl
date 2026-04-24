@@ -300,17 +300,37 @@ def _round_like_cpp(g: Geometry, even: str, mode: str) -> Geometry:
     fram_ax = g.framing_anchor.x + canvas_dw / 2.0
     fram_ay = g.framing_anchor.y + canvas_dh / 2.0
 
-    # 5) Clamp anchors to [0, canvas - dim].
-    def _clamp(a: float, dim: float, canvas_dim: float) -> float:
-        max_a = max(0.0, canvas_dim - dim)
-        return min(max_a, max(0.0, a))
+    # 5a) Lower bound: clamp negative anchors to 0.
+    def _clamp_lower(a: float) -> float:
+        return max(0.0, a)
 
-    eff_ax = _clamp(eff_ax, eff_w, new_canvas.width)
-    eff_ay = _clamp(eff_ay, eff_h, new_canvas.height)
-    prot_ax = _clamp(prot_ax, prot_w, new_canvas.width)
-    prot_ay = _clamp(prot_ay, prot_h, new_canvas.height)
-    fram_ax = _clamp(fram_ax, fram_w, new_canvas.width)
-    fram_ay = _clamp(fram_ay, fram_h, new_canvas.height)
+    eff_ax = _clamp_lower(eff_ax)
+    eff_ay = _clamp_lower(eff_ay)
+    prot_ax = _clamp_lower(prot_ax)
+    prot_ay = _clamp_lower(prot_ay)
+    fram_ax = _clamp_lower(fram_ax)
+    fram_ay = _clamp_lower(fram_ay)
+
+    # 5b) Upper bound: shrink dim if anchor + dim overflows canvas.
+    # Effective is an integer schema field so floor(canvas - anchor).
+    # Inner dims (protection, framing) stay float.
+    eff_w = min(eff_w, math.floor(max(0.0, new_canvas.width - eff_ax)))
+    eff_h = min(eff_h, math.floor(max(0.0, new_canvas.height - eff_ay)))
+    prot_w = min(prot_w, max(0.0, new_canvas.width - prot_ax))
+    prot_h = min(prot_h, max(0.0, new_canvas.height - prot_ay))
+    fram_w = min(fram_w, max(0.0, new_canvas.width - fram_ax))
+    fram_h = min(fram_h, max(0.0, new_canvas.height - fram_ay))
+
+    # 5c) Re-establish hierarchy after the floor on effective.  Only clamp
+    # on exceedance to preserve 0 = "unset" sentinel.
+    if prot_w > eff_w:
+        prot_w = eff_w
+    if prot_h > eff_h:
+        prot_h = eff_h
+    if fram_w > eff_w:
+        fram_w = eff_w
+    if fram_h > eff_h:
+        fram_h = eff_h
 
     return Geometry(
         canvas_dims=new_canvas,

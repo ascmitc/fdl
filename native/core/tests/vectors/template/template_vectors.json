@@ -884,15 +884,15 @@
         },
         "output_effective_dims": {
           "width": 1920.0,
-          "height": 804.0
+          "height": 803.0
         },
         "output_effective_anchor": {
           "x": 0.0,
-          "y": 276.0
+          "y": 276.28125
         },
         "output_fd_dims": {
           "width": 1920.0,
-          "height": 803.4375
+          "height": 803.0
         },
         "output_fd_anchor": {
           "x": 0.0,

@@ -207,19 +207,50 @@ fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy)
     geo.framing_anchor.x += canvas_dw / 2.0;
     geo.framing_anchor.y += canvas_dh / 2.0;
 
-    // 5) Clamp anchors to [0, canvas - dim].  Falls back to one-sided
-    //    absorption at canvas edges.
-    auto clamp_anchor = [](double a, double dim, double canvas_dim) {
-        double const max_a = std::max(0.0, canvas_dim - dim);
-        return std::min(max_a, std::max(0.0, a));
+    // 5a) Lower bound: clamp negative anchors to 0.  When rounding/shift
+    // nudges an anchor below zero, pull it back to the canvas origin.
+    auto clamp_anchor_lower = [](double& anchor) {
+        if (anchor < 0.0) anchor = 0.0;
     };
-    geo.effective_anchor.x = clamp_anchor(geo.effective_anchor.x, geo.effective_dims.width, geo.canvas_dims.width);
-    geo.effective_anchor.y = clamp_anchor(geo.effective_anchor.y, geo.effective_dims.height, geo.canvas_dims.height);
-    geo.protection_anchor.x = clamp_anchor(geo.protection_anchor.x, geo.protection_dims.width, geo.canvas_dims.width);
-    geo.protection_anchor.y =
-        clamp_anchor(geo.protection_anchor.y, geo.protection_dims.height, geo.canvas_dims.height);
-    geo.framing_anchor.x = clamp_anchor(geo.framing_anchor.x, geo.framing_dims.width, geo.canvas_dims.width);
-    geo.framing_anchor.y = clamp_anchor(geo.framing_anchor.y, geo.framing_dims.height, geo.canvas_dims.height);
+    clamp_anchor_lower(geo.effective_anchor.x);
+    clamp_anchor_lower(geo.effective_anchor.y);
+    clamp_anchor_lower(geo.protection_anchor.x);
+    clamp_anchor_lower(geo.protection_anchor.y);
+    clamp_anchor_lower(geo.framing_anchor.x);
+    clamp_anchor_lower(geo.framing_anchor.y);
+
+    // 5b) Upper bound: if anchor + dim overflows the right/bottom canvas
+    // edge, preserve the anchor and shrink the dim.  Effective is an
+    // integer schema field so we floor the available space (anchor +
+    // floor(canvas - anchor) <= canvas always holds).  Inner dims
+    // (protection, framing) stay float per the "fractional pixels" model.
+    {
+        double const max_w = std::max(0.0, geo.canvas_dims.width - geo.effective_anchor.x);
+        double const max_h = std::max(0.0, geo.canvas_dims.height - geo.effective_anchor.y);
+        geo.effective_dims.width = std::min(geo.effective_dims.width, std::floor(max_w));
+        geo.effective_dims.height = std::min(geo.effective_dims.height, std::floor(max_h));
+    }
+    geo.protection_dims.width = std::min(
+        geo.protection_dims.width, std::max(0.0, geo.canvas_dims.width - geo.protection_anchor.x));
+    geo.protection_dims.height = std::min(
+        geo.protection_dims.height, std::max(0.0, geo.canvas_dims.height - geo.protection_anchor.y));
+    geo.framing_dims.width = std::min(
+        geo.framing_dims.width, std::max(0.0, geo.canvas_dims.width - geo.framing_anchor.x));
+    geo.framing_dims.height = std::min(
+        geo.framing_dims.height, std::max(0.0, geo.canvas_dims.height - geo.framing_anchor.y));
+
+    // 5c) Re-establish hierarchy: floor on effective in 5b can drop it
+    // below inner float dims that were valid before.  Clamp protection /
+    // framing down to effective if they now exceed it.  Only clamp on
+    // exceedance so that 0 (unset protection) stays 0.
+    if (geo.protection_dims.width > geo.effective_dims.width)
+        geo.protection_dims.width = geo.effective_dims.width;
+    if (geo.protection_dims.height > geo.effective_dims.height)
+        geo.protection_dims.height = geo.effective_dims.height;
+    if (geo.framing_dims.width > geo.effective_dims.width)
+        geo.framing_dims.width = geo.effective_dims.width;
+    if (geo.framing_dims.height > geo.effective_dims.height)
+        geo.framing_dims.height = geo.effective_dims.height;
 
     return geo;
 }
