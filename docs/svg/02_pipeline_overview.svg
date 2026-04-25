@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 920" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 996" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12">
   <defs>
     <style>
       .title { font-weight: 700; font-size: 13px; fill: #1E293B; }
@@ -10,7 +10,7 @@
   </defs>
 
   <!-- Background -->
-  <rect x="0" y="0" width="520" height="920" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="520" height="996" fill="#FFFFFF"/>
 
   <!-- INPUT -->
   <rect x="60" y="10" width="400" height="40" rx="8" ry="8" fill="#F0F9FF" stroke="#3B82F6" stroke-width="1.5"/>
@@ -48,10 +48,10 @@
 
   <!-- Phase 5 -->
   <rect x="60" y="386" width="400" height="68" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
-  <text class="title" x="75" y="406">Phase 5: Normalize, Scale, and Round</text>
+  <text class="title" x="75" y="406">Phase 5: Normalize and Scale (float, no rounding)</text>
   <text class="desc" x="75" y="422">Apply anamorphic normalization + scale factor</text>
-  <text class="desc" x="75" y="435">Round all values to clean integers</text>
-  <text class="desc" x="75" y="448">Extract scaled_fit, scaled_fit_anchor, scaled_bbox</text>
+  <text class="desc" x="75" y="435">Rounding is deferred to Phase 9b (after crop)</text>
+  <text class="desc" x="75" y="448">Extract scaled_fit, scaled_fit_anchor, scaled_bbox (float)</text>
   <line x1="260" y1="454" x2="260" y2="472" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
 
   <!-- Phase 6 -->
@@ -75,14 +75,22 @@
   <text class="desc" x="75" y="675">Enforce hierarchy containment</text>
   <line x1="260" y1="682" x2="260" y2="700" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
 
-  <!-- Phase 9 -->
-  <rect x="60" y="702" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
-  <text class="title" x="75" y="722">Phase 9: Create Output FDL</text>
-  <text class="desc" x="75" y="738">Build Context, Canvas, FramingDecision, FDL</text>
-  <text class="desc" x="75" y="751">Return TransformationResult</text>
-  <line x1="260" y1="758" x2="260" y2="776" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <!-- Phase 9b -->
+  <rect x="60" y="702" width="400" height="68" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="722">Phase 9b: Round Integer-Typed Schema Fields</text>
+  <text class="desc" x="75" y="738">Ceil effective; round canvas per RoundStrategy</text>
+  <text class="desc" x="75" y="751">Clamp inner dims; absorb deltas into anchors (delta/2)</text>
+  <text class="desc" x="75" y="764">Inner dims and all anchors stay float</text>
+  <line x1="260" y1="770" x2="260" y2="788" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Phase 10 -->
+  <rect x="60" y="790" width="400" height="56" rx="8" ry="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text class="title" x="75" y="810">Phase 10: Create Output FDL</text>
+  <text class="desc" x="75" y="826">Build Context, Canvas, FramingDecision, FDL</text>
+  <text class="desc" x="75" y="839">Return TransformationResult</text>
+  <line x1="260" y1="846" x2="260" y2="864" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
 
   <!-- OUTPUT -->
-  <rect x="60" y="778" width="400" height="40" rx="8" ry="8" fill="#F0F9FF" stroke="#3B82F6" stroke-width="1.5"/>
-  <text class="title" x="260" y="803" text-anchor="middle">OUTPUT: TransformationResult</text>
+  <rect x="60" y="866" width="400" height="40" rx="8" ry="8" fill="#F0F9FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text class="title" x="260" y="891" text-anchor="middle">OUTPUT: TransformationResult</text>
 </svg>
