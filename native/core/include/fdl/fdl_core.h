@@ -561,10 +561,14 @@ fdl_geometry_normalize_and_scale(fdl_geometry_t geo, double source_squeeze, doub
  *   - effective delta: shift effective_anchor by -delta/2 (keep the
  *     rounded effective rectangle centered on its pre-round extent).
  *
- * Hierarchy is enforced post-round (effective >= ceil(max inner dims),
- * effective <= canvas) and all anchors are clamped to [0, canvas - dim].
- * At canvas boundaries the symmetric distribution degrades to one-sided
- * via clamping.
+ * Effective is rounded once (ceil); if it would overflow the canvas at its
+ * anchor, the effective anchor is pulled back to `canvas - dim` — a
+ * sub-pixel anchor slide preserves the integer dim, whose ceil delta is
+ * already committed.  Inner layers (protection, framing) instead have
+ * their float dims shrunk to `canvas - anchor`, preserving the anchor
+ * position.  The rounded canvas is the absolute container: no layer may
+ * extend beyond it on either edge.  Hierarchy is re-established post-
+ * shrink so protection/framing do not exceed effective.
  *
  * @param geo       Geometry to round (typically post-crop with float fields).
  * @param strategy  Rounding strategy (even + mode).

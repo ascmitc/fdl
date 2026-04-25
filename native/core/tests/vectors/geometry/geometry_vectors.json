@@ -642,12 +642,12 @@
       "mode": "up",
       "expected": {
         "canvas_dims": {
-          "width": 4098,
-          "height": 2162
+          "width": 4098.0,
+          "height": 2162.0
         },
         "effective_dims": {
-          "width": 4001,
-          "height": 2101
+          "width": 4001.0,
+          "height": 2101.0
         },
         "protection_dims": {
           "width": 3900.1,
@@ -658,16 +658,16 @@
           "height": 1600.7
         },
         "effective_anchor": {
-          "x": 48.9,
-          "y": 31.1
+          "x": 48.90000000000009,
+          "y": 31.09999999999991
         },
         "protection_anchor": {
-          "x": 50.95,
-          "y": 201.55
+          "x": 50.95000000000009,
+          "y": 201.5499999999999
         },
         "framing_anchor": {
-          "x": 100.75,
-          "y": 251.75
+          "x": 100.75000000000009,
+          "y": 251.74999999999991
         }
       }
     },
@@ -707,12 +707,12 @@
       "mode": "down",
       "expected": {
         "canvas_dims": {
-          "width": 4096,
-          "height": 2160
+          "width": 4096.0,
+          "height": 2160.0
         },
         "effective_dims": {
-          "width": 4001,
-          "height": 2101
+          "width": 4001.0,
+          "height": 2101.0
         },
         "protection_dims": {
           "width": 3900.1,
@@ -723,16 +723,16 @@
           "height": 1600.7
         },
         "effective_anchor": {
-          "x": 47.9,
-          "y": 30.1
+          "x": 47.90000000000009,
+          "y": 30.09999999999991
         },
         "protection_anchor": {
-          "x": 49.95,
-          "y": 200.55
+          "x": 49.95000000000009,
+          "y": 200.5499999999999
         },
         "framing_anchor": {
-          "x": 99.75,
-          "y": 250.75
+          "x": 99.75000000000009,
+          "y": 250.74999999999991
         }
       }
     },
@@ -772,12 +772,12 @@
       "mode": "round",
       "expected": {
         "canvas_dims": {
-          "width": 4096,
-          "height": 2160
+          "width": 4096.0,
+          "height": 2160.0
         },
         "effective_dims": {
-          "width": 4001,
-          "height": 2101
+          "width": 4001.0,
+          "height": 2101.0
         },
         "protection_dims": {
           "width": 3900.1,
@@ -788,16 +788,16 @@
           "height": 1600.7
         },
         "effective_anchor": {
-          "x": 47.9,
-          "y": 30.1
+          "x": 47.90000000000009,
+          "y": 30.09999999999991
         },
         "protection_anchor": {
-          "x": 49.95,
-          "y": 200.55
+          "x": 49.95000000000009,
+          "y": 200.5499999999999
         },
         "framing_anchor": {
-          "x": 99.75,
-          "y": 250.75
+          "x": 99.75000000000009,
+          "y": 250.74999999999991
         }
       }
     }

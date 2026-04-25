@@ -249,15 +249,21 @@ def generate_normalize_and_scale():
 #
 # Mirrors the C++ fdl_geometry_round contract:
 #
-#   1. ceil(effective_dims); absorb ceil delta into effective_anchor (delta/2).
-#      strategy.even / strategy.mode do NOT apply to effective — pure ceil.
-#   2. Round canvas_dims per strategy.even / strategy.mode.
-#   3. Clamp effective / protection / framing against rounded canvas.
-#   4. Shift ALL anchors by +canvas_delta / 2.
-#   5. Clamp anchors to [0, canvas - dim].
+#   1. Round canvas_dims per strategy.even / strategy.mode.
+#   2. Absorb rounding deltas into anchors (symmetric distribution):
+#        - every anchor shifts by +canvas_delta / 2;
+#        - effective anchor additionally shifts by -eff_ceil_delta / 2.
+#   3. Integerize effective: min(ceil(float_eff), canvas).
+#   4. Clamp anchors.  Effective anchor clamps to [0, canvas - dim] so its
+#      integer dim is preserved.  Inner anchors clamp to [0, canvas].
+#   5. Shrink inner dims to fit at their (clamped) anchors:
+#        protection = min(float_prot, canvas - anchor)  # float
+#        framing    = min(float_fram, canvas - anchor)  # float
+#   6. Re-establish hierarchy: clamp protection / framing down to effective
+#      on exceedance only (preserving 0 = "unset" protection sentinel).
 #
-# Inner dims (protection, framing) remain float per the "fractional pixels"
-# model; they only get clamped down when they would exceed the rounded canvas.
+# Effective is rounded once (ceil in step 3).  Overflow is absorbed via
+# anchor clamp (step 4), not a second integer round on the dim.
 
 
 def _round_scalar(value: float, even: str, mode: str) -> int:
@@ -270,59 +276,55 @@ def _round_like_cpp(g: Geometry, even: str, mode: str) -> Geometry:
     float_canvas_w, float_canvas_h = g.canvas_dims.width, g.canvas_dims.height
     float_eff_w, float_eff_h = g.effective_dims.width, g.effective_dims.height
 
-    # 1) Ceil effective; absorb ceil delta into effective_anchor.
-    eff_w = float(math.ceil(float_eff_w))
-    eff_h = float(math.ceil(float_eff_h))
-    eff_ax = g.effective_anchor.x - (eff_w - float_eff_w) / 2.0
-    eff_ay = g.effective_anchor.y - (eff_h - float_eff_h) / 2.0
-
-    # 2) Round canvas per strategy.
+    # 1) Round canvas per strategy.
     new_canvas = dims(
         _round_scalar(float_canvas_w, even, mode),
         _round_scalar(float_canvas_h, even, mode),
     )
 
-    # 3) Clamp every dim against canvas. 0 stays 0.
-    eff_w = min(eff_w, new_canvas.width)
-    eff_h = min(eff_h, new_canvas.height)
-    prot_w = min(g.protection_dims.width, new_canvas.width)
-    prot_h = min(g.protection_dims.height, new_canvas.height)
-    fram_w = min(g.framing_dims.width, new_canvas.width)
-    fram_h = min(g.framing_dims.height, new_canvas.height)
-
-    # 4) Shift all anchors by +canvas_delta / 2.
+    # 2) Symmetric anchor absorption.
+    # 2a) Canvas delta shifts every anchor by +canvas_delta / 2.
     canvas_dw = new_canvas.width - float_canvas_w
     canvas_dh = new_canvas.height - float_canvas_h
-    eff_ax += canvas_dw / 2.0
-    eff_ay += canvas_dh / 2.0
+    eff_ax = g.effective_anchor.x + canvas_dw / 2.0
+    eff_ay = g.effective_anchor.y + canvas_dh / 2.0
     prot_ax = g.protection_anchor.x + canvas_dw / 2.0
     prot_ay = g.protection_anchor.y + canvas_dh / 2.0
     fram_ax = g.framing_anchor.x + canvas_dw / 2.0
     fram_ay = g.framing_anchor.y + canvas_dh / 2.0
+    # 2b) Effective ceil grows the box by up to 1 px; shift its anchor by
+    # -ceil_delta / 2 so the rectangle stays centered on the float center.
+    eff_ceil_dw = math.ceil(float_eff_w) - float_eff_w
+    eff_ceil_dh = math.ceil(float_eff_h) - float_eff_h
+    eff_ax -= eff_ceil_dw / 2.0
+    eff_ay -= eff_ceil_dh / 2.0
 
-    # 5a) Lower bound: clamp negative anchors to 0.
-    def _clamp_lower(a: float) -> float:
-        return max(0.0, a)
+    # 3) Integerize effective once by ceil; then clamp to canvas.
+    eff_w = min(math.ceil(float_eff_w), new_canvas.width)
+    eff_h = min(math.ceil(float_eff_h), new_canvas.height)
 
-    eff_ax = _clamp_lower(eff_ax)
-    eff_ay = _clamp_lower(eff_ay)
-    prot_ax = _clamp_lower(prot_ax)
-    prot_ay = _clamp_lower(prot_ay)
-    fram_ax = _clamp_lower(fram_ax)
-    fram_ay = _clamp_lower(fram_ay)
+    # 4) Clamp anchors.  Effective anchor: [0, canvas - dim] (preserves dim).
+    #    Inner anchors: [0, canvas] (step 5 shrinks the dim).
+    def _clamp(a: float, lo: float, hi: float) -> float:
+        return max(lo, min(a, hi))
 
-    # 5b) Upper bound: shrink dim if anchor + dim overflows canvas.
-    # Effective is an integer schema field so floor(canvas - anchor).
-    # Inner dims (protection, framing) stay float.
-    eff_w = min(eff_w, math.floor(max(0.0, new_canvas.width - eff_ax)))
-    eff_h = min(eff_h, math.floor(max(0.0, new_canvas.height - eff_ay)))
-    prot_w = min(prot_w, max(0.0, new_canvas.width - prot_ax))
-    prot_h = min(prot_h, max(0.0, new_canvas.height - prot_ay))
-    fram_w = min(fram_w, max(0.0, new_canvas.width - fram_ax))
-    fram_h = min(fram_h, max(0.0, new_canvas.height - fram_ay))
+    eff_max_ax = max(0.0, new_canvas.width - eff_w)
+    eff_max_ay = max(0.0, new_canvas.height - eff_h)
+    eff_ax = _clamp(eff_ax, 0.0, eff_max_ax)
+    eff_ay = _clamp(eff_ay, 0.0, eff_max_ay)
+    prot_ax = _clamp(prot_ax, 0.0, new_canvas.width)
+    prot_ay = _clamp(prot_ay, 0.0, new_canvas.height)
+    fram_ax = _clamp(fram_ax, 0.0, new_canvas.width)
+    fram_ay = _clamp(fram_ay, 0.0, new_canvas.height)
 
-    # 5c) Re-establish hierarchy after the floor on effective.  Only clamp
-    # on exceedance to preserve 0 = "unset" sentinel.
+    # 5) Shrink inner dims to fit at their anchors.  Float, no rounding.
+    prot_w = min(g.protection_dims.width, new_canvas.width - prot_ax)
+    prot_h = min(g.protection_dims.height, new_canvas.height - prot_ay)
+    fram_w = min(g.framing_dims.width, new_canvas.width - fram_ax)
+    fram_h = min(g.framing_dims.height, new_canvas.height - fram_ay)
+
+    # 6) Re-establish hierarchy.  Only clamp on exceedance to preserve
+    # 0 = "unset" protection sentinel.
     if prot_w > eff_w:
         prot_w = eff_w
     if prot_h > eff_h:
