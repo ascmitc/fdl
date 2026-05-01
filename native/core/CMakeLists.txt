@@ -49,8 +49,16 @@ execute_process(
     -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenerateSchemaHeader.cmake
 )
 
-# Core shared library
-add_library(fdl_core SHARED
+# Allow consumers to opt into a static build of fdl_core. Default remains
+# SHARED so existing users see no behavior change. STATIC enables
+# self-contained downstream binaries on platforms without rpath/loader-
+# relative dependency resolution (e.g. Windows plug-in DLLs).
+set(FDL_CORE_LIBRARY_TYPE "SHARED" CACHE STRING
+    "fdl_core library type: SHARED or STATIC")
+set_property(CACHE FDL_CORE_LIBRARY_TYPE PROPERTY STRINGS SHARED STATIC)
+
+# Core library (SHARED by default; see FDL_CORE_LIBRARY_TYPE above)
+add_library(fdl_core ${FDL_CORE_LIBRARY_TYPE}
   src/fdl_abi.cpp
   src/fdl_handles.cpp
   src/fdl_rounding.cpp
