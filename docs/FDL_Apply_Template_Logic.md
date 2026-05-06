@@ -410,39 +410,52 @@ centered on its pre-round center.
 
 **Steps** (applied in order):
 
-1. **Ceil `effective_dims`** and absorb the ceil delta symmetrically into
-   `effective_anchor` (`-delta/2` on x and y).  Pure `ceil`; the
-   strategy's `even` / `mode` do NOT apply to effective.  Effective is
-   always `>= max(inner dims)` by construction, so `ceil` preserves the
-   hierarchy automatically; using `round` or `floor` here could shrink
-   effective below a valid inner layer.
-
-2. **Round `canvas_dims`** according to `strategy.even` + `strategy.mode`:
+1. **Round `canvas_dims`** according to `strategy.even` + `strategy.mode`:
 
    | `even`  | `mode`                         | Behaviour                             |
    |---------|--------------------------------|---------------------------------------|
    | `whole` | `up` / `down` / `round`        | Ceil / floor / nearest integer        |
    | `even`  | `up` / `down` / `round`        | Ceil / floor / nearest **even** integer |
 
-3. **Clamp** `effective_dims`, `protection_dims`, `framing_dims` against
-   the rounded canvas.  `std::min(dim, canvas)` on each axis.  `0`
-   (the "unset" sentinel for optional protection) is preserved.
+2. **Symmetric anchor absorption** so content stays centered:
+   1. **2a.** Shift every anchor (effective, protection, framing) by
+      `+canvas_delta/2`, distributing the canvas rounding evenly.
+   2. **2b.** Shift `effective_anchor` *additionally* by
+      `-eff_ceil_delta/2`, where `eff_ceil_delta = ceil(float_eff) - float_eff`.
+      This keeps the about-to-be-ceil'd effective rectangle centered on
+      its pre-ceil float position.  `eff_ceil_delta >= 0` always, so
+      this pulls the anchor toward the origin.
 
-4. **Shift all anchors** by `+canvas_delta/2` so content stays centered
-   within the rounded canvas.
+3. **Integerize `effective_dims`**: `min(ceil(float_eff), canvas_dims)`.
+   Pure `ceil`; the strategy's `even` / `mode` do NOT apply to
+   effective.  Effective is always `>= max(inner dims)` by construction,
+   so `ceil` preserves the hierarchy automatically; using `round` or
+   `floor` here could shrink effective below a valid inner layer.  This
+   is the **sole** integer round for effective -- subsequent steps
+   preserve this dim via anchor-pullback rather than dim-shrink.
 
-5. **Clamp anchors** inside `[0, canvas - dim]`:
-   1. **Lower bound**: `max(anchor, 0)` -- pull back into the canvas if
-      the symmetric shift pushed an anchor negative.
-   2. **Upper bound**: if `anchor + dim > canvas`, **preserve the anchor
-      and shrink the dim** to fit.  For `effective_dims` (schema
-      integer) the available space is `floor(canvas - anchor)` so the
-      result is still an integer; for inner dims (float) the available
-      space is the exact float `canvas - anchor`.
-   3. **Re-establish hierarchy**: the floor in the previous step can
-      drop `effective_dims` below valid inner float dims.  Clamp
-      protection and framing down to the new effective if they now
-      exceed it (only on exceedance, so 0 stays 0).
+4. **Clamp anchors** inside the canvas:
+   - **Effective anchor (integer-typed dim)**: clamp to
+     `[0, canvas_dims - effective_dims]`.  This preserves the ceil'd
+     `effective_dims` from step 3; if the anchor would push effective
+     past the canvas edge, the anchor is *pulled back* (sub-pixel slide
+     inward) rather than the dim being shrunk.  Losing a full integer
+     pixel of effective to sub-pixel anchor noise would be worse than a
+     sub-pixel anchor adjustment.
+   - **Protection / framing anchors (float dims)**: clamp to
+     `[0, canvas_dims]`.  Step 5 then shrinks the dim at this valid
+     anchor.
+
+5. **Shrink protection / framing dims** to fit at their anchors inside
+   the canvas: `dim = min(float_dim, canvas_dims - anchor)`.  Float; no
+   rounding; preserves the spatial anchor position.  `effective_dims`
+   is **not** modified in this step -- step 4 already preserved it via
+   anchor-pullback.
+
+6. **Re-establish hierarchy**: protection and framing cannot exceed the
+   (already integer, already canvas-clamped) effective.  Clamp on
+   exceedance only, so `0` (the "unset" sentinel for optional
+   protection) stays `0`.
 
 **Design summary**:
 
@@ -453,7 +466,10 @@ centered on its pre-round center.
   (no rounding).
 - For effective (integer), the dim's `ceil` is preserved and the anchor
   slides if needed -- a sub-pixel slide is cheaper than losing a full
-  pixel off effective.
+  integer pixel off effective.
+- Symmetric delta absorption (`delta/2`) keeps rectangles centered on
+  their pre-round centers, avoiding a directional bias that could
+  accumulate across chained template applications.
 
 ---
 

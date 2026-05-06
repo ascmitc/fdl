@@ -713,47 +713,60 @@ hierarchy.
 
 #### Algorithm
 
+`effective_dims` is integerized exactly once, in step 3; subsequent
+steps preserve it via anchor-pullback (step 4) rather than re-applying
+`floor` or `ceil`.
+
 ```
 geometry_round(geo, strategy):
     float_canvas = geo.canvas_dims
     float_eff    = geo.effective_dims
 
-    # 1. Ceil effective; absorb ceil delta symmetrically into effective_anchor.
-    geo.effective_dims = ceil(float_eff)
-    eff_delta = geo.effective_dims - float_eff
-    geo.effective_anchor -= eff_delta / 2
-
-    # 2. Round canvas per strategy.
+    # 1. Round canvas per strategy.
     geo.canvas_dims = fdl_round_dimensions(float_canvas, strategy.even, strategy.mode)
 
-    # 3. Clamp inner dims against rounded canvas (preserves 0 sentinel for unset protection).
-    geo.effective_dims  = min(geo.effective_dims,  geo.canvas_dims)
-    geo.protection_dims = min(geo.protection_dims, geo.canvas_dims)
-    geo.framing_dims    = min(geo.framing_dims,    geo.canvas_dims)
-
-    # 4. Shift ALL anchors by +canvas_delta/2 so content stays centered.
+    # 2. Symmetric anchor absorption.
+    #    2a. Canvas delta shifts every anchor by +canvas_delta/2 so content
+    #        stays centered on its pre-round center.
     canvas_delta = geo.canvas_dims - float_canvas
     geo.effective_anchor  += canvas_delta / 2
     geo.protection_anchor += canvas_delta / 2
     geo.framing_anchor    += canvas_delta / 2
+    #    2b. Effective's ceil grows its box by up to 1 px; shift its
+    #        anchor by -eff_ceil_delta/2 so the rectangle stays centered
+    #        on its pre-ceil float position.  ceil_delta >= 0 always, so
+    #        this pulls the anchor toward the origin.
+    eff_ceil_delta = ceil(float_eff) - float_eff
+    geo.effective_anchor -= eff_ceil_delta / 2
 
-    # 5a. Clamp anchors >= 0.
-    for each anchor: anchor = max(anchor, 0)
+    # 3. Integerize effective: min(ceil(float_eff), canvas).  This is the
+    #    SOLE integer round for effective; subsequent steps preserve the
+    #    dim via anchor-pullback rather than dim-shrink.
+    geo.effective_dims = min(ceil(float_eff), geo.canvas_dims)
 
-    # 5b. If anchor + dim > canvas: preserve the anchor, shrink the dim.
-    #     For effective (integer): floor(canvas - anchor).
-    #     For inner (float):       canvas - anchor.
-    geo.effective_dims.w  = min(geo.effective_dims.w,
-                                floor(canvas.w - geo.effective_anchor.x))
-    geo.protection_dims.w = min(geo.protection_dims.w,
-                                canvas.w - geo.protection_anchor.x)
-    geo.framing_dims.w    = min(geo.framing_dims.w,
-                                canvas.w - geo.framing_anchor.x)
-    # (same for height)
+    # 4. Clamp anchors inside the canvas.
+    #    For effective (integer): clamp anchor to [0, canvas - dim], so
+    #      the ceil'd dim from step 3 stays intact.  A sub-pixel inward
+    #      slide of the anchor is cheap; losing a whole integer pixel of
+    #      effective to sub-pixel anchor noise is not.
+    #    For protection / framing (float): clamp anchor to [0, canvas]
+    #      and let step 5 shrink the dim at a valid anchor.
+    geo.effective_anchor  = clamp(geo.effective_anchor,
+                                  0, geo.canvas_dims - geo.effective_dims)
+    geo.protection_anchor = clamp(geo.protection_anchor, 0, geo.canvas_dims)
+    geo.framing_anchor    = clamp(geo.framing_anchor,    0, geo.canvas_dims)
 
-    # 5c. Re-establish hierarchy: step 5b's floor on effective can drop
-    #     it below valid inner float dims.  Clamp down on exceedance only
-    #     (preserves 0 sentinel for unset protection).
+    # 5. Shrink protection / framing dims so they fit at their anchors
+    #    inside the canvas.  Float; no rounding; preserves the anchor.
+    #    effective is NOT shrunk here -- step 4 already preserved it.
+    geo.protection_dims = min(geo.protection_dims,
+                              geo.canvas_dims - geo.protection_anchor)
+    geo.framing_dims    = min(geo.framing_dims,
+                              geo.canvas_dims - geo.framing_anchor)
+
+    # 6. Re-establish hierarchy: protection / framing cannot exceed the
+    #    (already integer, already canvas-clamped) effective.  Clamp on
+    #    exceedance only so 0 (unset protection) stays 0.
     if protection > effective: protection = effective
     if framing    > effective: framing    = effective
 ```
