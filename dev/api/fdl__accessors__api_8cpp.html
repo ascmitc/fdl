@@ -261,6 +261,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ac9af9413112e3e9fbd75798979dbb6c3" id="r_ac9af9413112e3e9fbd75798979dbb6c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__accessors__api_8cpp.html#ac9af9413112e3e9fbd75798979dbb6c3">fdl_canvas_template_get_pad_to_maximum</a> (const <a class="el" href="fdl__core_8h.html#ab723c6566f49d08975f47a73aa7786cc">fdl_canvas_template_t</a> *ct)</td></tr>
 <tr class="memdesc:ac9af9413112e3e9fbd75798979dbb6c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the pad_to_maximum flag.  <br /></td></tr>
 <tr class="separator:ac9af9413112e3e9fbd75798979dbb6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85a40a9e8a0abd3d07c58824e7373817" id="r_a85a40a9e8a0abd3d07c58824e7373817"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__accessors__api_8cpp.html#a85a40a9e8a0abd3d07c58824e7373817">fdl_canvas_template_has_round</a> (const <a class="el" href="fdl__core_8h.html#ab723c6566f49d08975f47a73aa7786cc">fdl_canvas_template_t</a> *ct)</td></tr>
+<tr class="memdesc:a85a40a9e8a0abd3d07c58824e7373817"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the template has an explicit rounding strategy.  <br /></td></tr>
+<tr class="separator:a85a40a9e8a0abd3d07c58824e7373817"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c891079f384f6d55b3752400a9057d5" id="r_a3c891079f384f6d55b3752400a9057d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structfdl__round__strategy__t.html">fdl_round_strategy_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__accessors__api_8cpp.html#a3c891079f384f6d55b3752400a9057d5">fdl_canvas_template_get_round</a> (const <a class="el" href="fdl__core_8h.html#ab723c6566f49d08975f47a73aa7786cc">fdl_canvas_template_t</a> *ct)</td></tr>
 <tr class="memdesc:a3c891079f384f6d55b3752400a9057d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the rounding strategy.  <br /></td></tr>
 <tr class="separator:a3c891079f384f6d55b3752400a9057d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1705,6 +1708,33 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a85a40a9e8a0abd3d07c58824e7373817" name="a85a40a9e8a0abd3d07c58824e7373817"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85a40a9e8a0abd3d07c58824e7373817">&#9670;&#160;</a></span>fdl_canvas_template_has_round()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int fdl_canvas_template_has_round </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="fdl__core_8h.html#ab723c6566f49d08975f47a73aa7786cc">fdl_canvas_template_t</a> *&#160;</td>
+          <td class="paramname"><em>ct</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check whether the template has an explicit rounding strategy. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ct</td><td>Canvas template handle. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Non-zero if a "round" field is present in the JSON. </dd></dl>
+
+</div>
+</div>
 <a id="a3c891079f384f6d55b3752400a9057d5" name="a3c891079f384f6d55b3752400a9057d5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3c891079f384f6d55b3752400a9057d5">&#9670;&#160;</a></span>fdl_canvas_template_get_round()</h2>
 
@@ -1722,7 +1752,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the rounding strategy. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Returns the spec-default {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP} when no "round" field is present (FDL spec §7.4.12). </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ct</td><td>Canvas template handle. </td></tr>
   </table>

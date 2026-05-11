@@ -528,10 +528,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-5-scale-and-round" class="md-nav__link">
+  <a href="#step-5-scale-no-rounding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5 -- Scale and Round
+        Step 5 -- Scale (no rounding)
       
     </span>
   </a>
@@ -615,6 +615,17 @@
     <span class="md-ellipsis">
       
         Step 9 -- Crop to Visible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9b-round-integer-typed-schema-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9b -- Round Integer-Typed Schema Fields
       
     </span>
   </a>
@@ -1489,10 +1500,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-5-scale-and-round" class="md-nav__link">
+  <a href="#step-5-scale-no-rounding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5 -- Scale and Round
+        Step 5 -- Scale (no rounding)
       
     </span>
   </a>
@@ -1583,6 +1594,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#step-9b-round-integer-typed-schema-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9b -- Round Integer-Typed Schema Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#step-10-create-output-fdl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1647,17 +1669,26 @@ The algorithm processes all geometry layers through a linear pipeline:</p>
   |  2. Populate          |
   |  3. Hierarchy         |
   |  4. Scale Factor      |
-  |  5. Scale &amp; Round     |
+  |  5. Scale (float)     |
   |  6. Output Size       |
   |  7. Alignment Shift   |
   |  8. Apply Offsets     |
   |  9. Crop to Visible   |
+  | 9b. Round &amp; Absorb    |
   | 10. Create Output     |
   +----------------------+
         |
         v
   Output Canvas + FDL
 </code></pre></div>
+<blockquote>
+<p><strong>Rounding is deferred to the end of the pipeline (phase 9b)</strong>, after crop.
+Steps 4-9 operate on float values; only <code>canvas.dimensions</code> and
+<code>canvas.effective_dimensions</code> are integerized at the end, with the rounding
+deltas absorbed symmetrically into anchor positions.  Inner dimensions
+(<code>protection_dimensions</code>, framing <code>dimensions</code>) and all anchors remain
+fractional in the final output, per the "fractional pixels" model.</p>
+</blockquote>
 <hr />
 <h2 id="geometry-layers">Geometry Layers</h2>
 <p>FDL defines four nested layers from outermost to innermost. Each layer has
@@ -1846,10 +1877,13 @@ anamorphic squeeze factors to produce square-pixel equivalents (via
 </tbody>
 </table>
 <hr />
-<h3 id="step-5-scale-and-round">Step 5 -- Scale and Round</h3>
-<p><strong>C API</strong>: <code>fdl_geometry_normalize_and_scale()</code> + <code>fdl_geometry_round()</code>
-<strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code></p>
-<p>Apply the scale factor to <strong>all</strong> dimensions and anchors uniformly.</p>
+<h3 id="step-5-scale-no-rounding">Step 5 -- Scale (no rounding)</h3>
+<p><strong>C API</strong>: <code>fdl_geometry_normalize_and_scale()</code>
+<strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code>, <code>geometry_normalize_and_scale_ratio()</code></p>
+<p>Apply the scale factor to <strong>all</strong> dimensions and anchors uniformly, in float.
+<strong>No rounding happens here</strong> -- it is deferred to step 9b after crop so
+intermediate calculations (alignment, offset, crop) operate on exact scaled
+values without quantization drift.</p>
 <blockquote>
 <p><strong>Precision note</strong>: The scale factor is kept internally as a ratio
 (numerator / denominator) to avoid IEEE 754 precision loss. The computation
@@ -1860,45 +1894,17 @@ uses <code>(value x numerator) / denominator</code> instead of <code>value x (nu
 </code></pre></div>
 <p>This converts from source pixel space through square-pixel space to target
 pixel space in one operation.</p>
-<p><strong>Round</strong> all dimensions and anchors according to the template's <code>RoundStrategy</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Behaviour</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>even</code></td>
-<td>Round to the nearest even integer</td>
-</tr>
-<tr>
-<td><code>whole</code></td>
-<td>Round to the nearest integer</td>
-</tr>
-<tr>
-<td><code>up</code></td>
-<td>Always round up (ceiling)</td>
-</tr>
-<tr>
-<td><code>down</code></td>
-<td>Always round down (floor)</td>
-</tr>
-<tr>
-<td><code>round</code></td>
-<td>Standard rounding (half-up)</td>
-</tr>
-</tbody>
-</table>
-<p>After rounding, all dimensions and anchors are clean integers (stored as
-float for pipeline consistency).</p>
 <p><strong>Extract scaled values</strong> for use in later steps:</p>
 <ul>
-<li><code>scaled_fit</code> -- fit_source dimensions after scale+round</li>
-<li><code>scaled_fit_anchor</code> -- fit_source anchor after scale+round</li>
-<li><code>scaled_bounding_box</code> -- canvas dimensions (the full bounding box)</li>
+<li><code>scaled_fit</code> -- fit_source dimensions after scale (float)</li>
+<li><code>scaled_fit_anchor</code> -- fit_source anchor after scale (float)</li>
+<li><code>scaled_bounding_box</code> -- <code>geometry.canvas_dims</code> after scale (float)</li>
 </ul>
+<p>The <code>scaled_bounding_box</code> captured here is the <strong>true pre-round float
+canvas extent</strong>; it is stored as a custom attribute on the output canvas
+(<code>_scaled_bounding_box</code>) so downstream image processing can work from the
+exact scaled bounding box rather than the rounded integer <code>canvas.dimensions</code>
+produced by step 9b.</p>
 <hr />
 <h3 id="step-6-determine-output-size-per-axis">Step 6 -- Determine Output Size (per axis)</h3>
 <p><strong>C API</strong>: <code>fdl_output_size_for_axis()</code>
@@ -2060,6 +2066,114 @@ framing    = min(framing, protection or effective)
     400px clipped (theoretical_anchor.x = -400)
 </code></pre></div>
 <hr />
+<h3 id="step-9b-round-integer-typed-schema-fields">Step 9b -- Round Integer-Typed Schema Fields</h3>
+<p><strong>C API</strong>: <code>fdl_geometry_round()</code>
+<strong>C++ implementation</strong>: <code>fdl_geometry.cpp</code>, <code>geometry_round()</code></p>
+<p>Called once at the end of the pipeline, after crop.  Every anchor at this
+point already encodes the template's intent (scale, alignment, padding,
+crop).  Rounding integerizes the schema-integer fields
+(<code>canvas.dimensions</code> and <code>canvas.effective_dimensions</code>) and absorbs the
+rounding deltas symmetrically into anchor positions so content stays
+centered on its pre-round center.</p>
+<p><strong>Key invariants</strong>:</p>
+<ul>
+<li>Only <code>canvas.dimensions</code> and <code>canvas.effective_dimensions</code> become
+  integers; <code>protection_dimensions</code> and framing <code>dimensions</code> remain
+  float per the "fractional pixels" model.</li>
+<li>All anchors remain float.  They are only clamped inside
+  <code>[0, canvas - dim]</code> so every layer stays inside the rounded canvas.</li>
+<li>The template's <code>RoundStrategy</code> applies only to <code>canvas.dimensions</code>.
+  <code>effective_dimensions</code> is always <code>ceil</code>'d (see rationale below).</li>
+</ul>
+<p><strong>Steps</strong> (applied in order):</p>
+<ol>
+<li><strong>Round <code>canvas_dims</code></strong> according to <code>strategy.even</code> + <code>strategy.mode</code>:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th><code>even</code></th>
+<th><code>mode</code></th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>whole</code></td>
+<td><code>up</code> / <code>down</code> / <code>round</code></td>
+<td>Ceil / floor / nearest integer</td>
+</tr>
+<tr>
+<td><code>even</code></td>
+<td><code>up</code> / <code>down</code> / <code>round</code></td>
+<td>Ceil / floor / nearest <strong>even</strong> integer</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li><strong>Symmetric anchor absorption</strong> so content stays centered:</li>
+<li><strong>2a.</strong> Shift every anchor (effective, protection, framing) by
+      <code>+canvas_delta/2</code>, distributing the canvas rounding evenly.</li>
+<li>
+<p><strong>2b.</strong> Shift <code>effective_anchor</code> <em>additionally</em> by
+      <code>-eff_ceil_delta/2</code>, where <code>eff_ceil_delta = ceil(float_eff) - float_eff</code>.
+      This keeps the about-to-be-ceil'd effective rectangle centered on
+      its pre-ceil float position.  <code>eff_ceil_delta &gt;= 0</code> always, so
+      this pulls the anchor toward the origin.</p>
+</li>
+<li>
+<p><strong>Integerize <code>effective_dims</code></strong>: <code>min(ceil(float_eff), canvas_dims)</code>.
+   Pure <code>ceil</code>; the strategy's <code>even</code> / <code>mode</code> do NOT apply to
+   effective.  Effective is always <code>&gt;= max(inner dims)</code> by construction,
+   so <code>ceil</code> preserves the hierarchy automatically; using <code>round</code> or
+   <code>floor</code> here could shrink effective below a valid inner layer.  This
+   is the <strong>sole</strong> integer round for effective -- subsequent steps
+   preserve this dim via anchor-pullback rather than dim-shrink.</p>
+</li>
+<li>
+<p><strong>Clamp anchors</strong> inside the canvas:</p>
+</li>
+<li><strong>Effective anchor (integer-typed dim)</strong>: clamp to
+     <code>[0, canvas_dims - effective_dims]</code>.  This preserves the ceil'd
+     <code>effective_dims</code> from step 3; if the anchor would push effective
+     past the canvas edge, the anchor is <em>pulled back</em> (sub-pixel slide
+     inward) rather than the dim being shrunk.  Losing a full integer
+     pixel of effective to sub-pixel anchor noise would be worse than a
+     sub-pixel anchor adjustment.</li>
+<li>
+<p><strong>Protection / framing anchors (float dims)</strong>: clamp to
+     <code>[0, canvas_dims]</code>.  Step 5 then shrinks the dim at this valid
+     anchor.</p>
+</li>
+<li>
+<p><strong>Shrink protection / framing dims</strong> to fit at their anchors inside
+   the canvas: <code>dim = min(float_dim, canvas_dims - anchor)</code>.  Float; no
+   rounding; preserves the spatial anchor position.  <code>effective_dims</code>
+   is <strong>not</strong> modified in this step -- step 4 already preserved it via
+   anchor-pullback.</p>
+</li>
+<li>
+<p><strong>Re-establish hierarchy</strong>: protection and framing cannot exceed the
+   (already integer, already canvas-clamped) effective.  Clamp on
+   exceedance only, so <code>0</code> (the "unset" sentinel for optional
+   protection) stays <code>0</code>.</p>
+</li>
+</ol>
+<p><strong>Design summary</strong>:</p>
+<ul>
+<li>Canvas is authoritative.  Every layer is clamped inside the rounded
+  canvas; no layer can overflow.</li>
+<li>For inner layers (float), the anchor is preserved and the dim shrinks
+  -- this keeps the layer's spatial position intact and costs nothing
+  (no rounding).</li>
+<li>For effective (integer), the dim's <code>ceil</code> is preserved and the anchor
+  slides if needed -- a sub-pixel slide is cheaper than losing a full
+  integer pixel off effective.</li>
+<li>Symmetric delta absorption (<code>delta/2</code>) keeps rectangles centered on
+  their pre-round centers, avoiding a directional bias that could
+  accumulate across chained template applications.</li>
+</ul>
+<hr />
 <h3 id="step-10-create-output-fdl">Step 10 -- Create Output FDL</h3>
 <p><strong>C++ implementation</strong>: <code>fdl_template.cpp</code>, lines 298-473</p>
 <p>Assemble the final output objects from the processed geometry:</p>
@@ -2077,7 +2191,13 @@ framing    = min(framing, protection or effective)
 <li>
 <p><strong>Custom Attributes</strong>: <code>_scale_factor</code>, <code>_scaled_bounding_box</code>, and
    <code>_content_translation</code> are stored on the output canvas for use by
-   image processing pipelines.</p>
+   image processing pipelines.  <code>_scaled_bounding_box</code> and
+   <code>_content_translation</code> are captured <strong>post-scale, pre-round</strong> and
+   are intentionally unrounded float values -- they preserve sub-pixel
+   precision so image processors (e.g. <code>fdl_imaging</code>'s warp-based
+   pipeline) can place content without re-quantizing.  They may differ
+   by sub-pixel amounts from the rounded integer <code>canvas.dimensions</code>
+   produced by step 9b.</p>
 </li>
 <li>
 <p><strong>New Context</strong>: contains both the source canvas (for reference) and the
@@ -2093,13 +2213,15 @@ document and IDs for resolving the created context, canvas, and framing
 decision. Python wraps this as <code>TemplateResult</code> with convenience properties.</p>
 <hr />
 <h2 id="complete-formula-reference">Complete Formula Reference</h2>
-<p>For a single axis, the full content translation calculation is:</p>
-<div class="highlight"><pre><span></span><code># Inputs
-canvas_size  = scaled bounding box on this axis
+<p>For a single axis, the full content translation calculation is.  All
+values are <strong>floats</strong> at this point in the pipeline; integerization
+happens later in step 9b.</p>
+<div class="highlight"><pre><span></span><code># Inputs (all floats)
+canvas_size  = scaled bounding box on this axis (float)
 target_size  = template target dimensions on this axis
-fit_size     = scaled fit_source dimensions on this axis
-fit_anchor   = scaled fit_source anchor on this axis
-output_size  = final output canvas size (from step 6)
+fit_size     = scaled fit_source dimensions on this axis (float)
+fit_anchor   = scaled fit_source anchor on this axis (float)
+output_size  = final output canvas size (from step 6; integer for PAD/CROP, float for FIT)
 align_factor = 0.0 (left/top), 0.5 (center), 1.0 (right/bottom)
 
 # Output size (step 6)

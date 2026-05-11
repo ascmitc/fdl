@@ -276,19 +276,70 @@ constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><b>fdl::cons
 constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>fdl::constants::kAttrScaleFactor</b> = &quot;scale_factor&quot;</td></tr>
 <tr class="memdesc:ac433f1b08a0d2c267dc3eb6bda3d94e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template scale factor (float). <br /></td></tr>
 <tr class="separator:ac433f1b08a0d2c267dc3eb6bda3d94e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12f58a9da0c7f05410eabaa1f43670d0" id="r_a12f58a9da0c7f05410eabaa1f43670d0"><td class="memItemLeft" align="right" valign="top"><a id="a12f58a9da0c7f05410eabaa1f43670d0" name="a12f58a9da0c7f05410eabaa1f43670d0"></a>
-constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>fdl::constants::kAttrContentTranslation</b> = &quot;content_translation&quot;</td></tr>
-<tr class="memdesc:a12f58a9da0c7f05410eabaa1f43670d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template content translation (point_f64). <br /></td></tr>
+<tr class="memitem:a12f58a9da0c7f05410eabaa1f43670d0" id="r_a12f58a9da0c7f05410eabaa1f43670d0"><td class="memItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__constants_8h.html#a12f58a9da0c7f05410eabaa1f43670d0">fdl::constants::kAttrContentTranslation</a></td></tr>
+<tr class="memdesc:a12f58a9da0c7f05410eabaa1f43670d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template content translation (point_f64, unrounded float by design).  <br /></td></tr>
 <tr class="separator:a12f58a9da0c7f05410eabaa1f43670d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc54c85e8211199b52765d27524e292a" id="r_afc54c85e8211199b52765d27524e292a"><td class="memItemLeft" align="right" valign="top"><a id="afc54c85e8211199b52765d27524e292a" name="afc54c85e8211199b52765d27524e292a"></a>
-constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>fdl::constants::kAttrScaledBoundingBox</b> = &quot;scaled_bounding_box&quot;</td></tr>
-<tr class="memdesc:afc54c85e8211199b52765d27524e292a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template scaled bounding box (dims_f64). <br /></td></tr>
+<tr class="memitem:afc54c85e8211199b52765d27524e292a" id="r_afc54c85e8211199b52765d27524e292a"><td class="memItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__constants_8h.html#afc54c85e8211199b52765d27524e292a">fdl::constants::kAttrScaledBoundingBox</a></td></tr>
+<tr class="memdesc:afc54c85e8211199b52765d27524e292a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template scaled bounding box (dims_f64, unrounded float by design).  <br /></td></tr>
 <tr class="separator:afc54c85e8211199b52765d27524e292a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Named constants replacing magic numbers throughout the FDL core library. </p>
 <p>Every numeric literal in the codebase (except 0 and 0.0) must be a named constant defined here or in the public header (<a class="el" href="fdl__core_8h.html" title="Public C ABI for the FDL (Framing Decision List) core library.">fdl_core.h</a>). This ensures readability-magic-numbers and cppcoreguidelines-avoid-magic-numbers pass with no whitelist. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a12f58a9da0c7f05410eabaa1f43670d0" name="a12f58a9da0c7f05410eabaa1f43670d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12f58a9da0c7f05410eabaa1f43670d0">&#9670;&#160;</a></span>kAttrContentTranslation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char* fdl::constants::kAttrContentTranslation</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">    <span class="stringliteral">&quot;content_translation&quot;</span></div>
+</div><!-- fragment -->
+<p>Template content translation (point_f64, unrounded float by design). </p>
+
+</div>
+</div>
+<a id="afc54c85e8211199b52765d27524e292a" name="afc54c85e8211199b52765d27524e292a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc54c85e8211199b52765d27524e292a">&#9670;&#160;</a></span>kAttrScaledBoundingBox</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char* fdl::constants::kAttrScaledBoundingBox</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">    <span class="stringliteral">&quot;scaled_bounding_box&quot;</span></div>
+</div><!-- fragment -->
+<p>Template scaled bounding box (dims_f64, unrounded float by design). </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8

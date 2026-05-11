@@ -95,7 +95,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:aac63b026813f5e077aec235a78f8add9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalize and scale all 7 fields of the geometry.  <br /></td></tr>
 <tr class="separator:aac63b026813f5e077aec235a78f8add9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adab21e9a168814ccfe16ff596ea9bdb9" id="r_adab21e9a168814ccfe16ff596ea9bdb9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__geometry__api_8cpp.html#adab21e9a168814ccfe16ff596ea9bdb9">fdl_geometry_round</a> (<a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a> geo, <a class="el" href="structfdl__round__strategy__t.html">fdl_round_strategy_t</a> strategy)</td></tr>
-<tr class="memdesc:adab21e9a168814ccfe16ff596ea9bdb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Round all 7 fields of the geometry.  <br /></td></tr>
+<tr class="memdesc:adab21e9a168814ccfe16ff596ea9bdb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Round integer-typed schema fields and symmetrically absorb deltas into anchors.  <br /></td></tr>
 <tr class="separator:adab21e9a168814ccfe16ff596ea9bdb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0a4b50c1fef040e0ba0af6b4903b146" id="r_aa0a4b50c1fef040e0ba0af6b4903b146"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fdl__geometry__api_8cpp.html#aa0a4b50c1fef040e0ba0af6b4903b146">fdl_geometry_apply_offset</a> (<a class="el" href="structfdl__geometry__t.html">fdl_geometry_t</a> geo, <a class="el" href="structfdl__point__f64__t.html">fdl_point_f64_t</a> offset, <a class="el" href="structfdl__point__f64__t.html">fdl_point_f64_t</a> *theo_eff, <a class="el" href="structfdl__point__f64__t.html">fdl_point_f64_t</a> *theo_prot, <a class="el" href="structfdl__point__f64__t.html">fdl_point_f64_t</a> *theo_fram)</td></tr>
 <tr class="memdesc:aa0a4b50c1fef040e0ba0af6b4903b146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply offset to all anchors, clamping to canvas bounds.  <br /></td></tr>
@@ -246,15 +246,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Round all 7 fields of the geometry. </p>
+<p>Round integer-typed schema fields and symmetrically absorb deltas into anchors. </p>
+<p>Intended to run once at the end of the template pipeline (post-crop).</p>
+<p>Per FDL spec 7.4.12 the rounding strategy applies to canvas.dimensions; the schema also types canvas.effective_dimensions as integer so both are rounded here. Inner geometry (protection, framing dims and all anchors) remains float per the fractional-pixels model.</p>
+<p>The anchors at this stage already encode all template intent (scale, alignment, padding, crop); the rounding deltas are pure schema-integer artifacts and are distributed symmetrically (delta/2) so they introduce no directional bias:</p>
+<ul>
+<li>canvas delta: shift ALL anchors by +delta/2 (keep content centered within the rounded canvas).</li>
+<li>effective delta: shift effective_anchor by -delta/2 (keep the rounded effective rectangle centered on its pre-round extent).</li>
+</ul>
+<p>Effective is rounded once (ceil); if it would overflow the canvas at its anchor, the effective anchor is pulled back to <code>canvas - dim</code> — a sub-pixel anchor slide preserves the integer dim, whose ceil delta is already committed. Inner layers (protection, framing) instead have their float dims shrunk to <code>canvas - anchor</code>, preserving the anchor position. The rounded canvas is the absolute container: no layer may extend beyond it on either edge. Hierarchy is re-established post- shrink so protection/framing do not exceed effective.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">geo</td><td>Geometry to round. </td></tr>
+    <tr><td class="paramname">geo</td><td>Geometry to round (typically post-crop with float fields). </td></tr>
     <tr><td class="paramname">strategy</td><td>Rounding strategy (even + mode). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Rounded geometry. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Geometry with canvas/effective rounded and anchors compensated. </dd></dl>
 
 </div>
 </div>
