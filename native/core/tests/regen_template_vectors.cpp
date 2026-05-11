@@ -120,9 +120,11 @@ ojson run_vector(const ojson& v) {
     auto json_str = build_input_doc(v);
     auto parse_result = fdl_doc_parse_json(json_str.c_str(), json_str.size());
     if (parse_result.doc == nullptr) {
-        std::fprintf(stderr, "parse error for vector %s: %s\n",
-                     v["label"].as<std::string>().c_str(),
-                     parse_result.error ? parse_result.error : "(none)");
+        std::fprintf(
+            stderr,
+            "parse error for vector %s: %s\n",
+            v["label"].as<std::string>().c_str(),
+            parse_result.error ? parse_result.error : "(none)");
         std::abort();
     }
 
@@ -133,19 +135,25 @@ ojson run_vector(const ojson& v) {
 
     std::string new_fd_name = v["new_fd_name"].as<std::string>();
     std::string ctx_label;
-    if (!v["source_context_label"].is_null()) ctx_label = v["source_context_label"].as<std::string>();
+    if (!v["source_context_label"].is_null()) {
+        ctx_label = v["source_context_label"].as<std::string>();
+    }
     std::string ctx_creator;
-    if (!v["context_creator"].is_null()) ctx_creator = v["context_creator"].as<std::string>();
+    if (!v["context_creator"].is_null()) {
+        ctx_creator = v["context_creator"].as<std::string>();
+    }
 
     auto result = fdl_apply_canvas_template(
-        tmpl, canvas, framing, "NEW_CANVAS_ID",
+        tmpl,
+        canvas,
+        framing,
+        "NEW_CANVAS_ID",
         new_fd_name.c_str(),
         ctx_label.empty() ? nullptr : ctx_label.c_str(),
         ctx_creator.empty() ? nullptr : ctx_creator.c_str());
 
     if (result.error != nullptr) {
-        std::fprintf(stderr, "apply error for vector %s: %s\n",
-                     v["label"].as<std::string>().c_str(), result.error);
+        std::fprintf(stderr, "apply error for vector %s: %s\n", v["label"].as<std::string>().c_str(), result.error);
         std::abort();
     }
 
@@ -185,11 +193,12 @@ ojson run_vector(const ojson& v) {
     expected.insert_or_assign("scale_factor", scale_factor);
     expected.insert_or_assign("scaled_bounding_box", dims_json(bb.width, bb.height));
     expected.insert_or_assign("content_translation", point_json(ct.x, ct.y));
-    expected.insert_or_assign("output_canvas_dims",
-                              dims_json(static_cast<double>(cv_dims.width), static_cast<double>(cv_dims.height)));
+    expected.insert_or_assign(
+        "output_canvas_dims", dims_json(static_cast<double>(cv_dims.width), static_cast<double>(cv_dims.height)));
     if (has_eff) {
-        expected.insert_or_assign("output_effective_dims",
-                                  dims_json(static_cast<double>(eff_dims.width), static_cast<double>(eff_dims.height)));
+        expected.insert_or_assign(
+            "output_effective_dims",
+            dims_json(static_cast<double>(eff_dims.width), static_cast<double>(eff_dims.height)));
         expected.insert_or_assign("output_effective_anchor", point_json(eff_anchor.x, eff_anchor.y));
     } else {
         expected.insert_or_assign("output_effective_dims", ojson::null());

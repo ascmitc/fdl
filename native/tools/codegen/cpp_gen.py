@@ -689,7 +689,9 @@ def _build_builder(method, handle_field: str) -> dict:
     c_args = [handle_field]
 
     for p in method.params:
-        params.append(_cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback))
+        params.append(
+            _cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback)
+        )
         c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=p.expand, nullable=p.nullable, source_class=p.source_class))
 
     returns = _cpp_class_name(method.returns)
@@ -752,7 +754,9 @@ def _lifecycle_class_factory(method, handle_field: str) -> dict:
     params = []
     c_args = [handle_field]
     for p in method.params:
-        params.append(_cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback))
+        params.append(
+            _cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback)
+        )
         c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=False, nullable=p.nullable, source_class=p.source_class))
     return {
         "kind": "populate",
@@ -781,7 +785,11 @@ def _lifecycle_static_factory(method, handle_field: str) -> dict | None:
         params = []
         c_args = []
         for p in method.params:
-            params.append(_cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback))
+            params.append(
+                _cpp_param(
+                    p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback
+                )
+            )
             c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=False, nullable=p.nullable, source_class=p.source_class))
         return {
             "kind": "create",
@@ -818,7 +826,11 @@ def _lifecycle_instance(method, handle_field: str) -> dict | None:
         params = []
         c_args = [handle_field]
         for p in method.params:
-            params.append(_cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback))
+            params.append(
+                _cpp_param(
+                    p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback
+                )
+            )
             c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=False, nullable=p.nullable, source_class=p.source_class))
         return {
             "kind": "apply",

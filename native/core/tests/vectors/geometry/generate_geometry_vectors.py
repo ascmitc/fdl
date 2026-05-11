@@ -268,11 +268,13 @@ def generate_normalize_and_scale():
 
 def _round_scalar(value: float, even: str, mode: str) -> int:
     from fdl.rounding import fdl_round
+
     return fdl_round(value, even=even, mode=mode)
 
 
 def _round_like_cpp(g: Geometry, even: str, mode: str) -> Geometry:
     import math
+
     float_canvas_w, float_canvas_h = g.canvas_dims.width, g.canvas_dims.height
     float_eff_w, float_eff_h = g.effective_dims.width, g.effective_dims.height
 

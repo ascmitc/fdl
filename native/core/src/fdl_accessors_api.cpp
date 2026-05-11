@@ -836,7 +836,7 @@ int fdl_canvas_template_has_round(const fdl_canvas_template_t* ct) {
     if (n == nullptr || !n->contains("round") || !(*n)["round"].is_object()) {
         return 0;
     }
-    return 1;
+    return FDL_TRUE;
 }
 
 fdl_round_strategy_t fdl_canvas_template_get_round(const fdl_canvas_template_t* ct) {

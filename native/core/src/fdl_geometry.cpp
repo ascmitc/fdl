@@ -194,20 +194,20 @@ fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy)
     //    2a) Canvas delta shifts every anchor by +canvas_delta/2.
     double const canvas_dw = geo.canvas_dims.width - float_canvas.width;
     double const canvas_dh = geo.canvas_dims.height - float_canvas.height;
-    geo.effective_anchor.x += canvas_dw / 2.0;
-    geo.effective_anchor.y += canvas_dh / 2.0;
-    geo.protection_anchor.x += canvas_dw / 2.0;
-    geo.protection_anchor.y += canvas_dh / 2.0;
-    geo.framing_anchor.x += canvas_dw / 2.0;
-    geo.framing_anchor.y += canvas_dh / 2.0;
+    geo.effective_anchor.x += canvas_dw / fdl::constants::kCenterDivisor;
+    geo.effective_anchor.y += canvas_dh / fdl::constants::kCenterDivisor;
+    geo.protection_anchor.x += canvas_dw / fdl::constants::kCenterDivisor;
+    geo.protection_anchor.y += canvas_dh / fdl::constants::kCenterDivisor;
+    geo.framing_anchor.x += canvas_dw / fdl::constants::kCenterDivisor;
+    geo.framing_anchor.y += canvas_dh / fdl::constants::kCenterDivisor;
     //    2b) Effective ceil grows the box by up to 1 px; shift its anchor by
     //        -ceil_delta/2 so the rectangle stays centered on the original
     //        float center.  ceil_delta ≥ 0 always, so this pulls the anchor
     //        toward the origin.
     double const eff_ceil_dw = std::ceil(float_eff.width) - float_eff.width;
     double const eff_ceil_dh = std::ceil(float_eff.height) - float_eff.height;
-    geo.effective_anchor.x -= eff_ceil_dw / 2.0;
-    geo.effective_anchor.y -= eff_ceil_dh / 2.0;
+    geo.effective_anchor.x -= eff_ceil_dw / fdl::constants::kCenterDivisor;
+    geo.effective_anchor.y -= eff_ceil_dh / fdl::constants::kCenterDivisor;
 
     // 3) Set effective dims.  Integerized once by ceil(float_eff); then
     //    clamped to canvas.  If the ceil'd value would overflow
@@ -225,8 +225,12 @@ fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy)
     //      and let step 5 shrink the dim (float, no round — preserves
     //      the spatial anchor position).
     auto clamp_range = [](double a, double lo, double hi) {
-        if (a < lo) return lo;
-        if (a > hi) return hi;
+        if (a < lo) {
+            return lo;
+        }
+        if (a > hi) {
+            return hi;
+        }
         return a;
     };
     double const eff_max_ax = std::max(0.0, geo.canvas_dims.width - geo.effective_dims.width);
@@ -240,26 +244,18 @@ fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy)
 
     // 5) Shrink protection / framing dims so they fit at their anchors
     //    inside the canvas.  Float so no rounding; preserves the anchor.
-    geo.protection_dims.width = std::min(
-        geo.protection_dims.width, geo.canvas_dims.width - geo.protection_anchor.x);
-    geo.protection_dims.height = std::min(
-        geo.protection_dims.height, geo.canvas_dims.height - geo.protection_anchor.y);
-    geo.framing_dims.width =
-        std::min(geo.framing_dims.width, geo.canvas_dims.width - geo.framing_anchor.x);
-    geo.framing_dims.height =
-        std::min(geo.framing_dims.height, geo.canvas_dims.height - geo.framing_anchor.y);
+    geo.protection_dims.width = std::min(geo.protection_dims.width, geo.canvas_dims.width - geo.protection_anchor.x);
+    geo.protection_dims.height = std::min(geo.protection_dims.height, geo.canvas_dims.height - geo.protection_anchor.y);
+    geo.framing_dims.width = std::min(geo.framing_dims.width, geo.canvas_dims.width - geo.framing_anchor.x);
+    geo.framing_dims.height = std::min(geo.framing_dims.height, geo.canvas_dims.height - geo.framing_anchor.y);
 
     // 6) Re-establish hierarchy: protection / framing cannot exceed the
     //    (already integer, already canvas-clamped) effective.  Only clamp
     //    on exceedance so that 0 (unset protection) stays 0.
-    if (geo.protection_dims.width > geo.effective_dims.width)
-        geo.protection_dims.width = geo.effective_dims.width;
-    if (geo.protection_dims.height > geo.effective_dims.height)
-        geo.protection_dims.height = geo.effective_dims.height;
-    if (geo.framing_dims.width > geo.effective_dims.width)
-        geo.framing_dims.width = geo.effective_dims.width;
-    if (geo.framing_dims.height > geo.effective_dims.height)
-        geo.framing_dims.height = geo.effective_dims.height;
+    geo.protection_dims.width = std::min(geo.protection_dims.width, geo.effective_dims.width);
+    geo.protection_dims.height = std::min(geo.protection_dims.height, geo.effective_dims.height);
+    geo.framing_dims.width = std::min(geo.framing_dims.width, geo.effective_dims.width);
+    geo.framing_dims.height = std::min(geo.framing_dims.height, geo.effective_dims.height);
 
     return geo;
 }
