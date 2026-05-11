@@ -6,6 +6,7 @@ Base test case for FDL template tests.
 Provides FDL-only test functionality without image processing or Nuke dependencies.
 """
 
+import os
 import unittest
 import uuid
 from pathlib import Path
@@ -21,8 +22,10 @@ class BaseFDLTestCase(unittest.TestCase):
     Subclass this for tests that only need FDL comparison (no image/nuke).
     """
 
-    # Set to True to generate expected results instead of comparing against them
-    generate_result = False
+    # Set to True (or FDL_REGEN_FIXTURES=1 in env) to write expected results
+    # in place of comparing. Used to refresh golden fixtures when pipeline
+    # semantics intentionally change.
+    generate_result = os.environ.get("FDL_REGEN_FIXTURES") == "1"
 
     def setUp(self):
         """Set up comparators for each test."""

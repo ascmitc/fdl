@@ -153,7 +153,13 @@ std::string safe_copy(const char* s) {
  * @param geometry              Final transformed geometry after all pipeline phases.
  * @param scale_factor          Computed scale factor (stored as custom attribute).
  * @param content_translation   Content translation shift (stored as custom attribute).
+ *                              Unrounded float by design — captured post-scale, pre-round;
+ *                              intentionally not quantized so downstream consumers can place
+ *                              content with sub-pixel precision.
  * @param scaled_bounding_box   Scaled bounding box before output sizing (stored as custom attribute).
+ *                              Unrounded float by design — captured post-scale, pre-round to
+ *                              preserve the exact scaled canvas extent; may not match the
+ *                              integer canvas.dimensions that the round step produces.
  * @param target_squeeze        Resolved target anamorphic squeeze (0 already replaced with input squeeze).
  * @return Template result with output FDL and metadata, or error string on failure.
  */
@@ -423,6 +429,14 @@ fdl_template_result_t apply_canvas_template(
 
     fdl_round_strategy_t const rounding = fdl_canvas_template_get_round(tmpl);
 
+    // Spec 7.4.12: "If maximum_dimensions is defined and pad_to_maximum =
+    // true, then round has no effect due to maximum_dimensions already being
+    // defined."  In the deferred-rounding pipeline this is satisfied
+    // automatically: canvas_dims is set to max_dims (integer) before the
+    // final geometry_round, so its rounding delta is zero and no anchor
+    // shift occurs.  Effective_dims may still require integerization and is
+    // rounded normally.
+
     fdl_dimensions_i64_t const target_dims_i = fdl_canvas_template_get_target_dimensions(tmpl);
     fdl_dimensions_f64_t const target_dims = {
         static_cast<double>(target_dims_i.width), static_cast<double>(target_dims_i.height)};
@@ -489,17 +503,25 @@ fdl_template_result_t apply_canvas_template(
     auto const scale_ratio = fdl::detail::calculate_scale_ratio(fit_norm, target_norm, fit_method);
     double const scale_factor = scale_ratio.numerator / scale_ratio.denominator;
 
-    // --- Phase 5: Scale and round ---
+    // --- Phase 5: Scale (no rounding yet) ---
     // Use ratio-based scaling: (value * numerator) / denominator preserves precision
     // for integer inputs, avoiding IEEE 754 rounding errors in the scale factor.
+    //
+    // Rounding is deferred to a single step at the end of the pipeline
+    // (after crop).  Keeping all fields float through alignment/offset/crop
+    // avoids intermediate quantization and lets the final round absorb
+    // schema-integer deltas symmetrically via anchor shifts.
     geometry = fdl::detail::geometry_normalize_and_scale_ratio(
         geometry, input_squeeze, scale_ratio.numerator, scale_ratio.denominator, target_squeeze);
-    geometry = fdl_geometry_round(geometry, rounding);
 
     // Extract scaled values BEFORE crop
     fdl_dimensions_f64_t scaled_fit;
     fdl_point_f64_t scaled_fit_anchor;
     fdl_geometry_get_dims_anchor_from_path(&geometry, fit_source, &scaled_fit, &scaled_fit_anchor);
+    // Stored as `_scaled_bounding_box` custom attribute — unrounded float by
+    // design.  Captured here (post-scale, pre-round) so downstream consumers
+    // see the exact scaled canvas extent, independent of the final rounded
+    // canvas.dimensions.
     fdl_dimensions_f64_t const scaled_bounding_box = geometry.canvas_dims;
 
     // --- Phases 6-8: Output canvas size and content translation ---
@@ -532,6 +554,9 @@ fdl_template_result_t apply_canvas_template(
         af_v,
         pad_to_max ? FDL_TRUE : FDL_FALSE);
 
+    // Stored as `_content_translation` custom attribute — unrounded float by
+    // design.  Sub-pixel precision preserves the exact alignment shift so
+    // downstream consumers can place content without re-quantizing.
     fdl_point_f64_t const content_translation = {shift_x, shift_y};
     geometry.canvas_dims = {out_w, out_h};
 
@@ -543,6 +568,19 @@ fdl_template_result_t apply_canvas_template(
 
     // --- Phase 9: Crop ---
     geometry = fdl_geometry_crop(geometry, theo_eff, theo_prot, theo_fram);
+
+    // --- Phase 9b: Round integer-typed schema fields at the end ---
+    // Rounds canvas_dims and effective_dims, absorbs the deltas symmetrically
+    // into anchor positions (delta/2), enforces hierarchy, and clamps anchors
+    // inside the canvas.
+    //
+    // Note: when pad_to_maximum + maximum_dimensions is active, canvas_dims
+    // is already integer (taken from max_dims) so its rounding delta is zero
+    // and no anchor shift occurs on that axis — matching spec 7.4.12's
+    // "round has no effect" semantics for canvas.  Inner effective_dims may
+    // still be fractional from float cropping and gets integerized here as
+    // required by the schema.
+    geometry = fdl_geometry_round(geometry, rounding);
 
     // --- Phase 10: Build output FDL document ---
     return build_template_output_document(

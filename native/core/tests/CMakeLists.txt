@@ -66,3 +66,9 @@ include(Catch)
 catch_discover_tests(fdl_core_tests
   DL_PATHS $<TARGET_FILE_DIR:fdl_core>
 )
+
+# One-off helper for regenerating template_vectors.json after algorithmic
+# changes.  Not part of ctest; invoke manually:
+#   ./tests/regen_template_vectors in.json out.json
+add_executable(regen_template_vectors regen_template_vectors.cpp)
+target_link_libraries(regen_template_vectors PRIVATE fdl_core jsoncons)

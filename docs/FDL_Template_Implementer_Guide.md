@@ -107,7 +107,7 @@ final rounding. This prevents cumulative rounding errors.
 |----------|---------|
 | `fdl_geometry_fill_hierarchy_gaps()` | Propagate populated layers upward to fill zero layers |
 | `fdl_geometry_normalize_and_scale()` | Apply anamorphic normalization + scale factor |
-| `fdl_geometry_round()` | Apply FDL rounding rules to all values |
+| `fdl_geometry_round()` | Integerize schema-integer fields (canvas, effective) at end of pipeline; absorb deltas into anchors |
 | `fdl_geometry_apply_offset()` | Apply content translation to all anchors |
 | `fdl_geometry_crop()` | Crop dimensions to visible portion within canvas |
 | `fdl_geometry_get_dims_anchor_from_path()` | Look up dimensions/anchor by path string |
@@ -459,12 +459,16 @@ calculate_scale_factor(fit_norm, target_norm, fit_method):
 
 ![fill -- Crop](svg/04_fill_crop.svg)
 
-### 4.5 Phase 5: Normalize, Scale, and Round
+### 4.5 Phase 5: Normalize and Scale (no rounding)
 
-**C API**: `fdl_geometry_normalize_and_scale()` + `fdl_geometry_round()`
-**C++ implementation**: `fdl_geometry.cpp`
+**C API**: `fdl_geometry_normalize_and_scale()`
+**C++ implementation**: `fdl_geometry.cpp`, `geometry_normalize_and_scale_ratio()`
 
-Apply the scale factor to **all** dimensions and anchors uniformly, then round.
+Apply the scale factor to **all** dimensions and anchors uniformly, in float.
+**No rounding happens here** -- it is deferred to Phase 9b after crop
+(see section 4.9).  Carrying floats through alignment, offset, and crop
+avoids intermediate quantization drift and lets the final round absorb
+schema-integer deltas symmetrically into anchor positions.
 
 > **Precision note**: The scale factor `target / fit` may not be exactly
 > representable in IEEE 754 (e.g., `3840/6560 = 24/41`). To avoid rounding
@@ -478,8 +482,6 @@ geometry = fdl_geometry_normalize_and_scale(geometry,
     source_squeeze  = input_squeeze,
     scale_factor    = scale_factor,
     target_squeeze  = target_squeeze)
-
-geometry = fdl_geometry_round(geometry, round_strategy)
 ```
 
 **The Normalize-and-Scale Formula** (per ASC FDL spec 7.4.5):
@@ -496,31 +498,20 @@ x_out = (x_in x source_squeeze x scale_numerator) / (scale_denominator x target_
 y_out = (y_in x scale_numerator) / scale_denominator
 ```
 
-**Rounding Configuration** (`RoundStrategy`):
-
-| Property | Values | Description |
-|----------|--------|-------------|
-| `even` | `"whole"`, `"even"` | Round to any integer vs even integers only |
-| `mode` | `"up"`, `"down"`, `"round"` | Ceiling, floor, or nearest |
-
-**Examples**:
-
-| Value | even="whole", mode="up" | even="even", mode="up" |
-|-------|------------------------|----------------------|
-| 1919.5 | 1920 | 1920 |
-| 1919.1 | 1920 | 1920 |
-| 1921.1 | 1922 | 1922 |
-| 1920.0 | 1920 | 1920 |
-
-**Why Round Before Alignment**: Clean integer dimensions ensure that alignment
-calculations produce precise pixel positions, avoiding sub-pixel positioning issues.
-
-After rounding, the scaled values are extracted for use in Phase 6:
+After scaling, the scaled values are extracted for use in Phase 6.  They
+are captured **before any rounding** and are the true post-scale float
+values:
 
 ```
 scaled_fit, scaled_fit_anchor = fdl_geometry_get_dims_anchor_from_path(geometry, fit_source)
-scaled_bounding_box = geometry.canvas_dims    # Full bounding box before crop/pad
+scaled_bounding_box           = geometry.canvas_dims    # pre-round float
 ```
+
+The `scaled_bounding_box` is also stored as a custom attribute on the
+output canvas (`_scaled_bounding_box`) for use by image processing
+pipelines.  It is intentionally unrounded -- the integer
+`canvas.dimensions` produced by Phase 9b may differ by sub-pixel
+amounts.
 
 ### 4.6 Phase 6: Output Size and Alignment Shift
 
@@ -689,6 +680,111 @@ This ensures inner layers never exceed their parent boundaries.
 
 ![Right-aligned crop -- 400px clipped](svg/07_crop_right_aligned.svg)
 
+### 4.9 Phase 9b: Round Integer-Typed Schema Fields
+
+**C API**: `fdl_geometry_round()`
+**C++ implementation**: `fdl_geometry.cpp`, `geometry_round()`
+
+Called once at the end of the pipeline, after crop.  Every anchor at this
+point already encodes the template's intent (scale, alignment, padding,
+crop).  This phase integerizes the schema-integer fields
+(`canvas.dimensions` and `canvas.effective_dimensions`) and absorbs the
+rounding deltas symmetrically into anchor positions so content stays
+centered on its pre-round center.
+
+#### What gets rounded
+
+| Field                              | Behaviour                                       |
+|------------------------------------|-------------------------------------------------|
+| `canvas_dims`                      | Rounded per template's `RoundStrategy` (even + mode) |
+| `effective_dims`                   | Always `ceil`'d -- strategy is NOT applied      |
+| `protection_dims`, `framing_dims`  | **Stay float**; only clamped if > canvas        |
+| All anchors                        | **Stay float**; shifted by delta/2, then clamped inside canvas |
+
+Only `canvas.dimensions` and `canvas.effective_dimensions` are
+schema-integer fields; everything else remains fractional per the
+"fractional pixels" model.
+
+**Why effective is always `ceil`**: `effective_dims >= max(inner dims)`
+by construction.  `ceil` preserves this invariant automatically, so the
+strategy's `even` / `mode` do NOT apply to effective.  Using `round` or
+`floor` here could shrink effective below a valid inner layer and break
+hierarchy.
+
+#### Algorithm
+
+`effective_dims` is integerized exactly once, in step 3; subsequent
+steps preserve it via anchor-pullback (step 4) rather than re-applying
+`floor` or `ceil`.
+
+```
+geometry_round(geo, strategy):
+    float_canvas = geo.canvas_dims
+    float_eff    = geo.effective_dims
+
+    # 1. Round canvas per strategy.
+    geo.canvas_dims = fdl_round_dimensions(float_canvas, strategy.even, strategy.mode)
+
+    # 2. Symmetric anchor absorption.
+    #    2a. Canvas delta shifts every anchor by +canvas_delta/2 so content
+    #        stays centered on its pre-round center.
+    canvas_delta = geo.canvas_dims - float_canvas
+    geo.effective_anchor  += canvas_delta / 2
+    geo.protection_anchor += canvas_delta / 2
+    geo.framing_anchor    += canvas_delta / 2
+    #    2b. Effective's ceil grows its box by up to 1 px; shift its
+    #        anchor by -eff_ceil_delta/2 so the rectangle stays centered
+    #        on its pre-ceil float position.  ceil_delta >= 0 always, so
+    #        this pulls the anchor toward the origin.
+    eff_ceil_delta = ceil(float_eff) - float_eff
+    geo.effective_anchor -= eff_ceil_delta / 2
+
+    # 3. Integerize effective: min(ceil(float_eff), canvas).  This is the
+    #    SOLE integer round for effective; subsequent steps preserve the
+    #    dim via anchor-pullback rather than dim-shrink.
+    geo.effective_dims = min(ceil(float_eff), geo.canvas_dims)
+
+    # 4. Clamp anchors inside the canvas.
+    #    For effective (integer): clamp anchor to [0, canvas - dim], so
+    #      the ceil'd dim from step 3 stays intact.  A sub-pixel inward
+    #      slide of the anchor is cheap; losing a whole integer pixel of
+    #      effective to sub-pixel anchor noise is not.
+    #    For protection / framing (float): clamp anchor to [0, canvas]
+    #      and let step 5 shrink the dim at a valid anchor.
+    geo.effective_anchor  = clamp(geo.effective_anchor,
+                                  0, geo.canvas_dims - geo.effective_dims)
+    geo.protection_anchor = clamp(geo.protection_anchor, 0, geo.canvas_dims)
+    geo.framing_anchor    = clamp(geo.framing_anchor,    0, geo.canvas_dims)
+
+    # 5. Shrink protection / framing dims so they fit at their anchors
+    #    inside the canvas.  Float; no rounding; preserves the anchor.
+    #    effective is NOT shrunk here -- step 4 already preserved it.
+    geo.protection_dims = min(geo.protection_dims,
+                              geo.canvas_dims - geo.protection_anchor)
+    geo.framing_dims    = min(geo.framing_dims,
+                              geo.canvas_dims - geo.framing_anchor)
+
+    # 6. Re-establish hierarchy: protection / framing cannot exceed the
+    #    (already integer, already canvas-clamped) effective.  Clamp on
+    #    exceedance only so 0 (unset protection) stays 0.
+    if protection > effective: protection = effective
+    if framing    > effective: framing    = effective
+```
+
+#### Design summary
+
+- **Canvas is authoritative.** Every layer is clamped inside the rounded
+  canvas; no layer can overflow.
+- **For inner layers (float), preserve the anchor and shrink the dim.**
+  This keeps the layer's spatial position intact and costs nothing (no
+  rounding).
+- **For effective (integer), preserve the ceil'd dim and slide the
+  anchor if needed.** A sub-pixel slide is cheaper than losing a full
+  pixel off effective.
+- **Symmetric delta absorption (delta/2)** keeps rectangles centered on
+  their pre-round centers, avoiding a directional bias that could
+  accumulate across chained template applications.
+
 ---
 
 ## 5. Edge Cases & Special Handling
@@ -749,11 +845,19 @@ source FDL. If the source doesn't have the referenced layer (e.g., template refe
 `framing_decision.protection_dimensions` but the source has no protection), a descriptive
 error is raised with guidance on how to fix it.
 
-### 5.6 Exact Integer Comparison in FIT Regime
+### 5.6 Exact Float Comparison in FIT Regime
 
-The FIT regime check uses exact comparison (`overflow == 0`) rather than float tolerance,
-because all values are rounded integers at this point in the pipeline. This avoids
-false matches where a small sub-pixel overflow would be treated as FIT.
+The FIT regime check uses exact comparison (`overflow == 0`) rather than float
+tolerance.  Since Phase 6 sets `output_size = canvas_size` (the same float value)
+when no max constraint applies, `overflow = canvas_size - output_size` is
+bit-identical to `0` in the FIT case.  When a max constraint is active, the two
+values diverge deterministically (one being `max_size` and the other being the
+float canvas), so the exact check never produces a false match from sub-pixel
+noise.
+
+Note: Phase 5 no longer rounds, so values here are floats.  The FIT detection
+is still exact because it relies on variable identity in the assignment, not on
+values happening to land on integers.
 
 ---
 
@@ -767,29 +871,40 @@ The pipeline assembles the final output from the processed geometry:
 
 **New Canvas**:
 - `id` = caller-provided canvas ID
-- `dimensions` = geometry.canvas_dims (as integer)
+- `dimensions` = geometry.canvas_dims (integer after Phase 9b)
 - `source_canvas_id` = source canvas ID (traceability link)
 - `anamorphic_squeeze` = target squeeze
-- `effective_dimensions` = geometry.effective_dims (as integer)
-- `effective_anchor_point` = geometry.effective_anchor
+- `effective_dimensions` = geometry.effective_dims (integer after Phase 9b)
+- `effective_anchor_point` = geometry.effective_anchor (float)
 
 **New Framing Decision**:
 - `id` = `"{canvas_id}-{framing_intent_id}"`
-- `dimensions` = geometry.framing_dims
-- `anchor_point` = geometry.framing_anchor
-- `protection_dimensions` = geometry.protection_dims (only if non-zero)
-- `protection_anchor_point` = geometry.protection_anchor (only if protection non-zero)
+- `dimensions` = geometry.framing_dims (float)
+- `anchor_point` = geometry.framing_anchor (float)
+- `protection_dimensions` = geometry.protection_dims (float, only if non-zero)
+- `protection_anchor_point` = geometry.protection_anchor (float, only if protection non-zero)
+
+Per the "fractional pixels" model, only the schema-integer fields
+(`canvas.dimensions`, `canvas.effective_dimensions`) are integerized.
+Inner dimensions and all anchors remain floats.
 
 **Custom Attributes on Output Canvas**:
 
-The C++ implementation stores three computed values as custom attributes on the
-output canvas for use by image processing pipelines:
+The C++ implementation stores three computed values as custom attributes on
+the output canvas for use by image processing pipelines:
 
 | Attribute | Value | Purpose |
 |-----------|-------|---------|
-| `_scale_factor` | Uniform scale factor | Image scaling |
-| `_scaled_bounding_box` | Pre-crop/pad canvas dims | Source content boundary |
-| `_content_translation` | Pixel shift (x, y) | Image positioning |
+| `_scale_factor` | Uniform scale factor (float) | Image scaling |
+| `_scaled_bounding_box` | Scaled canvas dims **post-scale, pre-round** (float) | Source content boundary |
+| `_content_translation` | Content shift **post-scale, pre-round** (float) | Image positioning |
+
+`_scaled_bounding_box` and `_content_translation` are intentionally
+**unrounded** -- they are captured in Phase 5/6 before Phase 9b runs.
+This preserves sub-pixel precision so downstream image processing (e.g.
+`fdl_imaging`'s warp-based pipeline) can place content without
+re-quantizing.  They may differ by sub-pixel amounts from the final
+rounded `canvas.dimensions`.
 
 **New Context and FDL**:
 - Context contains both the source canvas (for reference) and the new output canvas
@@ -811,14 +926,16 @@ IDs for resolving the created context, canvas, and framing decision.
 
 ## 7. Complete Formula Reference
 
-For a single axis, the full content translation calculation is:
+For a single axis, the full content translation calculation is.  All
+values here are **floats** (Phase 5 no longer rounds; integerization
+is deferred to Phase 9b).
 
 ```
-# Inputs (all rounded integers at this point)
-canvas_size  = scaled bounding box on this axis
+# Inputs (all floats)
+canvas_size  = scaled bounding box on this axis (float, from Phase 5)
 target_size  = template target dimensions on this axis
-fit_size     = scaled fit_source dimensions on this axis
-fit_anchor   = scaled fit_source anchor on this axis
+fit_size     = scaled fit_source dimensions on this axis (float)
+fit_anchor   = scaled fit_source anchor on this axis (float)
 align_factor = 0.0 (left/top), 0.5 (center), 1.0 (right/bottom)
 pad_to_max   = template.pad_to_maximum
 
@@ -856,26 +973,36 @@ else:                                                        # PAD / CROP
 | 2 | Populate source geometry | `fit_source` overwrites `preserve` for overlapping paths |
 | 3 | Fill hierarchy gaps | Protection is **NEVER** auto-filled |
 | 4 | Calculate scale factor | Based on normalized (desqueezed) dimensions |
-| 5 | Normalize, scale, round | All geometry scaled uniformly; round to clean integers |
+| 5 | Normalize and scale (float) | All geometry scaled uniformly; **no rounding here** |
 | 6 | Output size + alignment | Unified PAD/CROP formula; each axis independent |
 | 7 | Apply offsets | Produces clamped + theoretical anchors |
 | 8 | Crop to visible | Enforce hierarchy containment |
-| 9 | Create output | Protection only included if non-zero |
+| 9b | Round integer-typed fields | Canvas + effective to integers; absorb deltas into anchors symmetrically |
+| 10 | Create output | Protection only included if non-zero |
 
 ### Key Design Decisions
 
 1. **Float throughout**: All calculations use `fdl_dimensions_f64_t` to prevent cumulative
    rounding errors.
-2. **Round early**: Rounding happens after scaling but before alignment to ensure clean
-   pixel boundaries.
+2. **Round late, absorb into anchors**: Rounding is the **last** geometric step (Phase 9b),
+   applied only to schema-integer fields (`canvas.dimensions`,
+   `canvas.effective_dimensions`).  Alignment, offsets, and crop all operate on exact
+   float values, and the final round distributes deltas symmetrically (delta/2) into
+   anchor positions so content stays centered on its pre-round center.  Inner
+   dimensions (protection, framing) and all anchors remain fractional in the output.
 3. **Protection is sacred**: Never auto-generate protection dimensions; they must be
    explicitly specified.
 4. **Unified alignment**: PAD and CROP use the same formula
    (`target_offset + alignment_offset - fit_anchor`), eliminating special-case bugs.
-5. **Exact integer comparison**: FIT regime uses `overflow == 0` (not float tolerance)
-   because all values are rounded integers at this point.
+5. **Exact FIT detection**: FIT regime uses `overflow == 0` (not float tolerance).  In
+   the FIT case, `output_size = canvas_size` by direct assignment, so the comparison
+   is bit-exact regardless of whether either value is an integer.
 6. **Anchors are relative**: After hierarchy preparation, anchors represent positions
    relative to the canvas origin.
+7. **Unrounded side-channel for imaging**: `_scaled_bounding_box` and
+   `_content_translation` are exported as custom attributes in their pre-round
+   float form, so image processors can reproduce template geometry at sub-pixel
+   precision without re-quantizing.
 
 ### Common Scenarios
 

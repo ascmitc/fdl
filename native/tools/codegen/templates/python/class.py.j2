@@ -136,6 +136,10 @@ class {{ cls.name }}({{ "OwnedHandle" if cls.owns_handle else "HandleWrapper" }}
         from fdl_ffi import get_lib
 
         lib = get_lib()
+{% for p in cls.init.params if p.unwrap_expr %}
+        if {{ p.name }} is None:
+            {{ p.name }} = {{ p.unwrap_expr }}
+{% endfor %}
 {% if cls.init.depth == 0 %}
         import uuid as _uuid_mod
 
@@ -374,6 +378,10 @@ class {{ cls.name }}({{ "OwnedHandle" if cls.owns_handle else "HandleWrapper" }}
     ) -> {{ builder.returns }}:
         """{{ builder.doc }}"""
         self._check_handle()
+{% for p in builder.params if p.unwrap_expr %}
+        if {{ p.name }} is None:
+            {{ p.name }} = {{ p.unwrap_expr }}
+{% endfor %}
 {% if builder.lazy_import %}
         from .{{ builder.lazy_import.module }} import {{ builder.lazy_import.cls }}
 {% endif %}
@@ -422,6 +430,10 @@ class {{ cls.name }}({{ "OwnedHandle" if cls.owns_handle else "HandleWrapper" }}
 
             {{ p.name }} = {{ p.global_fallback }}()
 {% endif %}
+{% endfor %}
+{% for p in method.params if p.unwrap_expr %}
+        if {{ p.name }} is None:
+            {{ p.name }} = {{ p.unwrap_expr }}
 {% endfor %}
         self._lib.{{ method.c_function }}(
             self._handle,

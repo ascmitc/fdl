@@ -62,15 +62,27 @@ class OwnedHandle(HandleWrapper):
         Concurrent reads and writes to the same FDL document from multiple
         threads are safe. However, do not call close()/free on a document
         while other threads are still using it.
+
+    Finalizer reentrancy safety
+        ``__del__`` can fire during garbage collection at arbitrary times,
+        including while another thread is inside ``cffi.api.make_accessor``
+        resolving a different lib function.  If the finalizer were to
+        request ``self._lib.fdl_doc_free`` via the normal cffi lazy-accessor
+        path, and that function had never been bound before, ``make_accessor``
+        would reenter and deadlock on cffi's internal lock.  To keep the
+        free-on-finalize path free of cffi attribute magic, the
+        ``fdl_doc_free`` callable is captured at construction time (when the
+        stack is known-safe) and called directly in ``close()``.
     """
 
-    __slots__ = ("_close_lock", "_closed")
+    __slots__ = ("_close_lock", "_closed", "_free_fn")
 
     def __init__(self, handle, lib):
         super().__init__(handle, lib, doc_ref=None)
         self._doc_ref = self  # document references itself
         self._closed = False
         self._close_lock = threading.Lock()
+        self._free_fn = lib.fdl_doc_free
 
     @classmethod
     def _from_handle(cls, handle, lib, doc_ref=None):
@@ -81,12 +93,13 @@ class OwnedHandle(HandleWrapper):
         obj._doc_ref = obj  # self-referencing for documents
         obj._closed = False
         obj._close_lock = threading.Lock()
+        obj._free_fn = lib.fdl_doc_free
         return obj
 
     def close(self):
         with self._close_lock:
             if not self._closed and self._handle is not None:
-                self._lib.fdl_doc_free(self._handle)
+                self._free_fn(self._handle)
                 self._handle = None
                 self._closed = True
 

@@ -128,9 +128,11 @@ class CppAdapter:
         "VAlign": "FDL_VALIGN",
     }
 
-    # Constructor → C++ aggregate literal
+    # Constructor → C++ aggregate literal.
+    # RoundStrategy defaults per FDL spec §7.4.12: {EVEN, UP} — matches the
+    # facade defaults defined on fdl_round_strategy_t in fdl_api.yaml.
     _CONSTRUCTOR_MAP: dict[str, str] = {
-        "RoundStrategy": "{FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_ROUND}",
+        "RoundStrategy": "{FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP}",
     }
 
     def resolve_type(self, type_key: str, *, nullable: bool = False) -> str:

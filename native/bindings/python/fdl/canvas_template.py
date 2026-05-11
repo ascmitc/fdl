@@ -104,7 +104,7 @@ class CanvasTemplate(HandleWrapper):
         fit_method: FitMethod = FitMethod.WIDTH,
         alignment_method_horizontal: HAlign = HAlign.CENTER,
         alignment_method_vertical: VAlign = VAlign.CENTER,
-        round: RoundStrategy = RoundStrategy(),
+        round: RoundStrategy | None = None,
         preserve_from_source_canvas: GeometryPath | None = None,
         maximum_dimensions: DimensionsInt | None = None,
         pad_to_maximum: bool = False,
@@ -112,6 +112,8 @@ class CanvasTemplate(HandleWrapper):
         from fdl_ffi import get_lib
 
         lib = get_lib()
+        if round is None:
+            round = RoundStrategy()
         from .fdl import FDL
 
         _doc_h = lib.fdl_doc_create_with_header(

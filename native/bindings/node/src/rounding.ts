@@ -19,7 +19,11 @@ import { DimensionsFloat } from "./types.js";
 // RoundStrategy
 // -----------------------------------------------------------------------
 
-/** Rounding strategy: combination of even/odd and direction. */
+/** Rounding strategy: combination of even/odd and direction.
+ *
+ * Defaults match FDL spec §7.4.12: EVEN + UP — the values applied when
+ * a canvas template omits the `round` field.
+ */
 export class RoundStrategy {
   even: RoundingEven;
   mode: RoundingMode;

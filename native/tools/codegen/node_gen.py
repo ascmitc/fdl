@@ -952,6 +952,15 @@ def _scan_node_builders(cls_ctx, acc, all_class_names, enum_tk_to_facade, enum_t
         for p in builder.get("params", []):
             tk = p.get("type_key", "")
             _node_import_param_type(tk, acc, enum_tk_to_facade, enum_tk_to_map)
+            # If the default is a constructor call (e.g. `new RoundStrategy()`),
+            # the class must be imported as a value, not just a type.
+            default = p.get("default", "")
+            if default and isinstance(default, str) and "new " in default:
+                for vt_cls in ("PointFloat", "DimensionsFloat", "DimensionsInt"):
+                    if vt_cls in default:
+                        acc.value_imports_map.setdefault("./types.js", set()).add(vt_cls)
+                if "RoundStrategy" in default:
+                    acc.value_imports_map.setdefault("./rounding.js", set()).add("RoundStrategy")
         for arg in builder.get("addon_args", []):
             for to_fn in converter_to_fn_map.values():
                 if to_fn in arg:

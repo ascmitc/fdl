@@ -542,11 +542,37 @@ FDL_API fdl_geometry_t
 fdl_geometry_normalize_and_scale(fdl_geometry_t geo, double source_squeeze, double scale_factor, double target_squeeze);
 
 /**
- * Round all 7 fields of the geometry.
+ * Round integer-typed schema fields and symmetrically absorb deltas into
+ * anchors.  Intended to run once at the end of the template pipeline
+ * (post-crop).
  *
- * @param geo       Geometry to round.
+ * Per FDL spec 7.4.12 the rounding strategy applies to canvas.dimensions;
+ * the schema also types canvas.effective_dimensions as integer so both are
+ * rounded here.  Inner geometry (protection, framing dims and all anchors)
+ * remains float per the fractional-pixels model.
+ *
+ * The anchors at this stage already encode all template intent (scale,
+ * alignment, padding, crop); the rounding deltas are pure schema-integer
+ * artifacts and are distributed symmetrically (delta/2) so they introduce
+ * no directional bias:
+ *
+ *   - canvas delta: shift ALL anchors by +delta/2 (keep content centered
+ *     within the rounded canvas).
+ *   - effective delta: shift effective_anchor by -delta/2 (keep the
+ *     rounded effective rectangle centered on its pre-round extent).
+ *
+ * Effective is rounded once (ceil); if it would overflow the canvas at its
+ * anchor, the effective anchor is pulled back to `canvas - dim` — a
+ * sub-pixel anchor slide preserves the integer dim, whose ceil delta is
+ * already committed.  Inner layers (protection, framing) instead have
+ * their float dims shrunk to `canvas - anchor`, preserving the anchor
+ * position.  The rounded canvas is the absolute container: no layer may
+ * extend beyond it on either edge.  Hierarchy is re-established post-
+ * shrink so protection/framing do not exceed effective.
+ *
+ * @param geo       Geometry to round (typically post-crop with float fields).
  * @param strategy  Rounding strategy (even + mode).
- * @return Rounded geometry.
+ * @return Geometry with canvas/effective rounded and anchors compensated.
  */
 FDL_API fdl_geometry_t fdl_geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy);
 
@@ -1330,7 +1356,14 @@ FDL_API fdl_dimensions_i64_t fdl_canvas_template_get_maximum_dimensions(const fd
  * @return FDL_TRUE if output should be padded to maximum dimensions, FDL_FALSE otherwise. */
 FDL_API int fdl_canvas_template_get_pad_to_maximum(const fdl_canvas_template_t* ct);
 
+/** Check whether the template has an explicit rounding strategy.
+ * @param ct  Canvas template handle.
+ * @return Non-zero if a "round" field is present in the JSON. */
+FDL_API int fdl_canvas_template_has_round(const fdl_canvas_template_t* ct);
+
 /** Get the rounding strategy.
+ * Returns the spec-default {FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP}
+ * when no "round" field is present (FDL spec §7.4.12).
  * @param ct  Canvas template handle.
  * @return Rounding strategy (even + mode). */
 FDL_API fdl_round_strategy_t fdl_canvas_template_get_round(const fdl_canvas_template_t* ct);

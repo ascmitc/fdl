@@ -6,39 +6,46 @@
  * Mirrors: native/bindings/python/tests/test_facade.py (mutation section)
  */
 
-import { describe, it, expect } from 'vitest';
-import { FDL } from '../src/fdl.js';
-import { DimensionsInt, DimensionsFloat, PointFloat } from '../src/types.js';
+import { describe, it, expect } from "vitest";
+import { FDL } from "../src/fdl.js";
+import { DimensionsInt, DimensionsFloat, PointFloat } from "../src/types.js";
 
-describe('Property mutation', () => {
+describe("Property mutation", () => {
   function buildDoc() {
     const fdl = new FDL({
-      uuid: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
-      fdlCreator: 'test',
-      defaultFramingIntent: 'FI_01',
+      uuid: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      fdlCreator: "test",
+      defaultFramingIntent: "FI_01",
     });
-    fdl.addFramingIntent('FI_01', 'Default', new DimensionsInt(16, 9), 0.0);
-    const ctx = fdl.addContext('Primary', null);
+    fdl.addFramingIntent("FI_01", "Default", new DimensionsInt(16, 9), 0.0);
+    const ctx = fdl.addContext("Primary", null);
     const canvas = ctx.addCanvas(
-      'C1', 'Test', 'C1', new DimensionsInt(1920, 1080), 1.0,
+      "C1",
+      "Test",
+      "C1",
+      new DimensionsInt(1920, 1080),
+      1.0,
     );
     canvas.setEffective(new DimensionsInt(1920, 1080), new PointFloat(0, 0));
     const fd = canvas.addFramingDecision(
-      'C1-FI_01', 'Test FD', 'FI_01',
-      new DimensionsFloat(1920, 1080), new PointFloat(0, 0),
+      "C1-FI_01",
+      "Test FD",
+      "FI_01",
+      new DimensionsFloat(1920, 1080),
+      new PointFloat(0, 0),
     );
     return { fdl, ctx, canvas, fd };
   }
 
-  it('FDL fdlCreator mutation', () => {
+  it("FDL fdlCreator mutation", () => {
     const { fdl } = buildDoc();
-    expect(fdl.fdlCreator).toBe('test');
-    fdl.fdlCreator = 'updated';
-    expect(fdl.fdlCreator).toBe('updated');
+    expect(fdl.fdlCreator).toBe("test");
+    fdl.fdlCreator = "updated";
+    expect(fdl.fdlCreator).toBe("updated");
     fdl.close();
   });
 
-  it('Canvas dimensions remain after setEffective', () => {
+  it("Canvas dimensions remain after setEffective", () => {
     const { fdl, canvas } = buildDoc();
     // Original effective dimensions
     expect(canvas.effectiveDimensions!.width).toBe(1920);
@@ -53,7 +60,7 @@ describe('Property mutation', () => {
     fdl.close();
   });
 
-  it('Canvas remove effective via null setter', () => {
+  it("Canvas remove effective via null setter", () => {
     const { fdl, canvas } = buildDoc();
     expect(canvas.effectiveDimensions).not.toBeNull();
     canvas.effectiveDimensions = null;
@@ -62,7 +69,7 @@ describe('Property mutation', () => {
     fdl.close();
   });
 
-  it('Canvas photosite mutation', () => {
+  it("Canvas photosite mutation", () => {
     const { fdl, canvas } = buildDoc();
     expect(canvas.photositeDimensions).toBeNull();
     canvas.photositeDimensions = new DimensionsInt(6000, 5000);
@@ -73,7 +80,7 @@ describe('Property mutation', () => {
     fdl.close();
   });
 
-  it('Canvas physical dimensions mutation', () => {
+  it("Canvas physical dimensions mutation", () => {
     const { fdl, canvas } = buildDoc();
     expect(canvas.physicalDimensions).toBeNull();
     canvas.physicalDimensions = new DimensionsFloat(36.0, 24.0);
@@ -84,7 +91,7 @@ describe('Property mutation', () => {
     fdl.close();
   });
 
-  it('FramingDecision dimensions mutation', () => {
+  it("FramingDecision dimensions mutation", () => {
     const { fdl, fd } = buildDoc();
     expect(fd.dimensions.width).toBeCloseTo(1920);
     fd.dimensions = new DimensionsFloat(1600, 900);
@@ -92,7 +99,7 @@ describe('Property mutation', () => {
     fdl.close();
   });
 
-  it('FramingDecision anchor mutation', () => {
+  it("FramingDecision anchor mutation", () => {
     const { fdl, fd } = buildDoc();
     expect(fd.anchorPoint.x).toBeCloseTo(0);
     fd.anchorPoint = new PointFloat(100, 50);
@@ -100,7 +107,7 @@ describe('Property mutation', () => {
     fdl.close();
   });
 
-  it('FramingDecision protection mutation', () => {
+  it("FramingDecision protection mutation", () => {
     const { fdl, fd } = buildDoc();
     expect(fd.protectionDimensions).toBeNull();
 
@@ -117,7 +124,7 @@ describe('Property mutation', () => {
     fdl.close();
   });
 
-  it('JSON roundtrip after mutation', () => {
+  it("JSON roundtrip after mutation", () => {
     const { fdl, canvas } = buildDoc();
     canvas.setEffective(new DimensionsInt(1600, 900), new PointFloat(160, 90));
     const json = fdl.asJson();

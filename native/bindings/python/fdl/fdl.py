@@ -255,10 +255,12 @@ class FDL(OwnedHandle):
         fit_method: FitMethod,
         alignment_method_horizontal: HAlign,
         alignment_method_vertical: VAlign,
-        round: RoundStrategy,
+        round: RoundStrategy | None = None,
     ) -> CanvasTemplate:
         """Add a canvas template to the document."""
         self._check_handle()
+        if round is None:
+            round = RoundStrategy()
         from .canvas_template import CanvasTemplate
 
         handle = self._lib.fdl_doc_add_canvas_template(

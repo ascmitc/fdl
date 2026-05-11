@@ -6,11 +6,11 @@
  * Mirrors: native/bindings/python/tests/test_framing_decision.py
  */
 
-import { describe, it, expect } from 'vitest';
-import { FDL } from '../src/fdl.js';
-import { FramingDecision } from '../src/framing-decision.js';
-import { DimensionsInt, DimensionsFloat, PointFloat } from '../src/types.js';
-import { HAlign, VAlign } from '../src/constants.js';
+import { describe, it, expect } from "vitest";
+import { FDL } from "../src/fdl.js";
+import { FramingDecision } from "../src/framing-decision.js";
+import { DimensionsInt, DimensionsFloat, PointFloat } from "../src/types.js";
+import { HAlign, VAlign } from "../src/constants.js";
 
 /** Build an FDL doc with one context + one canvas + one FI for testing. */
 function buildDoc(opts: {
@@ -23,11 +23,18 @@ function buildDoc(opts: {
 }) {
   const fdl = new FDL({});
   const fi = fdl.addFramingIntent(
-    'FI_A', 'Test', opts.fiRatio, opts.fiProtection,
+    "FI_A",
+    "Test",
+    opts.fiRatio,
+    opts.fiProtection,
   );
-  const ctx = fdl.addContext('Primary', null);
+  const ctx = fdl.addContext("Primary", null);
   const canvas = ctx.addCanvas(
-    'C1', 'Test Canvas', 'C1', opts.canvasDims, opts.squeeze ?? 1.0,
+    "C1",
+    "Test Canvas",
+    "C1",
+    opts.canvasDims,
+    opts.squeeze ?? 1.0,
   );
   if (opts.effectiveDims) {
     canvas.setEffective(
@@ -38,8 +45,8 @@ function buildDoc(opts: {
   return { fdl, fi, ctx, canvas };
 }
 
-describe('FramingDecision.fromFramingIntent', () => {
-  it('1:1 no squeeze', () => {
+describe("FramingDecision.fromFramingIntent", () => {
+  it("1:1 no squeeze", () => {
     const { fdl, fi, canvas } = buildDoc({
       canvasDims: new DimensionsInt(1920, 1080),
       fiRatio: new DimensionsInt(16, 9),
@@ -52,7 +59,7 @@ describe('FramingDecision.fromFramingIntent', () => {
     fdl.close();
   });
 
-  it('1:1 with squeeze', () => {
+  it("1:1 with squeeze", () => {
     const { fdl, fi, canvas } = buildDoc({
       canvasDims: new DimensionsInt(960, 1080),
       squeeze: 2.0,
@@ -65,7 +72,7 @@ describe('FramingDecision.fromFramingIntent', () => {
     fdl.close();
   });
 
-  it('wide intent', () => {
+  it("wide intent", () => {
     const { fdl, fi, canvas } = buildDoc({
       canvasDims: new DimensionsInt(1920, 1080),
       fiRatio: new DimensionsInt(235, 100),
@@ -78,7 +85,7 @@ describe('FramingDecision.fromFramingIntent', () => {
     fdl.close();
   });
 
-  it('tall intent', () => {
+  it("tall intent", () => {
     const { fdl, fi, canvas } = buildDoc({
       canvasDims: new DimensionsInt(1920, 1080),
       fiRatio: new DimensionsInt(4, 3),
@@ -91,7 +98,7 @@ describe('FramingDecision.fromFramingIntent', () => {
     fdl.close();
   });
 
-  it('with protection', () => {
+  it("with protection", () => {
     const { fdl, fi, canvas } = buildDoc({
       canvasDims: new DimensionsInt(1920, 1080),
       effectiveDims: new DimensionsInt(1920, 1080),
@@ -107,25 +114,31 @@ describe('FramingDecision.fromFramingIntent', () => {
   });
 });
 
-describe('FramingDecision.adjustAnchorPoint', () => {
+describe("FramingDecision.adjustAnchorPoint", () => {
   function buildFdForAdjust() {
     const fdl = new FDL({});
-    fdl.addFramingIntent('FI_A', '', new DimensionsInt(16, 9), 0.0);
-    const ctx = fdl.addContext('Primary', null);
+    fdl.addFramingIntent("FI_A", "", new DimensionsInt(16, 9), 0.0);
+    const ctx = fdl.addContext("Primary", null);
     const canvas = ctx.addCanvas(
-      'C1', '', 'C1', new DimensionsInt(1920, 1080), 1.0,
+      "C1",
+      "",
+      "C1",
+      new DimensionsInt(1920, 1080),
+      1.0,
     );
     canvas.setEffective(new DimensionsInt(1920, 1080), new PointFloat(0, 0));
     // Add FD with dimensions smaller than canvas to allow anchor adjustment
     const fd = canvas.addFramingDecision(
-      'C1-FI_A', '', 'FI_A',
+      "C1-FI_A",
+      "",
+      "FI_A",
       new DimensionsFloat(1600, 900),
       new PointFloat(160, 90),
     );
     return { fdl, canvas, fd };
   }
 
-  it('center-center produces centered anchor', () => {
+  it("center-center produces centered anchor", () => {
     const { fdl, canvas, fd } = buildFdForAdjust();
     fd.adjustAnchorPoint(canvas, HAlign.CENTER, VAlign.CENTER);
     expect(fd.anchorPoint.x).toBeCloseTo(160, 0);
@@ -133,7 +146,7 @@ describe('FramingDecision.adjustAnchorPoint', () => {
     fdl.close();
   });
 
-  it('left-top produces zero anchor', () => {
+  it("left-top produces zero anchor", () => {
     const { fdl, canvas, fd } = buildFdForAdjust();
     fd.adjustAnchorPoint(canvas, HAlign.LEFT, VAlign.TOP);
     expect(fd.anchorPoint.x).toBeCloseTo(0, 0);
@@ -141,7 +154,7 @@ describe('FramingDecision.adjustAnchorPoint', () => {
     fdl.close();
   });
 
-  it('right-bottom produces max anchor', () => {
+  it("right-bottom produces max anchor", () => {
     const { fdl, canvas, fd } = buildFdForAdjust();
     fd.adjustAnchorPoint(canvas, HAlign.RIGHT, VAlign.BOTTOM);
     // anchor = canvas_dim - fd_dim
@@ -151,17 +164,24 @@ describe('FramingDecision.adjustAnchorPoint', () => {
   });
 });
 
-describe('FramingDecision.populateFromIntent', () => {
-  it('populates existing FD from intent', () => {
+describe("FramingDecision.populateFromIntent", () => {
+  it("populates existing FD from intent", () => {
     const fdl = new FDL({});
-    const fi = fdl.addFramingIntent('FI_A', '', new DimensionsInt(16, 9), 0.0);
-    const ctx = fdl.addContext('Primary', null);
+    const fi = fdl.addFramingIntent("FI_A", "", new DimensionsInt(16, 9), 0.0);
+    const ctx = fdl.addContext("Primary", null);
     const canvas = ctx.addCanvas(
-      'C1', '', 'C1', new DimensionsInt(1920, 1080), 1.0,
+      "C1",
+      "",
+      "C1",
+      new DimensionsInt(1920, 1080),
+      1.0,
     );
     const fd = canvas.addFramingDecision(
-      'C1-FI_A', '', 'FI_A',
-      new DimensionsFloat(0, 0), new PointFloat(0, 0),
+      "C1-FI_A",
+      "",
+      "FI_A",
+      new DimensionsFloat(0, 0),
+      new PointFloat(0, 0),
     );
 
     // Initially zero

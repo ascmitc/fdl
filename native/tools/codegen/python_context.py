@@ -37,6 +37,24 @@ def _class_to_module(class_name: str) -> str:
 _py = PythonAdapter()
 
 
+def _resolve_python_default(p) -> tuple[str | None, str | None]:
+    """Resolve a param's rendered default and optional None-sentinel unwrap expression.
+
+    For constructor-call defaults (e.g. ``RoundStrategy()``), avoid emitting a
+    mutable-default in the signature — return ``None`` as the default and the
+    constructor call as an unwrap expression to apply inside the function body.
+
+    Returns ``(default_src, unwrap_expr)``.  ``unwrap_expr`` is non-None only
+    when the caller should emit ``if p is None: p = <unwrap_expr>``.
+    """
+    nullable = getattr(p, "nullable", False)
+    if p.default is None:
+        return ("None" if nullable else None), None
+    if p.default.kind == "constructor":
+        return "None", _py.render_default(p.default)
+    return _py.render_default(p.default), None
+
+
 # -----------------------------------------------------------------------
 # Enum context builders (Python-specific)
 # -----------------------------------------------------------------------
@@ -308,10 +326,17 @@ def build_value_type_context(vt: ValueType, idl: IDL) -> dict:
 
     cross_eq_class = resolve_cross_eq_class(vt, idl)
 
+    doc = f"Lightweight {python_class} value type."
+    if python_class == "RoundStrategy":
+        doc += (
+            "\n\n    Defaults match FDL spec §7.4.12: ``even=EVEN`` and ``mode=UP`` —\n"
+            "    the values applied when a canvas template omits the ``round`` field."
+        )
+
     return {
         "python_class": python_class,
         "c_type": vt.name,
-        "doc": f"Lightweight {python_class} value type.",
+        "doc": doc,
         "fields": fields,
         "slot_names": ", ".join(f'"{fn}"' for fn in sorted(field_names)),
         "init_params": ", ".join(init_parts),
@@ -400,12 +425,15 @@ def build_builder_method_context(method, idl: IDL, enum_contexts: list[dict]) ->
 
     for p in method.params:
         python_type = _py.resolve_type(p.type_key, nullable=p.nullable)
-        default = "None" if p.nullable and p.default is None else (_py.render_default(p.default) if p.default else None)
+        default, unwrap_expr = _resolve_python_default(p)
+        if unwrap_expr is not None:
+            python_type = f"{python_type} | None"
         params.append(
             {
                 "name": p.name,
                 "python_type": python_type,
                 "default": default,
+                "unwrap_expr": unwrap_expr,
             }
         )
 
@@ -498,12 +526,15 @@ def build_lifecycle_method_context(method, idl: IDL, enum_contexts: list[dict]) 
             python_type = "str"
         else:
             python_type = _py.resolve_type(p.type_key, nullable=p.nullable)
-        default = "None" if p.nullable and p.default is None else (_py.render_default(p.default) if p.default else None)
+        default, unwrap_expr = _resolve_python_default(p)
+        if unwrap_expr is not None:
+            python_type = f"{python_type} | None"
         param_ctx = {
             "name": p.name,
             "type_key": p.type_key,
             "python_type": python_type,
             "default": default,
+            "unwrap_expr": unwrap_expr,
         }
         if p.global_fallback:
             param_ctx["global_fallback"] = p.global_fallback
@@ -603,14 +634,15 @@ def build_init_context(ir_cls, idl: IDL, enum_contexts: list[dict], ir_class_by_
             )
         else:
             python_type = _py.resolve_type(p.type_key, nullable=p.nullable)
-            default = _py.render_default(p.default) if p.default else None
-            if p.nullable and default is None:
-                default = "None"
+            default, unwrap_expr = _resolve_python_default(p)
+            if unwrap_expr is not None:
+                python_type = f"{python_type} | None"
             init_params.append(
                 {
                     "name": p.name,
                     "python_type": python_type,
                     "default": default,
+                    "unwrap_expr": unwrap_expr,
                     "ignore": False,
                 }
             )

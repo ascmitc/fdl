@@ -43,10 +43,37 @@ fdl_geometry_t geometry_normalize_and_scale_ratio(
     fdl_geometry_t geo, double source_squeeze, double scale_numerator, double scale_denominator, double target_squeeze);
 
 /**
- * @brief Round all 7 fields of the geometry using the given strategy.
- * @param geo       Input geometry.
+ * @brief Round canvas_dims and effective_dims; absorb deltas symmetrically.
+ *
+ * Per spec 7.4.12 "round" applies to canvas.dimensions.  The schema also
+ * types canvas.effective_dimensions as integer, so both are rounded here.
+ * Inner geometry (protection, framing dims and all anchors) remains float
+ * per the fractional-pixels model.
+ *
+ * Intended to run once at the end of the template pipeline (post-crop).
+ * The anchors at that point already encode all template intent (scale,
+ * alignment, padding, crop); the rounding deltas are pure schema-integer
+ * artifacts.  This function distributes those deltas symmetrically so no
+ * directional bias is introduced:
+ *
+ *   - canvas delta is absorbed by shifting ALL anchors by +delta/2
+ *     (content stays centered in the rounded canvas).
+ *   - effective delta is absorbed by shifting effective_anchor by -delta/2
+ *     (rounded effective rectangle stays centered on its pre-round extent).
+ *
+ * Effective is rounded once (ceil); if it would overflow the canvas at its
+ * anchor, the effective anchor is pulled back to `canvas - dim` — we trade
+ * a sub-pixel anchor slide for a preserved integer dim, because the ceil
+ * delta is already committed to the pixel budget.  Inner layers
+ * (protection, framing) instead have their float dims shrunk to
+ * `canvas - anchor`, which preserves the anchor position since the dims
+ * carry no integer commitment.  The rounded canvas is the absolute
+ * container: no layer may extend beyond it on either edge.  Hierarchy is
+ * re-established post-shrink so protection/framing do not exceed effective.
+ *
+ * @param geo       Input geometry (typically post-crop with float fields).
  * @param strategy  Rounding strategy (even + mode).
- * @return Geometry with all fields rounded.
+ * @return Geometry with canvas/effective rounded and anchors compensated.
  */
 fdl_geometry_t geometry_round(fdl_geometry_t geo, fdl_round_strategy_t strategy);
 

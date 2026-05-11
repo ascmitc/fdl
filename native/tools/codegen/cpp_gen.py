@@ -72,7 +72,15 @@ _DC_FIELD_CPP: dict[str, str] = {
 }
 
 
-def _cpp_param(name: str, type_key: str, default=None, *, nullable: bool = False, source_class: str | None = None) -> dict:
+def _cpp_param(
+    name: str,
+    type_key: str,
+    default=None,
+    *,
+    nullable: bool = False,
+    source_class: str | None = None,
+    global_fallback: str | None = None,
+) -> dict:
     """Build a C++ parameter dict from IR type information.
 
     Parameters
@@ -87,6 +95,10 @@ def _cpp_param(name: str, type_key: str, default=None, *, nullable: bool = False
         Whether the parameter is nullable.
     source_class : str | None
         For handle params: the facade class name (e.g. "FramingIntent").
+    global_fallback : str | None
+        Global fallback function (Python/Node facade only). C++ has no global
+        state, so for fdl_round_strategy_t we substitute the spec default
+        {EVEN, UP} inline — matching RoundStrategy()'s facade default.
     """
     if source_class:
         cpp_type = _cpp_class_name(source_class)
@@ -102,6 +114,10 @@ def _cpp_param(name: str, type_key: str, default=None, *, nullable: bool = False
             cpp_default = None
     elif nullable and cpp_type == "std::string":
         cpp_default = '""'
+    # Nullable round_strategy params with a global_fallback: substitute the
+    # spec default {EVEN, UP} inline in C++ (no global state available).
+    if cpp_default is None and type_key == "fdl_round_strategy_t" and global_fallback:
+        cpp_default = "{FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP}"
     bare = f"{pass_decl} {name}"
     return {
         "name": name,
@@ -673,7 +689,9 @@ def _build_builder(method, handle_field: str) -> dict:
     c_args = [handle_field]
 
     for p in method.params:
-        params.append(_cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class))
+        params.append(
+            _cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback)
+        )
         c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=p.expand, nullable=p.nullable, source_class=p.source_class))
 
     returns = _cpp_class_name(method.returns)
@@ -736,7 +754,9 @@ def _lifecycle_class_factory(method, handle_field: str) -> dict:
     params = []
     c_args = [handle_field]
     for p in method.params:
-        params.append(_cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class))
+        params.append(
+            _cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback)
+        )
         c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=False, nullable=p.nullable, source_class=p.source_class))
     return {
         "kind": "populate",
@@ -765,7 +785,11 @@ def _lifecycle_static_factory(method, handle_field: str) -> dict | None:
         params = []
         c_args = []
         for p in method.params:
-            params.append(_cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class))
+            params.append(
+                _cpp_param(
+                    p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback
+                )
+            )
             c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=False, nullable=p.nullable, source_class=p.source_class))
         return {
             "kind": "create",
@@ -802,7 +826,11 @@ def _lifecycle_instance(method, handle_field: str) -> dict | None:
         params = []
         c_args = [handle_field]
         for p in method.params:
-            params.append(_cpp_param(p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class))
+            params.append(
+                _cpp_param(
+                    p.name, p.type_key, p.default, nullable=p.nullable, source_class=p.source_class, global_fallback=p.global_fallback
+                )
+            )
             c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=False, nullable=p.nullable, source_class=p.source_class))
         return {
             "kind": "apply",
@@ -823,7 +851,16 @@ def _lifecycle_compound_setter(method, handle_field: str) -> dict:
     params = []
     c_args = [handle_field]
     for p in method.params:
-        params.append(_cpp_param(p.name, p.type_key, nullable=p.nullable, source_class=p.source_class))
+        params.append(
+            _cpp_param(
+                p.name,
+                p.type_key,
+                p.default,
+                nullable=p.nullable,
+                source_class=p.source_class,
+                global_fallback=p.global_fallback,
+            )
+        )
         c_args.extend(_cpp_call_arg(p.name, p.type_key, expand_vt=False, nullable=p.nullable, source_class=p.source_class))
     return {
         "kind": "compound_setter",

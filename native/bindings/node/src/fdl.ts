@@ -3,8 +3,8 @@
 // AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
 
 import type { FitMethod, GeometryPath, HAlign, VAlign } from "./constants.js";
-import type { RoundStrategy } from "./rounding.js";
 import type { DimensionsInt } from "./types.js";
+import { RoundStrategy } from "./rounding.js";
 import { Version } from "./version.js";
 import type { NativeAddon } from "./ffi/index.js";
 import { getAddon } from "./ffi/index.js";
@@ -230,7 +230,7 @@ export class FDL extends OwnedHandle {
     fitMethod: FitMethod,
     alignmentMethodHorizontal: HAlign,
     alignmentMethodVertical: VAlign,
-    round: RoundStrategy,
+    round: RoundStrategy = new RoundStrategy(),
   ): CanvasTemplate {
     this._checkHandle();
     const handle = this._addon.fdl_doc_add_canvas_template(

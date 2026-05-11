@@ -445,7 +445,7 @@ object_model:
             - { name: fit_method, type: fdl_fit_method_t }
             - { name: alignment_method_horizontal, type: fdl_halign_t }
             - { name: alignment_method_vertical, type: fdl_valign_t }
-            - { name: round, type: fdl_round_strategy_t }
+            - { name: round, type: fdl_round_strategy_t, default: "RoundStrategy()" }
           error_handling:
             pattern: null_check
       init:
