@@ -31,7 +31,8 @@ static void* UnwrapHandle(const Napi::Value& val) {
 Napi::Value Wrap_fdl_abi_version(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_abi_version_t _r = fdl_abi_version();
-    return AbiVersionToObject(env, _r);
+    auto _out = AbiVersionToObject(env, _r);
+    return _out;
 }
 
 // Calculate content translation shift for a single axis.
@@ -71,7 +72,20 @@ Napi::Value Wrap_fdl_apply_canvas_template(const Napi::CallbackInfo& info) {
         new_fd_name_str.c_str(),
         (source_context_label_is_null ? nullptr : source_context_label_str.c_str()),
         (context_creator_is_null ? nullptr : context_creator_str.c_str()));
-    return TemplateResultToObject(env, _r);
+    auto _out = TemplateResultToObject(env, _r);
+    if (_r.context_label) {
+        fdl_free(const_cast<char*>(_r.context_label));
+    }
+    if (_r.canvas_id) {
+        fdl_free(const_cast<char*>(_r.canvas_id));
+    }
+    if (_r.framing_decision_id) {
+        fdl_free(const_cast<char*>(_r.framing_decision_id));
+    }
+    if (_r.error) {
+        fdl_free(const_cast<char*>(_r.error));
+    }
+    return _out;
 }
 
 // Calculate scale factor based on fit method.
@@ -142,7 +156,8 @@ Napi::Value Wrap_fdl_canvas_get_dimensions(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_i64_t _r = fdl_canvas_get_dimensions(canvas);
-    return DimensionsI64ToObject(env, _r);
+    auto _out = DimensionsI64ToObject(env, _r);
+    return _out;
 }
 
 // Get the effective anchor point (offset from canvas origin).
@@ -150,7 +165,8 @@ Napi::Value Wrap_fdl_canvas_get_effective_anchor_point(const Napi::CallbackInfo&
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
     fdl_point_f64_t _r = fdl_canvas_get_effective_anchor_point(canvas);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Get effective (active image area) dimensions.
@@ -158,7 +174,8 @@ Napi::Value Wrap_fdl_canvas_get_effective_dimensions(const Napi::CallbackInfo& i
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_i64_t _r = fdl_canvas_get_effective_dimensions(canvas);
-    return DimensionsI64ToObject(env, _r);
+    auto _out = DimensionsI64ToObject(env, _r);
+    return _out;
 }
 
 // Get the effective (active image) rect of a canvas.
@@ -194,7 +211,8 @@ Napi::Value Wrap_fdl_canvas_get_photosite_dimensions(const Napi::CallbackInfo& i
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_i64_t _r = fdl_canvas_get_photosite_dimensions(canvas);
-    return DimensionsI64ToObject(env, _r);
+    auto _out = DimensionsI64ToObject(env, _r);
+    return _out;
 }
 
 // Get physical dimensions (e.g. millimeters on sensor).
@@ -202,7 +220,8 @@ Napi::Value Wrap_fdl_canvas_get_physical_dimensions(const Napi::CallbackInfo& in
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_f64_t _r = fdl_canvas_get_physical_dimensions(canvas);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Get the full canvas rect: (0, 0, dims.width, dims.height).
@@ -210,7 +229,8 @@ Napi::Value Wrap_fdl_canvas_get_rect(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[0]));
     fdl_rect_t _r = fdl_canvas_get_rect(canvas);
-    return RectToObject(env, _r);
+    auto _out = RectToObject(env, _r);
+    return _out;
 }
 
 // Get the source_canvas_id of a canvas (the canvas this was derived from).
@@ -347,7 +367,8 @@ Napi::Value Wrap_fdl_canvas_template_get_maximum_dimensions(const Napi::Callback
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_i64_t _r = fdl_canvas_template_get_maximum_dimensions(ct);
-    return DimensionsI64ToObject(env, _r);
+    auto _out = DimensionsI64ToObject(env, _r);
+    return _out;
 }
 
 // Get the pad_to_maximum flag.
@@ -372,7 +393,8 @@ Napi::Value Wrap_fdl_canvas_template_get_round(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
     fdl_round_strategy_t _r = fdl_canvas_template_get_round(ct);
-    return RoundStrategyToObject(env, _r);
+    auto _out = RoundStrategyToObject(env, _r);
+    return _out;
 }
 
 // Get the target anamorphic squeeze factor.
@@ -388,7 +410,8 @@ Napi::Value Wrap_fdl_canvas_template_get_target_dimensions(const Napi::CallbackI
     Napi::Env env = info.Env();
     auto* ct = static_cast<fdl_canvas_template_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_i64_t _r = fdl_canvas_template_get_target_dimensions(ct);
-    return DimensionsI64ToObject(env, _r);
+    auto _out = DimensionsI64ToObject(env, _r);
+    return _out;
 }
 
 // Check if maximum_dimensions constraint is set.
@@ -546,7 +569,8 @@ Napi::Value Wrap_fdl_compute_framing_from_intent(const Napi::CallbackInfo& info)
     fdl_round_strategy_t rounding = ObjectToRoundStrategy(info[5].As<Napi::Object>());
     fdl_from_intent_result_t _r =
         fdl_compute_framing_from_intent(canvas_dims, working_dims, squeeze, aspect_ratio, protection, rounding);
-    return FromIntentResultToObject(env, _r);
+    auto _out = FromIntentResultToObject(env, _r);
+    return _out;
 }
 
 // Add a canvas to a context.
@@ -652,7 +676,11 @@ Napi::Value Wrap_fdl_context_resolve_canvas_for_dimensions(const Napi::CallbackI
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[2]));
     auto* framing = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[3]));
     fdl_resolve_canvas_result_t _r = fdl_context_resolve_canvas_for_dimensions(ctx, input_dims, canvas, framing);
-    return ResolveCanvasResultToObject(env, _r);
+    auto _out = ResolveCanvasResultToObject(env, _r);
+    if (_r.error) {
+        fdl_free(const_cast<char*>(_r.error));
+    }
+    return _out;
 }
 
 // Set clip_id on a context from a JSON string.
@@ -730,7 +758,8 @@ Napi::Value Wrap_fdl_dimensions_f64_to_i64(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     fdl_dimensions_f64_t dims = ObjectToDimensionsF64(info[0].As<Napi::Object>());
     fdl_dimensions_i64_t _r = fdl_dimensions_f64_to_i64(dims);
-    return DimensionsI64ToObject(env, _r);
+    auto _out = DimensionsI64ToObject(env, _r);
+    return _out;
 }
 
 // Check if a > b using OR logic (either width or height is greater).
@@ -765,7 +794,8 @@ Napi::Value Wrap_fdl_dimensions_i64_normalize(const Napi::CallbackInfo& info) {
     fdl_dimensions_i64_t dims = ObjectToDimensionsI64(info[0].As<Napi::Object>());
     double squeeze = info[1].As<Napi::Number>().DoubleValue();
     fdl_dimensions_f64_t _r = fdl_dimensions_i64_normalize(dims, squeeze);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Check if both width and height are zero.
@@ -782,7 +812,8 @@ Napi::Value Wrap_fdl_dimensions_normalize(const Napi::CallbackInfo& info) {
     fdl_dimensions_f64_t dims = ObjectToDimensionsF64(info[0].As<Napi::Object>());
     double squeeze = info[1].As<Napi::Number>().DoubleValue();
     fdl_dimensions_f64_t _r = fdl_dimensions_normalize(dims, squeeze);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Normalize and scale in one step.
@@ -793,7 +824,8 @@ Napi::Value Wrap_fdl_dimensions_normalize_and_scale(const Napi::CallbackInfo& in
     double scale_factor = info[2].As<Napi::Number>().DoubleValue();
     double target_squeeze = info[3].As<Napi::Number>().DoubleValue();
     fdl_dimensions_f64_t _r = fdl_dimensions_normalize_and_scale(dims, input_squeeze, scale_factor, target_squeeze);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Scale normalized dimensions and apply target squeeze.
@@ -803,7 +835,8 @@ Napi::Value Wrap_fdl_dimensions_scale(const Napi::CallbackInfo& info) {
     double scale_factor = info[1].As<Napi::Number>().DoubleValue();
     double target_squeeze = info[2].As<Napi::Number>().DoubleValue();
     fdl_dimensions_f64_t _r = fdl_dimensions_scale(dims, scale_factor, target_squeeze);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Subtract two dimensions: result = a - b.
@@ -812,7 +845,8 @@ Napi::Value Wrap_fdl_dimensions_sub(const Napi::CallbackInfo& info) {
     fdl_dimensions_f64_t a = ObjectToDimensionsF64(info[0].As<Napi::Object>());
     fdl_dimensions_f64_t b = ObjectToDimensionsF64(info[1].As<Napi::Object>());
     fdl_dimensions_f64_t _r = fdl_dimensions_sub(a, b);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Add a canvas template to the document.
@@ -1037,7 +1071,11 @@ Napi::Value Wrap_fdl_doc_parse_json(const Napi::CallbackInfo& info) {
     std::string json_str_str = info[0].As<Napi::String>().Utf8Value();
     size_t json_len = static_cast<size_t>(info[1].As<Napi::Number>().Int64Value());
     fdl_parse_result_t _r = fdl_doc_parse_json(json_str_str.c_str(), json_len);
-    return ParseResultToObject(env, _r);
+    auto _out = ParseResultToObject(env, _r);
+    if (_r.error) {
+        fdl_free(const_cast<char*>(_r.error));
+    }
+    return _out;
 }
 
 // Set the default_framing_intent on a document.
@@ -1161,7 +1199,8 @@ Napi::Value Wrap_fdl_framing_decision_get_anchor_point(const Napi::CallbackInfo&
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
     fdl_point_f64_t _r = fdl_framing_decision_get_anchor_point(fd);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Get the framing decision dimensions (floating-point sub-pixel).
@@ -1169,7 +1208,8 @@ Napi::Value Wrap_fdl_framing_decision_get_dimensions(const Napi::CallbackInfo& i
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_f64_t _r = fdl_framing_decision_get_dimensions(fd);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Get the framing_intent_id that this framing decision references.
@@ -1201,7 +1241,8 @@ Napi::Value Wrap_fdl_framing_decision_get_protection_anchor_point(const Napi::Ca
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
     fdl_point_f64_t _r = fdl_framing_decision_get_protection_anchor_point(fd);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Get the protection area dimensions.
@@ -1209,7 +1250,8 @@ Napi::Value Wrap_fdl_framing_decision_get_protection_dimensions(const Napi::Call
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_f64_t _r = fdl_framing_decision_get_protection_dimensions(fd);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Get the framing decision protection rect.
@@ -1229,7 +1271,8 @@ Napi::Value Wrap_fdl_framing_decision_get_rect(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     auto* fd = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[0]));
     fdl_rect_t _r = fdl_framing_decision_get_rect(fd);
-    return RectToObject(env, _r);
+    auto _out = RectToObject(env, _r);
+    return _out;
 }
 
 // Check if a framing decision has protection area set.
@@ -1311,7 +1354,8 @@ Napi::Value Wrap_fdl_framing_intent_get_aspect_ratio(const Napi::CallbackInfo& i
     Napi::Env env = info.Env();
     auto* fi = static_cast<fdl_framing_intent_t*>(UnwrapHandle(info[0]));
     fdl_dimensions_i64_t _r = fdl_framing_intent_get_aspect_ratio(fi);
-    return DimensionsI64ToObject(env, _r);
+    auto _out = DimensionsI64ToObject(env, _r);
+    return _out;
 }
 
 // Get the ID of a framing intent.
@@ -1401,7 +1445,8 @@ Napi::Value Wrap_fdl_geometry_crop(const Napi::CallbackInfo& info) {
     fdl_point_f64_t theo_prot = ObjectToPointF64(info[2].As<Napi::Object>());
     fdl_point_f64_t theo_fram = ObjectToPointF64(info[3].As<Napi::Object>());
     fdl_geometry_t _r = fdl_geometry_crop(geo, theo_eff, theo_prot, theo_fram);
-    return GeometryToObject(env, _r);
+    auto _out = GeometryToObject(env, _r);
+    return _out;
 }
 
 // Fill gaps in the geometry hierarchy by propagating populated dimensions upward.
@@ -1410,7 +1455,8 @@ Napi::Value Wrap_fdl_geometry_fill_hierarchy_gaps(const Napi::CallbackInfo& info
     fdl_geometry_t geo = ObjectToGeometry(info[0].As<Napi::Object>());
     fdl_point_f64_t anchor_offset = ObjectToPointF64(info[1].As<Napi::Object>());
     fdl_geometry_t _r = fdl_geometry_fill_hierarchy_gaps(geo, anchor_offset);
-    return GeometryToObject(env, _r);
+    auto _out = GeometryToObject(env, _r);
+    return _out;
 }
 
 // Extract dimensions and anchor from geometry by path.
@@ -1436,7 +1482,8 @@ Napi::Value Wrap_fdl_geometry_normalize_and_scale(const Napi::CallbackInfo& info
     double scale_factor = info[2].As<Napi::Number>().DoubleValue();
     double target_squeeze = info[3].As<Napi::Number>().DoubleValue();
     fdl_geometry_t _r = fdl_geometry_normalize_and_scale(geo, source_squeeze, scale_factor, target_squeeze);
-    return GeometryToObject(env, _r);
+    auto _out = GeometryToObject(env, _r);
+    return _out;
 }
 
 // Round integer-typed schema fields and symmetrically absorb deltas into anchors.  Intended to run once at the end of
@@ -1446,7 +1493,8 @@ Napi::Value Wrap_fdl_geometry_round(const Napi::CallbackInfo& info) {
     fdl_geometry_t geo = ObjectToGeometry(info[0].As<Napi::Object>());
     fdl_round_strategy_t strategy = ObjectToRoundStrategy(info[1].As<Napi::Object>());
     fdl_geometry_t _r = fdl_geometry_round(geo, strategy);
-    return GeometryToObject(env, _r);
+    auto _out = GeometryToObject(env, _r);
+    return _out;
 }
 
 // Construct a rect from raw coordinates.
@@ -1457,7 +1505,8 @@ Napi::Value Wrap_fdl_make_rect(const Napi::CallbackInfo& info) {
     double width = info[2].As<Napi::Number>().DoubleValue();
     double height = info[3].As<Napi::Number>().DoubleValue();
     fdl_rect_t _r = fdl_make_rect(x, y, width, height);
-    return RectToObject(env, _r);
+    auto _out = RectToObject(env, _r);
+    return _out;
 }
 
 // Determine output canvas size for a single axis.
@@ -1477,7 +1526,8 @@ Napi::Value Wrap_fdl_point_add(const Napi::CallbackInfo& info) {
     fdl_point_f64_t a = ObjectToPointF64(info[0].As<Napi::Object>());
     fdl_point_f64_t b = ObjectToPointF64(info[1].As<Napi::Object>());
     fdl_point_f64_t _r = fdl_point_add(a, b);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Clamp point values to [min_val, max_val].
@@ -1489,7 +1539,8 @@ Napi::Value Wrap_fdl_point_clamp(const Napi::CallbackInfo& info) {
     int has_min = info[3].As<Napi::Number>().Int32Value();
     int has_max = info[4].As<Napi::Number>().Int32Value();
     fdl_point_f64_t _r = fdl_point_clamp(point, min_val, max_val, has_min, has_max);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Check approximate equality within FDL tolerances.
@@ -1533,7 +1584,8 @@ Napi::Value Wrap_fdl_point_mul_scalar(const Napi::CallbackInfo& info) {
     fdl_point_f64_t a = ObjectToPointF64(info[0].As<Napi::Object>());
     double scalar = info[1].As<Napi::Number>().DoubleValue();
     fdl_point_f64_t _r = fdl_point_mul_scalar(a, scalar);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Normalize a point by applying anamorphic squeeze to x.
@@ -1542,7 +1594,8 @@ Napi::Value Wrap_fdl_point_normalize(const Napi::CallbackInfo& info) {
     fdl_point_f64_t point = ObjectToPointF64(info[0].As<Napi::Object>());
     double squeeze = info[1].As<Napi::Number>().DoubleValue();
     fdl_point_f64_t _r = fdl_point_normalize(point, squeeze);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Normalize and scale a point in one step.
@@ -1553,7 +1606,8 @@ Napi::Value Wrap_fdl_point_normalize_and_scale(const Napi::CallbackInfo& info) {
     double scale_factor = info[2].As<Napi::Number>().DoubleValue();
     double target_squeeze = info[3].As<Napi::Number>().DoubleValue();
     fdl_point_f64_t _r = fdl_point_normalize_and_scale(point, input_squeeze, scale_factor, target_squeeze);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Scale a normalized point and apply target squeeze.
@@ -1563,7 +1617,8 @@ Napi::Value Wrap_fdl_point_scale(const Napi::CallbackInfo& info) {
     double scale_factor = info[1].As<Napi::Number>().DoubleValue();
     double target_squeeze = info[2].As<Napi::Number>().DoubleValue();
     fdl_point_f64_t _r = fdl_point_scale(point, scale_factor, target_squeeze);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Subtract two points: result = a - b.
@@ -1572,7 +1627,8 @@ Napi::Value Wrap_fdl_point_sub(const Napi::CallbackInfo& info) {
     fdl_point_f64_t a = ObjectToPointF64(info[0].As<Napi::Object>());
     fdl_point_f64_t b = ObjectToPointF64(info[1].As<Napi::Object>());
     fdl_point_f64_t _r = fdl_point_sub(a, b);
-    return PointF64ToObject(env, _r);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Resolve dimensions and anchor directly from canvas/framing handles for a path.
@@ -1608,7 +1664,8 @@ Napi::Value Wrap_fdl_round_dimensions(const Napi::CallbackInfo& info) {
     fdl_rounding_even_t even = static_cast<fdl_rounding_even_t>(info[1].As<Napi::Number>().Uint32Value());
     fdl_rounding_mode_t mode = static_cast<fdl_rounding_mode_t>(info[2].As<Napi::Number>().Uint32Value());
     fdl_dimensions_f64_t _r = fdl_round_dimensions(dims, even, mode);
-    return DimensionsF64ToObject(env, _r);
+    auto _out = DimensionsF64ToObject(env, _r);
+    return _out;
 }
 
 // Round a point according to FDL rounding rules.
@@ -1618,13 +1675,8 @@ Napi::Value Wrap_fdl_round_point(const Napi::CallbackInfo& info) {
     fdl_rounding_even_t even = static_cast<fdl_rounding_even_t>(info[1].As<Napi::Number>().Uint32Value());
     fdl_rounding_mode_t mode = static_cast<fdl_rounding_mode_t>(info[2].As<Napi::Number>().Uint32Value());
     fdl_point_f64_t _r = fdl_round_point(point, even, mode);
-    return PointF64ToObject(env, _r);
-}
-
-// Free a template result (doc + all allocated strings).
-void Wrap_fdl_template_result_free(const Napi::CallbackInfo& info) {
-    fdl_template_result_t result = ObjectToTemplateResult(info[0].As<Napi::Object>());
-    fdl_template_result_free(&result);
+    auto _out = PointF64ToObject(env, _r);
+    return _out;
 }
 
 // Get a specific error message by index.
@@ -3509,7 +3561,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("fdl_round", Napi::Function::New(env, Wrap_fdl_round));
     exports.Set("fdl_round_dimensions", Napi::Function::New(env, Wrap_fdl_round_dimensions));
     exports.Set("fdl_round_point", Napi::Function::New(env, Wrap_fdl_round_point));
-    exports.Set("fdl_template_result_free", Napi::Function::New(env, Wrap_fdl_template_result_free));
     exports.Set("fdl_validation_result_error_at", Napi::Function::New(env, Wrap_fdl_validation_result_error_at));
     exports.Set("fdl_validation_result_error_count", Napi::Function::New(env, Wrap_fdl_validation_result_error_count));
     exports.Set("fdl_validation_result_free", Napi::Function::New(env, Wrap_fdl_validation_result_free));

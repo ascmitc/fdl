@@ -32,6 +32,20 @@ packages/fdl_viewer/dist/**
 native/bindings/node/build/
 native/bindings/node/dist/
 
+# WASM / Emscripten build artifacts
+# - bindings/wasm/build/   : CMake build dir (object files, static libs, etc.)
+# - bindings/wasm/cmake-build-* : IDE-flavoured build dirs
+# - bindings/node/wasm/*.{mjs,wasm,wasm.map} : compiled artifacts copied here by
+#   scripts/build_wasm.py and downloaded by the npm_publish CI job.
+native/bindings/wasm/build/
+native/bindings/wasm/cmake-build-*/
+native/bindings/node/wasm/*.mjs
+native/bindings/node/wasm/*.wasm
+native/bindings/node/wasm/*.wasm.map
+
+# Local emsdk install (some devs put it inside the repo root)
+/emsdk/
+
 # Example app build artifacts
 examples/**/dist/
 examples/**/.vite/

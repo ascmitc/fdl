@@ -26,13 +26,14 @@ def _project_python() -> str:
     return sys.executable
 
 
-TARGETS = ["python-facade", "python-models", "cpp-raii", "node-addon", "node-facade"]
+TARGETS = ["python-facade", "python-models", "cpp-raii", "node-addon", "node-facade", "wasm-bindings"]
 
 GENERATED_PATHS = [
     "native/bindings/python/fdl/",
     "native/bindings/python/fdl_ffi/fdl_core_decl.h",
     "native/bindings/cpp/fdl/",
     "native/bindings/node/src/",
+    "native/bindings/wasm/src/",
 ]
 
 GENERATED_PYTHON_PATHS = [
@@ -49,6 +50,10 @@ GENERATED_NODE_TS_PATHS = [
 
 GENERATED_NODE_ADDON_PATHS = [
     "native/bindings/node/src/addon/",
+]
+
+GENERATED_WASM_CPP_PATHS = [
+    "native/bindings/wasm/src/",
 ]
 
 
@@ -121,6 +126,22 @@ def run_codegen() -> int:
                 print("WARNING: clang-format failed on addon files", file=sys.stderr)
         except FileNotFoundError:
             print("WARNING: clang-format not found, skipping addon formatting", file=sys.stderr)
+
+    # Post-process: format generated WASM Embind C++ with clang-format
+    print("=== Formatting generated WASM C++ ===")
+    wasm_files: list[str] = []
+    for p in GENERATED_WASM_CPP_PATHS:
+        d = REPO_ROOT / p
+        if d.exists():
+            wasm_files.extend(str(f) for f in d.rglob("*.cpp"))
+            wasm_files.extend(str(f) for f in d.rglob("*.h"))
+    if wasm_files:
+        try:
+            cfmt = subprocess.run(["clang-format", "-i", *wasm_files], cwd=REPO_ROOT)
+            if cfmt.returncode != 0:
+                print("WARNING: clang-format failed on wasm files", file=sys.stderr)
+        except FileNotFoundError:
+            print("WARNING: clang-format not found, skipping wasm formatting", file=sys.stderr)
 
     # Post-process: format generated TypeScript with prettier
     print("=== Formatting generated TypeScript ===")

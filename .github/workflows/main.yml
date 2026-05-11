@@ -117,11 +117,67 @@ jobs:
         run: python scripts/verify_version.py "${GITHUB_REF_NAME#v}"
 
   # ---------------------------------------------------------------------------
+  # Build WASM — Emscripten output is platform-independent, so build once.
+  # The artifact is consumed by the `test` job (WASM smoke tests) and the
+  # `npm_publish` job (shipped inside @asc-mitc/fdl alongside the N-API prebuilds).
+  # ---------------------------------------------------------------------------
+  build_wasm:
+    name: Build WASM
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install codegen dependencies
+        run: uv pip install pyyaml jinja2 --system
+
+      - name: Install CMake and clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake clang-format-19
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 100
+
+      - name: Set up Emscripten SDK
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '3.1.73'
+          actions-cache-folder: 'emsdk-cache'
+
+      - name: Generate WASM bindings (codegen)
+        run: python -m codegen.generate --target wasm-bindings
+        working-directory: native/tools
+
+      - name: Build WASM module
+        run: python scripts/build_wasm.py
+
+      - name: Verify WASM artifacts
+        run: |
+          ls -lh native/bindings/node/wasm/
+          test -s native/bindings/node/wasm/fdl_module.mjs
+          test -s native/bindings/node/wasm/fdl_module.wasm
+
+      - name: Upload WASM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm
+          path: native/bindings/node/wasm/
+          retention-days: 7
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------------------
   # Tests — gate for all downstream jobs
   # ---------------------------------------------------------------------------
   test:
     name: Tests (${{ matrix.os }})
-    needs: lint
+    needs: [lint, build_wasm]
     strategy:
       fail-fast: false
       matrix:
@@ -224,6 +280,19 @@ jobs:
       - name: Build Node.js addon and run tests
         if: runner.os != 'Windows'
         run: python scripts/build_node.py --run-tests
+
+      # --- WASM backend smoke test (Linux only — same artifact runs everywhere) ---
+      - name: Download WASM artifact (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm
+          path: native/bindings/node/wasm/
+
+      - name: Run WASM backend tests (Linux)
+        if: runner.os == 'Linux'
+        run: npm run test:wasm
+        working-directory: native/bindings/node
 
       # --- Python environment ---
       - name: Install Python packages
@@ -648,7 +717,7 @@ jobs:
   # ---------------------------------------------------------------------------
   npm_publish:
     name: Publish to npm
-    needs: [build_artifacts]
+    needs: [build_artifacts, build_wasm]
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     permissions:
@@ -675,6 +744,12 @@ jobs:
         with:
           name: node-addon-Linux-X64
           path: native/bindings/node/prebuilds/linux-x64/
+
+      - name: Download WASM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm
+          path: native/bindings/node/wasm/
 
       - name: Set up Python
         uses: actions/setup-python@v5

@@ -1,0 +1,179 @@
+{# Jinja2 template — rendered by wasm_gen.py to produce bindings.cpp #}
+// SPDX-FileCopyrightText: 2024-present American Society Of Cinematographers
+// SPDX-License-Identifier: Apache-2.0
+// AUTO-GENERATED from fdl_api.yaml — DO NOT EDIT
+/**
+ * @file bindings.cpp
+ * @brief Emscripten Embind bindings exposing the fdl_core C ABI to JavaScript.
+ *
+ * Each registered function carries the same name as the underlying C function
+ * (e.g. fdl_doc_create), so JavaScript can call the WASM module the same way
+ * it calls the N-API addon.  Opaque handles are passed as plain JS objects
+ * { __ptr: <number> }; value-type structs are plain JS objects whose property
+ * names match the N-API path produced by structs.h.
+ */
+
+#include <emscripten/bind.h>
+#include <emscripten/val.h>
+#include <cstdint>
+#include <string>
+#include "fdl/fdl_core.h"
+
+using emscripten::val;
+
+// ----------------------------------------------------------------------------
+// Handle wrap / unwrap
+// ----------------------------------------------------------------------------
+
+template <typename T>
+static T* unwrap_handle(const val& v) {
+    if (v.isNull() || v.isUndefined()) return nullptr;
+    return reinterpret_cast<T*>(v["__ptr"].as<uintptr_t>());
+}
+
+template <typename T>
+static val wrap_handle(T* p) {
+    if (!p) return val::null();
+    auto o = val::object();
+    o.set("__ptr", static_cast<uintptr_t>(reinterpret_cast<uintptr_t>(p)));
+    return o;
+}
+
+static const char* val_to_cstr_or_null(const val& v, std::string& buf) {
+    if (v.isNull() || v.isUndefined()) return nullptr;
+    buf = v.as<std::string>();
+    return buf.c_str();
+}
+
+// ----------------------------------------------------------------------------
+// Struct <-> val helpers
+// ----------------------------------------------------------------------------
+
+{% for sc in structs %}
+static val to_val_{{ sc.pascal_name }}(const {{ sc.c_name }}& d) {
+    auto o = val::object();
+    {% for f in sc.fields %}
+    o.set("{{ f.name }}", {{ f.to_js }});
+    {% endfor %}
+    return o;
+}
+
+{% if sc.emit_from_val %}
+static {{ sc.c_name }} from_val_{{ sc.pascal_name }}(const val& v) {
+    {{ sc.c_name }} d{};
+    {% for f in sc.fields %}
+    {% if f.to_c %}
+    d.{{ f.name }} = {{ f.to_c }};
+    {% else %}
+    {{ f.to_c_stmt }}
+    {% endif %}
+    {% endfor %}
+    return d;
+}
+
+{% endif %}
+{% endfor %}
+// ----------------------------------------------------------------------------
+// Function bindings
+// ----------------------------------------------------------------------------
+
+EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
+{% for fn in functions %}
+    // {{ fn.name }}{% if fn.doc %} — {{ fn.doc | replace("\n", " ") | truncate(180) }}{% endif %}
+
+    emscripten::function("{{ fn.name }}", emscripten::optional_override(
+        []({% for p in fn.params %}{{ p.decl }}{% if not loop.last %}, {% endif %}{% endfor %})
+        {%- if fn.return.kind == "void" and not fn.has_out_params %} -> void
+        {%- else %} -> val
+        {%- endif %} {
+        {% if fn.is_free_fn %}
+            if ({{ fn.params[0].name }}_v.isNull() || {{ fn.params[0].name }}_v.isUndefined()) return;
+        {% endif %}
+        {# --- Parameter extraction prologue --- #}
+        {% for p in fn.params %}
+            {% if p.extract %}
+            {{ p.extract }}
+            {% endif %}
+        {% endfor %}
+        {# --- Out-parameter allocation --- #}
+        {% for op in fn.out_params %}
+            {{ op.base_type }} {{ op.name }}{};
+        {% endfor %}
+        {# --- Call the C function --- #}
+        {% if fn.return.kind == "void" %}
+            {{ fn.name }}({{ fn.call_args_str }});
+        {% elif fn.return.kind == "handle" %}
+            auto* _r = {{ fn.name }}({{ fn.call_args_str }});
+        {% elif fn.return.kind in ("string", "string_free") %}
+            {% if fn.return.kind == "string_free" %}auto* _r = {{ fn.name }}({{ fn.call_args_str }});
+            {% else %}const char* _r = {{ fn.name }}({{ fn.call_args_str }});
+            {% endif %}
+        {% elif fn.return.kind == "struct" %}
+            {{ fn.return.c_type }} _r = {{ fn.name }}({{ fn.call_args_str }});
+        {% elif fn.return.kind == "enum" %}
+            auto _r = {{ fn.name }}({{ fn.call_args_str }});
+        {% else %}
+            auto _r = {{ fn.name }}({{ fn.call_args_str }});
+        {% endif %}
+        {# --- Build the return value --- #}
+        {% if fn.has_out_params %}
+            auto _out = val::object();
+            {% if fn.return.kind == "number" %}
+            _out.set("_return", static_cast<double>(_r));
+            {% elif fn.return.kind == "handle" %}
+            _out.set("_return", wrap_handle(_r));
+            {% elif fn.return.kind == "struct" %}
+            _out.set("_return", to_val_{{ fn.return.pascal_name }}(_r));
+            {% elif fn.return.kind == "enum" %}
+            _out.set("_return", static_cast<unsigned>(_r));
+            {% elif fn.return.kind == "string" %}
+            _out.set("_return", _r ? val(std::string(_r)) : val::null());
+            {% elif fn.return.kind == "string_free" %}
+            if (_r) { _out.set("_return", val(std::string(_r))); fdl_free(const_cast<char*>(_r)); }
+            else { _out.set("_return", val::null()); }
+            {% endif %}
+            {% for op in fn.out_params %}
+            {% if op.is_struct %}
+            _out.set("{{ op.js_name }}", to_val_{{ op.pascal_name }}({{ op.name }}));
+            {% else %}
+            _out.set("{{ op.js_name }}", static_cast<double>({{ op.name }}));
+            {% endif %}
+            {% endfor %}
+            {% if fn.return.kind == "struct" %}
+            {% for fld in fn.return.owned_string_fields %}
+            if (_r.{{ fld }}) fdl_free(const_cast<char*>(_r.{{ fld }}));
+            {% endfor %}
+            {% endif %}
+            return _out;
+        {% elif fn.return.kind == "void" %}
+            return;
+        {% elif fn.return.kind == "number" %}
+            return val(static_cast<double>(_r));
+        {% elif fn.return.kind == "handle" %}
+            return wrap_handle(_r);
+        {% elif fn.return.kind == "struct" %}
+            auto _out = to_val_{{ fn.return.pascal_name }}(_r);
+            {% for fld in fn.return.owned_string_fields %}
+            if (_r.{{ fld }}) fdl_free(const_cast<char*>(_r.{{ fld }}));
+            {% endfor %}
+            return _out;
+        {% elif fn.return.kind == "enum" %}
+            return val(static_cast<unsigned>(_r));
+        {% elif fn.return.kind == "string" %}
+            return _r ? val(std::string(_r)) : val::null();
+        {% elif fn.return.kind == "string_free" %}
+            {% if fn.return.nullable %}
+            if (!_r) return val::null();
+            {% else %}
+            if (!_r) return val::null();
+            {% endif %}
+            std::string _s(_r);
+            fdl_free(const_cast<char*>(_r));
+            return val(_s);
+        {% else %}
+            return val::undefined();
+        {% endif %}
+        }));
+
+{% endfor %}
+}

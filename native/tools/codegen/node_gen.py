@@ -219,10 +219,16 @@ def _classify_return(fn: Function, idl: IDL) -> dict:
     # Value type (struct)
     for vt in idl.value_types:
         if c_type == vt.name:
+            # Owned-string fields (ownership=caller_frees on a string field) need
+            # explicit fdl_free() cleanup after the JS object is built, otherwise
+            # the C-side malloc'd buffers leak. See the cleanup loop in
+            # binding.cc.j2 / bindings.cpp.j2.
+            owned_strings = [f.name for f in vt.fields if f.ownership == "caller_frees" and f.c_type in ("const char*", "char*")]
             return {
                 "return_kind": "struct",
                 "return_type": c_type,
                 "return_pascal_name": _struct_pascal_name(vt.name),
+                "return_owned_string_fields": owned_strings,
             }
 
     # Enum
@@ -286,6 +292,7 @@ def _build_napi_function_context(fn: Function, idl: IDL) -> dict:
         "return_type": ret.get("return_type", "void"),
         "return_nullable": ret.get("return_nullable", False),
         "return_pascal_name": ret.get("return_pascal_name", ""),
+        "return_owned_string_fields": ret.get("return_owned_string_fields", []),
         # Parameters
         "params": js_params,
         "out_params": out_params,
@@ -451,6 +458,30 @@ def _generate_custom_attr_functions(idl: IDL) -> list[Function]:
 _make_env = make_jinja_env
 
 
+# Functions never invoked from the JavaScript facade. They take a result-type
+# struct (by pointer) as input, which would trigger generation of an unsafe
+# JS→C `ObjectTo*` helper (lifetime UB on the embedded `const char*` fields).
+# The facade frees these results piece-by-piece instead (`fdl_doc_free` on
+# `output_fdl`, `fdl_free` on the string fields), so dropping the binding has
+# zero runtime impact. Kept in sync with `wasm_gen._SKIP_FUNCTIONS`.
+_SKIP_FUNCTIONS: frozenset[str] = frozenset(
+    {
+        "fdl_template_result_free",
+    }
+)
+
+# Structs that only ever cross the boundary C→JS (function returns or out-params).
+# We skip emitting their `ObjectTo*` helpers entirely; `*ToObject` is always
+# emitted. Kept in sync with `wasm_gen._OUTPUT_ONLY_STRUCTS`.
+_OUTPUT_ONLY_STRUCTS: frozenset[str] = frozenset(
+    {
+        "fdl_parse_result_t",
+        "fdl_template_result_t",
+        "fdl_resolve_canvas_result_t",
+    }
+)
+
+
 def generate_addon(idl: IDL, output_dir: Path) -> None:
     """Generate C++ N-API addon files (binding.cc, structs.h).
 
@@ -466,29 +497,45 @@ def generate_addon(idl: IDL, output_dir: Path) -> None:
     struct_contexts = [_build_struct_helpers_context(vt) for vt in idl.value_types]
 
     # --- Function wrappers (IDL functions + synthesized custom-attr functions) ---
-    all_fns = list(idl.functions) + _generate_custom_attr_functions(idl)
+    all_fns = [fn for fn in list(idl.functions) + _generate_custom_attr_functions(idl) if fn.name not in _SKIP_FUNCTIONS]
     fn_contexts = [_build_napi_function_context(fn, idl) for fn in all_fns]
 
     # --- Module init registrations (export using C function names) ---
     registrations = [{"c_name": ctx["name"], "wrapper_name": ctx["wrapper_name"]} for ctx in fn_contexts]
 
-    # --- Filter structs to those actually referenced ---
-    used_struct_names: set[str] = set()
+    # --- Filter structs to those actually referenced, split by direction ---
+    used_as_input: set[str] = set()
+    used_as_output: set[str] = set()
     for ctx in fn_contexts:
         for p in ctx["params"]:
             if p["kind"] in ("struct", "struct_ptr"):
-                used_struct_names.add(p["c_type"])
+                used_as_input.add(p["c_type"])
         if ctx["return_kind"] == "struct":
-            used_struct_names.add(ctx["return_type"])
+            used_as_output.add(ctx["return_type"])
         for op in ctx["out_params"]:
             if op["is_struct"]:
-                used_struct_names.add(op["base_type"])
-    # Transitive nested deps
+                used_as_output.add(op["base_type"])
+
+    def _propagate(seed: set[str]) -> set[str]:
+        out = set(seed)
+        changed = True
+        while changed:
+            changed = False
+            for sc in struct_contexts:
+                if sc["c_name"] in out:
+                    for f in sc["fields"]:
+                        if f["is_nested"] and f["c_type"] not in out:
+                            out.add(f["c_type"])
+                            changed = True
+        return out
+
+    used_as_output = _propagate(used_as_output)
+    used_as_input = _propagate(used_as_input) - _OUTPUT_ONLY_STRUCTS
+    used_struct_names = used_as_input | used_as_output
+
+    # Annotate each struct context with whether the JS→C helper should be emitted.
     for sc in struct_contexts:
-        if sc["c_name"] in used_struct_names:
-            for f in sc["fields"]:
-                if f["is_nested"]:
-                    used_struct_names.add(f["c_type"])
+        sc["emit_object_to"] = sc["c_name"] in used_as_input
 
     used_structs = [sc for sc in struct_contexts if sc["c_name"] in used_struct_names]
 

@@ -9,6 +9,7 @@ Usage:
     python -m codegen.generate --target cpp-raii         # C++ RAII header
     python -m codegen.generate --target node-addon       # Node.js addon
     python -m codegen.generate --target node-facade      # Node.js facade
+    python -m codegen.generate --target wasm-bindings    # Emscripten Embind C++
 """
 
 from __future__ import annotations
@@ -25,7 +26,7 @@ def main() -> None:
     parser.add_argument("--idl", type=Path, help="Path to fdl_api.yaml")
     parser.add_argument(
         "--target",
-        choices=["python-facade", "python-models", "cpp-raii", "node-addon", "node-facade"],
+        choices=["python-facade", "python-models", "cpp-raii", "node-addon", "node-facade", "wasm-bindings"],
         default="python-facade",
     )
     parser.add_argument("--schema", type=Path, help="Path to JSON Schema (for python-models)")
@@ -69,6 +70,11 @@ def main() -> None:
 
         output_dir = args.output or (repo_root / "bindings" / "node" / "src")
         node_gen.generate_facade(idl, output_dir)
+    elif args.target == "wasm-bindings":
+        from . import wasm_gen
+
+        output_dir = args.output or (repo_root / "bindings" / "wasm" / "src")
+        wasm_gen.generate_bindings(idl, output_dir)
 
 
 if __name__ == "__main__":

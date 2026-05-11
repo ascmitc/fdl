@@ -16,6 +16,7 @@
 // {{ st.c_name }}
 // -----------------------------------------------------------------------
 
+{% if st.emit_object_to %}
 inline {{ st.c_name }} ObjectTo{{ st.pascal_name }}(const Napi::Object& obj) {
     {{ st.c_name }} result;
 {% for f in st.fields %}
@@ -34,6 +35,7 @@ inline {{ st.c_name }} ObjectTo{{ st.pascal_name }}(const Napi::Object& obj) {
     return result;
 }
 
+{% endif %}
 inline Napi::Object {{ st.pascal_name }}ToObject(Napi::Env env, const {{ st.c_name }}& d) {
     auto obj = Napi::Object::New(env);
 {% for f in st.fields %}
