@@ -181,7 +181,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        # windows-2022 is pinned (not windows-latest): the MSVC 14.36 toolset
+        # component id is a VS 2022 component, and windows-latest may migrate to
+        # windows-2025. Artifact names use runner.os/arch, not the label.
+        os: [macos-latest, windows-2022, ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
     env:
@@ -263,6 +266,62 @@ jobs:
       - name: Run codegen
         run: python scripts/run_codegen.py
 
+      # --- Pin MSVC toolset (Windows) so fdl_core.dll binds to older MSVC runtimes ---
+      - name: Install required MSVC toolset (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $info = & python scripts/msvc_toolset.py --print-required-toolset
+          if ($LASTEXITCODE -ne 0) { $info | ForEach-Object { Write-Host $_ }; throw "Could not determine required toolset" }
+          $info | ForEach-Object { Write-Host $_ }
+          $mm   = ($info | Select-String '^TOOLSET_MAJOR_MINOR=(.+)$').Matches.Groups[1].Value
+          $comp = ($info | Select-String '^VS_COMPONENT=(.+)$').Matches.Groups[1].Value
+          if (-not $mm -or -not $comp -or $comp -eq 'unknown') {
+            throw "Unknown toolset/component (major_minor='$mm' component='$comp')"
+          }
+
+          $dir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
+          $vs  = & "$dir\vswhere.exe" -latest -property installationPath
+          $tools = Join-Path $vs "VC\Tools\MSVC"
+          function Have-Toolset { Get-ChildItem "$tools\$mm.*\bin\Hostx64\x64\cl.exe" -ErrorAction SilentlyContinue }
+          Write-Host "Installed MSVC toolsets before:"
+          Get-ChildItem $tools -Directory -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
+          if (Have-Toolset) { Write-Host "Toolset $mm already present."; exit 0 }
+
+          # Wait out any VS installer already running, else modify can't acquire
+          # the installer singleton lock.
+          Get-Process -Name vs_installer,vs_installershell,setup -ErrorAction SilentlyContinue |
+            ForEach-Object { try { $_.WaitForExit(600000) | Out-Null } catch {} }
+
+          $start = Get-Date
+          Write-Host "Installing MSVC toolset $mm ($comp) into $vs ..."
+          $argline = ('modify --installPath "{0}" --add {1} --quiet --norestart --force') -f $vs, $comp
+          Write-Host "vs_installer $argline"
+          # Launch and return (no --wait; --wait deadlocks on the singleton lock).
+          Start-Process -FilePath "$dir\vs_installer.exe" -ArgumentList $argline | Out-Null
+          Start-Sleep -Seconds 15   # let the installer engine spin up
+
+          # Wait until cl.exe exists AND the `setup` engine has exited. CMake's
+          # VS generator queries the Setup COM catalog and fails ("could not
+          # find any instance of Visual Studio") if it runs mid-rewrite.
+          $deadline = (Get-Date).AddMinutes(25)
+          while ((Get-Date) -lt $deadline) {
+            $busy = @(Get-Process -Name setup -ErrorAction SilentlyContinue)
+            if ((Have-Toolset) -and $busy.Count -eq 0) { break }
+            Start-Sleep -Seconds 10
+          }
+          if (-not (Have-Toolset)) {
+            Write-Host "---- VS installer logs (tail) ----"
+            Get-ChildItem $env:TEMP -Filter "dd_*.log" -ErrorAction SilentlyContinue |
+              Where-Object { $_.LastWriteTime -ge $start } |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 5 |
+              ForEach-Object { Write-Host "==== $($_.FullName) ===="; Get-Content $_.FullName -Tail 100 }
+            throw "MSVC toolset $mm not present after install"
+          }
+          Start-Sleep -Seconds 30   # let the instance catalog settle before CMake
+          Write-Host "Installed: $((Have-Toolset).FullName); installer idle."
+
       # --- Build native library ---
       - name: Build native library and run C++ tests
         run: python scripts/build_native.py --run-tests
@@ -340,7 +399,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        # windows-2022 is pinned (not windows-latest): the MSVC 14.36 toolset
+        # component id is a VS 2022 component, and windows-latest may migrate to
+        # windows-2025. Artifact names use runner.os/arch, not the label.
+        os: [macos-latest, windows-2022, ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
     env:
@@ -438,6 +500,62 @@ jobs:
 
       - name: Run codegen
         run: python scripts/run_codegen.py
+
+      # --- Pin MSVC toolset (Windows) so fdl_core.dll binds to older MSVC runtimes ---
+      - name: Install required MSVC toolset (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $info = & python scripts/msvc_toolset.py --print-required-toolset
+          if ($LASTEXITCODE -ne 0) { $info | ForEach-Object { Write-Host $_ }; throw "Could not determine required toolset" }
+          $info | ForEach-Object { Write-Host $_ }
+          $mm   = ($info | Select-String '^TOOLSET_MAJOR_MINOR=(.+)$').Matches.Groups[1].Value
+          $comp = ($info | Select-String '^VS_COMPONENT=(.+)$').Matches.Groups[1].Value
+          if (-not $mm -or -not $comp -or $comp -eq 'unknown') {
+            throw "Unknown toolset/component (major_minor='$mm' component='$comp')"
+          }
+
+          $dir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
+          $vs  = & "$dir\vswhere.exe" -latest -property installationPath
+          $tools = Join-Path $vs "VC\Tools\MSVC"
+          function Have-Toolset { Get-ChildItem "$tools\$mm.*\bin\Hostx64\x64\cl.exe" -ErrorAction SilentlyContinue }
+          Write-Host "Installed MSVC toolsets before:"
+          Get-ChildItem $tools -Directory -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
+          if (Have-Toolset) { Write-Host "Toolset $mm already present."; exit 0 }
+
+          # Wait out any VS installer already running, else modify can't acquire
+          # the installer singleton lock.
+          Get-Process -Name vs_installer,vs_installershell,setup -ErrorAction SilentlyContinue |
+            ForEach-Object { try { $_.WaitForExit(600000) | Out-Null } catch {} }
+
+          $start = Get-Date
+          Write-Host "Installing MSVC toolset $mm ($comp) into $vs ..."
+          $argline = ('modify --installPath "{0}" --add {1} --quiet --norestart --force') -f $vs, $comp
+          Write-Host "vs_installer $argline"
+          # Launch and return (no --wait; --wait deadlocks on the singleton lock).
+          Start-Process -FilePath "$dir\vs_installer.exe" -ArgumentList $argline | Out-Null
+          Start-Sleep -Seconds 15   # let the installer engine spin up
+
+          # Wait until cl.exe exists AND the `setup` engine has exited. CMake's
+          # VS generator queries the Setup COM catalog and fails ("could not
+          # find any instance of Visual Studio") if it runs mid-rewrite.
+          $deadline = (Get-Date).AddMinutes(25)
+          while ((Get-Date) -lt $deadline) {
+            $busy = @(Get-Process -Name setup -ErrorAction SilentlyContinue)
+            if ((Have-Toolset) -and $busy.Count -eq 0) { break }
+            Start-Sleep -Seconds 10
+          }
+          if (-not (Have-Toolset)) {
+            Write-Host "---- VS installer logs (tail) ----"
+            Get-ChildItem $env:TEMP -Filter "dd_*.log" -ErrorAction SilentlyContinue |
+              Where-Object { $_.LastWriteTime -ge $start } |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 5 |
+              ForEach-Object { Write-Host "==== $($_.FullName) ===="; Get-Content $_.FullName -Tail 100 }
+            throw "MSVC toolset $mm not present after install"
+          }
+          Start-Sleep -Seconds 30   # let the instance catalog settle before CMake
+          Write-Host "Installed: $((Have-Toolset).FullName); installer idle."
 
       # --- Build native library ---
       - name: Build native library
