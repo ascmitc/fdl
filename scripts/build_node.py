@@ -24,6 +24,15 @@ NODE_DIR = REPO_ROOT / "native" / "bindings" / "node"
 CORE_BUILD_DIR = REPO_ROOT / "native" / "core" / "build"
 
 
+def _core_lib_search_dirs() -> list[Path]:
+    """Directories that may contain the built fdl_core library.
+
+    On Windows/MSVC (multi-config generators) the DLL lands in a per-config
+    subdir (Release/), so search it in addition to the base build dir.
+    """
+    return [CORE_BUILD_DIR, CORE_BUILD_DIR / "Release"]
+
+
 def check_prerequisites() -> list[str]:
     """Check that required tools are available. Returns list of errors."""
     errors = []
@@ -34,12 +43,15 @@ def check_prerequisites() -> list[str]:
     if not shutil.which("cmake"):
         errors.append("cmake not found — install cmake")
 
-    # Check that libfdl_core exists
+    # Check that libfdl_core exists (search base build dir + Windows Release/ subdir)
     core_lib = None
-    for pattern in ["libfdl_core.dylib", "libfdl_core.so", "fdl_core.dll", "libfdl_core.a"]:
-        candidates = list(CORE_BUILD_DIR.glob(pattern))
-        if candidates:
-            core_lib = candidates[0]
+    for search_dir in _core_lib_search_dirs():
+        for pattern in ["libfdl_core.dylib", "libfdl_core.so", "fdl_core.dll", "libfdl_core.a"]:
+            candidates = list(search_dir.glob(pattern))
+            if candidates:
+                core_lib = candidates[0]
+                break
+        if core_lib is not None:
             break
     if core_lib is None:
         errors.append(f"libfdl_core not found in {CORE_BUILD_DIR}.\n  Build it first: python scripts/build_native.py")
@@ -98,14 +110,14 @@ def _bundle_libfdl_core(dest_dir: Path) -> None:
         "libfdl_core.so.*",  # Linux versioned: libfdl_core.so.0, libfdl_core.so.0.6.0
         "fdl_core.dll",
     ]
-    for pattern in lib_patterns:
-        candidates = list(CORE_BUILD_DIR.glob(pattern))
-        for src in candidates:
-            dst = dest_dir / src.name
-            if dst.resolve() == src.resolve():
-                continue
-            shutil.copy2(src, dst)
-            print(f"  Bundled: {src.name} -> {dst}")
+    for search_dir in _core_lib_search_dirs():
+        for pattern in lib_patterns:
+            for src in search_dir.glob(pattern):
+                dst = dest_dir / src.name
+                if dst.resolve() == src.resolve():
+                    continue
+                shutil.copy2(src, dst)
+                print(f"  Bundled: {src.name} -> {dst}")
 
 
 def build_typescript() -> int:

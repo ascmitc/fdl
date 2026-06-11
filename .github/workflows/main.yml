@@ -337,7 +337,6 @@ jobs:
           node-version: '20'
 
       - name: Build Node.js addon and run tests
-        if: runner.os != 'Windows'
         run: python scripts/build_node.py --run-tests
 
       # --- WASM backend smoke test (Linux only — same artifact runs everywhere) ---
@@ -561,15 +560,13 @@ jobs:
       - name: Build native library
         run: python scripts/build_native.py --no-tests
 
-      # --- Build Node.js addon (non-Windows) ---
+      # --- Build Node.js addon (all platforms) ---
       - name: Set up Node.js
-        if: runner.os != 'Windows'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Build Node.js addon
-        if: runner.os != 'Windows'
         run: python scripts/build_node.py --addon-only
 
       # --- Copy native lib into fdl_ffi for wheel bundling ---
@@ -713,6 +710,20 @@ jobs:
             native/bindings/node/build/fdl_addon.node
             native/bindings/node/build/libfdl_core.*
           if-no-files-found: warn
+          retention-days: 2
+
+      # Windows: MSVC emits to build/Release/. Upload the addon + co-located
+      # fdl_core.dll (common ancestor build/Release => both land flat in the
+      # artifact, so the npm_publish download fills prebuilds/win32-x64/ flat).
+      - name: Upload Node.js addon (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-addon-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            native/bindings/node/build/Release/fdl_addon.node
+            native/bindings/node/build/Release/fdl_core.dll
+          if-no-files-found: error
           retention-days: 2
 
   # ---------------------------------------------------------------------------
@@ -862,6 +873,14 @@ jobs:
         with:
           name: node-addon-Linux-X64
           path: native/bindings/node/prebuilds/linux-x64/
+
+      # Dir name must match the loader's runtime lookup:
+      # prebuilds/${process.platform}-${process.arch} => win32-x64
+      - name: Download Windows (X64) addon
+        uses: actions/download-artifact@v4
+        with:
+          name: node-addon-Windows-X64
+          path: native/bindings/node/prebuilds/win32-x64/
 
       - name: Download WASM artifact
         uses: actions/download-artifact@v4
