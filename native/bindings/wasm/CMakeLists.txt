@@ -56,6 +56,7 @@ target_include_directories(fdl_module PRIVATE
 )
 
 # Emscripten link flags. Keep these on the link step only.
+# Built/tested with emsdk 3.1.73 (pinned in .github/workflows/main.yml).
 set(_FDL_WASM_LINK_FLAGS
   "-lembind"
   "-sMODULARIZE=1"
@@ -67,7 +68,6 @@ set(_FDL_WASM_LINK_FLAGS
   "-sSTACK_SIZE=1048576"          # 1 MiB stack.
   "-sFILESYSTEM=0"                # We don't need the FS shim.
   "-sDISABLE_EXCEPTION_CATCHING=0"
-  "-sEXPORTED_RUNTIME_METHODS=['HEAPU8']"
   "-sDYNAMIC_EXECUTION=0"
 )
 string(REPLACE ";" " " _FDL_WASM_LINK_FLAGS_STR "${_FDL_WASM_LINK_FLAGS}")

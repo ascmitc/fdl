@@ -6,6 +6,11 @@
  * @brief Public API for @asc-mitc/fdl — re-exports all facade classes, types, and utilities.
  */
 
+// Register the N-API loader (Node.js entry only). This side-effect import wires
+// the native addon into the backend-agnostic registry so getAddon() can lazily
+// load it. The browser/WASM entry (./wasm/index.ts) never imports this module.
+import "./ffi/loader-node.js";
+
 // Facade classes
 export { FDL } from "./fdl.js";
 export { Canvas } from "./canvas.js";
@@ -61,11 +66,12 @@ export {
   getAnchorFromPath,
   getDimensionsFromPath,
   makeRect,
-  readFromFile,
   readFromString,
-  writeToFile,
   writeToString,
 } from "./utils.js";
+
+// Node.js-only file I/O (uses node:fs; not exported from the browser/WASM entry)
+export { readFromFile, writeToFile } from "./utils-node.js";
 
 // Utility types
 export type { FramingFromIntentResult } from "./utils.js";

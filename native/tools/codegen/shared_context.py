@@ -14,7 +14,33 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
-from .fdl_idl import IDL, EnumType, ValueType
+from .fdl_idl import IDL, EnumType, Function, ValueType
+
+
+# -----------------------------------------------------------------------
+# Binding validation
+# -----------------------------------------------------------------------
+
+
+def assert_js_bindable(fn: Function) -> None:
+    """Reject function shapes the JS binding generators can't represent consistently.
+
+    A caller-frees string return combined with out-parameters has no consistent
+    representation across the N-API and WASM backends: the N-API generator would emit no
+    ``_return`` and leak the malloc'd string, while the WASM generator would return null
+    instead of throwing. No such function exists in the C ABI today; this guard ensures one
+    cannot be added without explicit, tested handling in both binding templates.
+    """
+    is_caller_frees_str = fn.ownership is not None and "caller_frees" in fn.ownership and fn.returns in ("char*", "const char*")
+    has_out_param = any(p.direction == "out" for p in fn.params)
+    if is_caller_frees_str and has_out_param:
+        raise ValueError(
+            f"{fn.name}: a caller-frees string return combined with out-parameters is not "
+            "supported by the JS binding generators (N-API and WASM would diverge). Add "
+            "explicit handling to the has_out_params blocks of both "
+            "templates/node/binding.cc.j2 and templates/wasm/bindings.cpp.j2 (throw for "
+            "non-nullable, free the string), then add a test, before enabling it."
+        )
 
 
 # -----------------------------------------------------------------------

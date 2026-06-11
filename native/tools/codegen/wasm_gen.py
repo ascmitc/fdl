@@ -31,7 +31,7 @@ from .node_gen import (
     _generate_custom_attr_functions,
     _struct_pascal_name,
 )
-from .shared_context import make_jinja_env
+from .shared_context import assert_js_bindable, make_jinja_env
 
 
 # Functions never invoked from the JavaScript facade. They take a result-type
@@ -364,6 +364,8 @@ def generate_bindings(idl: IDL, output_dir: Path) -> None:
     # All functions (IDL + synthesised custom-attr functions), minus the
     # blocklist of dead bindings (see _SKIP_FUNCTIONS above).
     all_fns = [fn for fn in list(idl.functions) + _generate_custom_attr_functions(idl) if fn.name not in _SKIP_FUNCTIONS]
+    for _fn in all_fns:
+        assert_js_bindable(_fn)
     fn_contexts = [_build_function_context(fn, idl) for fn in all_fns]
 
     # Build struct helper contexts, filtered to those referenced.

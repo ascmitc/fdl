@@ -6,8 +6,6 @@
  * @brief Utility functions for FDL operations.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
 import { getAddon } from "./ffi/index.js";
 import { DimensionsFloat, DimensionsInt, PointFloat, Rect } from "./types.js";
 import { GeometryPath } from "./constants.js";
@@ -15,16 +13,10 @@ import { GEOMETRY_PATH_TO_C } from "./enum-maps.js";
 import { toRoundStrategy } from "./converters.js";
 import { RoundStrategy, getRounding } from "./rounding.js";
 import { Version } from "./version.js";
-// Type-only imports for facade classes (runtime-loaded lazily below)
-import type { FDL as FDLType } from "./fdl.js";
+import { FDL } from "./fdl.js";
+// Type-only imports for facade classes used in signatures.
 import type { Canvas as CanvasType } from "./canvas.js";
 import type { FramingDecision as FDType } from "./framing-decision.js";
-
-// Lazy loader for circular deps in ESM
-const _require = createRequire(import.meta.url);
-function _lazyFDL(): typeof import("./fdl.js") {
-  return _require("./fdl.js");
-}
 
 /** Create a rect from raw coordinates. */
 export function makeRect(
@@ -39,36 +31,24 @@ export function makeRect(
 }
 
 // -----------------------------------------------------------------------
-// I/O convenience functions
+// I/O convenience functions (string-based; safe for browser and Node.js)
+//
+// File-based helpers (readFromFile / writeToFile) live in utils-node.ts since
+// they require node:fs. Browser callers do their own fetch/Blob I/O and use
+// these string functions.
 // -----------------------------------------------------------------------
 
 /** Parse an FDL document from a JSON string. */
-export function readFromString(json: string, validate = true): FDLType {
-  const { FDL } = _lazyFDL();
+export function readFromString(json: string, validate = true): FDL {
   const doc = FDL.parse(json);
   if (validate) doc.validate();
   return doc;
 }
 
-/** Read an FDL document from a file on disk. */
-export function readFromFile(filePath: string, validate = true): FDLType {
-  const contents = readFileSync(filePath, "utf-8");
-  return readFromString(contents, validate);
-}
-
 /** Serialize an FDL document to a JSON string. */
-export function writeToString(doc: FDLType, validate = true): string {
+export function writeToString(doc: FDL, validate = true): string {
   if (validate) doc.validate();
   return doc.asJson();
-}
-
-/** Write an FDL document to a file on disk. */
-export function writeToFile(
-  doc: FDLType,
-  filePath: string,
-  validate = true,
-): void {
-  writeFileSync(filePath, writeToString(doc, validate), "utf-8");
 }
 
 // -----------------------------------------------------------------------

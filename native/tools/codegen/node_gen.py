@@ -15,7 +15,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from .fdl_idl import IDL, Function, FunctionParam, ValueType, build_ir
-from .shared_context import make_jinja_env
+from .shared_context import assert_js_bindable, make_jinja_env
 
 # -----------------------------------------------------------------------
 # Struct types requiring Object<->struct conversion helpers
@@ -498,6 +498,8 @@ def generate_addon(idl: IDL, output_dir: Path) -> None:
 
     # --- Function wrappers (IDL functions + synthesized custom-attr functions) ---
     all_fns = [fn for fn in list(idl.functions) + _generate_custom_attr_functions(idl) if fn.name not in _SKIP_FUNCTIONS]
+    for _fn in all_fns:
+        assert_js_bindable(_fn)
     fn_contexts = [_build_napi_function_context(fn, idl) for fn in all_fns]
 
     # --- Module init registrations (export using C function names) ---
@@ -758,7 +760,7 @@ def _gen_node_utils(env, idl, utils_ff_contexts: list[dict], output_dir: Path) -
         utils_enum_imports.update(ctx.get("needed_enum_imports", []))
         utils_enum_map_imports.update(ctx["needed_enum_maps"])
 
-    # --- utils.ts ---
+    # --- utils.ts (universal: no Node.js built-ins, safe for the browser) ---
     tmpl = env.get_template("node/utils.ts.j2")
     (output_dir / "utils.ts").write_text(
         encoding="utf-8",
@@ -769,6 +771,13 @@ def _gen_node_utils(env, idl, utils_ff_contexts: list[dict], output_dir: Path) -
             enum_map_imports=sorted(utils_enum_map_imports),
             has_version=bool(aux.version),
         ),
+    )
+
+    # --- utils-node.ts (Node.js-only file I/O; never imported by the WASM entry) ---
+    node_tmpl = env.get_template("node/utils-node.ts.j2")
+    (output_dir / "utils-node.ts").write_text(
+        encoding="utf-8",
+        data=node_tmpl.render(),
     )
 
 
@@ -860,18 +869,19 @@ def _gen_node_index(
 
     enum_names = sorted(ec["ts_class"] for ec in constants_contexts)
     error_names = [e.name for e in aux.errors] if aux.errors else []
-    # Hand-coded utils that are added in the template alongside codegen-generated ones
+    # Hand-coded utils that are added in the template alongside codegen-generated ones.
+    # readFromFile/writeToFile live in the Node-only utils-node.ts module (they use
+    # node:fs), so they are re-exported separately and NOT from the universal utils.ts.
     _HANDCODED_UTILS = {
         "readFromString",
-        "readFromFile",
         "writeToString",
-        "writeToFile",
         "abiVersion",
         "getDimensionsFromPath",
         "getAnchorFromPath",
         "computeFramingFromIntent",
     }
     utils_names = sorted(set(ctx["name"] for ctx in utils_ff_contexts) | _HANDCODED_UTILS)
+    node_utils_names = ["readFromFile", "writeToFile"]
 
     index_tmpl = env.get_template("node/index.ts.j2")
     (output_dir / "index.ts").write_text(
@@ -881,6 +891,7 @@ def _gen_node_index(
             enums=enum_names,
             errors=error_names,
             utils=utils_names,
+            node_utils=node_utils_names,
         ),
     )
 
@@ -921,6 +932,7 @@ def generate_facade(idl: IDL, output_dir: Path) -> None:
         "version.ts",
         "rounding.ts",
         "utils.ts",
+        "utils-node.ts",
         "custom-attrs.ts",
         "index.ts",
     ] + [f"{class_to_module(ctx['name'])}.ts" for ctx in class_contexts]

@@ -5,6 +5,10 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "browser": {
+    "./dist/ffi/loader-node.js": false,
+    "./dist/utils-node.js": false
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

@@ -15,11 +15,17 @@
 
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
+#include <emscripten.h>
 #include <cstdint>
 #include <string>
 #include "fdl/fdl_core.h"
 
 using emscripten::val;
+
+// Throw a real JS Error from C++ so non-nullable NULL returns surface the same
+// way as the N-API addon (a catchable Error with a message), rather than an
+// opaque value. Defined via EM_JS so it works under -sDYNAMIC_EXECUTION=0.
+EM_JS(void, fdl_throw_js_error, (const char* msg), { throw new Error(UTF8ToString(msg)); });
 
 // ----------------------------------------------------------------------------
 // Handle wrap / unwrap
@@ -117,6 +123,8 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
         {% endif %}
         {# --- Build the return value --- #}
         {% if fn.has_out_params %}
+            {# A caller-frees string return (string_free) cannot co-occur with out-params —
+               enforced by assert_js_bindable in shared_context.py — so no case for it here. #}
             auto _out = val::object();
             {% if fn.return.kind == "number" %}
             _out.set("_return", static_cast<double>(_r));
@@ -128,9 +136,6 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
             _out.set("_return", static_cast<unsigned>(_r));
             {% elif fn.return.kind == "string" %}
             _out.set("_return", _r ? val(std::string(_r)) : val::null());
-            {% elif fn.return.kind == "string_free" %}
-            if (_r) { _out.set("_return", val(std::string(_r))); fdl_free(const_cast<char*>(_r)); }
-            else { _out.set("_return", val::null()); }
             {% endif %}
             {% for op in fn.out_params %}
             {% if op.is_struct %}
@@ -165,7 +170,10 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
             {% if fn.return.nullable %}
             if (!_r) return val::null();
             {% else %}
-            if (!_r) return val::null();
+            if (!_r) {
+                fdl_throw_js_error("{{ fn.name }} returned NULL");
+                return val::null();  // unreachable: the line above throws
+            }
             {% endif %}
             std::string _s(_r);
             fdl_free(const_cast<char*>(_r));

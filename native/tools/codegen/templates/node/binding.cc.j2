@@ -66,7 +66,9 @@ Napi::Value {{ fn.wrapper_name }}(const Napi::CallbackInfo& info) {
 {% endfor %}
 {# --- Call C function and handle return --- #}
 {% if fn.has_out_params %}
-{# Functions with out-parameters: always return a JS object #}
+{# Functions with out-parameters: always return a JS object.
+   A caller-frees string return (string_free) cannot co-occur with out-params —
+   enforced by assert_js_bindable in shared_context.py — so no case for it here. #}
 {% if fn.return_kind == "void" %}
     {{ fn.name }}({{ fn.call_args_str }});
 {% elif fn.return_kind == "number" %}
@@ -128,11 +130,15 @@ Napi::Value {{ fn.wrapper_name }}(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, static_cast<double>(_r));
 {% elif fn.return_kind == "struct" %}
     {{ fn.return_type }} _r = {{ fn.name }}({{ fn.call_args_str }});
+{% if fn.return_owned_string_fields %}
     auto _out = {{ fn.return_pascal_name }}ToObject(env, _r);
 {% for fld in fn.return_owned_string_fields %}
     if (_r.{{ fld }}) fdl_free(const_cast<char*>(_r.{{ fld }}));
 {% endfor %}
     return _out;
+{% else %}
+    return {{ fn.return_pascal_name }}ToObject(env, _r);
+{% endif %}
 {% elif fn.return_kind == "enum" %}
     auto _r = {{ fn.name }}({{ fn.call_args_str }});
     return Napi::Number::New(env, static_cast<uint32_t>(_r));

@@ -4,7 +4,9 @@
 """Build the WebAssembly (Emscripten) bindings.
 
 Prerequisites:
-    - Emscripten SDK active in the environment (emcc, emcmake on PATH)
+    - Emscripten SDK active in the environment (emcc, emcmake on PATH).
+      Use emsdk 3.1.73 — the version pinned in CI (.github/workflows/main.yml).
+      Other versions may produce subtly different Embind output.
     - cmake, make
 
 Activates emsdk:

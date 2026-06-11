@@ -14,11 +14,17 @@
 
 #include "fdl/fdl_core.h"
 #include <cstdint>
+#include <emscripten.h>
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
 #include <string>
 
 using emscripten::val;
+
+// Throw a real JS Error from C++ so non-nullable NULL returns surface the same
+// way as the N-API addon (a catchable Error with a message), rather than an
+// opaque value. Defined via EM_JS so it works under -sDYNAMIC_EXECUTION=0.
+EM_JS(void, fdl_throw_js_error, (const char* msg), { throw new Error(UTF8ToString(msg)); });
 
 // ----------------------------------------------------------------------------
 // Handle wrap / unwrap
@@ -673,7 +679,8 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
             auto* ct = unwrap_handle<fdl_canvas_template_t>(ct_v);
             auto* _r = fdl_canvas_template_to_json(ct, indent);
             if (!_r) {
-                return val::null();
+                fdl_throw_js_error("fdl_canvas_template_to_json returned NULL");
+                return val::null(); // unreachable: the line above throws
             }
             std::string _s(_r);
             fdl_free(const_cast<char*>(_r));
@@ -686,7 +693,8 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
             auto* canvas = unwrap_handle<fdl_canvas_t>(canvas_v);
             auto* _r = fdl_canvas_to_json(canvas, indent);
             if (!_r) {
-                return val::null();
+                fdl_throw_js_error("fdl_canvas_to_json returned NULL");
+                return val::null(); // unreachable: the line above throws
             }
             std::string _s(_r);
             fdl_free(const_cast<char*>(_r));
@@ -734,7 +742,8 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
             auto* cid = unwrap_handle<fdl_clip_id_t>(cid_v);
             auto* _r = fdl_clip_id_to_json(cid, indent);
             if (!_r) {
-                return val::null();
+                fdl_throw_js_error("fdl_clip_id_to_json returned NULL");
+                return val::null(); // unreachable: the line above throws
             }
             std::string _s(_r);
             fdl_free(const_cast<char*>(_r));
@@ -906,7 +915,8 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
             auto* ctx = unwrap_handle<fdl_context_t>(ctx_v);
             auto* _r = fdl_context_to_json(ctx, indent);
             if (!_r) {
-                return val::null();
+                fdl_throw_js_error("fdl_context_to_json returned NULL");
+                return val::null(); // unreachable: the line above throws
             }
             std::string _s(_r);
             fdl_free(const_cast<char*>(_r));
@@ -1307,7 +1317,8 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
                              auto* doc = unwrap_handle<fdl_doc_t>(doc_v);
                              auto* _r = fdl_doc_to_json(doc, indent);
                              if (!_r) {
-                                 return val::null();
+                                 fdl_throw_js_error("fdl_doc_to_json returned NULL");
+                                 return val::null(); // unreachable: the line above throws
                              }
                              std::string _s(_r);
                              fdl_free(const_cast<char*>(_r));
@@ -1560,7 +1571,8 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
             auto* fd = unwrap_handle<fdl_framing_decision_t>(fd_v);
             auto* _r = fdl_framing_decision_to_json(fd, indent);
             if (!_r) {
-                return val::null();
+                fdl_throw_js_error("fdl_framing_decision_to_json returned NULL");
+                return val::null(); // unreachable: the line above throws
             }
             std::string _s(_r);
             fdl_free(const_cast<char*>(_r));
@@ -1623,7 +1635,8 @@ EMSCRIPTEN_BINDINGS(fdl_core_bindings) {
             auto* fi = unwrap_handle<fdl_framing_intent_t>(fi_v);
             auto* _r = fdl_framing_intent_to_json(fi, indent);
             if (!_r) {
-                return val::null();
+                fdl_throw_js_error("fdl_framing_intent_to_json returned NULL");
+                return val::null(); // unreachable: the line above throws
             }
             std::string _s(_r);
             fdl_free(const_cast<char*>(_r));

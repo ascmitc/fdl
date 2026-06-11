@@ -32,7 +32,7 @@ export async function initialize(
   overrides: Record<string, unknown> = {},
 ): Promise<void> {
   if (_initPromise) return _initPromise;
-  _initPromise = (async () => {
+  const p = (async () => {
     // The compiled .mjs sits two levels up from dist/wasm/index.js
     // (i.e. <package>/wasm/fdl_module.mjs). The dynamic import URL is
     // computed at runtime so bundlers don't try to inline it.
@@ -45,7 +45,13 @@ export async function initialize(
     verifyAbi(instance);
     setAddon(instance);
   })();
-  return _initPromise;
+  _initPromise = p;
+  // On failure, clear the cached promise so a later call can retry. Guard on
+  // identity so we don't clobber a concurrent re-initialization attempt.
+  p.catch(() => {
+    if (_initPromise === p) _initPromise = null;
+  });
+  return p;
 }
 
 // Re-export the entire facade surface (same as the Node.js entry).
@@ -89,15 +95,16 @@ export {
   calculateScaleFactor,
 } from "../rounding.js";
 
+// Note: file-based I/O (readFromFile/writeToFile) is intentionally NOT exported
+// from the browser/WASM entry — it requires node:fs. Browser callers read/write
+// via their own fetch/Blob I/O and use readFromString/writeToString.
 export {
   abiVersion,
   computeFramingFromIntent,
   getAnchorFromPath,
   getDimensionsFromPath,
   makeRect,
-  readFromFile,
   readFromString,
-  writeToFile,
   writeToString,
 } from "../utils.js";
 
