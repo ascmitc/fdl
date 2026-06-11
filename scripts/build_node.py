@@ -14,6 +14,7 @@ Usage:
 """
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -22,6 +23,19 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 NODE_DIR = REPO_ROOT / "native" / "bindings" / "node"
 CORE_BUILD_DIR = REPO_ROOT / "native" / "core" / "build"
+
+
+def _run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
+    """Run a subprocess, working around a Windows quirk.
+
+    On Windows, npm/npx (and other Node CLIs) are ``.cmd`` shims that
+    ``CreateProcess`` cannot execute directly, so we route the command through
+    the shell there (cmd.exe resolves the ``.cmd`` via PATHEXT). On POSIX we run
+    the argv list directly as before.
+    """
+    if os.name == "nt":
+        return subprocess.run(subprocess.list2cmdline(cmd), shell=True, **kwargs)
+    return subprocess.run(cmd, **kwargs)
 
 
 def _core_lib_search_dirs() -> list[Path]:
@@ -63,7 +77,7 @@ def npm_install() -> int:
     """Install Node.js dependencies."""
     print("=== npm install ===")
     # Use --ignore-scripts to avoid triggering cmake-js during install
-    result = subprocess.run(
+    result = _run(
         ["npm", "install", "--ignore-scripts"],
         cwd=NODE_DIR,
     )
@@ -73,11 +87,11 @@ def npm_install() -> int:
 def build_addon() -> int:
     """Build the N-API addon via cmake-js."""
     print("=== Building N-API addon (cmake-js) ===")
-    result = subprocess.run(
+    result = _run(
         ["npx", "cmake-js", "compile", "-d", str(NODE_DIR)],
         cwd=NODE_DIR,
         env={
-            **__import__("os").environ,
+            **os.environ,
             "FDL_CORE_LIB_DIR": str(CORE_BUILD_DIR),
         },
     )
@@ -123,7 +137,7 @@ def _bundle_libfdl_core(dest_dir: Path) -> None:
 def build_typescript() -> int:
     """Compile TypeScript to JavaScript."""
     print("=== Compiling TypeScript ===")
-    result = subprocess.run(
+    result = _run(
         ["npx", "tsc"],
         cwd=NODE_DIR,
     )
@@ -133,7 +147,7 @@ def build_typescript() -> int:
 def run_tests() -> int:
     """Run vitest test suite."""
     print("=== Running vitest ===")
-    result = subprocess.run(
+    result = _run(
         ["npx", "vitest", "run"],
         cwd=NODE_DIR,
     )
