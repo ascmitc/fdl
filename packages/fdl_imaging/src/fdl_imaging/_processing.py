@@ -199,9 +199,10 @@ def _warp_compose(
     anchor_x, anchor_y : float
         Source anchor of the region to preserve (top-left of the crop).
     crop_width, crop_height : float
-        Float dimensions of the source region to preserve.  Used only to
-        compute the scale factor; the actual area read is determined by
-        the output grid size and the filter footprint.
+        Float dimensions of the source region to preserve.  Sets the scale
+        factor and bounds the source read: the source is pre-cropped to the
+        integer ROI enclosing ``[anchor, anchor+crop]`` so content outside
+        the region cannot leak into the output through the scale+translate.
     scale_width, scale_height : float
         Target dimensions of the scaled (resized) content.  May be float; the
         scale factor is ``scale_dim / crop_dim`` and is applied in float.
@@ -222,6 +223,34 @@ def _warp_compose(
     scale_x = scale_width / crop_width if crop_width != 0 else 1.0
     scale_y = scale_height / crop_height if crop_height != 0 else 1.0
 
+    # Restrict sampling to the crop region.  ``warp`` maps the whole source
+    # through ``M``, so without this pre-crop the scale+translate would place
+    # source content *outside* ``[anchor, anchor+crop]`` (e.g. framing/pad
+    # bands) inside the output canvas instead of cropping it away — matching
+    # the old ``cut -> resize -> paste`` pipeline's hard crop.  ``crop``
+    # preserves the source coordinate origin (unlike ``cut``), so ``M`` stays
+    # correct with no offset compensation, and ``wrap="black"`` then blackens
+    # everything outside the cropped pixel-data window.  The enclosing integer
+    # ROI keeps the fractional anchor's sub-pixel precision in the warp.
+    x0 = math.floor(anchor_x)
+    y0 = math.floor(anchor_y)
+    x1 = math.ceil(anchor_x + crop_width)
+    y1 = math.ceil(anchor_y + crop_height)
+    # Clamp to the source pixel-data window; area beyond the image is still
+    # correctly blackened by ``wrap="black"`` during the warp.
+    src_x0 = src_spec.x
+    src_y0 = src_spec.y
+    src_x1 = src_spec.x + src_spec.width
+    src_y1 = src_spec.y + src_spec.height
+    x0 = min(max(x0, src_x0), src_x1)
+    y0 = min(max(y0, src_y0), src_y1)
+    x1 = min(max(x1, src_x0), src_x1)
+    y1 = min(max(y1, src_y0), src_y1)
+    cropped = ImageBuf()
+    ImageBufAlgo.crop(cropped, src, ROI(x0, x1, y0, y1))
+    if cropped.has_error:
+        raise OSError(f"Failed to crop image: {cropped.geterror()}")
+
     M = _warp_matrix(
         anchor_x=anchor_x,
         anchor_y=anchor_y,
@@ -232,7 +261,7 @@ def _warp_compose(
     )
     dst_spec = ImageSpec(final_width, final_height, src_spec.nchannels, src_spec.format)
     dst = ImageBuf(dst_spec)
-    ImageBufAlgo.warp(dst, src, M, filtername=filter_name, wrap="black")
+    ImageBufAlgo.warp(dst, cropped, M, filtername=filter_name, wrap="black")
     if dst.has_error:
         raise OSError(f"Failed to warp image: {dst.geterror()}")
     return dst
