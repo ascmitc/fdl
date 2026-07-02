@@ -554,17 +554,16 @@ fdl_template_result_t apply_canvas_template(
         af_v,
         pad_to_max ? FDL_TRUE : FDL_FALSE);
 
-    // Stored as `_content_translation` custom attribute — unrounded float by
-    // design.  Sub-pixel precision preserves the exact alignment shift so
-    // downstream consumers can place content without re-quantizing.
-    fdl_point_f64_t const content_translation = {shift_x, shift_y};
+    // Geometry offset = the alignment shift (applied to position the layers;
+    // unchanged so anchors/dims are unaffected).
+    fdl_point_f64_t const applied_offset = {shift_x, shift_y};
     geometry.canvas_dims = {out_w, out_h};
 
     // --- Phase 8b: Apply offsets ---
     fdl_point_f64_t theo_eff;
     fdl_point_f64_t theo_prot;
     fdl_point_f64_t theo_fram;
-    geometry = fdl_geometry_apply_offset(geometry, content_translation, &theo_eff, &theo_prot, &theo_fram);
+    geometry = fdl_geometry_apply_offset(geometry, applied_offset, &theo_eff, &theo_prot, &theo_fram);
 
     // --- Phase 9: Crop ---
     geometry = fdl_geometry_crop(geometry, theo_eff, theo_prot, theo_fram);
@@ -581,6 +580,18 @@ fdl_template_result_t apply_canvas_template(
     // still be fractional from float cropping and gets integerized here as
     // required by the schema.
     geometry = fdl_geometry_round(geometry, rounding);
+
+    // Stored `_content_translation` custom attribute — unrounded float by
+    // design.  It is the alignment shift PLUS the symmetric canvas-rounding
+    // absorption that `geometry_round` folds into the layer anchors
+    // (`canvas_delta / 2`).  We add it here so content_translation reflects the
+    // final post-round placement of the content: for a fractional scaled canvas
+    // that rounds to an integer, the content shifts by (rounded - float)/2 to
+    // stay centered.  When the canvas is already integer (pad-to-max/max dims)
+    // the delta is zero and content_translation equals the raw shift.
+    fdl_point_f64_t const content_translation = {
+        shift_x + ((geometry.canvas_dims.width - out_w) / fdl::constants::kCenterDivisor),
+        shift_y + ((geometry.canvas_dims.height - out_h) / fdl::constants::kCenterDivisor)};
 
     // --- Phase 10: Build output FDL document ---
     return build_template_output_document(

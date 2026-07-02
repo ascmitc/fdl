@@ -214,6 +214,13 @@ class ImageComparison:
             f"Channel count mismatch: expected {expected_spec.nchannels}, got {actual_spec.nchannels}",
         )
 
+        # Compare pixel aspect ratio (always required) — carries the anamorphic
+        # squeeze; default 1.0 when unset (EXR convention).
+        expected_par = expected_spec.get_float_attribute("PixelAspectRatio", defaultval=1.0)
+        actual_par = actual_spec.get_float_attribute("PixelAspectRatio", defaultval=1.0)
+        if abs(expected_par - actual_par) > 1.0e-4:
+            self._fail(f"Pixel aspect ratio mismatch: expected {expected_par}, got {actual_par}")
+
         # Compare format (data type)
         if expected_spec.format != actual_spec.format:
             msg = f"Image format mismatch: expected {expected_spec.format}, got {actual_spec.format}"
