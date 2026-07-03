@@ -3,17 +3,18 @@
 """Generate golden vectors for fdl_apply_canvas_template end-to-end tests."""
 
 import json
-import sys
 
-sys.path.insert(0, "../../../../../packages/fdl/src")
-
-from fdl.canvas import Canvas
-from fdl.canvastemplate import CanvasTemplate
-from fdl.config import set_rounding
-from fdl.context import Context
-from fdl.framingdecision import FramingDecision
-from fdl.rounding import RoundStrategy
-from fdl.fdl_types import DimensionsFloat, DimensionsInt, PointFloat
+from fdl import (
+    Canvas,
+    CanvasTemplate,
+    Context,
+    DimensionsFloat,
+    DimensionsInt,
+    FramingDecision,
+    PointFloat,
+    RoundStrategy,
+    set_rounding,
+)
 
 
 def make_vector(label, tmpl, source_canvas, source_framing, source_context=None, context_creator=None, new_fd_name=""):
@@ -25,8 +26,9 @@ def make_vector(label, tmpl, source_canvas, source_framing, source_context=None,
     result = tmpl.apply(
         source_canvas=source_canvas,
         source_framing=source_framing,
+        new_canvas_id="NEW",
         new_fd_name=new_fd_name,
-        source_context=source_context,
+        source_context_label=source_context.label if source_context else None,
         context_creator=context_creator,
     )
 
