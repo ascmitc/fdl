@@ -182,13 +182,20 @@ def _warp_compose(
     offset_x: float,
     offset_y: float,
     filter_name: str,
+    content_roi: tuple[int, int, int, int],
 ) -> ImageBuf:
     """
-    Single-pass crop + scale + translate (paste) via one ``warp`` call.
+    Scale + translate via one ``warp`` call, then crop in OUTPUT space.
 
-    Replaces the three-step ``cut → resize → paste`` pipeline with a single
-    reconstruction-filter pass.  This eliminates two intermediate filter
-    roundings and keeps float source coordinates precise end-to-end.
+    The full source is warped (scale + translate) into the output canvas with
+    float source coordinates carried through the reconstruction filter — no
+    pre-crop of the source, so nothing is quantized before the warp.  The crop
+    is applied LAST, in output space, to ``content_roi`` (the output canvas's
+    integer effective rectangle): everything outside it is set to black.  This
+    removes content that falls outside the framing region (which the warp would
+    otherwise place into the canvas) and drops any overflow, while putting the
+    hard crop edge on the output integer grid rather than a scaled source-space
+    boundary.  This matches flapi's whole-pixel, output-space crop.
 
     Parameters
     ----------
@@ -197,60 +204,35 @@ def _warp_compose(
     src_spec : ImageSpec
         Spec of ``src`` (captured once to avoid repeated ``.spec()`` calls).
     anchor_x, anchor_y : float
-        Source anchor of the region to preserve (top-left of the crop).
+        Source anchor of the region to preserve (maps to the output origin
+        pre-translate).
     crop_width, crop_height : float
-        Float dimensions of the source region to preserve.  Sets the scale
-        factor and bounds the source read: the source is pre-cropped to the
-        integer ROI enclosing ``[anchor, anchor+crop]`` so content outside
-        the region cannot leak into the output through the scale+translate.
+        Float dimensions of the source region to preserve.  Used only to derive
+        the scale factor (``scale_dim / crop_dim``).
     scale_width, scale_height : float
-        Target dimensions of the scaled (resized) content.  May be float; the
-        scale factor is ``scale_dim / crop_dim`` and is applied in float.
+        Target dimensions of the scaled content (float; sub-pixel precise).
     final_width, final_height : int
         Size of the output canvas (``new_canvas.dimensions``, already int).
     offset_x, offset_y : float
-        Output-space translation to place the scaled content (``0, 0`` to
-        center at origin; otherwise ``content_translation``).
+        Output-space translation placing the scaled content in the canvas
+        (``content_translation``).
     filter_name : str
         Reconstruction filter (``"lanczos3"``, ``"triangle"``, etc.).
+    content_roi : tuple[int, int, int, int]
+        Output-space integer crop rectangle ``(x0, x1, y0, y1)`` (the effective
+        rect).  Only pixels inside it are kept; the rest are black padding.
 
     Returns
     -------
     ImageBuf
-        Output buffer of size ``final_width x final_height``, pixels outside
-        the warped region filled with black (``wrap="black"``).
+        Output buffer of size ``final_width x final_height``.
     """
     scale_x = scale_width / crop_width if crop_width != 0 else 1.0
     scale_y = scale_height / crop_height if crop_height != 0 else 1.0
 
-    # Restrict sampling to the crop region.  ``warp`` maps the whole source
-    # through ``M``, so without this pre-crop the scale+translate would place
-    # source content *outside* ``[anchor, anchor+crop]`` (e.g. framing/pad
-    # bands) inside the output canvas instead of cropping it away — matching
-    # the old ``cut -> resize -> paste`` pipeline's hard crop.  ``crop``
-    # preserves the source coordinate origin (unlike ``cut``), so ``M`` stays
-    # correct with no offset compensation, and ``wrap="black"`` then blackens
-    # everything outside the cropped pixel-data window.  The enclosing integer
-    # ROI keeps the fractional anchor's sub-pixel precision in the warp.
-    x0 = math.floor(anchor_x)
-    y0 = math.floor(anchor_y)
-    x1 = math.ceil(anchor_x + crop_width)
-    y1 = math.ceil(anchor_y + crop_height)
-    # Clamp to the source pixel-data window; area beyond the image is still
-    # correctly blackened by ``wrap="black"`` during the warp.
-    src_x0 = src_spec.x
-    src_y0 = src_spec.y
-    src_x1 = src_spec.x + src_spec.width
-    src_y1 = src_spec.y + src_spec.height
-    x0 = min(max(x0, src_x0), src_x1)
-    y0 = min(max(y0, src_y0), src_y1)
-    x1 = min(max(x1, src_x0), src_x1)
-    y1 = min(max(y1, src_y0), src_y1)
-    cropped = ImageBuf()
-    ImageBufAlgo.crop(cropped, src, ROI(x0, x1, y0, y1))
-    if cropped.has_error:
-        raise OSError(f"Failed to crop image: {cropped.geterror()}")
-
+    # Warp the FULL source (scale + translate) into the output canvas.  Float
+    # source coordinates are carried through the filter; the destination is the
+    # integer output raster.  wrap="black" blackens samples outside the image.
     M = _warp_matrix(
         anchor_x=anchor_x,
         anchor_y=anchor_y,
@@ -260,10 +242,25 @@ def _warp_compose(
         translate_y=offset_y,
     )
     dst_spec = ImageSpec(final_width, final_height, src_spec.nchannels, src_spec.format)
+    warped = ImageBuf(dst_spec)
+    ImageBufAlgo.warp(warped, src, M, filtername=filter_name, wrap="black")
+    if warped.has_error:
+        raise OSError(f"Failed to warp image: {warped.geterror()}")
+
+    # Crop LAST, in output space, to the effective rectangle: cut the kept
+    # region (cut resets its origin to 0,0) and paste it back onto a black
+    # canvas at its output position.  Everything outside content_roi is padding.
+    x0, x1, y0, y1 = content_roi
+    region = ImageBuf()
+    ImageBufAlgo.cut(region, warped, ROI(x0, x1, y0, y1))
+    if region.has_error:
+        raise OSError(f"Failed to cut content region: {region.geterror()}")
+
     dst = ImageBuf(dst_spec)
-    ImageBufAlgo.warp(dst, cropped, M, filtername=filter_name, wrap="black")
+    ImageBufAlgo.zero(dst)
+    ImageBufAlgo.paste(dst, x0, y0, 0, 0, region)
     if dst.has_error:
-        raise OSError(f"Failed to warp image: {dst.geterror()}")
+        raise OSError(f"Failed to compose output: {dst.geterror()}")
     return dst
 
 
@@ -699,6 +696,23 @@ def transform_image_with_computed_values(
         offset_x = float(content_translation.x)
         offset_y = float(content_translation.y)
 
+    # Output-space crop rectangle = the scaled content extent
+    # (content_translation .. content_translation + scaled_bounding_box),
+    # rounded to whole pixels and clamped to the canvas.  This matches what
+    # flapi's renderer rasterizes: round(scaled_bounding_box), NOT the FDL's
+    # effective_dimensions field (which is ceil'd metadata both tools store but
+    # flapi does not crop to).  Each edge rounds to nearest whole pixel, but an
+    # edge whose float content reaches a canvas boundary snaps to the canvas so
+    # content that fills the canvas is not shaved by a round-down.
+    left = offset_x
+    top = offset_y
+    right = offset_x + scale_width
+    bottom = offset_y + scale_height
+    cx0 = 0 if left < 1.0 else min(round(left), final_width)
+    cy0 = 0 if top < 1.0 else min(round(top), final_height)
+    cx1 = final_width if right > final_width - 1.0 else max(round(right), 0)
+    cy1 = final_height if bottom > final_height - 1.0 else max(round(bottom), 0)
+
     final_buf = _warp_compose(
         src=input_buf,
         src_spec=input_spec,
@@ -713,7 +727,14 @@ def transform_image_with_computed_values(
         offset_x=offset_x,
         offset_y=offset_y,
         filter_name=filter_name,
+        content_roi=(cx0, cx1, cy0, cy1),
     )
+
+    # Set PixelAspectRatio metadata to the output canvas's anamorphic squeeze
+    # (matching flapi): default 1.0, or the squeeze when the output is anamorphic
+    # (e.g. a normalize-to-2 template produces a 2.0 pixel aspect ratio).
+    par = float(new_canvas.anamorphic_squeeze) if new_canvas.anamorphic_squeeze else 1.0
+    final_buf.specmod().attribute("PixelAspectRatio", par)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     if output_path.suffix.lower() == ".exr":
