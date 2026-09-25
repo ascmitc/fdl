@@ -69,6 +69,24 @@ def _is_integer_aligned(*values: float) -> bool:
     return all(abs(v - round(v)) < _INT_ALIGNMENT_TOL for v in values)
 
 
+def _output_size_for_axis(canvas_size: float, maximum_dimensions, pad_to_maximum, axis: str) -> float:
+    """Pre-round output size for one axis, mirroring the core's ``output_size_for_axis``.
+
+    Returns ``max_size`` when padding to maximum, or when the scaled canvas
+    overflows the maximum; otherwise the (float) scaled canvas size.  Used to
+    recover the canvas-rounding delta so image placement can strip the
+    ``delta / 2`` that ``_content_translation`` carries in the rounded frame.
+    """
+    if maximum_dimensions is None:
+        return canvas_size
+    max_size = float(getattr(maximum_dimensions, axis))
+    if bool(pad_to_maximum):
+        return max_size
+    if canvas_size > max_size:
+        return max_size
+    return canvas_size
+
+
 def _warp_matrix(
     anchor_x: float,
     anchor_y: float,
@@ -683,17 +701,30 @@ def transform_image_with_computed_values(
     final_width = int(new_canvas.dimensions.width)
     final_height = int(new_canvas.dimensions.height)
 
-    # Output placement.  Historical behavior (pre-warp): when
-    # content_translation is zero, the scaled content is pasted at origin
-    # (0, 0); when non-zero, at int(content_translation).  Preserving this
-    # verbatim — the docstring in the old code mentioned "center" but the
-    # code pinned top-left.  Keep float translation for sub-pixel precision.
-    if content_translation.is_zero():
-        offset_x = 0.0
-        offset_y = 0.0
-    else:
-        offset_x = float(content_translation.x)
-        offset_y = float(content_translation.y)
+    # Output placement.
+    #
+    # ``_content_translation`` is recorded in the ROUNDED output-canvas frame:
+    # it is the raw alignment shift PLUS the symmetric canvas-rounding
+    # absorption (``canvas_delta / 2``) that the core's ``geometry_round`` folds
+    # into every layer anchor.  That post-round value is the correct thing to
+    # serialize in the FDL (it is consistent with the rounded canvas dimensions
+    # and anchors, and matches other implementations e.g. FLAPI).
+    #
+    # For pixel placement, however, we need the *raw* alignment shift — the
+    # content must keep its absolute position, with the canvas boundary (not the
+    # content) absorbing the rounding delta.  So we subtract the same
+    # ``canvas_delta / 2`` back out here.  ``canvas_delta`` is non-zero only when
+    # a fractional scaled canvas is rounded to integer; in pad-to-maximum and
+    # max-dimension-crop cases ``out`` already equals the integer canvas, so the
+    # correction is exactly zero and placement is unaffected.
+    out_w = _output_size_for_axis(
+        float(scaled_bounding_box.width), template.maximum_dimensions, template.pad_to_maximum, axis="width"
+    )
+    out_h = _output_size_for_axis(
+        float(scaled_bounding_box.height), template.maximum_dimensions, template.pad_to_maximum, axis="height"
+    )
+    offset_x = float(content_translation.x) - (final_width - out_w) / 2.0
+    offset_y = float(content_translation.y) - (final_height - out_h) / 2.0
 
     # Output-space crop rectangle = the smallest whole-pixel box that ENCLOSES
     # the scaled content extent (content_translation .. content_translation +
