@@ -530,6 +530,58 @@ fdl_template_result_t apply_canvas_template(
     double const out_h = fdl_output_size_for_axis(
         geometry.canvas_dims.height, max_h, has_max_dims ? FDL_TRUE : FDL_FALSE, pad_to_max ? FDL_TRUE : FDL_FALSE);
 
+    // Spec 7.4.4/7.4.7: target_dimensions on the axis that did NOT drive
+    // the scale ratio may be left unset by the author ("may be calculated
+    // by the application and not predefined by the user"). The schema's
+    // sentinel for "unset" on that axis is target_dimensions == 0 (see
+    // target_dimensions_int in the schema, which — unlike every other
+    // dimensions field — permits 0). When that sentinel is present, the
+    // real value is the scaled, preserve-extended canvas on that axis,
+    // captured above as `scaled_bounding_box`. Any nonzero value is a
+    // real, author-provided target and is used as-is.
+    //
+    // This applies identically to fit_all/fill: they are not a distinct
+    // sizing model, just an automatic choice of *which* axis drives the
+    // scale — once that axis is chosen, the other axis's target_dimensions
+    // is resolved exactly as it would be had the user picked that axis's
+    // fit_method explicitly.
+    bool width_drives_scale;
+    switch (fit_method) {
+    case FDL_FIT_METHOD_WIDTH:
+        width_drives_scale = true;
+        break;
+    case FDL_FIT_METHOD_HEIGHT:
+        width_drives_scale = false;
+        break;
+    default:
+        // fit_all/fill: calculate_scale_ratio() already picked the driving
+        // axis above; read it back from its result instead of redoing the
+        // w_ratio/h_ratio comparison.
+        width_drives_scale = (scale_ratio.denominator == fit_norm.width);
+        break;
+    }
+    // The 0-sentinel substitution above is skipped when the axis instead
+    // *crops* (scaled_bounding_box overflows maximum_dimensions — e.g.
+    // fit_method "fill" deliberately overflows the non-driving axis, or
+    // "width"/"height" can too when preserve extends far enough): in a
+    // crop, target_dimensions is the real, load-bearing crop window, and
+    // alignment_method genuinely determines which portion of the overflow
+    // is kept. Substituting the overflowing scaled size there would
+    // collapse the gap to zero and silently disable cropping alignment
+    // (e.g. "right"/"bottom" would incorrectly behave like flush-left/top).
+    bool const width_would_crop = has_max_dims && (scaled_bounding_box.width > max_w);
+    bool const height_would_crop = has_max_dims && (scaled_bounding_box.height > max_h);
+    fdl_dimensions_f64_t target_dims_resolved = target_dims;
+    if (width_drives_scale) {
+        if (!height_would_crop && target_dims.height == 0.0) {
+            target_dims_resolved.height = scaled_bounding_box.height;
+        }
+    } else {
+        if (!width_would_crop && target_dims.width == 0.0) {
+            target_dims_resolved.width = scaled_bounding_box.width;
+        }
+    }
+
     bool const is_center_h = (h_align == FDL_HALIGN_CENTER);
     bool const is_center_v = (v_align == FDL_VALIGN_CENTER);
     double const af_h = alignment_factor_h(h_align);
@@ -540,7 +592,7 @@ fdl_template_result_t apply_canvas_template(
         scaled_fit_anchor.x,
         out_w,
         geometry.canvas_dims.width,
-        target_dims.width,
+        target_dims_resolved.width,
         is_center_h ? FDL_TRUE : FDL_FALSE,
         af_h,
         pad_to_max ? FDL_TRUE : FDL_FALSE);
@@ -549,7 +601,7 @@ fdl_template_result_t apply_canvas_template(
         scaled_fit_anchor.y,
         out_h,
         geometry.canvas_dims.height,
-        target_dims.height,
+        target_dims_resolved.height,
         is_center_v ? FDL_TRUE : FDL_FALSE,
         af_v,
         pad_to_max ? FDL_TRUE : FDL_FALSE);
