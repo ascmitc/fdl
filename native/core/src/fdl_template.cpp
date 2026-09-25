@@ -554,17 +554,17 @@ fdl_template_result_t apply_canvas_template(
         af_v,
         pad_to_max ? FDL_TRUE : FDL_FALSE);
 
-    // Stored as `_content_translation` custom attribute — unrounded float by
-    // design.  Sub-pixel precision preserves the exact alignment shift so
-    // downstream consumers can place content without re-quantizing.
-    fdl_point_f64_t const content_translation = {shift_x, shift_y};
+    // Geometry offset = the raw alignment shift, applied in the PRE-round
+    // (float) canvas frame — this is what actually positions the layers, so
+    // it must stay exactly the raw shift for pixel placement to be correct.
+    fdl_point_f64_t const applied_offset = {shift_x, shift_y};
     geometry.canvas_dims = {out_w, out_h};
 
     // --- Phase 8b: Apply offsets ---
     fdl_point_f64_t theo_eff;
     fdl_point_f64_t theo_prot;
     fdl_point_f64_t theo_fram;
-    geometry = fdl_geometry_apply_offset(geometry, content_translation, &theo_eff, &theo_prot, &theo_fram);
+    geometry = fdl_geometry_apply_offset(geometry, applied_offset, &theo_eff, &theo_prot, &theo_fram);
 
     // --- Phase 9: Crop ---
     geometry = fdl_geometry_crop(geometry, theo_eff, theo_prot, theo_fram);
@@ -581,6 +581,20 @@ fdl_template_result_t apply_canvas_template(
     // still be fractional from float cropping and gets integerized here as
     // required by the schema.
     geometry = fdl_geometry_round(geometry, rounding);
+
+    // Stored as `_content_translation` custom attribute — captured AFTER
+    // rounding, in the same (integer) canvas frame as every other exported
+    // geometry field (anchors, effective_dims, etc.). `geometry_round` above
+    // already absorbed `canvas_delta / 2` into those fields to keep them
+    // consistent with the rounded canvas; content_translation must reflect
+    // the same absorption to stay consistent with them, even though pixel
+    // placement itself (already applied above) correctly uses the raw,
+    // pre-round shift. When canvas_dims is already integer (pad_to_maximum
+    // or max-dimension crop), the delta is zero and content_translation
+    // equals the raw shift.
+    fdl_point_f64_t const content_translation = {
+        shift_x + ((geometry.canvas_dims.width - out_w) / fdl::constants::kCenterDivisor),
+        shift_y + ((geometry.canvas_dims.height - out_h) / fdl::constants::kCenterDivisor)};
 
     // --- Phase 10: Build output FDL document ---
     return build_template_output_document(
