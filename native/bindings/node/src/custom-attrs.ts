@@ -14,7 +14,12 @@ import { PointFloat, DimensionsFloat, DimensionsInt } from "./types.js";
 
 /** Custom attribute value type (matches Python parity). */
 export type CustomAttrValue =
-  string | number | boolean | PointFloat | DimensionsFloat | DimensionsInt;
+  | string
+  | number
+  | boolean
+  | PointFloat
+  | DimensionsFloat
+  | DimensionsInt;
 
 // Must match FDL_CUSTOM_ATTR_TYPE_* from fdl_core.h
 const ATTR_TYPE_STRING = 1;
