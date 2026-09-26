@@ -62,6 +62,18 @@ jobs:
       - name: Install CMake
         run: sudo apt-get install -y cmake
 
+      # --- Node.js setup (must precede codegen: its TS formatting step
+      # resolves `npx prettier` to the pinned local install below, keeping it
+      # consistent with the "Run prettier check" step further down) ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node.js dependencies
+        run: npm install --ignore-scripts
+        working-directory: native/bindings/node
+
       - name: Install codegen dependencies
         run: uv pip install pyyaml jinja2 ruff "datamodel-code-generator[http]>=0.25" --system
 
@@ -78,15 +90,6 @@ jobs:
         run: run-clang-tidy -p native/core/build -j"$(nproc)" native/core/src/
 
       # --- TypeScript linting ---
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Node.js dependencies
-        run: npm install --ignore-scripts
-        working-directory: native/bindings/node
-
       - name: Run prettier check
         run: npx prettier --check 'src/**/*.ts'
         working-directory: native/bindings/node
