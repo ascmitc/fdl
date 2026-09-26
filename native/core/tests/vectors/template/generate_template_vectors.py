@@ -338,6 +338,122 @@ vectors.append(
     make_vector("right_bottom_alignment", tmpl_rb, canvas1, fd1, source_context=ctx1, context_creator="test", new_fd_name="2.39:1")
 )
 
+# --- Scenario 11: target_dimensions == 0 sentinel on the non-driving axis,
+# pad_to_maximum ---
+#
+# Regression test for a defect where an author-supplied placeholder value on
+# the axis not driving the fit (schema requires *some* positive value there;
+# 0 was previously illegal) was fed literally into the alignment/pad math,
+# corrupting placement whenever pad_to_maximum extended that axis. Spec
+# 7.4.4/7.4.7 allow this axis to be left unspecified by the author and
+# calculated by the application instead; target_dimensions.height == 0 is
+# the schema-legal sentinel for that.
+#
+# Canvas/framing here are deliberately round numbers (3840-wide canvas,
+# full-frame framing decision, scale factor exactly 1.0) so the expected
+# values below can be verified by inspection:
+#   scaled content height = 2160 (no scaling)
+#   target_dimensions.height == 0 resolves to that same 2160
+#   pad room = maximum_dimensions.height (4000) - 2160 = 1840, so a
+#   correctly-centered fd_anchor.y = 1840 / 2 = 920
+#
+# Before this fix, target_dimensions.height was used literally as 0 in the
+# alignment formula, which for pad_to_maximum evaluates to
+# fd_anchor.y = maximum_dimensions.height / 2 = 2000 regardless of
+# alignment_method_vertical — a value with no relationship to the actual
+# scaled content, and the shape of the originally reported defect.
+canvas_zero = Canvas(
+    id="CVS_ZERO",
+    source_canvas_id="CVS_ZERO",
+    label="Full-frame source",
+    dimensions=DimensionsInt(width=3840, height=2160),
+    anamorphic_squeeze=1.0,
+)
+fd_zero = FramingDecision(
+    id="CVS_ZERO-FI_FULL",
+    label="Full frame",
+    framing_intent_id="FI_FULL",
+    dimensions=DimensionsFloat(width=3840.0, height=2160.0),
+    anchor_point=PointFloat(x=0.0, y=0.0),
+)
+tmpl_zero_sentinel_pad = CanvasTemplate(
+    id="CT_ZERO_PAD",
+    label="Zero-height sentinel, pad_to_maximum",
+    target_dimensions=DimensionsInt(width=3840, height=0),
+    target_anamorphic_squeeze=1.0,
+    fit_source="framing_decision.dimensions",
+    fit_method="width",
+    # alignment_method_vertical is deliberately non-center: per spec 7.4.11,
+    # pad_to_maximum always centers the padded axis regardless of alignment,
+    # so this also confirms the sentinel resolution doesn't leak a stray
+    # top/bottom bias into that centering.
+    alignment_method_horizontal="center",
+    alignment_method_vertical="top",
+    maximum_dimensions=DimensionsInt(width=3840, height=4000),
+    pad_to_maximum=True,
+    round=RoundStrategy(even="even", mode="round"),
+)
+vectors.append(
+    make_vector(
+        "zero_height_sentinel_pad_to_maximum",
+        tmpl_zero_sentinel_pad,
+        canvas_zero,
+        fd_zero,
+        source_context=ctx1,
+        context_creator="test",
+        new_fd_name="Full frame",
+    )
+)
+
+# --- Scenario 12: target_dimensions == 0 sentinel on the non-driving axis,
+# but that axis CROPS instead of pads ---
+#
+# When the non-driving axis instead overflows maximum_dimensions (here:
+# fit_method height drives the scale, and preserve_from_source_canvas
+# extends the width past maximum_dimensions.width), target_dimensions is the
+# real, load-bearing crop window and alignment_method genuinely selects
+# which part of the overflow is visible — so the 0 sentinel must NOT be
+# substituted here, unlike scenario 11. This locks in that gating.
+canvas_crop = Canvas(
+    id="CVS_CROP",
+    source_canvas_id="CVS_CROP",
+    label="Wide source",
+    dimensions=DimensionsInt(width=4000, height=2160),
+    anamorphic_squeeze=1.0,
+)
+fd_crop = FramingDecision(
+    id="CVS_CROP-FI_FULL",
+    label="Full frame",
+    framing_intent_id="FI_FULL",
+    dimensions=DimensionsFloat(width=4000.0, height=2160.0),
+    anchor_point=PointFloat(x=0.0, y=0.0),
+)
+tmpl_zero_sentinel_crop = CanvasTemplate(
+    id="CT_ZERO_CROP",
+    label="Zero-width sentinel, crop",
+    target_dimensions=DimensionsInt(width=0, height=2160),
+    target_anamorphic_squeeze=1.0,
+    fit_source="framing_decision.dimensions",
+    fit_method="height",
+    preserve_from_source_canvas="canvas.dimensions",
+    alignment_method_horizontal="right",
+    alignment_method_vertical="center",
+    maximum_dimensions=DimensionsInt(width=3840, height=2160),
+    pad_to_maximum=False,
+    round=RoundStrategy(even="even", mode="round"),
+)
+vectors.append(
+    make_vector(
+        "zero_width_sentinel_crop_stays_literal",
+        tmpl_zero_sentinel_crop,
+        canvas_crop,
+        fd_crop,
+        source_context=ctx1,
+        context_creator="test",
+        new_fd_name="Full frame",
+    )
+)
+
 result = {"description": "Canvas template apply() end-to-end golden vectors", "version": "1.0", "vectors": vectors}
 
 output_path = "template_vectors.json"
