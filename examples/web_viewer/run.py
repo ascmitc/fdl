@@ -69,6 +69,7 @@ def setup_python_venv() -> None:
         [str(VENV_PYTHON), "-c", "import fdl; import fdl_imaging; import OpenImageIO; print('OK')"],
         capture_output=True,
         text=True,
+        check=False,
     )
     if result.returncode != 0:
         print(f"Warning: Import check failed: {result.stderr.strip()}")

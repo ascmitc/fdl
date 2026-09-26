@@ -16,6 +16,8 @@ from .fdl_idl import IDL, EnumType, FreeFunctionDef, ValueType, VTMethod, VTOper
 from .ir import IRClass, IRCollection, IRMethod, IRProperty
 from .shared_context import (
     ENUM_SHORT_TO_CLASS as _ENUM_SHORT_TO_TS,
+)
+from .shared_context import (
     build_converter_lookup,
     build_enum_context_lookups,
     build_enum_facade_map,
@@ -25,6 +27,8 @@ from .shared_context import (
     find_builder_method,
     is_lifecycle_method,
     resolve_cross_eq_class,
+)
+from .shared_context import (
     vt_field_names_for_type as _vt_field_names_for_type,
 )
 
@@ -869,9 +873,7 @@ def _build_node_lifecycle_context(
         elif p.type_key == "bytes":
             addon_args.append(f"_{ts_name}")
             addon_args.append(f"_{ts_name}.length")
-        elif p.type_key == "string":
-            addon_args.append(ts_name)
-        elif p.type_key in ("int", "int64_t", "uint32_t", "double"):
+        elif p.type_key == "string" or p.type_key in ("int", "int64_t", "uint32_t", "double"):
             addon_args.append(ts_name)
         elif p.type_key in type_key_to_to_c:
             addon_args.append(f"{type_key_to_to_c[p.type_key]}.get({ts_name})!")

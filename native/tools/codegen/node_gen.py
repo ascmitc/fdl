@@ -76,10 +76,8 @@ def _struct_pascal_name(c_name: str) -> str:
     fdl_abi_version_t    -> AbiVersion
     """
     inner = c_name
-    if inner.startswith("fdl_"):
-        inner = inner[4:]
-    if inner.endswith("_t"):
-        inner = inner[:-2]
+    inner = inner.removeprefix("fdl_")
+    inner = inner.removesuffix("_t")
     return "".join(word.capitalize() for word in inner.split("_"))
 
 
@@ -824,7 +822,7 @@ def _gen_node_index(
         "getAnchorFromPath",
         "computeFramingFromIntent",
     }
-    utils_names = sorted(set(ctx["name"] for ctx in utils_ff_contexts) | _HANDCODED_UTILS)
+    utils_names = sorted({ctx["name"] for ctx in utils_ff_contexts} | _HANDCODED_UTILS)
 
     index_tmpl = env.get_template("node/index.ts.j2")
     (output_dir / "index.ts").write_text(
@@ -859,7 +857,7 @@ def generate_facade(idl: IDL, output_dir: Path) -> None:
     _gen_node_converters(env, idl, output_dir)
     _gen_node_errors(env, idl, output_dir)
     _gen_node_version(env, idl, output_dir)
-    rounding_ff_contexts, utils_ff_contexts, eligible_ffs, ff_contexts = _gen_node_free_functions(idl)
+    rounding_ff_contexts, utils_ff_contexts, _eligible_ffs, _ff_contexts = _gen_node_free_functions(idl)
     _gen_node_rounding(env, rounding_vt_contexts, rounding_ff_contexts, output_dir)
     _gen_node_utils(env, idl, utils_ff_contexts, output_dir)
     class_contexts = _gen_node_classes(env, idl, enum_contexts, output_dir)

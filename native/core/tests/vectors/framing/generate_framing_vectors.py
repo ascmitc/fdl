@@ -9,10 +9,10 @@ sys.path.insert(0, "../../../../../packages/fdl/src")
 
 from fdl.canvas import Canvas
 from fdl.config import set_rounding
+from fdl.fdl_types import DimensionsInt, PointFloat
 from fdl.framingdecision import FramingDecision
 from fdl.framingintent import FramingIntent
 from fdl.rounding import RoundStrategy
-from fdl.fdl_types import DimensionsInt, PointFloat
 
 
 def make_vector(label, canvas, fi, rounding):

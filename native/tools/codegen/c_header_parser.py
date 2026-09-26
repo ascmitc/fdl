@@ -52,10 +52,7 @@ def _clean_return_type(raw: str) -> str:
     """Normalize a return type string."""
     # Collapse whitespace, handle pointer spacing
     parts = raw.split()
-    result = []
-    for p in parts:
-        result.append(p)
-    s = " ".join(result)
+    s = " ".join(parts)
     # Normalize pointer: "char *" -> "char*", "fdl_doc_t *" -> "fdl_doc_t*"
     s = re.sub(r"\s+\*", "*", s)
     return s
