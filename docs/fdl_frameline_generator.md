@@ -138,6 +138,7 @@ renderer.render_from_fdl("input.fdl", "output.png")
 
 # From FDL object
 from fdl import read_from_file
+
 fdl = read_from_file("input.fdl")
 renderer.render_from_fdl_object(fdl, "output.exr")
 

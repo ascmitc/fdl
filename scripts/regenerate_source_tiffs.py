@@ -70,7 +70,7 @@ def regenerate_all(dry_run: bool = False) -> tuple[int, int]:
                 renderer.render_from_fdl(fdl_path=fdl_path, output_path=image_path)
                 print(f"  OK: {image_path.name}")
                 success += 1
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - continue batch regen, report per-file failure
                 print(f"  ERROR: {image_path.name} - {e}")
                 errors += 1
 

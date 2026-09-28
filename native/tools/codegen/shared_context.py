@@ -16,7 +16,6 @@ from jinja2 import Environment, FileSystemLoader
 
 from .fdl_idl import IDL, EnumType, ValueType
 
-
 # -----------------------------------------------------------------------
 # Utilities
 # -----------------------------------------------------------------------

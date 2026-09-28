@@ -60,7 +60,7 @@ def main() -> int:
         cmake_args.append("-DFDL_BUILD_TESTS=OFF")
 
     print("=== CMake configure ===")
-    result = subprocess.run(cmake_args)
+    result = subprocess.run(cmake_args, check=False)
     if result.returncode != 0:
         return result.returncode
 
@@ -74,7 +74,8 @@ def main() -> int:
             "--config",
             args.build_type,
             "--parallel",
-        ]
+        ],
+        check=False,
     )
     if result.returncode != 0:
         return result.returncode
@@ -90,7 +91,8 @@ def main() -> int:
                 "--output-on-failure",
                 "-C",
                 args.build_type,
-            ]
+            ],
+            check=False,
         )
         if result.returncode != 0:
             return result.returncode
