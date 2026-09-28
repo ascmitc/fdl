@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1502,12 +1502,12 @@ primitives, text rendering, and pixel-level image comparison.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fdl_imaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_framing_region</span>
 
 <span class="n">extract_framing_region</span><span class="p">(</span>
-    <span class="n">input_path</span><span class="o">=</span><span class="s2">&quot;source.tif&quot;</span><span class="p">,</span>
-    <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;framed.tif&quot;</span><span class="p">,</span>
-    <span class="n">fdl</span><span class="o">=</span><span class="s2">&quot;scene.fdl&quot;</span><span class="p">,</span>
-    <span class="n">context_id</span><span class="o">=</span><span class="s2">&quot;Camera A&quot;</span><span class="p">,</span>
-    <span class="n">canvas_id</span><span class="o">=</span><span class="s2">&quot;canvas_001&quot;</span><span class="p">,</span>
-    <span class="n">framing_decision_id</span><span class="o">=</span><span class="s2">&quot;fd_001&quot;</span><span class="p">,</span>
+    <span class="n">input_path</span><span class="o">=</span><span class="s2">"source.tif"</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="o">=</span><span class="s2">"framed.tif"</span><span class="p">,</span>
+    <span class="n">fdl</span><span class="o">=</span><span class="s2">"scene.fdl"</span><span class="p">,</span>
+    <span class="n">context_id</span><span class="o">=</span><span class="s2">"Camera A"</span><span class="p">,</span>
+    <span class="n">canvas_id</span><span class="o">=</span><span class="s2">"canvas_001"</span><span class="p">,</span>
+    <span class="n">framing_decision_id</span><span class="o">=</span><span class="s2">"fd_001"</span><span class="p">,</span>
     <span class="n">output_width</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span>
     <span class="n">output_height</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1516,14 +1516,14 @@ primitives, text rendering, and pixel-level image comparison.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fdl_imaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_image_with_fdl_template</span>
 
 <span class="n">process_image_with_fdl_template</span><span class="p">(</span>
-    <span class="n">input_path</span><span class="o">=</span><span class="s2">&quot;source.tif&quot;</span><span class="p">,</span>
-    <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;transformed.tif&quot;</span><span class="p">,</span>
-    <span class="n">source_fdl</span><span class="o">=</span><span class="s2">&quot;source.fdl&quot;</span><span class="p">,</span>
-    <span class="n">template_fdl</span><span class="o">=</span><span class="s2">&quot;template.fdl&quot;</span><span class="p">,</span>
-    <span class="n">context_id</span><span class="o">=</span><span class="s2">&quot;Camera A&quot;</span><span class="p">,</span>
-    <span class="n">canvas_id</span><span class="o">=</span><span class="s2">&quot;canvas_001&quot;</span><span class="p">,</span>
-    <span class="n">framing_decision_id</span><span class="o">=</span><span class="s2">&quot;fd_001&quot;</span><span class="p">,</span>
-    <span class="n">template_label</span><span class="o">=</span><span class="s2">&quot;UHD Delivery&quot;</span><span class="p">,</span>
+    <span class="n">input_path</span><span class="o">=</span><span class="s2">"source.tif"</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="o">=</span><span class="s2">"transformed.tif"</span><span class="p">,</span>
+    <span class="n">source_fdl</span><span class="o">=</span><span class="s2">"source.fdl"</span><span class="p">,</span>
+    <span class="n">template_fdl</span><span class="o">=</span><span class="s2">"template.fdl"</span><span class="p">,</span>
+    <span class="n">context_id</span><span class="o">=</span><span class="s2">"Camera A"</span><span class="p">,</span>
+    <span class="n">canvas_id</span><span class="o">=</span><span class="s2">"canvas_001"</span><span class="p">,</span>
+    <span class="n">framing_decision_id</span><span class="o">=</span><span class="s2">"fd_001"</span><span class="p">,</span>
+    <span class="n">template_label</span><span class="o">=</span><span class="s2">"UHD Delivery"</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 <h3 id="draw-on-an-image-buffer">Draw on an image buffer</h3>
@@ -1533,15 +1533,12 @@ primitives, text rendering, and pixel-level image comparison.</p>
 
 <span class="n">buf</span> <span class="o">=</span> <span class="n">oiio</span><span class="o">.</span><span class="n">ImageBuf</span><span class="p">(</span><span class="n">oiio</span><span class="o">.</span><span class="n">ImageSpec</span><span class="p">(</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">oiio</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">))</span>
 
-<span class="n">draw_rect_outline</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">1720</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">980</span><span class="p">,</span>
-                  <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">draw_crosshair</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">cx</span><span class="o">=</span><span class="mi">960</span><span class="p">,</span> <span class="n">cy</span><span class="o">=</span><span class="mi">540</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
-               <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">draw_rect_outline</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">1720</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">980</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">draw_crosshair</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">cx</span><span class="o">=</span><span class="mi">960</span><span class="p">,</span> <span class="n">cy</span><span class="o">=</span><span class="mi">540</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">draw_grid</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">render_dimension_label</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;1920 x 1080&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">960</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1060</span><span class="p">,</span>
-                       <span class="n">font_size</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">render_dimension_label</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">"1920 x 1080"</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">960</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1060</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
 
-<span class="n">buf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;overlay.png&quot;</span><span class="p">)</span>
+<span class="n">buf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"overlay.png"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="api-modules">API Modules</h2>
 <table>
@@ -1585,13 +1582,13 @@ primitives, text rendering, and pixel-level image comparison.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fdl_imaging.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageComparison</span>
 
 <span class="n">comparator</span> <span class="o">=</span> <span class="n">ImageComparison</span><span class="p">(</span>
-    <span class="n">fail_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>      <span class="c1"># per-pixel difference threshold</span>
+    <span class="n">fail_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>  <span class="c1"># per-pixel difference threshold</span>
     <span class="n">warn_threshold</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span>
-    <span class="n">allowed_failed_pixels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="c1"># tolerance for cross-platform text rendering</span>
-    <span class="n">outputs_dir</span><span class="o">=</span><span class="s2">&quot;test_outputs&quot;</span><span class="p">,</span> <span class="c1"># save diff images here</span>
+    <span class="n">allowed_failed_pixels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># tolerance for cross-platform text rendering</span>
+    <span class="n">outputs_dir</span><span class="o">=</span><span class="s2">"test_outputs"</span><span class="p">,</span>  <span class="c1"># save diff images here</span>
 <span class="p">)</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">comparator</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;expected.tif&quot;</span><span class="p">,</span> <span class="s2">&quot;actual.tif&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">comparator</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">"expected.tif"</span><span class="p">,</span> <span class="s2">"actual.tif"</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">passed</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">message</span>
 </code></pre></div>
 <h2 id="package-relationships">Package Relationships</h2>
@@ -1658,7 +1655,7 @@ loading, processing, and visual QC comparison.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

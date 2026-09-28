@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2867,7 +2867,7 @@ if target_squeeze == 0.0:
     target_squeeze = input_squeeze    # Preserve source squeeze
 
 fit_method    = template.fit_method                 (default FIT_ALL)
-preserve_path = template.preserve_from_source_canvas (default &quot;&quot;)
+preserve_path = template.preserve_from_source_canvas (default "")
 max_dims      = template.maximum_dimensions
 has_max_dims  = max_dims is not null and not max_dims.is_zero()
 h_align       = template.alignment_method_horizontal (default CENTER)
@@ -2888,12 +2888,12 @@ Two template paths control what is read:</p>
 <h4 id="the-two-pass-mechanism">The two-pass mechanism</h4>
 <p>Population starts with an all-zeros geometry, then calls
 <code>populate_from_path</code> <strong>twice</strong> into the same structure:</p>
-<div class="highlight"><pre><span></span><code># Pass 1: preserve paints first (the &quot;background&quot;)
+<div class="highlight"><pre><span></span><code># Pass 1: preserve paints first (the "background")
 if preserve_path is not empty:
     populate_from_path(source_canvas, source_framing,
                        preserve_path, geometry)
 
-# Pass 2: fit paints second (the &quot;foreground&quot; -- overwrites on overlap)
+# Pass 2: fit paints second (the "foreground" -- overwrites on overlap)
 populate_from_path(source_canvas, source_framing,
                    fit_source, geometry)
 </code></pre></div>
@@ -2904,7 +2904,7 @@ populate_from_path(source_canvas, source_framing,
     for path in PATH_HIERARCHY[start_index:]:
         dims, anchor = fdl_resolve_geometry_layer(canvas, framing, path)
         if dims is not null:
-            store dims and anchor in geometry at path&#39;s slot
+            store dims and anchor in geometry at path's slot
 </code></pre></div>
 <p>The C API function <code>fdl_resolve_geometry_layer()</code> extracts dimensions and anchors
 from the canvas/framing for a given geometry path. If the source FDL doesn't have
@@ -3466,7 +3466,7 @@ steps preserve it via anchor-pullback (step 4) rather than re-applying
     geo.effective_anchor  += canvas_delta / 2
     geo.protection_anchor += canvas_delta / 2
     geo.framing_anchor    += canvas_delta / 2
-    #    2b. Effective&#39;s ceil grows its box by up to 1 px; shift its
+    #    2b. Effective's ceil grows its box by up to 1 px; shift its
     #        anchor by -eff_ceil_delta/2 so the rectangle stays centered
     #        on its pre-ceil float position.  ceil_delta &gt;= 0 always, so
     #        this pulls the anchor toward the origin.
@@ -3480,7 +3480,7 @@ steps preserve it via anchor-pullback (step 4) rather than re-applying
 
     # 4. Clamp anchors inside the canvas.
     #    For effective (integer): clamp anchor to [0, canvas - dim], so
-    #      the ceil&#39;d dim from step 3 stays intact.  A sub-pixel inward
+    #      the ceil'd dim from step 3 stays intact.  A sub-pixel inward
     #      slide of the anchor is cheap; losing a whole integer pixel of
     #      effective to sub-pixel anchor noise is not.
     #    For protection / framing (float): clamp anchor to [0, canvas]
@@ -3544,14 +3544,14 @@ to 0, it means "preserve source squeeze."</p>
 <p>The pipeline validates input geometry before processing:</p>
 <div class="highlight"><pre><span></span><code># Framing dimensions must be non-zero
 if source_geometry.framing_dims.is_zero():
-    error(&quot;Framing decision dimensions not provided&quot;)
+    error("Framing decision dimensions not provided")
 
 # Effective must be &gt;= protection (if both specified)
 if not source_geometry.effective_dims.is_zero()
    and not source_geometry.protection_dims.is_zero():
     if effective.width &lt; protection.width
        or effective.height &lt; protection.height:
-        error(&quot;Source effective canvas dimensions are smaller than protection dimensions&quot;)
+        error("Source effective canvas dimensions are smaller than protection dimensions")
 </code></pre></div>
 <h3 id="55-path-hierarchy-validation">5.5 Path Hierarchy Validation</h3>
 <p>Template paths (<code>fit_source</code>, <code>preserve_from_source_canvas</code>) are validated against the
@@ -3825,23 +3825,23 @@ else:                                                        # PAD / CROP
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
     <span class="n">source_canvas</span><span class="p">,</span>
     <span class="n">source_framing</span><span class="p">,</span>
-    <span class="n">new_fd_name</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-    <span class="n">source_context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>       <span class="c1"># optional</span>
-    <span class="n">context_creator</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>        <span class="c1"># optional</span>
+    <span class="n">new_fd_name</span><span class="o">=</span><span class="s2">"..."</span><span class="p">,</span>
+    <span class="n">source_context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>  <span class="c1"># optional</span>
+    <span class="n">context_creator</span><span class="o">=</span><span class="s2">"..."</span><span class="p">,</span>  <span class="c1"># optional</span>
 <span class="p">)</span>
 <span class="c1"># result.fdl, result.canvas, result.framing_decision, result.context</span>
 </code></pre></div>
 <p><strong>C++ RAII</strong> (<code>fdl::CanvasTemplate</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmpl</span><span class="p">.</span><span class="n">apply</span><span class="p">(</span><span class="n">source_canvas</span><span class="p">,</span><span class="w"> </span><span class="n">source_framing</span><span class="p">,</span>
-<span class="w">                         </span><span class="s">&quot;canvas_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fd_name&quot;</span><span class="p">,</span>
-<span class="w">                         </span><span class="s">&quot;context_label&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;creator&quot;</span><span class="p">);</span>
+<span class="w">                         </span><span class="s">"canvas_id"</span><span class="p">,</span><span class="w"> </span><span class="s">"fd_name"</span><span class="p">,</span>
+<span class="w">                         </span><span class="s">"context_label"</span><span class="p">,</span><span class="w"> </span><span class="s">"creator"</span><span class="p">);</span>
 <span class="c1">// result.fdl(), result.canvas(), result.framing_decision()</span>
 </code></pre></div>
 <p><strong>TypeScript</strong> (<code>CanvasTemplate</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">template</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span>
 <span class="w">  </span><span class="nx">sourceCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">sourceFraming</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;canvas_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fd_name&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;context_label&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;creator&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'canvas_id'</span><span class="p">,</span><span class="w"> </span><span class="s1">'fd_name'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'context_label'</span><span class="p">,</span><span class="w"> </span><span class="s1">'creator'</span><span class="p">,</span>
 <span class="p">);</span>
 <span class="c1">// result.fdl, result.context, result.canvas, result.framingDecision</span>
 </code></pre></div>
@@ -3899,7 +3899,7 @@ else:                                                        # PAD / CROP
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

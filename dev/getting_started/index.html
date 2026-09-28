@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1393,32 +1393,32 @@ the simplest workflow is:</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
 
 <span class="c1"># Load from a file (validates automatically)</span>
-<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;tests&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample_data&quot;</span>
-<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Scenario-9__OriginalFDL_UsedToMakePlate.fdl&quot;</span><span class="p">)</span>
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"tests"</span> <span class="o">/</span> <span class="s2">"sample_data"</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">"Scenario-9__OriginalFDL_UsedToMakePlate.fdl"</span><span class="p">)</span>
 
 <span class="c1"># Save to a file (validates automatically)</span>
-<span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.fdl&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">".fdl"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">write_to_file</span><span class="p">(</span><span class="n">my_fdl</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">,</span><span class="w"> </span><span class="nx">writeToFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">,</span><span class="w"> </span><span class="nx">writeToFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'fdl'</span><span class="p">;</span>
 
 <span class="c1">// Load from a file (validates automatically)</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">&#39;my_document.fdl&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">'my_document.fdl'</span><span class="p">);</span>
 
 <span class="c1">// Save to a file (validates automatically)</span>
-<span class="nx">writeToFile</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;output.fdl&#39;</span><span class="p">);</span>
+<span class="nx">writeToFile</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">,</span><span class="w"> </span><span class="s1">'output.fdl'</span><span class="p">);</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">"fdl/fdl.hpp"</span>
 
 <span class="c1">// Load from a file (validates automatically)</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_file</span><span class="p">(</span><span class="s">&quot;my_document.fdl&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_file</span><span class="p">(</span><span class="s">"my_document.fdl"</span><span class="p">);</span>
 
 <span class="c1">// Save to a file (validates automatically)</span>
-<span class="n">fdl</span><span class="o">::</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;output.fdl&quot;</span><span class="p">);</span>
+<span class="n">fdl</span><span class="o">::</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="s">"output.fdl"</span><span class="p">);</span>
 </code></pre></div>
 </div>
 </div>
@@ -1433,8 +1433,8 @@ validation, or call <code>validate()</code> manually:</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_from_file</span><span class="p">,</span> <span class="n">read_from_string</span><span class="p">,</span> <span class="n">write_to_string</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;tests&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample_data&quot;</span>
-<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Scenario-9__OriginalFDL_UsedToMakePlate.fdl&quot;</span><span class="p">)</span>
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"tests"</span> <span class="o">/</span> <span class="s2">"sample_data"</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">"Scenario-9__OriginalFDL_UsedToMakePlate.fdl"</span><span class="p">)</span>
 
 <span class="c1"># Serialize to a JSON string (skip validation since we just loaded a valid file)</span>
 <span class="n">json_str</span> <span class="o">=</span> <span class="n">write_to_string</span><span class="p">(</span><span class="n">my_fdl</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1447,9 +1447,9 @@ validation, or call <code>validate()</code> manually:</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">,</span><span class="w"> </span><span class="nx">readFromString</span><span class="p">,</span><span class="w"> </span><span class="nx">writeToString</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">,</span><span class="w"> </span><span class="nx">readFromString</span><span class="p">,</span><span class="w"> </span><span class="nx">writeToString</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'fdl'</span><span class="p">;</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">&#39;my_document.fdl&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">'my_document.fdl'</span><span class="p">);</span>
 
 <span class="c1">// Serialize to a JSON string (skip validation since we just loaded a valid file)</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">jsonStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">writeToString</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
@@ -1460,7 +1460,7 @@ validation, or call <code>validate()</code> manually:</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">"fdl/fdl.hpp"</span>
 
 <span class="c1">// Parse from a JSON string (validates automatically)</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">json_string</span><span class="p">);</span>
@@ -1487,18 +1487,18 @@ validation, or call <code>validate()</code> manually:</p>
 
 <span class="c1"># Add a framing intent</span>
 <span class="n">fi</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">add_framing_intent</span><span class="p">(</span>
-    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;FI178&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1.78-1 Framing&quot;</span><span class="p">,</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">"FI178"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"1.78-1 Framing"</span><span class="p">,</span>
     <span class="n">aspect_ratio</span><span class="o">=</span><span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">9</span><span class="p">),</span>
     <span class="n">protection</span><span class="o">=</span><span class="mf">0.088</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Add a context with a canvas</span>
-<span class="n">ctx</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">add_context</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;PanavisionDXL2&quot;</span><span class="p">)</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">add_context</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"PanavisionDXL2"</span><span class="p">)</span>
 <span class="n">canvas</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">add_canvas</span><span class="p">(</span>
-    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;CVS001&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Open Gate RAW&quot;</span><span class="p">,</span>
-    <span class="n">source_canvas_id</span><span class="o">=</span><span class="s2">&quot;CVS001&quot;</span><span class="p">,</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">"CVS001"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"Open Gate RAW"</span><span class="p">,</span>
+    <span class="n">source_canvas_id</span><span class="o">=</span><span class="s2">"CVS001"</span><span class="p">,</span>
     <span class="n">dimensions</span><span class="o">=</span><span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">5184</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4320</span><span class="p">),</span>
     <span class="n">anamorphic_squeeze</span><span class="o">=</span><span class="mf">1.30</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1513,8 +1513,8 @@ validation, or call <code>validate()</code> manually:</p>
 
 <span class="c1"># Add a framing decision referencing the framing intent</span>
 <span class="n">fd</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">add_framing_decision</span><span class="p">(</span>
-    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;CVS001-FI178&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1.78-1 Framing&quot;</span><span class="p">,</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">"CVS001-FI178"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"1.78-1 Framing"</span><span class="p">,</span>
     <span class="n">framing_intent_id</span><span class="o">=</span><span class="n">fi</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
     <span class="n">dimensions</span><span class="o">=</span><span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">5184.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2916.0</span><span class="p">),</span>
     <span class="n">anchor_point</span><span class="o">=</span><span class="n">PointFloat</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">702.0</span><span class="p">),</span>
@@ -1522,29 +1522,31 @@ validation, or call <code>validate()</code> manually:</p>
 
 <span class="c1"># Save to file (validates automatically)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
-<span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.fdl&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+
+<span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">".fdl"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_to_file</span>
+
     <span class="n">write_to_file</span><span class="p">(</span><span class="n">my_fdl</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">FDL</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">PointFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">writeToFile</span><span class="p">,</span>
-<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'fdl'</span><span class="p">;</span>
 
 <span class="c1">// Create a new FDL document</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FDL</span><span class="p">({});</span>
 
 <span class="c1">// Add a framing intent</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">fi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">addFramingIntent</span><span class="p">(</span>
-<span class="w">  </span><span class="s1">&#39;FI178&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1.78-1 Framing&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'FI178'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1.78-1 Framing'</span><span class="p">,</span>
 <span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">16</span><span class="p">,</span><span class="w"> </span><span class="mf">9</span><span class="p">),</span><span class="w"> </span><span class="mf">0.088</span><span class="p">,</span>
 <span class="p">);</span>
 
 <span class="c1">// Add a context with a canvas</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">addContext</span><span class="p">(</span><span class="s1">&#39;PanavisionDXL2&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">addContext</span><span class="p">(</span><span class="s1">'PanavisionDXL2'</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ctx</span><span class="p">.</span><span class="nx">addCanvas</span><span class="p">(</span>
-<span class="w">  </span><span class="s1">&#39;CVS001&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Open Gate RAW&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;CVS001&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'CVS001'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Open Gate RAW'</span><span class="p">,</span><span class="w"> </span><span class="s1">'CVS001'</span><span class="p">,</span>
 <span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">5184</span><span class="p">,</span><span class="w"> </span><span class="mf">4320</span><span class="p">),</span><span class="w"> </span><span class="mf">1.30</span><span class="p">,</span>
 <span class="p">);</span>
 
@@ -1558,30 +1560,30 @@ validation, or call <code>validate()</code> manually:</p>
 
 <span class="c1">// Add a framing decision referencing the framing intent</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvas</span><span class="p">.</span><span class="nx">addFramingDecision</span><span class="p">(</span>
-<span class="w">  </span><span class="s1">&#39;CVS001-FI178&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1.78-1 Framing&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">fi</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'CVS001-FI178'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1.78-1 Framing'</span><span class="p">,</span><span class="w"> </span><span class="nx">fi</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
 <span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">(</span><span class="mf">5184.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2916.0</span><span class="p">),</span>
 <span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">PointFloat</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">702.0</span><span class="p">),</span>
 <span class="p">);</span>
 
 <span class="c1">// Save to file (validates automatically)</span>
-<span class="nx">writeToFile</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;output.fdl&#39;</span><span class="p">);</span>
+<span class="nx">writeToFile</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">,</span><span class="w"> </span><span class="s1">'output.fdl'</span><span class="p">);</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">"fdl/fdl.hpp"</span>
 
 <span class="c1">// Create a new FDL document</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">FDL</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;00000000-0000-0000-0000-000000000001&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">FDL</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">"00000000-0000-0000-0000-000000000001"</span><span class="p">);</span>
 
 <span class="c1">// Add a framing intent</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">fi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">add_framing_intent</span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;FI178&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.78-1 Framing&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">"FI178"</span><span class="p">,</span><span class="w"> </span><span class="s">"1.78-1 Framing"</span><span class="p">,</span>
 <span class="w">    </span><span class="n">fdl_dimensions_i64_t</span><span class="p">{</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">},</span><span class="w"> </span><span class="mf">0.088</span><span class="p">);</span>
 
 <span class="c1">// Add a context with a canvas</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">add_context</span><span class="p">(</span><span class="s">&quot;PanavisionDXL2&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">add_context</span><span class="p">(</span><span class="s">"PanavisionDXL2"</span><span class="p">);</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">add_canvas</span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;CVS001&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Open Gate RAW&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CVS001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">"CVS001"</span><span class="p">,</span><span class="w"> </span><span class="s">"Open Gate RAW"</span><span class="p">,</span><span class="w"> </span><span class="s">"CVS001"</span><span class="p">,</span>
 <span class="w">    </span><span class="n">fdl_dimensions_i64_t</span><span class="p">{</span><span class="mi">5184</span><span class="p">,</span><span class="w"> </span><span class="mi">4320</span><span class="p">},</span><span class="w"> </span><span class="mf">1.30</span><span class="p">);</span>
 
 <span class="c1">// Set optional canvas properties</span>
@@ -1593,12 +1595,12 @@ validation, or call <code>validate()</code> manually:</p>
 
 <span class="c1">// Add a framing decision</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">canvas</span><span class="p">.</span><span class="n">add_framing_decision</span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;CVS001-FI178&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.78-1 Framing&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;FI178&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">"CVS001-FI178"</span><span class="p">,</span><span class="w"> </span><span class="s">"1.78-1 Framing"</span><span class="p">,</span><span class="w"> </span><span class="s">"FI178"</span><span class="p">,</span>
 <span class="w">    </span><span class="n">fdl_dimensions_f64_t</span><span class="p">{</span><span class="mf">5184.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2916.0</span><span class="p">},</span>
 <span class="w">    </span><span class="n">fdl_point_f64_t</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">702.0</span><span class="p">});</span>
 
 <span class="c1">// Save to file (validates automatically)</span>
-<span class="n">fdl</span><span class="o">::</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;output.fdl&quot;</span><span class="p">);</span>
+<span class="n">fdl</span><span class="o">::</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="s">"output.fdl"</span><span class="p">);</span>
 </code></pre></div>
 </div>
 </div>
@@ -1612,40 +1614,40 @@ validation, or call <code>validate()</code> manually:</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_from_file</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;tests&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample_data&quot;</span>
-<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Scenario-9__OriginalFDL_UsedToMakePlate.fdl&quot;</span><span class="p">)</span>
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"tests"</span> <span class="o">/</span> <span class="s2">"sample_data"</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">"Scenario-9__OriginalFDL_UsedToMakePlate.fdl"</span><span class="p">)</span>
 
 <span class="c1"># Iterate contexts</span>
 <span class="k">for</span> <span class="n">ctx</span> <span class="ow">in</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">contexts</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Context: </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Context: </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Iterate canvases within a context</span>
     <span class="k">for</span> <span class="n">canvas</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">canvases</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Canvas: </span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Canvas: </span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 
         <span class="c1"># Iterate framing decisions within a canvas</span>
         <span class="k">for</span> <span class="n">fd</span> <span class="ow">in</span> <span class="n">canvas</span><span class="o">.</span><span class="n">framing_decisions</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    FD: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Dimensions: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Anchor: (</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">anchor_point</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">anchor_point</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    FD: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"      Dimensions: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"      Anchor: (</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">anchor_point</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">anchor_point</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">fd</span><span class="o">.</span><span class="n">protection_dimensions</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Protection: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">protection_dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">protection_dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"      Protection: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">protection_dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">protection_dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Iterate framing intents</span>
 <span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">framing_intents</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Framing Intent: </span><span class="si">{</span><span class="n">fi</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2"> (protection=</span><span class="si">{</span><span class="n">fi</span><span class="o">.</span><span class="n">protection</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Framing Intent: </span><span class="si">{</span><span class="n">fi</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2"> (protection=</span><span class="si">{</span><span class="n">fi</span><span class="o">.</span><span class="n">protection</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 
 <span class="c1"># Look up by ID</span>
 <span class="n">canvas</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">contexts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">canvases</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">fd</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">framing_decisions</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="s2">&quot;20220310-FDLSMP03&quot;</span><span class="p">)</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">framing_decisions</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="s2">"20220310-FDLSMP03"</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">fd</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found FD: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found FD: </span><span class="si">{</span><span class="n">fd</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFromFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'fdl'</span><span class="p">;</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">&#39;my_document.fdl&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">'my_document.fdl'</span><span class="p">);</span>
 
 <span class="c1">// Iterate contexts</span>
 <span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">ctx</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">contexts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -1671,14 +1673,14 @@ validation, or call <code>validate()</code> manually:</p>
 
 <span class="c1">// Look up by ID</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">contexts</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">canvases</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvas</span><span class="p">.</span><span class="nx">framingDecisions</span><span class="p">.</span><span class="nx">getById</span><span class="p">(</span><span class="s1">&#39;20220310-FDLSMP03&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvas</span><span class="p">.</span><span class="nx">framingDecisions</span><span class="p">.</span><span class="nx">getById</span><span class="p">(</span><span class="s1">'20220310-FDLSMP03'</span><span class="p">);</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">fd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Found FD: </span><span class="si">${</span><span class="nx">fd</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">"fdl/fdl.hpp"</span>
 
 <span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">json_string</span><span class="p">);</span>
 
@@ -1703,7 +1705,7 @@ validation, or call <code>validate()</code> manually:</p>
 <span class="c1">// Look up by ID</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">context_at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">canvas_at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">canvas</span><span class="p">.</span><span class="n">framing_decision_find_by_id</span><span class="p">(</span><span class="s">&quot;20220310-FDLSMP03&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">canvas</span><span class="p">.</span><span class="n">framing_decision_find_by_id</span><span class="p">(</span><span class="s">"20220310-FDLSMP03"</span><span class="p">);</span>
 </code></pre></div>
 </div>
 </div>
@@ -1718,8 +1720,8 @@ validation, or call <code>validate()</code> manually:</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># Load an FDL that contains canvas templates</span>
-<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;tests&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample_data&quot;</span>
-<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Scenario-9__OriginalFDL_UsedToMakePlate.fdl&quot;</span><span class="p">)</span>
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdl</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"tests"</span> <span class="o">/</span> <span class="s2">"sample_data"</span>
+<span class="n">my_fdl</span> <span class="o">=</span> <span class="n">read_from_file</span><span class="p">(</span><span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">"Scenario-9__OriginalFDL_UsedToMakePlate.fdl"</span><span class="p">)</span>
 
 <span class="c1"># Select the source canvas and framing decision</span>
 <span class="n">context</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">contexts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1728,14 +1730,14 @@ validation, or call <code>validate()</code> manually:</p>
 
 <span class="c1"># Select a canvas template</span>
 <span class="n">template</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">canvas_templates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Applying template: </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Applying template: </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Apply the template</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
     <span class="n">source_canvas</span><span class="o">=</span><span class="n">source_canvas</span><span class="p">,</span>
     <span class="n">source_framing</span><span class="o">=</span><span class="n">source_framing</span><span class="p">,</span>
-    <span class="n">new_canvas_id</span><span class="o">=</span><span class="s2">&quot;new_canvas&quot;</span><span class="p">,</span>
-    <span class="n">new_fd_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">new_canvas_id</span><span class="o">=</span><span class="s2">"new_canvas"</span><span class="p">,</span>
+    <span class="n">new_fd_name</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
     <span class="n">source_context_label</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -1744,28 +1746,28 @@ validation, or call <code>validate()</code> manually:</p>
 <span class="n">output_canvas</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">canvas</span>
 <span class="n">output_framing</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">framing_decision</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output canvas: </span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Dimensions: </span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Output canvas: </span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Dimensions: </span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">output_canvas</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Read computed values from canvas custom attributes</span>
 <span class="n">scale_factor</span> <span class="o">=</span> <span class="n">output_canvas</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="n">ATTR_SCALE_FACTOR</span><span class="p">)</span>
 <span class="n">content_translation</span> <span class="o">=</span> <span class="n">output_canvas</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">)</span>
 <span class="n">scaled_bbox</span> <span class="o">=</span> <span class="n">output_canvas</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="n">ATTR_SCALED_BOUNDING_BOX</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Scale factor: </span><span class="si">{</span><span class="n">scale_factor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Scale factor: </span><span class="si">{</span><span class="n">scale_factor</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">content_translation</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Content translation: (</span><span class="si">{</span><span class="n">content_translation</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">content_translation</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Content translation: (</span><span class="si">{</span><span class="n">content_translation</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">content_translation</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">scaled_bbox</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Scaled bounding box: </span><span class="si">{</span><span class="n">scaled_bbox</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">scaled_bbox</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Scaled bounding box: </span><span class="si">{</span><span class="n">scaled_bbox</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">scaled_bbox</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">readFromFile</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">,</span><span class="w"> </span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">,</span><span class="w"> </span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">,</span>
-<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'fdl'</span><span class="p">;</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">&#39;my_document.fdl&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readFromFile</span><span class="p">(</span><span class="s1">'my_document.fdl'</span><span class="p">);</span>
 
 <span class="c1">// Select the source canvas and framing decision</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">contexts</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
@@ -1777,7 +1779,7 @@ validation, or call <code>validate()</code> manually:</p>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Applying template: </span><span class="si">${</span><span class="nx">template</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 
 <span class="c1">// Apply the template</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">template</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">sourceCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">sourceFraming</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;new_canvas&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">template</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">sourceCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">sourceFraming</span><span class="p">,</span><span class="w"> </span><span class="s1">'new_canvas'</span><span class="p">,</span><span class="w"> </span><span class="s1">''</span><span class="p">);</span>
 
 <span class="c1">// Access the output via convenience properties</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">outputFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">fdl</span><span class="p">;</span>
@@ -1795,7 +1797,7 @@ validation, or call <code>validate()</code> manually:</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">"fdl/fdl.hpp"</span>
 
 <span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">json_string</span><span class="p">);</span>
 
@@ -1810,7 +1812,7 @@ validation, or call <code>validate()</code> manually:</p>
 <span class="c1">// Apply the template</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmpl</span><span class="p">.</span><span class="n">apply</span><span class="p">(</span>
 <span class="w">    </span><span class="n">source_canvas</span><span class="p">,</span><span class="w"> </span><span class="n">source_framing</span><span class="p">,</span>
-<span class="w">    </span><span class="s">&quot;new_canvas&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">"new_canvas"</span><span class="p">,</span><span class="w"> </span><span class="s">""</span><span class="p">,</span>
 <span class="w">    </span><span class="n">ctx</span><span class="p">.</span><span class="n">label</span><span class="p">());</span>
 
 <span class="c1">// Access the output</span>
@@ -1847,12 +1849,12 @@ The rounding strategy has two components:</p>
 
 <span class="c1"># Check the default strategy</span>
 <span class="n">default</span> <span class="o">=</span> <span class="n">get_rounding</span><span class="p">()</span>
-<span class="k">assert</span> <span class="n">default</span><span class="o">.</span><span class="n">even</span> <span class="o">==</span> <span class="s2">&quot;even&quot;</span>
-<span class="k">assert</span> <span class="n">default</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;up&quot;</span>
+<span class="k">assert</span> <span class="n">default</span><span class="o">.</span><span class="n">even</span> <span class="o">==</span> <span class="s2">"even"</span>
+<span class="k">assert</span> <span class="n">default</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"up"</span>
 
 <span class="c1"># Set a global rounding strategy</span>
-<span class="n">set_rounding</span><span class="p">(</span><span class="n">RoundStrategy</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">&quot;whole&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">))</span>
-<span class="k">assert</span> <span class="n">get_rounding</span><span class="p">()</span><span class="o">.</span><span class="n">even</span> <span class="o">==</span> <span class="s2">&quot;whole&quot;</span>
+<span class="n">set_rounding</span><span class="p">(</span><span class="n">RoundStrategy</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">"whole"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"round"</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">get_rounding</span><span class="p">()</span><span class="o">.</span><span class="n">even</span> <span class="o">==</span> <span class="s2">"whole"</span>
 
 <span class="c1"># Reset to default</span>
 <span class="n">set_rounding</span><span class="p">(</span><span class="n">DEFAULT_ROUNDING_STRATEGY</span><span class="p">)</span>
@@ -1861,19 +1863,19 @@ The rounding strategy has two components:</p>
 <span class="n">dims</span> <span class="o">=</span> <span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">19.456</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">79.456</span><span class="p">)</span>
 
 <span class="c1"># Round to nearest even number, rounding up</span>
-<span class="n">rounded_even_up</span> <span class="o">=</span> <span class="n">dims</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
+<span class="n">rounded_even_up</span> <span class="o">=</span> <span class="n">dims</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">"even"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"up"</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">rounded_even_up</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="mi">20</span>
 <span class="k">assert</span> <span class="n">rounded_even_up</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="mi">80</span>
 
 <span class="c1"># Round to nearest whole number, rounding down</span>
-<span class="n">rounded_whole_down</span> <span class="o">=</span> <span class="n">dims</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">&quot;whole&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;down&quot;</span><span class="p">)</span>
+<span class="n">rounded_whole_down</span> <span class="o">=</span> <span class="n">dims</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">"whole"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"down"</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">rounded_whole_down</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="mi">19</span>
 <span class="k">assert</span> <span class="n">rounded_whole_down</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="mi">79</span>
 
 <span class="c1"># Scale then round</span>
 <span class="n">dims2</span> <span class="o">=</span> <span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">1920.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">1080.0</span><span class="p">)</span>
 <span class="n">scaled</span> <span class="o">=</span> <span class="n">dims2</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-<span class="n">rounded</span> <span class="o">=</span> <span class="n">scaled</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
+<span class="n">rounded</span> <span class="o">=</span> <span class="n">scaled</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">even</span><span class="o">=</span><span class="s2">"even"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"up"</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">rounded</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="mi">960</span>
 <span class="k">assert</span> <span class="n">rounded</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="mi">540</span>
 </code></pre></div>
@@ -1882,11 +1884,11 @@ The rounding strategy has two components:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">DimensionsFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundStrategy</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingEven</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingMode</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">getRounding</span><span class="p">,</span><span class="w"> </span><span class="nx">setRounding</span><span class="p">,</span><span class="w"> </span><span class="nx">DEFAULT_ROUNDING_STRATEGY</span><span class="p">,</span>
-<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'fdl'</span><span class="p">;</span>
 
 <span class="c1">// Check the default strategy</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">def</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getRounding</span><span class="p">();</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">def</span><span class="p">.</span><span class="nx">even</span><span class="p">,</span><span class="w"> </span><span class="nx">def</span><span class="p">.</span><span class="nx">mode</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;even&quot;, &quot;up&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">def</span><span class="p">.</span><span class="nx">even</span><span class="p">,</span><span class="w"> </span><span class="nx">def</span><span class="p">.</span><span class="nx">mode</span><span class="p">);</span><span class="w">  </span><span class="c1">// "even", "up"</span>
 
 <span class="c1">// Set a global rounding strategy</span>
 <span class="nx">setRounding</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">RoundStrategy</span><span class="p">(</span><span class="nx">RoundingEven</span><span class="p">.</span><span class="nx">WHOLE</span><span class="p">,</span><span class="w"> </span><span class="nx">RoundingMode</span><span class="p">.</span><span class="nx">ROUND</span><span class="p">));</span>
@@ -1913,7 +1915,7 @@ The rounding strategy has two components:</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">"fdl/fdl.hpp"</span>
 
 <span class="c1">// Per-dimension rounding</span>
 <span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsFloat</span><span class="w"> </span><span class="nf">dims</span><span class="p">(</span><span class="mf">19.456</span><span class="p">,</span><span class="w"> </span><span class="mf">79.456</span><span class="p">);</span>
@@ -1944,96 +1946,96 @@ composite types (PointFloat, DimensionsFloat, DimensionsInt).</p>
 <span class="n">my_fdl</span> <span class="o">=</span> <span class="n">FDL</span><span class="p">()</span>
 
 <span class="c1"># Set scalar attributes</span>
-<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;project_name&quot;</span><span class="p">,</span> <span class="s2">&quot;My Film&quot;</span><span class="p">)</span>
-<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;shot_count&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>
-<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;aspect_ratio_value&quot;</span><span class="p">,</span> <span class="mf">1.78</span><span class="p">)</span>
-<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;is_final&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">"project_name"</span><span class="p">,</span> <span class="s2">"My Film"</span><span class="p">)</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">"shot_count"</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">"aspect_ratio_value"</span><span class="p">,</span> <span class="mf">1.78</span><span class="p">)</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">"is_final"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Set composite attributes</span>
-<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">,</span> <span class="n">PointFloat</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">128.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">256.0</span><span class="p">))</span>
-<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;target_res&quot;</span><span class="p">,</span> <span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">3840.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2160.0</span><span class="p">))</span>
-<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">&quot;sensor_size&quot;</span><span class="p">,</span> <span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">5184</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4320</span><span class="p">))</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">"offset"</span><span class="p">,</span> <span class="n">PointFloat</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">128.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">256.0</span><span class="p">))</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">"target_res"</span><span class="p">,</span> <span class="n">DimensionsFloat</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">3840.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2160.0</span><span class="p">))</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s2">"sensor_size"</span><span class="p">,</span> <span class="n">DimensionsInt</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">5184</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4320</span><span class="p">))</span>
 
 <span class="c1"># Get attributes by name</span>
-<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;project_name&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;My Film&quot;</span>
-<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;shot_count&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">42</span>
-<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;is_final&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">"project_name"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"My Film"</span>
+<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">"shot_count"</span><span class="p">)</span> <span class="o">==</span> <span class="mi">42</span>
+<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">"is_final"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
 
-<span class="n">offset</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">)</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">"offset"</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">PointFloat</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">offset</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="mf">128.0</span>
 
-<span class="n">target</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;target_res&quot;</span><span class="p">)</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">"target_res"</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">DimensionsFloat</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="mf">3840.0</span>
 
 <span class="c1"># List all custom attributes</span>
 <span class="n">all_attrs</span> <span class="o">=</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">custom_attrs</span>
-<span class="k">assert</span> <span class="s2">&quot;project_name&quot;</span> <span class="ow">in</span> <span class="n">all_attrs</span>
-<span class="k">assert</span> <span class="s2">&quot;offset&quot;</span> <span class="ow">in</span> <span class="n">all_attrs</span>
+<span class="k">assert</span> <span class="s2">"project_name"</span> <span class="ow">in</span> <span class="n">all_attrs</span>
+<span class="k">assert</span> <span class="s2">"offset"</span> <span class="ow">in</span> <span class="n">all_attrs</span>
 
 <span class="c1"># Remove an attribute</span>
-<span class="n">my_fdl</span><span class="o">.</span><span class="n">remove_custom_attr</span><span class="p">(</span><span class="s2">&quot;is_final&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">&quot;is_final&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="n">my_fdl</span><span class="o">.</span><span class="n">remove_custom_attr</span><span class="p">(</span><span class="s2">"is_final"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">my_fdl</span><span class="o">.</span><span class="n">get_custom_attr</span><span class="p">(</span><span class="s2">"is_final"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FDL</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">PointFloat</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FDL</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">,</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">,</span><span class="w"> </span><span class="nx">PointFloat</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'fdl'</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">myFdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FDL</span><span class="p">({});</span>
 
 <span class="c1">// Set scalar attributes</span>
-<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;project_name&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;My Film&#39;</span><span class="p">);</span>
-<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;shot_count&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">42</span><span class="p">);</span>
-<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;aspect_ratio_value&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">1.78</span><span class="p">);</span>
-<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;is_final&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">'project_name'</span><span class="p">,</span><span class="w"> </span><span class="s1">'My Film'</span><span class="p">);</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">'shot_count'</span><span class="p">,</span><span class="w"> </span><span class="mf">42</span><span class="p">);</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">'aspect_ratio_value'</span><span class="p">,</span><span class="w"> </span><span class="mf">1.78</span><span class="p">);</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">'is_final'</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
 
 <span class="c1">// Set composite attributes</span>
-<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PointFloat</span><span class="p">(</span><span class="mf">128.0</span><span class="p">,</span><span class="w"> </span><span class="mf">256.0</span><span class="p">));</span>
-<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;target_res&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">(</span><span class="mf">3840.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2160.0</span><span class="p">));</span>
-<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">&#39;sensor_size&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">5184</span><span class="p">,</span><span class="w"> </span><span class="mf">4320</span><span class="p">));</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">'offset'</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PointFloat</span><span class="p">(</span><span class="mf">128.0</span><span class="p">,</span><span class="w"> </span><span class="mf">256.0</span><span class="p">));</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">'target_res'</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsFloat</span><span class="p">(</span><span class="mf">3840.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2160.0</span><span class="p">));</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">setCustomAttr</span><span class="p">(</span><span class="s1">'sensor_size'</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">5184</span><span class="p">,</span><span class="w"> </span><span class="mf">4320</span><span class="p">));</span>
 
 <span class="c1">// Get attributes by name</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;project_name&#39;</span><span class="p">));</span><span class="w">  </span><span class="c1">// &quot;My Film&quot;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;shot_count&#39;</span><span class="p">));</span><span class="w">     </span><span class="c1">// 42</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;is_final&#39;</span><span class="p">));</span><span class="w">       </span><span class="c1">// true</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">'project_name'</span><span class="p">));</span><span class="w">  </span><span class="c1">// "My Film"</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">'shot_count'</span><span class="p">));</span><span class="w">     </span><span class="c1">// 42</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">'is_final'</span><span class="p">));</span><span class="w">       </span><span class="c1">// true</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">);</span><span class="w">       </span><span class="c1">// PointFloat</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;target_res&#39;</span><span class="p">);</span><span class="w">   </span><span class="c1">// DimensionsFloat</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">'offset'</span><span class="p">);</span><span class="w">       </span><span class="c1">// PointFloat</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">'target_res'</span><span class="p">);</span><span class="w">   </span><span class="c1">// DimensionsFloat</span>
 
 <span class="c1">// List all custom attributes</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">allAttrs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">customAttrs</span><span class="p">;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">allAttrs</span><span class="p">));</span>
 
 <span class="c1">// Remove an attribute</span>
-<span class="nx">myFdl</span><span class="p">.</span><span class="nx">removeCustomAttr</span><span class="p">(</span><span class="s1">&#39;is_final&#39;</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">&#39;is_final&#39;</span><span class="p">));</span><span class="w">  </span><span class="c1">// null</span>
+<span class="nx">myFdl</span><span class="p">.</span><span class="nx">removeCustomAttr</span><span class="p">(</span><span class="s1">'is_final'</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myFdl</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="s1">'is_final'</span><span class="p">));</span><span class="w">  </span><span class="c1">// null</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">"fdl/fdl.hpp"</span>
 
-<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">FDL</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;00000000-0000-0000-0000-000000000001&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">FDL</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">"00000000-0000-0000-0000-000000000001"</span><span class="p">);</span>
 
 <span class="c1">// Set scalar attributes</span>
-<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;project_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;My Film&quot;</span><span class="p">));</span>
-<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;shot_count&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="p">(</span><span class="mi">42</span><span class="p">));</span>
-<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;aspect_ratio_value&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1.78</span><span class="p">);</span>
-<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;is_final&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">"project_name"</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"My Film"</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">"shot_count"</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="p">(</span><span class="mi">42</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">"aspect_ratio_value"</span><span class="p">,</span><span class="w"> </span><span class="mf">1.78</span><span class="p">);</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">"is_final"</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
 
 <span class="c1">// Set composite attributes</span>
-<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;offset&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">PointFloat</span><span class="p">(</span><span class="mf">128.0</span><span class="p">,</span><span class="w"> </span><span class="mf">256.0</span><span class="p">));</span>
-<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;target_res&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsFloat</span><span class="p">(</span><span class="mf">3840.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2160.0</span><span class="p">));</span>
-<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">&quot;sensor_size&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsInt</span><span class="p">(</span><span class="mi">5184</span><span class="p">,</span><span class="w"> </span><span class="mi">4320</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">"offset"</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">PointFloat</span><span class="p">(</span><span class="mf">128.0</span><span class="p">,</span><span class="w"> </span><span class="mf">256.0</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">"target_res"</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsFloat</span><span class="p">(</span><span class="mf">3840.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2160.0</span><span class="p">));</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">set_custom_attr</span><span class="p">(</span><span class="s">"sensor_size"</span><span class="p">,</span><span class="w"> </span><span class="n">fdl</span><span class="o">::</span><span class="n">DimensionsInt</span><span class="p">(</span><span class="mi">5184</span><span class="p">,</span><span class="w"> </span><span class="mi">4320</span><span class="p">));</span>
 
 <span class="c1">// Get attributes by name</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_string</span><span class="p">(</span><span class="s">&quot;project_name&quot;</span><span class="p">);</span><span class="w">   </span><span class="c1">// optional&lt;string&gt;</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_int</span><span class="p">(</span><span class="s">&quot;shot_count&quot;</span><span class="p">);</span><span class="w">        </span><span class="c1">// optional&lt;int64_t&gt;</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_point_f64</span><span class="p">(</span><span class="s">&quot;offset&quot;</span><span class="p">);</span><span class="w">     </span><span class="c1">// optional&lt;PointFloat&gt;</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_dims_f64</span><span class="p">(</span><span class="s">&quot;target_res&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// optional&lt;DimensionsFloat&gt;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_string</span><span class="p">(</span><span class="s">"project_name"</span><span class="p">);</span><span class="w">   </span><span class="c1">// optional&lt;string&gt;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_int</span><span class="p">(</span><span class="s">"shot_count"</span><span class="p">);</span><span class="w">        </span><span class="c1">// optional&lt;int64_t&gt;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_point_f64</span><span class="p">(</span><span class="s">"offset"</span><span class="p">);</span><span class="w">     </span><span class="c1">// optional&lt;PointFloat&gt;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">get_custom_attr_dims_f64</span><span class="p">(</span><span class="s">"target_res"</span><span class="p">);</span><span class="w">  </span><span class="c1">// optional&lt;DimensionsFloat&gt;</span>
 
 <span class="c1">// Remove an attribute</span>
-<span class="n">doc</span><span class="p">.</span><span class="n">remove_custom_attr</span><span class="p">(</span><span class="s">&quot;is_final&quot;</span><span class="p">);</span>
+<span class="n">doc</span><span class="p">.</span><span class="n">remove_custom_attr</span><span class="p">(</span><span class="s">"is_final"</span><span class="p">);</span>
 </code></pre></div>
 </div>
 </div>
@@ -2072,19 +2074,20 @@ custom attributes on the output canvas. Use the named constants to access them:<
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">ATTR_SCALE_FACTOR</span><span class="p">,</span> <span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">,</span> <span class="n">ATTR_SCALED_BOUNDING_BOX</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_SCALE_FACTOR</span><span class="p">)</span>          <span class="c1"># &quot;scale_factor&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">)</span>   <span class="c1"># &quot;content_translation&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_SCALED_BOUNDING_BOX</span><span class="p">)</span>   <span class="c1"># &quot;scaled_bounding_box&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_SCALE_FACTOR</span><span class="p">)</span>  <span class="c1"># "scale_factor"</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">)</span>  <span class="c1"># "content_translation"</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ATTR_SCALED_BOUNDING_BOX</span><span class="p">)</span>  <span class="c1"># "scaled_bounding_box"</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">,</span><span class="w"> </span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">,</span><span class="w"> </span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">,</span>
-<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fdl&#39;</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'fdl'</span><span class="p">;</span>
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">);</span><span class="w">         </span><span class="c1">// &quot;scale_factor&quot;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;content_translation&quot;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;scaled_bounding_box&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">);</span><span class="w">         </span><span class="c1">// "scale_factor"</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span><span class="w">  </span><span class="c1">// "content_translation"</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ATTR_SCALED_BOUNDING_BOX</span><span class="p">);</span><span class="w">  </span><span class="c1">// "scaled_bounding_box"</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">sf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="nx">ATTR_SCALE_FACTOR</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">outputCanvas</span><span class="p">.</span><span class="nx">getCustomAttr</span><span class="p">(</span><span class="nx">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span>
@@ -2092,11 +2095,11 @@ custom attributes on the output canvas. Use the named constants to access them:<
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fdl/fdl.hpp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">"fdl/fdl.hpp"</span>
 
-<span class="c1">// fdl::ATTR_SCALE_FACTOR          == &quot;scale_factor&quot;</span>
-<span class="c1">// fdl::ATTR_CONTENT_TRANSLATION   == &quot;content_translation&quot;</span>
-<span class="c1">// fdl::ATTR_SCALED_BOUNDING_BOX   == &quot;scaled_bounding_box&quot;</span>
+<span class="c1">// fdl::ATTR_SCALE_FACTOR          == "scale_factor"</span>
+<span class="c1">// fdl::ATTR_CONTENT_TRANSLATION   == "content_translation"</span>
+<span class="c1">// fdl::ATTR_SCALED_BOUNDING_BOX   == "scaled_bounding_box"</span>
 
 <span class="k">auto</span><span class="w"> </span><span class="n">sf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_canvas</span><span class="p">.</span><span class="n">get_custom_attr_float</span><span class="p">(</span><span class="n">fdl</span><span class="o">::</span><span class="n">ATTR_SCALE_FACTOR</span><span class="p">);</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_canvas</span><span class="p">.</span><span class="n">get_custom_attr_point_f64</span><span class="p">(</span><span class="n">fdl</span><span class="o">::</span><span class="n">ATTR_CONTENT_TRANSLATION</span><span class="p">);</span>
@@ -2159,7 +2162,7 @@ custom attributes on the output canvas. Use the named constants to access them:<
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
