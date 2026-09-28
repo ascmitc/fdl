@@ -52,7 +52,7 @@ def _singular(name: str) -> str:
     """Singularize a collection name (contexts→context, canvases→canvas)."""
     if name in _SINGULAR_MAP:
         return _SINGULAR_MAP[name]
-    return name[:-1] if name.endswith("s") else name
+    return name.removesuffix("s")
 
 
 # -----------------------------------------------------------------------
@@ -505,8 +505,7 @@ def _build_free_function(ff, idl: IDL) -> dict:
 
     # Strip "fdl_" prefix for nicer C++ name: fdl_round → round
     cpp_name = ff.display_name
-    if cpp_name.startswith("fdl_"):
-        cpp_name = cpp_name[4:]
+    cpp_name = cpp_name.removeprefix("fdl_")
 
     return {
         "cpp_name": cpp_name,
@@ -1030,8 +1029,7 @@ def generate_raii(idl: IDL, output_dir: Path) -> None:
             seen_c_functions.add(u.c_function)
             # Strip "fdl_" prefix for C++ name: fdl_resolve_geometry_layer → resolve_geometry_layer
             cpp_name = u.c_function
-            if cpp_name.startswith("fdl_"):
-                cpp_name = cpp_name[4:]
+            cpp_name = cpp_name.removeprefix("fdl_")
             c_abi_utils.append(
                 {
                     "cpp_name": cpp_name,

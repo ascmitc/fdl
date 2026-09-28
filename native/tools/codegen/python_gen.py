@@ -16,6 +16,7 @@ from types import SimpleNamespace
 
 from jinja2 import Environment, FileSystemLoader
 
+from .fdl_idl import IDL, build_ir
 from .python_context import (
     build_constants_enum_context,
     build_converter_context,
@@ -26,7 +27,6 @@ from .python_context import (
 from .shared_context import (
     build_enum_context,
 )
-from .fdl_idl import IDL, build_ir
 
 # -----------------------------------------------------------------------
 # Per-class facade helpers

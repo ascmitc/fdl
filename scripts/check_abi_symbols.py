@@ -20,7 +20,7 @@ HEADER_PATH = REPO_ROOT / "native" / "core" / "include" / "fdl" / "fdl_core.h"
 
 # Allow importing the codegen package
 sys.path.insert(0, str(REPO_ROOT / "native" / "tools"))
-from codegen.fdl_idl import parse_idl  # noqa: E402
+from codegen.fdl_idl import parse_idl
 
 
 def find_library() -> Path | None:
@@ -102,7 +102,7 @@ def extract_library_symbols(lib_path: Path) -> set[str]:
     else:
         cmd = ["nm", "-D", str(lib_path)]
 
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(f"ERROR: {cmd[0]} failed: {result.stderr.strip()}", file=sys.stderr)
         sys.exit(2)
@@ -119,8 +119,7 @@ def extract_library_symbols(lib_path: Path) -> set[str]:
             parts = line.split()
             if len(parts) >= 3 and parts[1] == "T":
                 sym = parts[2]
-                if sym.startswith("_"):
-                    sym = sym[1:]  # strip macOS leading underscore
+                sym = sym.removeprefix("_")  # strip macOS leading underscore
                 symbols.add(sym)
     return symbols
 

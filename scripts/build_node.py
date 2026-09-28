@@ -54,6 +54,7 @@ def npm_install() -> int:
     result = subprocess.run(
         ["npm", "install", "--ignore-scripts"],
         cwd=NODE_DIR,
+        check=False,
     )
     return result.returncode
 
@@ -68,6 +69,7 @@ def build_addon() -> int:
             **__import__("os").environ,
             "FDL_CORE_LIB_DIR": str(CORE_BUILD_DIR),
         },
+        check=False,
     )
     if result.returncode != 0:
         return result.returncode
@@ -114,6 +116,7 @@ def build_typescript() -> int:
     result = subprocess.run(
         ["npx", "tsc"],
         cwd=NODE_DIR,
+        check=False,
     )
     return result.returncode
 
@@ -124,6 +127,7 @@ def run_tests() -> int:
     result = subprocess.run(
         ["npx", "vitest", "run"],
         cwd=NODE_DIR,
+        check=False,
     )
     return result.returncode
 

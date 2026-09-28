@@ -12,21 +12,20 @@ import json
 import sys
 
 from fdl import (
+    ATTR_CONTENT_TRANSLATION,
+    ATTR_SCALED_BOUNDING_BOX,
     CanvasTemplate,
     DimensionsInt,
     FitMethod,
     GeometryPath,
     HAlign,
-    RoundStrategy,
     RoundingEven,
     RoundingMode,
+    RoundStrategy,
     VAlign,
     read_from_string,
-    ATTR_CONTENT_TRANSLATION,
-    ATTR_SCALED_BOUNDING_BOX,
 )
 from fdl_imaging import transform_image_with_computed_values
-
 
 GEOMETRY_PATH_MAP: dict[str, GeometryPath] = {
     "canvas.dimensions": GeometryPath.CANVAS_DIMENSIONS,
@@ -169,6 +168,6 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - top-level CLI boundary, report any failure as JSON
         print(json.dumps({"error": str(e)}))
         sys.exit(1)
