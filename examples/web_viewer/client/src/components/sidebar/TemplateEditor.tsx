@@ -99,13 +99,13 @@ export function TemplateEditor() {
             label="Width"
             value={template.targetWidth}
             onChange={(v) => updateTemplate({ targetWidth: v })}
-            min={1}
+            min={0}
           />
           <NumberField
             label="Height"
             value={template.targetHeight}
             onChange={(v) => updateTemplate({ targetHeight: v })}
-            min={1}
+            min={0}
           />
         </div>
         <NumberField
