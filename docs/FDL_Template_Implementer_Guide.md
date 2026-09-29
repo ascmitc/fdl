@@ -1036,8 +1036,8 @@ result = template.apply(
     source_canvas,
     source_framing,
     new_fd_name="...",
-    source_context=context,       # optional
-    context_creator="...",        # optional
+    source_context=context,  # optional
+    context_creator="...",  # optional
 )
 # result.fdl, result.canvas, result.framing_decision, result.context
 ```

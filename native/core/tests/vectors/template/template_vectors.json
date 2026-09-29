@@ -902,6 +902,188 @@
         "output_protection_dims": null,
         "output_protection_anchor": null
       }
+    },
+    {
+      "label": "zero_height_sentinel_pad_to_maximum",
+      "source_canvas": {
+        "id": "CVS_ZERO",
+        "label": "Full-frame source",
+        "source_canvas_id": "CVS_ZERO",
+        "dimensions": {
+          "width": 3840,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_ZERO-FI_FULL",
+        "label": "Full frame",
+        "framing_intent_id": "FI_FULL",
+        "dimensions": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_ZERO_PAD",
+        "label": "Zero-height sentinel, pad_to_maximum",
+        "target_dimensions": {
+          "width": 3840,
+          "height": 0
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "width",
+        "alignment_method_horizontal": "center",
+        "alignment_method_vertical": "top",
+        "preserve_from_source_canvas": null,
+        "has_maximum_dimensions": true,
+        "maximum_dimensions": {
+          "width": 3840,
+          "height": 4000
+        },
+        "pad_to_maximum": true,
+        "round": {
+          "even": "even",
+          "mode": "round"
+        }
+      },
+      "new_fd_name": "Full frame",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 1.0,
+        "scaled_bounding_box": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "content_translation": {
+          "x": 0.0,
+          "y": 920.0
+        },
+        "output_canvas_dims": {
+          "width": 3840.0,
+          "height": 4000.0
+        },
+        "output_effective_dims": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 920.0
+        },
+        "output_fd_dims": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 920.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
+    },
+    {
+      "label": "zero_width_sentinel_crop_stays_literal",
+      "source_canvas": {
+        "id": "CVS_CROP",
+        "label": "Wide source",
+        "source_canvas_id": "CVS_CROP",
+        "dimensions": {
+          "width": 4000,
+          "height": 2160
+        },
+        "effective_dimensions": null,
+        "effective_anchor_point": null,
+        "anamorphic_squeeze": 1.0
+      },
+      "source_framing": {
+        "id": "CVS_CROP-FI_FULL",
+        "label": "Full frame",
+        "framing_intent_id": "FI_FULL",
+        "dimensions": {
+          "width": 4000.0,
+          "height": 2160.0
+        },
+        "anchor_point": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "protection_dimensions": null,
+        "protection_anchor_point": null
+      },
+      "template": {
+        "id": "CT_ZERO_CROP",
+        "label": "Zero-width sentinel, crop",
+        "target_dimensions": {
+          "width": 0,
+          "height": 2160
+        },
+        "target_anamorphic_squeeze": 1.0,
+        "fit_source": "framing_decision.dimensions",
+        "fit_method": "height",
+        "alignment_method_horizontal": "right",
+        "alignment_method_vertical": "center",
+        "preserve_from_source_canvas": "canvas.dimensions",
+        "has_maximum_dimensions": true,
+        "maximum_dimensions": {
+          "width": 3840,
+          "height": 2160
+        },
+        "pad_to_maximum": false,
+        "round": {
+          "even": "even",
+          "mode": "round"
+        }
+      },
+      "new_fd_name": "Full frame",
+      "context_creator": "test",
+      "source_context_label": "Camera A",
+      "expected": {
+        "scale_factor": 1.0,
+        "scaled_bounding_box": {
+          "width": 4000.0,
+          "height": 2160.0
+        },
+        "content_translation": {
+          "x": -160.0,
+          "y": 0.0
+        },
+        "output_canvas_dims": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "output_effective_dims": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "output_effective_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_fd_dims": {
+          "width": 3840.0,
+          "height": 2160.0
+        },
+        "output_fd_anchor": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "output_has_protection": false,
+        "output_protection_dims": null,
+        "output_protection_anchor": null
+      }
     }
   ]
 }

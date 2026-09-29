@@ -57,6 +57,7 @@ def run_codegen() -> int:
     result = subprocess.run(
         [sys.executable, "-m", "codegen.generate", "--target", "wasm-bindings"],
         cwd=tools_dir,
+        check=False,
     )
     return result.returncode
 
@@ -75,6 +76,7 @@ def configure(build_type: str) -> int:
             f"-DCMAKE_BUILD_TYPE={build_type}",
         ],
         cwd=REPO_ROOT,
+        check=False,
     ).returncode
 
 
@@ -89,6 +91,7 @@ def build() -> int:
             str(os.cpu_count() or 2),
         ],
         cwd=REPO_ROOT,
+        check=False,
     ).returncode
 
 

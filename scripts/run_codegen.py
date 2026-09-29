@@ -62,7 +62,7 @@ def run_codegen() -> int:
 
     # Generate CFFI declaration header from fdl_core.h (must run before Python targets)
     print("=== Generating: cffi-decl-header ===")
-    result = subprocess.run([python, "scripts/generate_cffi_decl.py"], cwd=REPO_ROOT)
+    result = subprocess.run([python, "scripts/generate_cffi_decl.py"], cwd=REPO_ROOT, check=False)
     if result.returncode != 0:
         print("FAILED: cffi decl header generation failed", file=sys.stderr)
         return result.returncode
@@ -72,6 +72,7 @@ def run_codegen() -> int:
         result = subprocess.run(
             [python, "-m", "codegen.generate", "--target", target],
             cwd=TOOLS_DIR,
+            check=False,
         )
         if result.returncode != 0:
             print(f"FAILED: codegen target '{target}' exited {result.returncode}", file=sys.stderr)
@@ -91,6 +92,7 @@ def run_codegen() -> int:
     fmt = subprocess.run(
         [*ruff_cmd, "format", *abs_py_paths],
         cwd=REPO_ROOT,
+        check=False,
     )
     if fmt.returncode != 0:
         print("WARNING: ruff format failed (is ruff installed?)", file=sys.stderr)
@@ -105,7 +107,7 @@ def run_codegen() -> int:
             cpp_files.extend(str(f) for f in d.rglob("*.h"))
     if cpp_files:
         try:
-            cfmt = subprocess.run(["clang-format", "-i", *cpp_files], cwd=REPO_ROOT)
+            cfmt = subprocess.run(["clang-format", "-i", *cpp_files], cwd=REPO_ROOT, check=False)
             if cfmt.returncode != 0:
                 print("WARNING: clang-format failed", file=sys.stderr)
         except FileNotFoundError:
@@ -121,7 +123,7 @@ def run_codegen() -> int:
             addon_files.extend(str(f) for f in d.rglob("*.h"))
     if addon_files:
         try:
-            cfmt = subprocess.run(["clang-format", "-i", *addon_files], cwd=REPO_ROOT)
+            cfmt = subprocess.run(["clang-format", "-i", *addon_files], cwd=REPO_ROOT, check=False)
             if cfmt.returncode != 0:
                 print("WARNING: clang-format failed on addon files", file=sys.stderr)
         except FileNotFoundError:
@@ -137,7 +139,7 @@ def run_codegen() -> int:
             wasm_files.extend(str(f) for f in d.rglob("*.h"))
     if wasm_files:
         try:
-            cfmt = subprocess.run(["clang-format", "-i", *wasm_files], cwd=REPO_ROOT)
+            cfmt = subprocess.run(["clang-format", "-i", *wasm_files], cwd=REPO_ROOT, check=False)
             if cfmt.returncode != 0:
                 print("WARNING: clang-format failed on wasm files", file=sys.stderr)
         except FileNotFoundError:
@@ -156,6 +158,7 @@ def run_codegen() -> int:
             pfmt = subprocess.run(
                 ["npx", "prettier", "--write", *ts_files],
                 cwd=node_dir,
+                check=False,
             )
             if pfmt.returncode != 0:
                 print("WARNING: prettier failed", file=sys.stderr)
@@ -170,6 +173,7 @@ def check_drift() -> int:
     result = subprocess.run(
         ["git", "diff", "--exit-code", "--stat", *GENERATED_PATHS],
         cwd=REPO_ROOT,
+        check=False,
     )
     if result.returncode != 0:
         print(
@@ -184,6 +188,7 @@ def check_drift() -> int:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     if untracked.stdout.strip():
         print(

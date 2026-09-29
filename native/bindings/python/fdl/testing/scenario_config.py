@@ -1093,6 +1093,24 @@ SCENARIO_CONFIGS: dict[int, ScenarioConfig] = {
         custom_template_path="EdgeCases/alignment_combos/templates",
         custom_source_dir="EdgeCases/alignment_combos/source",
     ),
+    33: ScenarioConfig(
+        number=33,
+        name="PadToMax_ZeroHeightSentinel_TopLeft",
+        dir_name="Scen_33_PadToMax_ZeroHeightSentinel_TopLeft",
+        template_filename="Scen_33_PadToMax_ZeroHeightSentinel_TopLeft.fdl",
+        variants=[VARIANT_A, VARIANT_B, VARIANT_C],
+        result_pattern="Scen33-RESULT-{variant}.fdl",
+        custom_source_dir="Original_Source_Files",
+    ),
+    34: ScenarioConfig(
+        number=34,
+        name="PadToMax_ZeroHeightSentinel_BottomLeft",
+        dir_name="Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft",
+        template_filename="Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft.fdl",
+        variants=[VARIANT_A, VARIANT_B, VARIANT_C],
+        result_pattern="Scen34-RESULT-{variant}.fdl",
+        custom_source_dir="Original_Source_Files",
+    ),
 }
 
 

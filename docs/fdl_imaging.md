@@ -75,13 +75,10 @@ from fdl_imaging.text import render_dimension_label
 
 buf = oiio.ImageBuf(oiio.ImageSpec(1920, 1080, 4, oiio.FLOAT))
 
-draw_rect_outline(buf, x=100, y=50, w=1720, h=980,
-                  color=(0.5, 0.5, 0.5, 1.0), line_width=2)
-draw_crosshair(buf, cx=960, cy=540, size=40,
-               color=(0.0, 0.8, 0.4, 1.0), line_width=1)
+draw_rect_outline(buf, x=100, y=50, w=1720, h=980, color=(0.5, 0.5, 0.5, 1.0), line_width=2)
+draw_crosshair(buf, cx=960, cy=540, size=40, color=(0.0, 0.8, 0.4, 1.0), line_width=1)
 draw_grid(buf, spacing=100, color=(0.3, 0.3, 0.3, 0.5), line_width=1)
-render_dimension_label(buf, "1920 x 1080", x=960, y=1060,
-                       font_size=14, color=(1.0, 1.0, 1.0, 1.0))
+render_dimension_label(buf, "1920 x 1080", x=960, y=1060, font_size=14, color=(1.0, 1.0, 1.0, 1.0))
 
 buf.write("overlay.png")
 ```
@@ -104,10 +101,10 @@ The `ImageComparison` class provides configurable pixel-level image comparison:
 from fdl_imaging.testing import ImageComparison
 
 comparator = ImageComparison(
-    fail_threshold=0.01,      # per-pixel difference threshold
+    fail_threshold=0.01,  # per-pixel difference threshold
     warn_threshold=0.005,
-    allowed_failed_pixels=100, # tolerance for cross-platform text rendering
-    outputs_dir="test_outputs", # save diff images here
+    allowed_failed_pixels=100,  # tolerance for cross-platform text rendering
+    outputs_dir="test_outputs",  # save diff images here
 )
 
 result = comparator.compare("expected.tif", "actual.tif")

@@ -25,10 +25,10 @@ from fdl.common import Dimensions, Point
 from fdl.constants import RoundingEven, RoundingMode
 from fdl.context import Context
 from fdl.fdl import FDL
+from fdl.fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 from fdl.framingdecision import FramingDecision
 from fdl.framingintent import FramingIntent
 from fdl.rounding import fdl_round
-from fdl.fdl_types import DimensionsFloat, DimensionsInt, PointFloat
 
 DEFAULT_OUTPUT = Path(__file__).resolve().parent.parent / "core" / "tests" / "vectors"
 

@@ -33,7 +33,6 @@ from .node_gen import (
 )
 from .shared_context import assert_js_bindable, make_jinja_env
 
-
 # Functions never invoked from the JavaScript facade. They take a result-type
 # struct (by pointer) as input, which would trigger generation of an unsafe
 # JS→C `from_val_*` helper (lifetime UB on the embedded `const char*` fields).

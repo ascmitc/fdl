@@ -15,6 +15,8 @@ from .adapters import PythonAdapter
 from .fdl_idl import IDL, EnumType, FreeFunctionDef, ValueType, VTMethod, VTOperator
 from .shared_context import (
     ENUM_SHORT_NAMES as _ENUM_SHORT_NAMES,
+)
+from .shared_context import (
     build_converter_lookup,
     build_enum_context_lookups,
     build_enum_facade_map,
@@ -24,6 +26,8 @@ from .shared_context import (
     find_builder_method,
     is_lifecycle_method,
     resolve_cross_eq_class,
+)
+from .shared_context import (
     vt_field_names_for_type as _vt_field_names_for_type,
 )
 

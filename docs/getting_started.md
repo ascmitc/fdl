@@ -150,8 +150,10 @@ validation, or call `validate()` manually:
 
     # Save to file (validates automatically)
     from tempfile import NamedTemporaryFile
+
     with NamedTemporaryFile(suffix=".fdl", delete=False) as f:
         from fdl import write_to_file
+
         write_to_file(my_fdl, f.name)
     ```
 
@@ -702,9 +704,10 @@ custom attributes on the output canvas. Use the named constants to access them:
 
     ```python
     from fdl import ATTR_SCALE_FACTOR, ATTR_CONTENT_TRANSLATION, ATTR_SCALED_BOUNDING_BOX
-    print(ATTR_SCALE_FACTOR)          # "scale_factor"
-    print(ATTR_CONTENT_TRANSLATION)   # "content_translation"
-    print(ATTR_SCALED_BOUNDING_BOX)   # "scaled_bounding_box"
+
+    print(ATTR_SCALE_FACTOR)  # "scale_factor"
+    print(ATTR_CONTENT_TRANSLATION)  # "content_translation"
+    print(ATTR_SCALED_BOUNDING_BOX)  # "scaled_bounding_box"
     ```
 
 === "TypeScript"

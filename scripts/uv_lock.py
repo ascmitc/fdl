@@ -28,6 +28,7 @@ def main() -> int:
         ["uv", "lock", "--default-index", INDEX_URL],
         cwd=REPO_ROOT,
         env=env,
+        check=False,
     )
     if result.returncode == 0:
         print("uv.lock regenerated successfully.")

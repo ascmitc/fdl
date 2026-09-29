@@ -65,6 +65,16 @@ jobs:
       - name: Install codegen dependencies
         run: uv pip install pyyaml jinja2 ruff "datamodel-code-generator[http]>=0.25" --system
 
+      # --- TypeScript linting ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node.js dependencies
+        run: npm install --ignore-scripts
+        working-directory: native/bindings/node
+
       - name: Run codegen (with drift check)
         run: python scripts/run_codegen.py --check
 
@@ -76,16 +86,6 @@ jobs:
 
       - name: Run clang-tidy
         run: run-clang-tidy -p native/core/build -j"$(nproc)" native/core/src/
-
-      # --- TypeScript linting ---
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Node.js dependencies
-        run: npm install --ignore-scripts
-        working-directory: native/bindings/node
 
       - name: Run prettier check
         run: npx prettier --check 'src/**/*.ts'

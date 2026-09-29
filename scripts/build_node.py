@@ -33,9 +33,10 @@ def _run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
     the shell there (cmd.exe resolves the ``.cmd`` via PATHEXT). On POSIX we run
     the argv list directly as before.
     """
+    check = kwargs.pop("check", False)
     if os.name == "nt":
-        return subprocess.run(subprocess.list2cmdline(cmd), shell=True, **kwargs)
-    return subprocess.run(cmd, **kwargs)
+        return subprocess.run(subprocess.list2cmdline(cmd), shell=True, check=check, **kwargs)
+    return subprocess.run(cmd, check=check, **kwargs)
 
 
 def _core_lib_search_dirs() -> list[Path]:
@@ -80,6 +81,7 @@ def npm_install() -> int:
     result = _run(
         ["npm", "install", "--ignore-scripts"],
         cwd=NODE_DIR,
+        check=False,
     )
     return result.returncode
 
@@ -94,6 +96,7 @@ def build_addon() -> int:
             **os.environ,
             "FDL_CORE_LIB_DIR": str(CORE_BUILD_DIR),
         },
+        check=False,
     )
     if result.returncode != 0:
         return result.returncode
@@ -140,6 +143,7 @@ def build_typescript() -> int:
     result = _run(
         ["npx", "tsc"],
         cwd=NODE_DIR,
+        check=False,
     )
     return result.returncode
 
@@ -150,6 +154,7 @@ def run_tests() -> int:
     result = _run(
         ["npx", "vitest", "run"],
         cwd=NODE_DIR,
+        check=False,
     )
     return result.returncode
 

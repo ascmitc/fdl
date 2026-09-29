@@ -723,11 +723,7 @@ def _synthesize_property_fns(
             return []
         c_set_param = "const char*"  # handle_ref setters take JSON
         ownership = None
-    elif vtype in vt_names:
-        c_ret = vtype
-        c_set_param = vtype
-        ownership = None
-    elif vtype in enum_names:
+    elif vtype in vt_names or vtype in enum_names:
         c_ret = vtype
         c_set_param = vtype
         ownership = None

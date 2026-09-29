@@ -105,6 +105,14 @@ class DimensionsIntModel(BaseModel):
     height: Annotated[int, Field(gt=0)]
 
 
+class TargetDimensionsInt(BaseModel):
+    model_config = ConfigDict(
+        extra="allow",
+    )
+    width: Annotated[int, Field(ge=0)]
+    height: Annotated[int, Field(ge=0)]
+
+
 class DimensionsFloatModel(BaseModel):
     model_config = ConfigDict(
         extra="allow",
@@ -176,7 +184,7 @@ class CanvasTemplateModel(BaseModel):
     )
     label: str | None = None
     id: FdlId
-    target_dimensions: DimensionsIntModel
+    target_dimensions: TargetDimensionsInt
     target_anamorphic_squeeze: Annotated[float, Field(gt=0.0)]
     fit_source: FitSource
     fit_method: FitMethod

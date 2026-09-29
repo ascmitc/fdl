@@ -11,13 +11,15 @@ directly.
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 from .ir import DefaultDescriptor
 
 
 class PythonAdapter:
     """Resolve IR type keys, defaults, and errors for Python codegen."""
 
-    TYPES: dict[str, str] = {
+    TYPES: ClassVar[dict[str, str]] = {
         "string": "str",
         "double": "float",
         "int": "int",
@@ -41,7 +43,7 @@ class PythonAdapter:
         "handle_ref": "object",
     }
 
-    CONVERTERS: dict[str, str] = {
+    CONVERTERS: ClassVar[dict[str, str]] = {
         "string": "string",
         "double": "float",
         "int": "int",
@@ -62,7 +64,7 @@ class PythonAdapter:
         "handle_ref": "handle_ref",
     }
 
-    ERROR_CLASSES: dict[str, str] = {
+    ERROR_CLASSES: ClassVar[dict[str, str]] = {
         "validation_error": "ValueError",
     }
 
@@ -96,7 +98,7 @@ class PythonAdapter:
 class CppAdapter:
     """Resolve IR type keys, defaults, and errors for C++ codegen."""
 
-    TYPES: dict[str, str] = {
+    TYPES: ClassVar[dict[str, str]] = {
         "string": "std::string",
         "double": "double",
         "int": "int",
@@ -116,12 +118,12 @@ class CppAdapter:
         "fdl_geometry_t": "fdl_geometry_t",
     }
 
-    ERROR_CLASSES: dict[str, str] = {
+    ERROR_CLASSES: ClassVar[dict[str, str]] = {
         "validation_error": "std::invalid_argument",
     }
 
     # Enum member → C enum constant prefix map
-    _ENUM_PREFIX: dict[str, str] = {
+    _ENUM_PREFIX: ClassVar[dict[str, str]] = {
         "GeometryPath": "FDL_GEOMETRY_PATH",
         "FitMethod": "FDL_FIT_METHOD",
         "HAlign": "FDL_HALIGN",
@@ -131,7 +133,7 @@ class CppAdapter:
     # Constructor → C++ aggregate literal.
     # RoundStrategy defaults per FDL spec §7.4.12: {EVEN, UP} — matches the
     # facade defaults defined on fdl_round_strategy_t in fdl_api.yaml.
-    _CONSTRUCTOR_MAP: dict[str, str] = {
+    _CONSTRUCTOR_MAP: ClassVar[dict[str, str]] = {
         "RoundStrategy": "{FDL_ROUNDING_EVEN_EVEN, FDL_ROUNDING_MODE_UP}",
     }
 
@@ -165,7 +167,7 @@ class CppAdapter:
 class NodeAdapter:
     """Resolve IR type keys, defaults, and errors for Node.js/TypeScript codegen."""
 
-    TYPES: dict[str, str] = {
+    TYPES: ClassVar[dict[str, str]] = {
         "string": "string",
         "double": "number",
         "int": "number",
@@ -189,7 +191,7 @@ class NodeAdapter:
         "handle_ref": "object",
     }
 
-    CONVERTERS: dict[str, str] = {
+    CONVERTERS: ClassVar[dict[str, str]] = {
         "string": "string",
         "double": "number",
         "int": "number",
@@ -210,12 +212,12 @@ class NodeAdapter:
         "handle_ref": "handleRef",
     }
 
-    ERROR_CLASSES: dict[str, str] = {
+    ERROR_CLASSES: ClassVar[dict[str, str]] = {
         "validation_error": "FDLValidationError",
     }
 
     # Enum member → C enum constant prefix map (same as C++)
-    _ENUM_PREFIX: dict[str, str] = {
+    _ENUM_PREFIX: ClassVar[dict[str, str]] = {
         "GeometryPath": "FDL_GEOMETRY_PATH",
         "FitMethod": "FDL_FIT_METHOD",
         "HAlign": "FDL_HALIGN",

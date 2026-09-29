@@ -240,7 +240,7 @@
             "$ref": "#/$defs/fdl_id"
           },
           "target_dimensions": {
-            "$ref": "#/$defs/dimensions_int"
+            "$ref": "#/$defs/target_dimensions_int"
           },
           "target_anamorphic_squeeze": {
             "type": "number",
@@ -373,6 +373,26 @@
         "height": {
           "type": "integer",
           "exclusiveMinimum": 0
+        }
+      },
+      "patternProperties": {
+        "^_": {}
+      },
+      "required": [
+        "width",
+        "height"
+      ],
+      "additionalProperties": false
+    },
+    "target_dimensions_int": {
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "patternProperties": {

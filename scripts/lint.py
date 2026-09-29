@@ -101,6 +101,7 @@ class RuffCheck(LintStep):
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
+            check=False,
         )
         (log_dir / "ruff-check.txt").write_text(r.stdout + r.stderr)
         return r.returncode == 0, ""
@@ -121,6 +122,7 @@ class RuffFormat(LintStep):
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
+            check=False,
         )
         (log_dir / "ruff-format.txt").write_text(r.stdout + r.stderr)
         return r.returncode == 0, ""
@@ -144,6 +146,7 @@ class ClangFormat(LintStep):
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
+            check=False,
         )
         (log_dir / "clang-format.txt").write_text(r.stdout + r.stderr)
         return r.returncode == 0, ""
@@ -165,6 +168,7 @@ class CodegenDrift(LintStep):
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
+            check=False,
         )
         (log_dir / "codegen-drift.txt").write_text(r.stdout + r.stderr)
         return r.returncode == 0, ""
@@ -187,9 +191,8 @@ class ClangTidy(LintStep):
         cmake_file = REPO_ROOT / "native" / "core" / "CMakeLists.txt"
 
         need_configure = not cc_json.exists()
-        if cc_json.exists() and cmake_file.exists():
-            if cmake_file.stat().st_mtime > cc_json.stat().st_mtime:
-                need_configure = True
+        if cc_json.exists() and cmake_file.exists() and cmake_file.stat().st_mtime > cc_json.stat().st_mtime:
+            need_configure = True
 
         if need_configure:
             r = subprocess.run(
@@ -205,6 +208,7 @@ class ClangTidy(LintStep):
                 cwd=REPO_ROOT,
                 capture_output=True,
                 text=True,
+                check=False,
             )
             if r.returncode != 0:
                 return False
@@ -225,6 +229,7 @@ class ClangTidy(LintStep):
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
+            check=False,
         )
         combined = r.stdout + r.stderr
         (log_dir / "clang-tidy.txt").write_text(combined)
@@ -269,6 +274,7 @@ class PrettierCheck(LintStep):
             cwd=node_dir,
             capture_output=True,
             text=True,
+            check=False,
         )
         (log_dir / "prettier-check.txt").write_text(r.stdout + r.stderr)
         return r.returncode == 0, ""
@@ -292,6 +298,7 @@ class TscCheck(LintStep):
             cwd=node_dir,
             capture_output=True,
             text=True,
+            check=False,
         )
         (log_dir / "tsc-check.txt").write_text(r.stdout + r.stderr)
         return r.returncode == 0, ""

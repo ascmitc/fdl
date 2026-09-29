@@ -327,14 +327,10 @@ def _round_like_cpp(g: Geometry, even: str, mode: str) -> Geometry:
 
     # 6) Re-establish hierarchy.  Only clamp on exceedance to preserve
     # 0 = "unset" protection sentinel.
-    if prot_w > eff_w:
-        prot_w = eff_w
-    if prot_h > eff_h:
-        prot_h = eff_h
-    if fram_w > eff_w:
-        fram_w = eff_w
-    if fram_h > eff_h:
-        fram_h = eff_h
+    prot_w = min(prot_w, eff_w)
+    prot_h = min(prot_h, eff_h)
+    fram_w = min(fram_w, eff_w)
+    fram_h = min(fram_h, eff_h)
 
     return Geometry(
         canvas_dims=new_canvas,

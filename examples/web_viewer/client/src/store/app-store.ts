@@ -209,8 +209,8 @@ export function canTransform(state: AppState): boolean {
     state.selectedContext &&
     state.selectedCanvas &&
     state.selectedFraming &&
-    state.currentTemplate.targetWidth > 0 &&
-    state.currentTemplate.targetHeight > 0
+    state.currentTemplate.targetWidth >= 0 &&
+    state.currentTemplate.targetHeight >= 0
   );
 }
 
