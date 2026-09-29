@@ -47,6 +47,10 @@ RESOURCES_DIR = REPO_ROOT / "resources" / "FDL"
 SAMPLE_FILES_DIR = RESOURCES_DIR / "Scenarios_For_Implementers"
 
 
+class MissingResourcesError(RuntimeError):
+    """Raised when a configured scenario file does not exist on disk."""
+
+
 def stage_scenarios(staging_root: Path) -> list[tuple[Path, str]]:
     """Build a staged directory tree and return (src, arcname) pairs.
 
@@ -55,8 +59,11 @@ def stage_scenarios(staging_root: Path) -> list[tuple[Path, str]]:
     ``Results/``, and the source FDL + image go under ``SourceFiles/``.
 
     Returns a sorted list of (absolute_source_path, zip_arcname) tuples.
+    Raises MissingResourcesError if any file a scenario config points at is absent,
+    so an incomplete scenario can never be packaged silently.
     """
     entries: list[tuple[Path, str]] = []
+    missing: list[str] = []
 
     for config in SCENARIO_CONFIGS.values():
         if config.is_error_test or not config.variants:
@@ -73,7 +80,9 @@ def stage_scenarios(staging_root: Path) -> list[tuple[Path, str]]:
         first_variant = config.variants[0]
         file_map = get_scenario_paths(SAMPLE_FILES_DIR, config, first_variant)
         template_src = file_map["template"]
-        if template_src.exists():
+        if not template_src.exists():
+            missing.append(f"Scen {config.number} template: {template_src}")
+        else:
             dst = scenario_dir / template_src.name
             if not dst.exists():
                 shutil.copy2(template_src, dst)
@@ -85,7 +94,9 @@ def stage_scenarios(staging_root: Path) -> list[tuple[Path, str]]:
 
             # Source FDL
             src_fdl = file_map["source_fdl"]
-            if src_fdl.exists():
+            if not src_fdl.exists():
+                missing.append(f"Scen {config.number} source FDL: {src_fdl}")
+            else:
                 dst = source_files_dir / src_fdl.name
                 if not dst.exists():
                     shutil.copy2(src_fdl, dst)
@@ -93,7 +104,9 @@ def stage_scenarios(staging_root: Path) -> list[tuple[Path, str]]:
 
             # Source image (TIF / TIFF)
             src_tif = file_map["source_tif"]
-            if src_tif.exists():
+            if not src_tif.exists():
+                missing.append(f"Scen {config.number} source image: {src_tif}")
+            else:
                 dst = source_files_dir / src_tif.name
                 if not dst.exists():
                     shutil.copy2(src_tif, dst)
@@ -101,7 +114,9 @@ def stage_scenarios(staging_root: Path) -> list[tuple[Path, str]]:
 
             # Expected result FDL
             exp_fdl = file_map["expected_fdl"]
-            if exp_fdl.exists():
+            if not exp_fdl.exists():
+                missing.append(f"Scen {config.number} result FDL: {exp_fdl}")
+            else:
                 dst = results_dir / exp_fdl.name
                 if not dst.exists():
                     shutil.copy2(exp_fdl, dst)
@@ -109,11 +124,16 @@ def stage_scenarios(staging_root: Path) -> list[tuple[Path, str]]:
 
             # Expected result EXR
             exp_exr = file_map["expected_exr"]
-            if exp_exr.exists():
+            if not exp_exr.exists():
+                missing.append(f"Scen {config.number} result EXR: {exp_exr}")
+            else:
                 dst = results_dir / exp_exr.name
                 if not dst.exists():
                     shutil.copy2(exp_exr, dst)
                     entries.append((dst, f"{config.dir_name}/Results/{exp_exr.name}"))
+
+    if missing:
+        raise MissingResourcesError("Scenario resources missing:\n  " + "\n  ".join(missing))
 
     return sorted(entries, key=lambda e: e[1])
 
@@ -144,7 +164,11 @@ def main() -> None:
 
     with tempfile.TemporaryDirectory(prefix="fdl_scenario_zip_") as tmpdir:
         staging_root = Path(tmpdir)
-        entries = stage_scenarios(staging_root)
+        try:
+            entries = stage_scenarios(staging_root)
+        except MissingResourcesError as exc:
+            print(exc, file=sys.stderr)
+            sys.exit(1)
 
         if not entries:
             print("No resource files found.", file=sys.stderr)
