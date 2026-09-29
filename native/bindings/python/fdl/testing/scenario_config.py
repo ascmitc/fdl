@@ -6,8 +6,9 @@ Shared scenario configuration for FDL tests (unit tests and UI tests).
 This module defines data-driven configurations for all test scenarios (1-31),
 enabling parameterized tests that cover all variants across all scenarios.
 
-Note: Scenarios 21 and 22 are error validation tests (expecting ValueError)
-and are handled separately via is_error_test flag.
+Note: Scenarios 21 and 22 are error validation tests (expecting ValueError).
+They carry no variants and are driven generically from the error_* config fields
+via the is_error_test flag.
 """
 
 from dataclasses import dataclass
@@ -87,6 +88,14 @@ class ScenarioConfig:
         Label of the template to use (default: "VFX Pull - Custom").
     is_error_test : bool
         True for scenarios 21, 22 that expect ValueError.
+    error_source_fdl : str
+        Error tests only: source FDL path (relative to FDL resources root).
+    error_source_context_label : str
+        Error tests only: label of the source context to select.
+    error_source_canvas_label : str
+        Error tests only: label of the source canvas to select.
+    error_match : str
+        Error tests only: substring the raised error message must contain.
     """
 
     number: int
@@ -105,6 +114,10 @@ class ScenarioConfig:
     context_creator: str = "ASC FDL Tools"
     template_label: str = "VFX Pull - Custom"
     is_error_test: bool = False
+    error_source_fdl: str = "New_Source_Files/Test_34_Sony_FX3_Priority.fdl"
+    error_source_context_label: str = "Sony FX3"
+    error_source_canvas_label: str = "4K"
+    error_match: str = ""
 
 
 # =============================================================================
@@ -878,6 +891,7 @@ SCENARIO_CONFIGS: dict[int, ScenarioConfig] = {
         variants=[],  # No variants - error test
         result_pattern="",
         is_error_test=True,
+        error_match="protection_dimensions",
     ),
     22: ScenarioConfig(
         number=22,
@@ -887,6 +901,7 @@ SCENARIO_CONFIGS: dict[int, ScenarioConfig] = {
         variants=[],  # No variants - error test
         result_pattern="",
         is_error_test=True,
+        error_match="protection_dimensions",
     ),
     23: ScenarioConfig(
         number=23,
@@ -1147,6 +1162,19 @@ def get_scenario_test_id(param: tuple[int, str]) -> str:
     return f"scen{param[0]}_{param[1]}"
 
 
+def get_template_path(sample_files_dir: Path, config: ScenarioConfig) -> Path:
+    """Return the template FDL path for a scenario (also valid for variant-less error tests)."""
+    # custom_template_path takes precedence (relative to the FDL resources root)
+    # custom_template_dir is relative to sample_files_dir
+    if config.custom_template_path:
+        template_dir = sample_files_dir.parent / config.custom_template_path
+    elif config.custom_template_dir:
+        template_dir = sample_files_dir / config.custom_template_dir
+    else:
+        template_dir = sample_files_dir / config.dir_name
+    return template_dir / config.template_filename
+
+
 def get_scenario_paths(sample_files_dir: Path, config: ScenarioConfig, variant: SourceVariant) -> dict[str, Path]:
     """
     Get all file paths for a scenario/variant combination.
@@ -1168,15 +1196,7 @@ def get_scenario_paths(sample_files_dir: Path, config: ScenarioConfig, variant: 
     # Get the FDL resources root (parent of Scenarios_For_Implementers)
     fdl_resources_root = sample_files_dir.parent
 
-    # Determine template directory
-    # custom_template_path takes precedence (relative to fdl_resources_root)
-    # custom_template_dir is relative to sample_files_dir
-    if config.custom_template_path:
-        template_dir = fdl_resources_root / config.custom_template_path
-    elif config.custom_template_dir:
-        template_dir = sample_files_dir / config.custom_template_dir
-    else:
-        template_dir = sample_files_dir / config.dir_name
+    template_path = get_template_path(sample_files_dir, config)
 
     # Determine source directory
     if config.custom_source_dir:
@@ -1203,7 +1223,7 @@ def get_scenario_paths(sample_files_dir: Path, config: ScenarioConfig, variant: 
         source_tif_path = source_dir / f"{variant.fdl_basename}.tiff"
 
     return {
-        "template": template_dir / config.template_filename,
+        "template": template_path,
         "source_fdl": source_dir / f"{variant.fdl_basename}.fdl",
         "source_tif": source_tif_path,
         "expected_fdl": results_dir / result_fdl_name,
