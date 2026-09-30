@@ -125,7 +125,7 @@ constexpr char kCustomAttrPrefix = '_';
  *  @{ */
 constexpr const char* kAttrScaleFactor = "scale_factor"; /**< Template scale factor (float). */
 constexpr const char* kAttrContentTranslation =
-    "content_translation"; /**< Template content translation (point_f64, unrounded float by design). */
+    "content_translation"; /**< Final content translation (point_f64, unrounded). */
 constexpr const char* kAttrScaledBoundingBox =
     "scaled_bounding_box"; /**< Template scaled bounding box (dims_f64, unrounded float by design). */
 /** @} */

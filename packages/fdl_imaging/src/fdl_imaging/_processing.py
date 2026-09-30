@@ -635,7 +635,9 @@ def transform_image_with_computed_values(
     scaled_bounding_box : DimensionsFloat
         The scaled bounding box dimensions (biggest canvas)
     content_translation : Point
-        The content translation offset
+        The final content translation (``_content_translation``): alignment
+        shift plus the core's canvas-rounding shift.  May be sub-pixel and
+        negative; applied as-is to the warp.
     filter_name : str, optional
         The reconstruction filter to use.  Default is "lanczos3".
 

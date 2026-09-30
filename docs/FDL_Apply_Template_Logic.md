@@ -490,12 +490,17 @@ Assemble the final output objects from the processed geometry:
 3. **Custom Attributes**: `_scale_factor`, `_scaled_bounding_box`, and
    `_content_translation` are stored on the output canvas for use by
    image processing pipelines.  `_scaled_bounding_box` and
-   `_content_translation` are captured **post-scale, pre-round** and
-   are intentionally unrounded float values -- they preserve sub-pixel
-   precision so image processors (e.g. `fdl_imaging`'s warp-based
-   pipeline) can place content without re-quantizing.  They may differ
-   by sub-pixel amounts from the rounded integer `canvas.dimensions`
-   produced by step 9b.
+   `_content_translation` are unrounded float values -- they preserve
+   sub-pixel precision so image processors (e.g. `fdl_imaging`'s
+   warp-based pipeline) can place content without re-quantizing.
+   `_scaled_bounding_box` is captured **post-scale, pre-round**.
+   `_content_translation` is the **final** translation: the alignment
+   shift (Phase 8) plus the canvas-rounding shift `canvas_delta/2` that
+   step 9b applied to the anchors
+   `(rounded_canvas - unrounded_canvas) / 2` per axis, so the scaled
+   content lands where the anchors in the output FDL say it does.  The
+   effective-box ceil nudge and anchor clamping in 9b are not included
+   (they re-fit the integer crop rectangle; they do not move content).
 
 4. **New Context**: contains both the source canvas (for reference) and the
    new output canvas.

@@ -153,9 +153,10 @@ std::string safe_copy(const char* s) {
  * @param geometry              Final transformed geometry after all pipeline phases.
  * @param scale_factor          Computed scale factor (stored as custom attribute).
  * @param content_translation   Content translation shift (stored as custom attribute).
- *                              Unrounded float by design — captured post-scale, pre-round;
- *                              intentionally not quantized so downstream consumers can place
- *                              content with sub-pixel precision.
+ *                              FINAL, unrounded float translation of the scaled content: the
+ *                              pre-round alignment shift plus the canvas-rounding shift
+ *                              (canvas_delta/2) that fdl_geometry_round applied to the anchors.
+ *                              Not quantized so consumers place content with sub-pixel precision.
  * @param scaled_bounding_box   Scaled bounding box before output sizing (stored as custom attribute).
  *                              Unrounded float by design — captured post-scale, pre-round to
  *                              preserve the exact scaled canvas extent; may not match the
@@ -606,17 +607,19 @@ fdl_template_result_t apply_canvas_template(
         af_v,
         pad_to_max ? FDL_TRUE : FDL_FALSE);
 
-    // Stored as `_content_translation` custom attribute — unrounded float by
-    // design.  Sub-pixel precision preserves the exact alignment shift so
-    // downstream consumers can place content without re-quantizing.
-    fdl_point_f64_t const content_translation = {shift_x, shift_y};
+    // Pre-round alignment shift.  Phase 9c adds the canvas-rounding shift
+    // before this is stored as the `_content_translation` custom attribute
+    // (final, sub-pixel float translation of the scaled content).
+    fdl_point_f64_t content_translation = {shift_x, shift_y};
+    // Phase 8b/9 use the pre-round alignment shift (geometry is still float).
+    fdl_point_f64_t const align_shift = content_translation;
     geometry.canvas_dims = {out_w, out_h};
 
     // --- Phase 8b: Apply offsets ---
     fdl_point_f64_t theo_eff;
     fdl_point_f64_t theo_prot;
     fdl_point_f64_t theo_fram;
-    geometry = fdl_geometry_apply_offset(geometry, content_translation, &theo_eff, &theo_prot, &theo_fram);
+    geometry = fdl_geometry_apply_offset(geometry, align_shift, &theo_eff, &theo_prot, &theo_fram);
 
     // --- Phase 9: Crop ---
     geometry = fdl_geometry_crop(geometry, theo_eff, theo_prot, theo_fram);
@@ -632,7 +635,20 @@ fdl_template_result_t apply_canvas_template(
     // "round has no effect" semantics for canvas.  Inner effective_dims may
     // still be fractional from float cropping and gets integerized here as
     // required by the schema.
+    fdl_dimensions_f64_t const pre_round_canvas = geometry.canvas_dims;
     geometry = fdl_geometry_round(geometry, rounding);
+
+    // --- Phase 9c: Finalize content_translation ---
+    // fdl_geometry_round moves every anchor by +canvas_delta/2 to keep the
+    // crop centered on the rounded canvas.  That is a real displacement of
+    // the scaled content relative to the canvas origin, so it is folded into
+    // the stored translation: `_content_translation` is the FINAL translation
+    // that places the scaled (unrounded) content so that it agrees with the
+    // anchors written to the FDL.  Only the canvas delta is added: the
+    // effective-box ceil nudge and anchor clamping only re-fit the integer
+    // crop rectangle, they do not move the content.
+    content_translation.x += (geometry.canvas_dims.width - pre_round_canvas.width) / fdl::constants::kCenterDivisor;
+    content_translation.y += (geometry.canvas_dims.height - pre_round_canvas.height) / fdl::constants::kCenterDivisor;
 
     // --- Phase 10: Build output FDL document ---
     return build_template_output_document(
