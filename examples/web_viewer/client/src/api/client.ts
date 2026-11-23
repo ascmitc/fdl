@@ -52,11 +52,15 @@ export async function getFdlJson(sessionId: string): Promise<string> {
 
 export async function getGeometry(
   sessionId: string,
-  context: string,
+  contextIndex: number,
   canvas: string,
   framing: string,
 ): Promise<GeometryData> {
-  const params = new URLSearchParams({ context, canvas, framing });
+  const params = new URLSearchParams({
+    context: String(contextIndex),
+    canvas,
+    framing,
+  });
   return fetchJson<GeometryData>(
     `${BASE}/fdl/${sessionId}/geometry?${params}`,
   );
@@ -64,7 +68,7 @@ export async function getGeometry(
 
 export async function transform(
   sourceSessionId: string,
-  contextLabel: string,
+  contextIndex: number,
   canvasId: string,
   framingId: string,
   template: TemplateParams,
@@ -74,7 +78,7 @@ export async function transform(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       sourceSessionId,
-      contextLabel,
+      contextIndex,
       canvasId,
       framingId,
       template,
@@ -115,7 +119,7 @@ export function getImageUrl(imageId: string): string {
 export async function transformImage(
   imageId: string,
   sourceSessionId: string,
-  contextLabel: string,
+  contextIndex: number,
   canvasId: string,
   framingId: string,
   template: TemplateParams,
@@ -126,7 +130,7 @@ export async function transformImage(
     body: JSON.stringify({
       imageId,
       sourceSessionId,
-      contextLabel,
+      contextIndex,
       canvasId,
       framingId,
       template,

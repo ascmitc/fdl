@@ -55,7 +55,7 @@ export function SourceSelector() {
 
   // Fetch geometry when selection changes
   useEffect(() => {
-    if (!sourceSessionId || !selectedContext || !selectedCanvas || !selectedFraming)
+    if (!sourceSessionId || selectedContext === null || !selectedCanvas || !selectedFraming)
       return;
     getGeometry(sourceSessionId, selectedContext, selectedCanvas, selectedFraming)
       .then(setSourceGeometry)
@@ -69,9 +69,12 @@ export function SourceSelector() {
       <h3 className="text-sm font-semibold text-foreground">Source Selection</h3>
       <CascadingSelect
         label="Context"
-        value={selectedContext}
-        options={contexts.map((c) => ({ value: c.label, label: c.label }))}
-        onChange={setSelectedContext}
+        value={selectedContext === null ? "" : String(selectedContext)}
+        options={contexts.map((c, i) => ({
+          value: String(i),
+          label: c.label || `Context ${i + 1}`,
+        }))}
+        onChange={(value) => setSelectedContext(Number(value))}
       />
       <CascadingSelect
         label="Canvas"
