@@ -83,38 +83,54 @@ export class Canvas extends HandleWrapper {
       null,
     );
     const backing = FDL._fromHandle(docH, null);
-    const ctxH = addon.fdl_doc_add_context(docH, "_", null);
-    const handle = addon.fdl_context_add_canvas(
-      ctxH,
-      opts.id,
-      _label,
-      opts.sourceCanvasId,
-      opts.dimensions.width,
-      opts.dimensions.height,
-      _anamorphicSqueeze,
-    );
-    if (!handle) throw new Error("fdl_context_add_canvas returned NULL");
-    super(handle, backing);
-    if (
-      opts.effectiveDimensions !== undefined &&
-      opts.effectiveDimensions !== null
-    ) {
-      this.setEffective(
-        opts.effectiveDimensions ?? new DimensionsInt(0, 0),
-        opts.effectiveAnchorPoint ?? new PointFloat(0, 0),
+    let handle: object | null = null;
+    try {
+      const ctxH = addon.fdl_doc_add_context(docH, "_", null);
+      handle = addon.fdl_context_add_canvas(
+        ctxH,
+        opts.id,
+        _label,
+        opts.sourceCanvasId,
+        opts.dimensions.width,
+        opts.dimensions.height,
+        _anamorphicSqueeze,
       );
+    } catch (e) {
+      backing.close();
+      throw e;
     }
-    if (
-      opts.photositeDimensions !== undefined &&
-      opts.photositeDimensions !== null
-    ) {
-      this.photositeDimensions = opts.photositeDimensions;
+    if (!handle) {
+      backing.close();
+      throw new Error("fdl_context_add_canvas returned NULL");
     }
-    if (
-      opts.physicalDimensions !== undefined &&
-      opts.physicalDimensions !== null
-    ) {
-      this.physicalDimensions = opts.physicalDimensions;
+    super(handle, backing);
+    // The hidden backing document is owned by this object; close() releases it.
+    this._adoptBackingDoc(backing);
+    try {
+      if (
+        opts.effectiveDimensions !== undefined &&
+        opts.effectiveDimensions !== null
+      ) {
+        this.setEffective(
+          opts.effectiveDimensions ?? new DimensionsInt(0, 0),
+          opts.effectiveAnchorPoint ?? new PointFloat(0, 0),
+        );
+      }
+      if (
+        opts.photositeDimensions !== undefined &&
+        opts.photositeDimensions !== null
+      ) {
+        this.photositeDimensions = opts.photositeDimensions;
+      }
+      if (
+        opts.physicalDimensions !== undefined &&
+        opts.physicalDimensions !== null
+      ) {
+        this.physicalDimensions = opts.physicalDimensions;
+      }
+    } catch (e) {
+      this.close();
+      throw e;
     }
   }
 

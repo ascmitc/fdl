@@ -229,20 +229,32 @@ export class {{ cls.name }} extends {{ 'OwnedHandle' if cls.owns_handle else 'Ha
       '00000000-0000-0000-0000-000000000000', 2, 0, '_', null,
     );
     const backing = FDL._fromHandle(docH, null);
+    let handle: object | null = null;
+    try {
 {% if cls.init.depth >= 2 %}
-    const ctxH = addon.fdl_doc_add_context(docH, '_', null);
+      const ctxH = addon.fdl_doc_add_context(docH, '_', null);
 {% endif %}
 {% if cls.init.depth >= 3 %}
-    const canvasH = addon.fdl_context_add_canvas(ctxH, '_', '_', '_', 1, 1, 1.0);
+      const canvasH = addon.fdl_context_add_canvas(ctxH, '_', '_', '_', 1, 1, 1.0);
 {% endif %}
-    const handle = addon.{{ cls.init.builder_fn }}(
-      {{ cls.init.parent_handle }},
+      handle = addon.{{ cls.init.builder_fn }}(
+        {{ cls.init.parent_handle }},
 {% for arg in cls.init.addon_args %}
-      {{ arg }},
+        {{ arg }},
 {% endfor %}
-    );
-    if (!handle) throw new Error('{{ cls.init.builder_fn }} returned NULL');
+      );
+    } catch (e) {
+      backing.close();
+      throw e;
+    }
+    if (!handle) {
+      backing.close();
+      throw new Error('{{ cls.init.builder_fn }} returned NULL');
+    }
     super(handle, backing);
+    // The hidden backing document is owned by this object; close() releases it.
+    this._adoptBackingDoc(backing);
+    try {
 {% for ps in cls.init.post_setters %}
 {% if ps.kind == 'compound' %}
     if (opts.{{ ps.condition }} !== undefined && opts.{{ ps.condition }} !== null) {
@@ -266,6 +278,10 @@ export class {{ cls.name }} extends {{ 'OwnedHandle' if cls.owns_handle else 'Ha
 {% endif %}
 {% endif %}
 {% endfor %}
+    } catch (e) {
+      this.close();
+      throw e;
+    }
   }
 
 {% endif %}

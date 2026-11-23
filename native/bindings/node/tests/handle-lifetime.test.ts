@@ -103,7 +103,10 @@ describe.each(standalone)("standalone %s", (_name, make) => {
   it("throws, instead of crashing, when used after close()", () => {
     const obj = make();
     obj.close();
-    expect(() => obj.id).toThrow(/closed/);
+    const read = obj as unknown as { id?: string; label?: string };
+    expect(() => (_name === "Context" ? read.label : read.id)).toThrow(
+      /closed/,
+    );
   });
 });
 
@@ -173,7 +176,8 @@ describe("template results", () => {
     (template as unknown as Closable).close();
     source.close();
 
-    expect(() => result.fdl.validate()).not.toThrow();
+    expect(result.fdl.isClosed).toBe(false);
+    expect(() => result.fdl.asJson()).not.toThrow();
     expect(result.canvas.id).toBe("OUT");
     result.fdl.close();
   });
