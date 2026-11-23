@@ -70,7 +70,7 @@ def main() -> None:
     params = json.loads(sys.stdin.read())
 
     source_fdl_json: str = params["sourceFdlJson"]
-    context_label: str = params["contextLabel"]
+    context_index: int = params["contextIndex"]
     canvas_id: str = params["canvasId"]
     framing_id: str = params["framingId"]
     tpl: dict = params["template"]
@@ -82,23 +82,27 @@ def main() -> None:
     # Parse source FDL
     fdl = read_from_string(source_fdl_json)
 
-    # Find source canvas and framing
+    # Find source canvas and framing. Contexts are addressed by position: labels are
+    # optional and need not be unique.
+    contexts = list(fdl.contexts)
+    if not 0 <= context_index < len(contexts):
+        raise ValueError(f"Context index {context_index} out of range (FDL has {len(contexts)} contexts)")
+    context = contexts[context_index]
+    context_label = context.label
+
     source_canvas = None
     source_framing = None
-    for ctx in fdl.contexts:
-        if ctx.label == context_label:
-            for c in ctx.canvases:
-                if c.id == canvas_id:
-                    source_canvas = c
-                    for fd in c.framing_decisions:
-                        if fd.id == framing_id:
-                            source_framing = fd
-                            break
+    for c in context.canvases:
+        if c.id == canvas_id:
+            source_canvas = c
+            for fd in c.framing_decisions:
+                if fd.id == framing_id:
+                    source_framing = fd
                     break
             break
 
     if source_canvas is None:
-        raise ValueError(f"Canvas '{canvas_id}' not found in context '{context_label}'")
+        raise ValueError(f"Canvas '{canvas_id}' not found in context {context_index}")
     if source_framing is None:
         raise ValueError(f"Framing '{framing_id}' not found in canvas '{canvas_id}'")
 

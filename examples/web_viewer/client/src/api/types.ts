@@ -108,6 +108,7 @@ export interface TransformResultData {
 export interface TransformResponse {
   outputSessionId: string;
   outputContextLabel: string;
+  outputContextIndex: number;
   outputCanvasId: string;
   outputFramingId: string;
   hierarchy: FdlHierarchy;

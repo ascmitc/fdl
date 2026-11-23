@@ -79,7 +79,7 @@ def bridge_inputs() -> list[dict]:
                 "sourceImage": rel(paths["source_tif"]),
                 "expectedFdl": rel(paths["expected_fdl"]),
                 "expectedImage": rel(paths["expected_exr"]),
-                "contextLabel": context.label,
+                "contextIndex": list(source_fdl.contexts).index(context),
                 "canvasId": canvas.id,
                 "framingId": framing.id,
                 "template": template_params(template),
