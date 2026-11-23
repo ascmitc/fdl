@@ -13,6 +13,7 @@ import sys
 
 from fdl import (
     ATTR_CONTENT_TRANSLATION,
+    ATTR_SCALE_FACTOR,
     ATTR_SCALED_BOUNDING_BOX,
     CanvasTemplate,
     DimensionsInt,
@@ -75,6 +76,8 @@ def main() -> None:
     tpl: dict = params["template"]
     input_path: str = params["inputImagePath"]
     output_path: str = params["outputImagePath"]
+    # Optional OIIO resize filter; the default matches transform_image_with_computed_values.
+    filter_name: str = params.get("filterName", "lanczos3")
 
     # Parse source FDL
     fdl = read_from_string(source_fdl_json)
@@ -133,6 +136,7 @@ def main() -> None:
     )
 
     new_canvas = result.canvas
+    scale_factor = new_canvas.get_custom_attr(ATTR_SCALE_FACTOR)
     scaled_bb = new_canvas.get_custom_attr(ATTR_SCALED_BOUNDING_BOX)
     content_tr = new_canvas.get_custom_attr(ATTR_CONTENT_TRANSLATION)
 
@@ -144,8 +148,10 @@ def main() -> None:
         source_framing=source_framing,
         template=template,
         new_canvas=new_canvas,
+        scale_factor=scale_factor,
         scaled_bounding_box=scaled_bb,
         content_translation=content_tr,
+        filter_name=filter_name,
     )
 
     # Read output dimensions
