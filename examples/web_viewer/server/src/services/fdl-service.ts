@@ -26,7 +26,8 @@ interface FdlSession {
 const sessions = new Map<string, FdlSession>();
 const SESSION_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
-// Cleanup expired sessions every 5 minutes
+// Cleanup expired sessions every 5 minutes. unref() so the timer never keeps
+// the process alive on its own (the HTTP server does that, and tests must exit).
 setInterval(() => {
   const now = Date.now();
   for (const [id, session] of sessions) {
@@ -34,7 +35,7 @@ setInterval(() => {
       sessions.delete(id);
     }
   }
-}, 5 * 60 * 1000);
+}, 5 * 60 * 1000).unref();
 
 function extractFramingDecision(fd: FramingDecision): FramingDecisionData {
   const protDims = fd.protectionDimensions;
