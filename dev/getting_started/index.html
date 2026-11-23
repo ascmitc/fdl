@@ -369,6 +369,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#typescript-and-python-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeScript and Python Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1363,6 +1374,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#typescript-and-python-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeScript and Python Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2108,6 +2130,70 @@ custom attributes on the output canvas. Use the named constants to access them:<
 </div>
 </div>
 </div>
+<h2 id="typescript-and-python-differences">TypeScript and Python Differences</h2>
+<p>The TypeScript/JavaScript bindings (Node.js N-API and WebAssembly) wrap the same C core as the Python
+package and are tested against the same scenarios. Where the two languages' idioms differ, the behaviour
+below is intentional. N-API and WebAssembly behave identically.</p>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Python</th>
+<th>TypeScript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Item not found</td>
+<td><code>IndexError</code> for an index; <code>None</code> from the find helpers</td>
+<td><code>null</code> from <code>at()</code>, <code>findById()</code> and <code>findByLabel()</code></td>
+</tr>
+<tr>
+<td>Negative index</td>
+<td><code>contexts[-1]</code> is the last item</td>
+<td><code>contexts.at(-1)</code> is the last item (as <code>Array.prototype.at</code>); past the start is <code>null</code></td>
+</tr>
+<tr>
+<td>Finding contexts</td>
+<td><code>get_by_id()</code> falls back to the label</td>
+<td>Contexts have no id: use <code>findByLabel()</code> (<code>findById()</code> throws and says so)</td>
+</tr>
+<tr>
+<td>Hashing</td>
+<td><code>Context</code> and <code>Canvas</code> hash by label or id</td>
+<td>No hash: use <code>equals()</code>, and the label or id as a <code>Map</code> key</td>
+</tr>
+<tr>
+<td>Custom attribute type mismatch</td>
+<td><code>ValueError</code></td>
+<td><code>FDLError</code> with the same message</td>
+</tr>
+<tr>
+<td>Invalid enum value</td>
+<td><code>KeyError</code></td>
+<td><code>TypeError</code> naming the enum and its allowed values</td>
+</tr>
+<tr>
+<td>Custom attribute numbers</td>
+<td>An <code>int</code> cannot overwrite a <code>float</code></td>
+<td>JS has one number type, so a whole number written onto a float attribute stays a float. An int attribute still rejects a non-integer</td>
+</tr>
+<tr>
+<td>Releasing objects</td>
+<td>Freed when garbage collected</td>
+<td>Call <code>close()</code> (or use <code>using</code>) on a document, and on an object you built standalone such as <code>new CanvasTemplate({...})</code>, which owns a hidden document</td>
+</tr>
+<tr>
+<td>Reading files</td>
+<td><code>read_from_file()</code></td>
+<td><code>readFromFile()</code> from the Node entry point; the browser/WebAssembly entry has no file system, so pass a string to <code>FDL.parse()</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">doc</span><span class="p">.</span><span class="nx">contexts</span><span class="p">.</span><span class="nx">at</span><span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">);</span><span class="w">          </span><span class="c1">// last context, or null when empty</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">doc</span><span class="p">.</span><span class="nx">contexts</span><span class="p">.</span><span class="nx">findByLabel</span><span class="p">(</span><span class="s2">"Main"</span><span class="p">);</span>
+<span class="nx">using</span><span class="w"> </span><span class="nx">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CanvasTemplate</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">"HD"</span><span class="p">,</span><span class="w"> </span><span class="nx">targetDimensions</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">DimensionsInt</span><span class="p">(</span><span class="mf">1920</span><span class="p">,</span><span class="w"> </span><span class="mf">1080</span><span class="p">)</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
 
 
 
