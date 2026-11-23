@@ -49,12 +49,24 @@ jobs:
       - name: Install clang-format
         run: uv pip install "clang-format==19.1.7" --system
 
+      # clang-tidy follows the version ubuntu-latest ships (LLVM 21 on ubuntu-26.04).
+      # Keep CLANG_TIDY_MAJOR in scripts/lint.py in step with this.
       - name: Install clang-tidy
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy-19
-          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
-          sudo update-alternatives --install /usr/bin/run-clang-tidy run-clang-tidy /usr/bin/run-clang-tidy-19 100
+          sudo apt-get install -y clang-tidy-21
+          # The image already provides a default clang-tidy that update-alternatives
+          # does not replace, so put the versioned tools first on PATH explicitly.
+          mkdir -p "$HOME/llvm/bin"
+          ln -sf /usr/bin/clang-tidy-21 "$HOME/llvm/bin/clang-tidy"
+          ln -sf /usr/bin/run-clang-tidy-21 "$HOME/llvm/bin/run-clang-tidy"
+          echo "$HOME/llvm/bin" >> "$GITHUB_PATH"
+
+      - name: Verify clang-tidy version
+        # Fail loudly if the tool is not the major version CI and lint.py expect.
+        run: |
+          clang-tidy --version
+          clang-tidy --version | grep -q "LLVM version 21\."
 
       - name: Run clang-format check
         run: |
