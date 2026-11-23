@@ -239,6 +239,19 @@ export function computeGeometry(
   return { canvasRect, effectiveRect, framingRect, protectionRect, anchorPoint };
 }
 
+/**
+ * Parse a context index from untrusted input (query string or request body).
+ * Only non-negative integers are valid: CollectionWrapper.at() treats a negative
+ * index as "from the end", which a request must not be able to use.
+ */
+export function parseContextIndex(raw: unknown): number | null {
+  const value =
+    typeof raw === "string" && raw.trim() !== "" ? Number(raw) : raw;
+  return typeof value === "number" && Number.isInteger(value) && value >= 0
+    ? value
+    : null;
+}
+
 export function findCanvasAndFraming(
   fdl: FDL,
   contextIndex: number,
@@ -246,6 +259,7 @@ export function findCanvasAndFraming(
   framingId: string,
 ): { context: Context; canvas: Canvas; framing: FramingDecision } | null {
   // Contexts are addressed by position: labels are optional and need not be unique.
+  if (!Number.isInteger(contextIndex) || contextIndex < 0) return null;
   const targetContext = fdl.contexts.at(contextIndex);
   if (!targetContext) return null;
 
