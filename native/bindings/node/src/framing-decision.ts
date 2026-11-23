@@ -280,8 +280,8 @@ export class FramingDecision extends HandleWrapper {
     this._addon.fdl_framing_decision_adjust_anchor(
       this._handle,
       canvas._handle,
-      H_ALIGN_TO_C.get(hMethod)!,
-      V_ALIGN_TO_C.get(vMethod)!,
+      H_ALIGN_TO_C.require(hMethod),
+      V_ALIGN_TO_C.require(vMethod),
     );
   }
 
@@ -295,8 +295,8 @@ export class FramingDecision extends HandleWrapper {
     this._addon.fdl_framing_decision_adjust_protection_anchor(
       this._handle,
       canvas._handle,
-      H_ALIGN_TO_C.get(hMethod)!,
-      V_ALIGN_TO_C.get(vMethod)!,
+      H_ALIGN_TO_C.require(hMethod),
+      V_ALIGN_TO_C.require(vMethod),
     );
   }
 

@@ -109,7 +109,7 @@ export function fromRoundStrategy(raw: any): RoundStrategy {
 /** Convert RoundStrategy to addon-compatible plain object. */
 export function toRoundStrategy(val: RoundStrategy): Record<string, unknown> {
   return {
-    even: ROUNDING_EVEN_TO_C.get(val.even)!,
-    mode: ROUNDING_MODE_TO_C.get(val.mode)!,
+    even: ROUNDING_EVEN_TO_C.require(val.even),
+    mode: ROUNDING_MODE_TO_C.require(val.mode),
   };
 }

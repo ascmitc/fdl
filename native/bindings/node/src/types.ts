@@ -204,8 +204,8 @@ export class DimensionsFloat {
     const addon = getAddon();
     const _r = addon.fdl_round_dimensions(
       { width: this.width, height: this.height },
-      ROUNDING_EVEN_TO_C.get(even)!,
-      ROUNDING_MODE_TO_C.get(mode)!,
+      ROUNDING_EVEN_TO_C.require(even),
+      ROUNDING_MODE_TO_C.require(mode),
     );
     return new DimensionsFloat(_r.width, _r.height);
   }
@@ -385,8 +385,8 @@ export class PointFloat {
     const addon = getAddon();
     const _r = addon.fdl_round_point(
       { x: this.x, y: this.y },
-      ROUNDING_EVEN_TO_C.get(even)!,
-      ROUNDING_MODE_TO_C.get(mode)!,
+      ROUNDING_EVEN_TO_C.require(even),
+      ROUNDING_MODE_TO_C.require(mode),
     );
     return new PointFloat(_r.x, _r.y);
   }

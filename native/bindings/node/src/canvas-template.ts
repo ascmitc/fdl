@@ -176,10 +176,10 @@ export class CanvasTemplate extends HandleWrapper {
         opts.targetDimensions.width,
         opts.targetDimensions.height,
         _targetAnamorphicSqueeze,
-        GEOMETRY_PATH_TO_C.get(_fitSource)!,
-        FIT_METHOD_TO_C.get(_fitMethod)!,
-        H_ALIGN_TO_C.get(_alignmentMethodHorizontal)!,
-        V_ALIGN_TO_C.get(_alignmentMethodVertical)!,
+        GEOMETRY_PATH_TO_C.require(_fitSource),
+        FIT_METHOD_TO_C.require(_fitMethod),
+        H_ALIGN_TO_C.require(_alignmentMethodHorizontal),
+        V_ALIGN_TO_C.require(_alignmentMethodVertical),
         toRoundStrategy(_round),
       );
     } catch (e) {
@@ -303,7 +303,7 @@ export class CanvasTemplate extends HandleWrapper {
     this._checkHandle();
     this._addon.fdl_canvas_template_set_preserve_from_source_canvas(
       this._handle,
-      GEOMETRY_PATH_TO_C.get(value)!,
+      GEOMETRY_PATH_TO_C.require(value),
     );
   }
 

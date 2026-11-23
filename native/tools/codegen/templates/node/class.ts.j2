@@ -348,7 +348,7 @@ export class {{ cls.name }} extends {{ 'OwnedHandle' if cls.owns_handle else 'Ha
       return;
     }
 {% if prop.converter.startswith('enum') %}
-    this._addon.{{ prop.setter_fn }}(this._handle, {{ prop.enum_to_c }}.get(value)!);
+    this._addon.{{ prop.setter_fn }}(this._handle, {{ prop.enum_to_c }}.require(value));
 {% elif prop.converter in ('dimsI64', 'dimsF64', 'pointF64', 'rect', 'roundStrategy') %}
     this._addon.{{ prop.setter_fn }}(this._handle, {{ imports.converter_to_fn_map[prop.converter] }}(value));
 {% else %}
@@ -362,7 +362,7 @@ export class {{ cls.name }} extends {{ 'OwnedHandle' if cls.owns_handle else 'Ha
 {% if prop.converter == 'boolean' %}
     this._addon.{{ prop.setter_fn }}(this._handle, value ? 1 : 0);
 {% elif prop.converter.startswith('enum') %}
-    this._addon.{{ prop.setter_fn }}(this._handle, {{ prop.enum_to_c }}.get(value)!);
+    this._addon.{{ prop.setter_fn }}(this._handle, {{ prop.enum_to_c }}.require(value));
 {% elif prop.converter in ('dimsI64', 'dimsF64', 'pointF64', 'rect', 'roundStrategy') %}
     this._addon.{{ prop.setter_fn }}(this._handle, {{ imports.converter_to_fn_map[prop.converter] }}(value));
 {% else %}
