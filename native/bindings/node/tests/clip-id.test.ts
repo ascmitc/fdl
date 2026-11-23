@@ -120,3 +120,58 @@ describe("ClipID", () => {
     }
   });
 });
+
+// The C functions take the JSON length in UTF-8 bytes, not UTF-16 code units, so non-ASCII
+// names must survive a round trip through the setter and validate().
+describe("ClipID with non-ASCII text", () => {
+  const clipName = "日本語クリップ";
+  const file = "クリップ_001.mov";
+
+  it("setting clipId from a dict keeps non-ASCII names", () => {
+    const doc = parseWithClipId({ clip_name: "ASCII", file: "a.mov" });
+    try {
+      const ctx = doc.contexts.at(0)!;
+      ctx.clipId = { clip_name: clipName, file };
+      const clip = ctx.clipId!;
+      expect(clip.clipName).toBe(clipName);
+      expect(clip.file).toBe(file);
+    } finally {
+      doc.close();
+    }
+  });
+
+  it("setting clipId from a ClipID keeps non-ASCII names", () => {
+    const source = parseWithClipId({ clip_name: clipName, file });
+    const target = parseWithClipId({ clip_name: "ASCII", file: "a.mov" });
+    try {
+      target.contexts.at(0)!.clipId = source.contexts.at(0)!.clipId;
+      expect(target.contexts.at(0)!.clipId!.clipName).toBe(clipName);
+    } finally {
+      source.close();
+      target.close();
+    }
+  });
+
+  it("validate() accepts a non-ASCII ClipID", () => {
+    const doc = parseWithClipId({ clip_name: clipName, file });
+    try {
+      expect(() => doc.contexts.at(0)!.clipId!.validate()).not.toThrow();
+    } finally {
+      doc.close();
+    }
+  });
+
+  it("survives a serialization round trip", () => {
+    const doc = parseWithClipId({ clip_name: clipName, file });
+    try {
+      const reparsed = FDL.parse(doc.asJson());
+      try {
+        expect(reparsed.contexts.at(0)!.clipId!.clipName).toBe(clipName);
+      } finally {
+        reparsed.close();
+      }
+    } finally {
+      doc.close();
+    }
+  });
+});
