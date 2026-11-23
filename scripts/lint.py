@@ -35,6 +35,10 @@ CLANG_FORMAT_EXTENSIONS = (".cpp", ".cc", ".h", ".hpp")
 # differ between Ubuntu releases and produce different formatting verdicts.
 CLANG_FORMAT_VERSION = "19.1.7"
 
+# clang-tidy comes from the OS (CI: apt clang-tidy-19, local: Homebrew llvm). Its checks have
+# been stable across 19.x, so only the major version is enforced; CI prints the full version.
+CLANG_TIDY_MAJOR = 19
+
 WARNING_RE = re.compile(r"^(.+?):(\d+):(\d+): (warning|error): (.+) \[(.+)\]$")
 
 OUR_CODE_PREFIXES = ("native/core/src/", "native/core/include/")
@@ -193,6 +197,10 @@ class ClangTidy(LintStep):
             return "run-clang-tidy not found — install: brew install llvm"
         if not shutil.which("cmake"):
             return "cmake not found — install: brew install cmake"
+        r = subprocess.run(["clang-tidy", "--version"], capture_output=True, text=True, check=False)
+        match = re.search(r"LLVM version (\d+)\.", r.stdout)
+        if not match or int(match.group(1)) != CLANG_TIDY_MAJOR:
+            return f"clang-tidy {CLANG_TIDY_MAJOR}.x required (CI version), found: {r.stdout.strip() or r.stderr.strip()}"
         return None
 
     def _ensure_compile_commands(self) -> bool:

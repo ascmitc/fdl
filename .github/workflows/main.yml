@@ -55,6 +55,9 @@ jobs:
           sudo apt-get install -y clang-tidy-19
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
           sudo update-alternatives --install /usr/bin/run-clang-tidy run-clang-tidy /usr/bin/run-clang-tidy-19 100
+          # Fail loudly if the OS package stops being LLVM 19 (see CLANG_TIDY_MAJOR in scripts/lint.py).
+          clang-tidy --version
+          clang-tidy --version | grep -q "LLVM version 19\."
 
       - name: Run clang-format check
         run: |
