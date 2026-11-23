@@ -336,7 +336,7 @@ export class {{ cls.name }} extends {{ 'OwnedHandle' if cls.owns_handle else 'Ha
     const json = typeof value === 'object' && '_handle' in value
       ? JSON.stringify((value as any).asDict())
       : JSON.stringify(value);
-    const err = this._addon.{{ prop.setter_fn }}(this._handle, json, json.length);
+    const err = this._addon.{{ prop.setter_fn }}(this._handle, json, new TextEncoder().encode(json).length);
     if (err) throw new Error(err as string);
   }
 
@@ -685,7 +685,7 @@ export class {{ cls.name }} extends {{ 'OwnedHandle' if cls.owns_handle else 'Ha
     this._checkHandle();
     const json = this._addon.{{ cls.to_json_fn }}(this._handle, 0);
     if (!json) throw new Error('{{ cls.to_json_fn }} returned NULL');
-    const err = this._addon.{{ method.c_function }}(json as string, (json as string).length);
+    const err = this._addon.{{ method.c_function }}(json as string, new TextEncoder().encode(json as string).length);
     if (err) {
       throw new FDLValidationError(err as string);
     }

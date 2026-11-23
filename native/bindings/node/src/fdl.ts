@@ -255,7 +255,10 @@ export class FDL extends OwnedHandle {
     const addon = getAddon();
     const _jsonBytes =
       typeof jsonBytes === "string" ? jsonBytes : jsonBytes.toString("utf-8");
-    const result = addon.fdl_doc_parse_json(_jsonBytes, _jsonBytes.length);
+    const result = addon.fdl_doc_parse_json(
+      _jsonBytes,
+      new TextEncoder().encode(_jsonBytes).length,
+    );
     if (result.error) {
       const msg = result.error as string;
       throw new FDLValidationError(msg);

@@ -74,7 +74,7 @@ export class ClipID extends HandleWrapper {
     if (!json) throw new Error("fdl_clip_id_to_json returned NULL");
     const err = this._addon.fdl_clip_id_validate_json(
       json as string,
-      (json as string).length,
+      new TextEncoder().encode(json as string).length,
     );
     if (err) {
       throw new FDLValidationError(err as string);

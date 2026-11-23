@@ -764,7 +764,7 @@ def _build_node_builder_context(
             addon_args.append(ts_name)
         elif p.type_key == "bytes":
             addon_args.append(ts_name)
-            addon_args.append(f"{ts_name}.length")
+            addon_args.append(f"new TextEncoder().encode({ts_name}).length")  # UTF-8 byte length
         elif p.type_key in ("double", "int", "int64_t", "uint32_t"):
             addon_args.append(ts_name)
         elif p.expand and p.type_key in expand_map:
@@ -872,7 +872,7 @@ def _build_node_lifecycle_context(
             addon_args.append(f"{ts_name}._handle")
         elif p.type_key == "bytes":
             addon_args.append(f"_{ts_name}")
-            addon_args.append(f"_{ts_name}.length")
+            addon_args.append(f"new TextEncoder().encode(_{ts_name}).length")  # UTF-8 byte length
         elif p.type_key == "string" or p.type_key in ("int", "int64_t", "uint32_t", "double"):
             addon_args.append(ts_name)
         elif p.type_key in type_key_to_to_c:
