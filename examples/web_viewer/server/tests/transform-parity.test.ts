@@ -13,7 +13,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, it } from "node:test";
+import { after, describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
@@ -26,6 +26,7 @@ import type { Canvas } from "@asc-mitc/fdl";
 
 import {
   computeGeometry,
+  evictExpiredSessions,
   findCanvasAndFraming,
   getSession,
   parseFdlFromString,
@@ -40,7 +41,7 @@ interface ScenarioEntry {
   id: string;
   sourceFdl: string;
   expectedFdl: string;
-  contextLabel: string;
+  contextIndex: number;
   canvasId: string;
   framingId: string;
   template: TemplateParams;
@@ -81,13 +82,16 @@ function findOutputCanvas(fdl: ReturnType<typeof readFromFile>): Canvas {
   throw new Error("expected FDL has no output canvas");
 }
 
+// Close the native documents held by sessions once the tests are done.
+after(() => evictExpiredSessions(Number.POSITIVE_INFINITY));
+
 describe("web viewer transform matches the committed Results FDLs", () => {
   for (const entry of entries) {
     it(entry.id, () => {
       const source = parseFdlFromString(readFileSync(path.join(repoRoot, entry.sourceFdl), "utf-8"));
       const result = applyTransform(
         source.sessionId,
-        entry.contextLabel,
+        entry.contextIndex,
         entry.canvasId,
         entry.framingId,
         entry.template,
@@ -97,25 +101,46 @@ describe("web viewer transform matches the committed Results FDLs", () => {
       assert.ok(actualSession, "output session should exist");
       const actual = findCanvasAndFraming(
         actualSession.fdl,
-        result.outputContextLabel,
+        result.outputContextIndex,
         result.outputCanvasId,
         result.outputFramingId,
       );
       assert.ok(actual, "output canvas and framing should be found");
 
       const expectedFdl = readFromFile(path.join(repoRoot, entry.expectedFdl), true);
-      const expectedCanvas = findOutputCanvas(expectedFdl);
-      const expectedFraming = expectedCanvas.framingDecisions.at(0);
-      assert.ok(expectedFraming, "expected canvas should have a framing decision");
+      try {
+        const expectedCanvas = findOutputCanvas(expectedFdl);
+        const expectedFraming = expectedCanvas.framingDecisions.at(0);
+        assert.ok(expectedFraming, "expected canvas should have a framing decision");
 
-      assertClose(
-        computeGeometry(actual.canvas, actual.framing),
-        computeGeometry(expectedCanvas, expectedFraming),
-        "geometry",
-      );
-      for (const attr of [ATTR_SCALE_FACTOR, ATTR_CONTENT_TRANSLATION, ATTR_SCALED_BOUNDING_BOX]) {
-        assertClose(actual.canvas.getCustomAttr(attr), expectedCanvas.getCustomAttr(attr), attr);
+        assertClose(
+          computeGeometry(actual.canvas, actual.framing),
+          computeGeometry(expectedCanvas, expectedFraming),
+          "geometry",
+        );
+        for (const attr of [ATTR_SCALE_FACTOR, ATTR_CONTENT_TRANSLATION, ATTR_SCALED_BOUNDING_BOX]) {
+          assertClose(actual.canvas.getCustomAttr(attr), expectedCanvas.getCustomAttr(attr), attr);
+        }
+      } finally {
+        expectedFdl.close();
       }
     });
   }
+});
+
+describe("contexts without labels", () => {
+  it("are addressed by index, including a second unlabeled context", () => {
+    const entry = entries.find((e) => e.id === "scen1_B");
+    assert.ok(entry);
+    const fdl = JSON.parse(readFileSync(path.join(repoRoot, entry.sourceFdl), "utf-8"));
+    const second = JSON.parse(JSON.stringify(fdl.contexts[0]));
+    second.canvases[0].id = "SECOND";
+    second.canvases[0].framing_decisions[0].id = "SECOND-1";
+    for (const context of [...fdl.contexts, second]) delete context.label;
+    fdl.contexts.push(second);
+
+    const source = parseFdlFromString(JSON.stringify(fdl));
+    const result = applyTransform(source.sessionId, 1, "SECOND", "SECOND-1", entry.template);
+    assert.equal(result.outputCanvasId, "SECOND_output");
+  });
 });

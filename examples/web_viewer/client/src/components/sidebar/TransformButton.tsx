@@ -19,7 +19,7 @@ export function TransformButton() {
   const showReprocess = templateModified && hasOutput;
 
   const handleTransform = useCallback(async () => {
-    if (!sourceSessionId) return;
+    if (!sourceSessionId || selectedContext === null) return;
     try {
       setLoading(true);
       setError(null);
@@ -35,7 +35,7 @@ export function TransformButton() {
         result.outputSessionId,
         result.outputGeometry,
         result.transformResult,
-        result.outputContextLabel,
+        result.outputContextIndex,
         result.outputCanvasId,
         result.outputFramingId,
       );
