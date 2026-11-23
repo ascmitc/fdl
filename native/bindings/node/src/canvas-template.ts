@@ -167,34 +167,50 @@ export class CanvasTemplate extends HandleWrapper {
       null,
     );
     const backing = FDL._fromHandle(docH, null);
-    const handle = addon.fdl_doc_add_canvas_template(
-      docH,
-      opts.id,
-      _label,
-      opts.targetDimensions.width,
-      opts.targetDimensions.height,
-      _targetAnamorphicSqueeze,
-      GEOMETRY_PATH_TO_C.get(_fitSource)!,
-      FIT_METHOD_TO_C.get(_fitMethod)!,
-      H_ALIGN_TO_C.get(_alignmentMethodHorizontal)!,
-      V_ALIGN_TO_C.get(_alignmentMethodVertical)!,
-      toRoundStrategy(_round),
-    );
-    if (!handle) throw new Error("fdl_doc_add_canvas_template returned NULL");
+    let handle: object | null = null;
+    try {
+      handle = addon.fdl_doc_add_canvas_template(
+        docH,
+        opts.id,
+        _label,
+        opts.targetDimensions.width,
+        opts.targetDimensions.height,
+        _targetAnamorphicSqueeze,
+        GEOMETRY_PATH_TO_C.get(_fitSource)!,
+        FIT_METHOD_TO_C.get(_fitMethod)!,
+        H_ALIGN_TO_C.get(_alignmentMethodHorizontal)!,
+        V_ALIGN_TO_C.get(_alignmentMethodVertical)!,
+        toRoundStrategy(_round),
+      );
+    } catch (e) {
+      backing.close();
+      throw e;
+    }
+    if (!handle) {
+      backing.close();
+      throw new Error("fdl_doc_add_canvas_template returned NULL");
+    }
     super(handle, backing);
-    if (
-      opts.preserveFromSourceCanvas !== undefined &&
-      opts.preserveFromSourceCanvas !== null
-    ) {
-      this.preserveFromSourceCanvas = opts.preserveFromSourceCanvas;
+    // The hidden backing document is owned by this object; close() releases it.
+    this._adoptBackingDoc(backing);
+    try {
+      if (
+        opts.preserveFromSourceCanvas !== undefined &&
+        opts.preserveFromSourceCanvas !== null
+      ) {
+        this.preserveFromSourceCanvas = opts.preserveFromSourceCanvas;
+      }
+      if (
+        opts.maximumDimensions !== undefined &&
+        opts.maximumDimensions !== null
+      ) {
+        this.maximumDimensions = opts.maximumDimensions;
+      }
+      this.padToMaximum = opts.padToMaximum ?? false;
+    } catch (e) {
+      this.close();
+      throw e;
     }
-    if (
-      opts.maximumDimensions !== undefined &&
-      opts.maximumDimensions !== null
-    ) {
-      this.maximumDimensions = opts.maximumDimensions;
-    }
-    this.padToMaximum = opts.padToMaximum ?? false;
   }
 
   /** id */
