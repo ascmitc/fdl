@@ -3614,14 +3614,16 @@ the output canvas for use by image processing pipelines:</p>
 </tr>
 <tr>
 <td><code>_content_translation</code></td>
-<td>Content shift <strong>post-scale, pre-round</strong> (float)</td>
+<td><strong>Final</strong> content shift: alignment shift + canvas-rounding shift <code>(rounded_canvas - unrounded_canvas)/2</code> (float)</td>
 <td>Image positioning</td>
 </tr>
 </tbody>
 </table>
 <p><code>_scaled_bounding_box</code> and <code>_content_translation</code> are intentionally
-<strong>unrounded</strong> -- they are captured in Phase 5/6 before Phase 9b runs.
-This preserves sub-pixel precision so downstream image processing (e.g.
+<strong>unrounded</strong>.  <code>_scaled_bounding_box</code> is captured in Phase 5/6 before
+Phase 9b runs; <code>_content_translation</code> is the alignment shift plus the
+<code>canvas_delta/2</code> shift Phase 9b applies to the anchors, i.e. the final
+translation consistent with the output FDL's anchors.  This preserves sub-pixel precision so downstream image processing (e.g.
 <code>fdl_imaging</code>'s warp-based pipeline) can place content without
 re-quantizing.  They may differ by sub-pixel amounts from the final
 rounded <code>canvas.dimensions</code>.</p>
@@ -3774,9 +3776,9 @@ else:                                                        # PAD / CROP
    is bit-exact regardless of whether either value is an integer.</li>
 <li><strong>Anchors are relative</strong>: After hierarchy preparation, anchors represent positions
    relative to the canvas origin.</li>
-<li><strong>Unrounded side-channel for imaging</strong>: <code>_scaled_bounding_box</code> and
-   <code>_content_translation</code> are exported as custom attributes in their pre-round
-   float form, so image processors can reproduce template geometry at sub-pixel
+<li><strong>Unrounded side-channel for imaging</strong>: <code>_scaled_bounding_box</code> (pre-round) and
+   <code>_content_translation</code> (final: alignment shift plus canvas-rounding
+   <code>delta/2</code>) are exported as unrounded custom attributes, so image processors can reproduce template geometry at sub-pixel
    precision without re-quantizing.</li>
 </ol>
 <h3 id="common-scenarios">Common Scenarios</h3>
