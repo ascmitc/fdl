@@ -15,6 +15,15 @@ import type { NativeAddon } from "./ffi/index.js";
 import { getAddon } from "./ffi/index.js";
 
 // -----------------------------------------------------------------------
+// Finalization warning
+// -----------------------------------------------------------------------
+
+const _registry = new FinalizationRegistry<string>((msg: string) => {
+  // eslint-disable-next-line no-console
+  console.warn(msg);
+});
+
+// -----------------------------------------------------------------------
 // HandleWrapper — non-owning facade base
 // -----------------------------------------------------------------------
 
@@ -25,6 +34,11 @@ import { getAddon } from "./ffi/index.js";
  * Each HandleWrapper stores a reference to its owning OwnedHandle (`_docRef`)
  * to prevent the document from being garbage collected while child handles
  * are still in use.
+ *
+ * Objects built standalone (`new CanvasTemplate({...})`, `new Canvas({...})`, ...)
+ * live inside a hidden backing document that they own: `close()` releases it.
+ * `close()` on an object borrowed from a parsed document only invalidates that
+ * object and never closes the document.
  */
 export class HandleWrapper {
   /** @internal The opaque C handle (Napi::External). */
@@ -39,6 +53,12 @@ export class HandleWrapper {
    * For OwnedHandle, this is `this` (self-referencing).
    */
   protected _docRef: OwnedHandle | null;
+
+  /** Whether this wrapper has been closed. */
+  protected _closed = false;
+
+  /** True when `_docRef` is a hidden backing document created for this object. */
+  protected _ownsDocRef = false;
 
   /** @internal */
   constructor(handle: object, docRef: OwnedHandle | null = null) {
@@ -55,10 +75,62 @@ export class HandleWrapper {
     return new this(handle, docRef);
   }
 
-  /** Check that the handle is still valid. Throws if closed. */
+  /**
+   * @internal Take ownership of the hidden backing document of a standalone object.
+   *
+   * The backing document is created by the generated constructor and is not
+   * visible to the caller, so the finalization warning is moved onto this
+   * object, where it names the class the caller actually created.
+   */
+  protected _adoptBackingDoc(backing: OwnedHandle): void {
+    this._ownsDocRef = true;
+    _registry.unregister(backing);
+    _registry.register(
+      this,
+      `${this.constructor.name} was garbage collected without being closed. ` +
+        `Call .close() or use 'using' syntax.`,
+      this,
+    );
+  }
+
+  /**
+   * Release this object. A standalone object also closes its hidden backing
+   * document; an object borrowed from a parsed document is only invalidated.
+   * Safe to call multiple times.
+   */
+  close(): void {
+    if (this._closed) return;
+    this._closed = true;
+    if (this._ownsDocRef && this._docRef) {
+      this._docRef.close();
+    }
+    this._handle = null!;
+    _registry.unregister(this);
+  }
+
+  /** Support `using x = new CanvasTemplate(...)` syntax (Symbol.dispose). */
+  [Symbol.dispose](): void {
+    this.close();
+  }
+
+  /** Whether this object has been closed. */
+  get isClosed(): boolean {
+    return this._closed;
+  }
+
+  /** Check that the handle is still valid. Throws if it or its document is closed. */
   protected _checkHandle(): void {
-    if (this._handle === null) {
+    if (this._handle === null || this._closed) {
       throw new Error("Handle has been closed or freed");
+    }
+    if (
+      this._docRef &&
+      (this._docRef as HandleWrapper) !== this &&
+      this._docRef.isClosed
+    ) {
+      throw new Error(
+        "Handle has been closed or freed (its document is closed)",
+      );
     }
   }
 }
@@ -66,11 +138,6 @@ export class HandleWrapper {
 // -----------------------------------------------------------------------
 // OwnedHandle — RAII document owner
 // -----------------------------------------------------------------------
-
-const _registry = new FinalizationRegistry<string>((msg: string) => {
-  // eslint-disable-next-line no-console
-  console.warn(msg);
-});
 
 /**
  * Owning handle for FDL documents.
@@ -82,7 +149,6 @@ const _registry = new FinalizationRegistry<string>((msg: string) => {
  */
 export class OwnedHandle extends HandleWrapper {
   private _freeFn: string;
-  private _closed = false;
 
   /** @internal */
   constructor(handle: object, freeFn: string) {
@@ -100,23 +166,13 @@ export class OwnedHandle extends HandleWrapper {
   }
 
   /** Release the underlying C handle. Safe to call multiple times. */
-  close(): void {
+  override close(): void {
     if (!this._closed && this._handle !== null) {
       this._addon[this._freeFn](this._handle);
       this._handle = null!;
       this._closed = true;
       _registry.unregister(this);
     }
-  }
-
-  /** Support `using doc = FDL.parse(...)` syntax (Symbol.dispose). */
-  [Symbol.dispose](): void {
-    this.close();
-  }
-
-  /** Whether this handle has been closed. */
-  get isClosed(): boolean {
-    return this._closed;
   }
 }
 
@@ -169,8 +225,18 @@ export class CollectionWrapper<T extends HandleWrapper> {
     this._findByLabelFn = findByLabelFn ?? null;
   }
 
+  /** Throws if the owning document has been closed (its handles are freed). */
+  private _checkDoc(): void {
+    if (this._docRef.isClosed) {
+      throw new Error(
+        "Handle has been closed or freed (its document is closed)",
+      );
+    }
+  }
+
   /** Number of items in the collection. */
   get length(): number {
+    this._checkDoc();
     return this._addon[this._countFn](this._parentHandle) as number;
   }
 
@@ -185,6 +251,7 @@ export class CollectionWrapper<T extends HandleWrapper> {
 
   /** Find item by ID. Returns null if not found. */
   findById(id: string): T | null {
+    this._checkDoc();
     if (!this._findByIdFn) {
       throw new Error("findById not supported on this collection");
     }
@@ -195,6 +262,7 @@ export class CollectionWrapper<T extends HandleWrapper> {
 
   /** Find item by label. Returns null if not found. */
   findByLabel(label: string): T | null {
+    this._checkDoc();
     if (!this._findByLabelFn) {
       throw new Error("findByLabel not supported on this collection");
     }

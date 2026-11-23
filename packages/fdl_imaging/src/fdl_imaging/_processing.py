@@ -15,8 +15,10 @@ sub-pixel alignment), this module uses :func:`OpenImageIO.ImageBufAlgo.warp`
 to carry float source coordinates through the filter kernel.  Output buffers
 must still be sized as integers; widths and heights are rounded up with
 ``math.ceil`` to match the frameline generator's display convention (every
-sub-pixel of a region is preserved in the output; the last column/row may be
-a partial sample filtered against ``wrap="black"``).
+sub-pixel of a region is preserved in the output).  The filter extends the
+source by repeating its edge pixels (``wrap="clamp"``), so a boundary pixel
+whose footprint reaches past the source border stays a full-intensity pixel
+instead of being blended with black.
 
 Fast path for integer-aligned crops
 -----------------------------------
@@ -161,7 +163,7 @@ def _warp_crop(
     M = _warp_matrix(anchor_x=anchor_x, anchor_y=anchor_y)
     dst_spec = ImageSpec(out_width, out_height, src_spec.nchannels, src_spec.format)
     dst = ImageBuf(dst_spec)
-    ImageBufAlgo.warp(dst, src, M, filtername=filter_name, wrap="black")
+    ImageBufAlgo.warp(dst, src, M, filtername=filter_name, wrap="clamp")
     if dst.has_error:
         raise OSError(f"Failed to warp image: {dst.geterror()}")
     return dst
@@ -224,7 +226,9 @@ def _warp_compose(
     """
     # Warp the FULL source (scale + translate) into the output canvas.  Float
     # source coordinates are carried through the filter; the destination is the
-    # integer output raster.  wrap="black" blackens samples outside the image.
+    # integer output raster.  wrap="clamp" extends the image by its edge pixels, so
+    # samples past the source border take the edge value instead of black (no
+    # feathered boundary); the output-space crop below sets what is kept.
     M = _warp_matrix(
         anchor_x=anchor_x,
         anchor_y=anchor_y,
@@ -235,7 +239,7 @@ def _warp_compose(
     )
     dst_spec = ImageSpec(final_width, final_height, src_spec.nchannels, src_spec.format)
     warped = ImageBuf(dst_spec)
-    ImageBufAlgo.warp(warped, src, M, filtername=filter_name, wrap="black")
+    ImageBufAlgo.warp(warped, src, M, filtername=filter_name, wrap="clamp")
     if warped.has_error:
         raise OSError(f"Failed to warp image: {warped.geterror()}")
 
@@ -635,7 +639,9 @@ def transform_image_with_computed_values(
     scaled_bounding_box : DimensionsFloat
         The scaled bounding box dimensions (biggest canvas)
     content_translation : Point
-        The content translation offset
+        The final content translation (``_content_translation``): alignment
+        shift plus the core's canvas-rounding shift.  May be sub-pixel and
+        negative; applied as-is to the warp.
     filter_name : str, optional
         The reconstruction filter to use.  Default is "lanczos3".
 
@@ -699,7 +705,8 @@ def transform_image_with_computed_values(
     # the scaled content extent (content_translation .. content_translation +
     # scaled_bounding_box), clamped to the canvas.  Floor the lower edges and
     # ceil the upper edges so every sub-pixel of content is preserved (the
-    # boundary pixel may be a partial content/black blend from the warp filter),
+    # boundary pixel is a full pixel: real data where the source extends past
+    # the content edge, edge-extended data where it does not),
     # matching the ceil convention used elsewhere in this module (see _warp_crop
     # and the module docstring).  The clamp bounds the box to the canvas, which
     # also fills the canvas when content reaches its far edge (no separate snap

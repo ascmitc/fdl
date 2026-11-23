@@ -58,3 +58,23 @@ PYTHON_PATH=.venv/bin/python npm run dev
 |--------|------------|
 | Client | React, Vite, Tailwind CSS, Radix UI |
 | Server | Express, TypeScript (tsx), `@asc-mitc/fdl` native addon |
+
+The server depends on the repository's own Node binding (`native/bindings/node`), not
+the published npm package, so it always runs the current core. Build it first with
+`python scripts/build_node.py` (`run.py` does this for you).
+
+## Tests
+
+Both suites run every scenario that has a source image and a golden EXR, and use
+`server/tests/scenario_inputs.json` (generated from the Python scenario config).
+
+```shell
+# FDL transform vs the committed Results FDLs (N-API binding)
+npm test -w server
+
+# Image bridge vs the golden EXRs (pixel-identical)
+python -m pytest examples/web_viewer/server/tests -v
+```
+
+After changing the scenarios, regenerate the fixture with
+`python examples/web_viewer/server/tests/scenario_inputs.py`.

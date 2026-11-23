@@ -63,7 +63,7 @@
         },
         "content_translation": {
           "x": 0.0,
-          "y": 0.0
+          "y": 0.28125
         },
         "output_canvas_dims": {
           "width": 1920.0,
@@ -151,7 +151,7 @@
         },
         "content_translation": {
           "x": 0.0,
-          "y": 0.0
+          "y": 0.5
         },
         "output_canvas_dims": {
           "width": 3840.0,
@@ -245,7 +245,7 @@
         },
         "content_translation": {
           "x": 0.0,
-          "y": 0.0
+          "y": 0.75
         },
         "output_canvas_dims": {
           "width": 1920.0,
@@ -424,7 +424,7 @@
         },
         "content_translation": {
           "x": 0.0,
-          "y": 0.0
+          "y": 0.140625
         },
         "output_canvas_dims": {
           "width": 1920.0,
@@ -511,7 +511,7 @@
           "height": 1080.0
         },
         "content_translation": {
-          "x": 0.0,
+          "x": 0.5449241540256935,
           "y": 0.0
         },
         "output_canvas_dims": {
@@ -599,7 +599,7 @@
           "height": 1080.0
         },
         "content_translation": {
-          "x": 0.0,
+          "x": 0.5449241540256935,
           "y": 0.0
         },
         "output_canvas_dims": {
@@ -694,7 +694,7 @@
         },
         "content_translation": {
           "x": 0.0,
-          "y": 0.0
+          "y": 0.2604166666666856
         },
         "output_canvas_dims": {
           "width": 1920.0,

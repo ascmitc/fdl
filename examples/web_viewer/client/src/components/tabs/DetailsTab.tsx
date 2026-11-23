@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useAppStore, getSelectedCanvas, getFramingDecisions, getOutputContext, getOutputCanvas, getOutputFraming } from "@/store/app-store";
+import { useAppStore, getSelectedCanvas, getSelectedContext, getFramingDecisions, getOutputContext, getOutputCanvas, getOutputFraming } from "@/store/app-store";
 import { getFdlJson, getExportUrl, getImageDownloadUrl } from "@/api/client";
 
 function PropertyRow({
@@ -55,6 +55,7 @@ export function DetailsTab() {
   const selectedCanvas = useAppStore((s) => s.selectedCanvas);
   const selectedFraming = useAppStore((s) => s.selectedFraming);
 
+  const sourceCtx = useAppStore(getSelectedContext);
   const sourceCanvas = useAppStore(getSelectedCanvas);
   const sourceFramings = useAppStore(getFramingDecisions);
   const sourceFraming = sourceFramings.find((f) => f.id === selectedFraming);
@@ -118,7 +119,7 @@ export function DetailsTab() {
             <tbody className="divide-y divide-border">
               <PropertyRow
                 label="Context"
-                source={selectedContext || "-"}
+                source={sourceCtx ? sourceCtx.label || `Context ${selectedContext! + 1}` : "-"}
                 output={outputCtx?.label || "-"}
               />
               <PropertyRow

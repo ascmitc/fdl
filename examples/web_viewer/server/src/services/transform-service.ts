@@ -91,7 +91,7 @@ function createTemplate(params: TemplateParams): CanvasTemplate {
 
 export function applyTransform(
   sourceSessionId: string,
-  contextLabel: string,
+  contextIndex: number,
   canvasId: string,
   framingId: string,
   templateParams: TemplateParams,
@@ -103,26 +103,39 @@ export function applyTransform(
 
   const found = findCanvasAndFraming(
     session.fdl,
-    contextLabel,
+    contextIndex,
     canvasId,
     framingId,
   );
   if (!found) {
     throw new Error(
-      `Could not find context="${contextLabel}", canvas="${canvasId}", framing="${framingId}"`,
+      `Could not find context=${contextIndex}, canvas="${canvasId}", framing="${framingId}"`,
     );
   }
 
   const sourceGeometry = computeGeometry(found.canvas, found.framing);
 
+  // The template owns a hidden backing document; close it once applied. The result
+  // is an independent document, so it stays valid.
   const template = createTemplate(templateParams);
-  const result = template.apply(
-    found.canvas,
-    found.framing,
-    `${canvasId}_output`,
-    `${framingId}_output`,
-    contextLabel,
-  );
+  let result: ReturnType<CanvasTemplate["apply"]>;
+  try {
+    result = template.apply(
+      found.canvas,
+      found.framing,
+      `${canvasId}_output`,
+      `${framingId}_output`,
+      found.context.label as string,
+    );
+  } finally {
+    template.close();
+  }
+
+  // The template adds the output context to the result FDL; address it by position too.
+  const outputContextIndex = result.fdl.contexts
+    .toArray()
+    .map((ctx) => ctx.label)
+    .lastIndexOf(result.contextLabel);
 
   // Store the output FDL
   const { sessionId: outputSessionId, hierarchy: outputHierarchy } = storeFdl(
@@ -132,7 +145,7 @@ export function applyTransform(
   // Navigate to the output canvas/framing for geometry
   const outputFound = findCanvasAndFraming(
     result.fdl,
-    result.contextLabel,
+    outputContextIndex,
     result.canvasId,
     result.framingDecisionId,
   );
@@ -165,6 +178,7 @@ export function applyTransform(
   return {
     outputSessionId,
     outputContextLabel: result.contextLabel,
+    outputContextIndex,
     outputCanvasId: result.canvasId,
     outputFramingId: result.framingDecisionId,
     hierarchy: outputHierarchy,

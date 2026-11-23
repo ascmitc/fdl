@@ -26,7 +26,8 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Cleanup expired images every 10 minutes
+// Cleanup expired images every 10 minutes. unref() so the timer never keeps
+// the process alive on its own (the HTTP server does that, and tests must exit).
 setInterval(() => {
   const now = Date.now();
   const TTL = 60 * 60 * 1000; // 1 hour
@@ -40,7 +41,7 @@ setInterval(() => {
       imageStore.delete(id);
     }
   }
-}, 10 * 60 * 1000);
+}, 10 * 60 * 1000).unref();
 
 // Resolve Python path: PYTHON_PATH env → workspace .venv → python3 fallback
 function resolvePythonPath(): string {
@@ -134,7 +135,7 @@ export function getImageMetadata(id: string): ImageSession | null {
 export async function transformImage(
   imageId: string,
   sourceFdlJson: string,
-  contextLabel: string,
+  contextIndex: number,
   canvasId: string,
   framingId: string,
   template: TemplateParams,
@@ -156,7 +157,7 @@ export async function transformImage(
 
   const bridgeInput = JSON.stringify({
     sourceFdlJson,
-    contextLabel,
+    contextIndex,
     canvasId,
     framingId,
     template,

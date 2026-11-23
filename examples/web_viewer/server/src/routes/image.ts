@@ -39,7 +39,7 @@ router.get("/:id", (req, res) => {
 // Transform image with FDL parameters via Python OIIO bridge
 router.post("/transform", async (req, res) => {
   try {
-    const { imageId, sourceSessionId, contextLabel, canvasId, framingId, template } =
+    const { imageId, sourceSessionId, contextIndex, canvasId, framingId, template } =
       req.body;
     const fdlJson = getFdlJson(sourceSessionId);
     if (!fdlJson) {
@@ -49,7 +49,7 @@ router.post("/transform", async (req, res) => {
     const result = await transformImage(
       imageId,
       fdlJson,
-      contextLabel,
+      contextIndex,
       canvasId,
       framingId,
       template,

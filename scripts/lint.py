@@ -31,6 +31,17 @@ CLANG_FORMAT_DIRS = [
 ]
 CLANG_FORMAT_EXTENSIONS = (".cpp", ".cc", ".h", ".hpp")
 
+# Must match the version installed by the CI lint job (.github/workflows/main.yml).
+# CI installs the PyPI wheel rather than the OS package, because distro builds
+# differ between Ubuntu releases and produce different formatting verdicts.
+CLANG_FORMAT_VERSION = "19.1.7"
+
+# clang-tidy follows the version ubuntu-latest ships (CI installs clang-tidy-21 from apt; local:
+# `brew install llvm@21`). Only the major version is enforced; CI prints the full version. When
+# the runner image moves to a newer LLVM, bump this and the CI install step together and fix
+# any new findings.
+CLANG_TIDY_MAJOR = 21
+
 WARNING_RE = re.compile(r"^(.+?):(\d+):(\d+): (warning|error): (.+) \[(.+)\]$")
 
 OUR_CODE_PREFIXES = ("native/core/src/", "native/core/include/")
@@ -134,7 +145,13 @@ class ClangFormat(LintStep):
 
     def check_tools(self) -> str | None:
         if not shutil.which("clang-format"):
-            return "clang-format not found — install: brew install llvm"
+            return f"clang-format not found — install: uv tool install clang-format=={CLANG_FORMAT_VERSION}"
+        r = subprocess.run(["clang-format", "--version"], capture_output=True, text=True, check=False)
+        if CLANG_FORMAT_VERSION not in r.stdout:
+            return (
+                f"clang-format {CLANG_FORMAT_VERSION} required (CI version), found: {r.stdout.strip()} — "
+                f"install: uv tool install clang-format=={CLANG_FORMAT_VERSION}"
+            )
         return None
 
     def run(self, log_dir: Path) -> tuple[bool, str]:
@@ -180,9 +197,16 @@ class ClangTidy(LintStep):
 
     def check_tools(self) -> str | None:
         if not shutil.which("run-clang-tidy"):
-            return "run-clang-tidy not found — install: brew install llvm"
+            return f"run-clang-tidy not found — install: brew install llvm@{CLANG_TIDY_MAJOR} (keg-only: add its bin/ to PATH)"
         if not shutil.which("cmake"):
             return "cmake not found — install: brew install cmake"
+        r = subprocess.run(["clang-tidy", "--version"], capture_output=True, text=True, check=False)
+        match = re.search(r"LLVM version (\d+)\.", r.stdout)
+        if not match or int(match.group(1)) != CLANG_TIDY_MAJOR:
+            return (
+                f"clang-tidy {CLANG_TIDY_MAJOR}.x required (CI version), found: {r.stdout.strip() or r.stderr.strip()} "
+                f"— install: brew install llvm@{CLANG_TIDY_MAJOR} (keg-only: add its bin/ to PATH)"
+            )
         return None
 
     def _ensure_compile_commands(self) -> bool:

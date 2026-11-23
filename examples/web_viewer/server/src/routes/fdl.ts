@@ -76,14 +76,17 @@ router.get("/:id/geometry", (req, res) => {
     framing: string;
   };
 
-  if (!context || !canvas) {
-    res.status(400).json({ error: "context and canvas query params required" });
+  const contextIndex = Number(context);
+  if (context === undefined || !Number.isInteger(contextIndex) || !canvas) {
+    res
+      .status(400)
+      .json({ error: "context (index) and canvas query params required" });
     return;
   }
 
   const found = findCanvasAndFraming(
     session.fdl,
-    context,
+    contextIndex,
     canvas,
     framing || "",
   );
@@ -102,7 +105,7 @@ router.post("/transform", (req, res) => {
     const body = req.body as TransformRequest;
     const result = applyTransform(
       body.sourceSessionId,
-      body.contextLabel,
+      body.contextIndex,
       body.canvasId,
       body.framingId,
       body.template,

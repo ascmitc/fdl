@@ -26,15 +26,22 @@ interface FdlSession {
 const sessions = new Map<string, FdlSession>();
 const SESSION_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
-// Cleanup expired sessions every 5 minutes
-setInterval(() => {
-  const now = Date.now();
+/**
+ * Remove sessions older than the TTL and close their native FDL documents.
+ * Exported (with an injectable clock) so the lifecycle can be tested.
+ */
+export function evictExpiredSessions(now: number = Date.now()): void {
   for (const [id, session] of sessions) {
     if (now - session.createdAt > SESSION_TTL_MS) {
+      session.fdl.close();
       sessions.delete(id);
     }
   }
-}, 5 * 60 * 1000);
+}
+
+// Cleanup expired sessions every 5 minutes. unref() so the timer never keeps
+// the process alive on its own (the HTTP server does that, and tests must exit).
+setInterval(() => evictExpiredSessions(), 5 * 60 * 1000).unref();
 
 function extractFramingDecision(fd: FramingDecision): FramingDecisionData {
   const protDims = fd.protectionDimensions;
@@ -234,17 +241,12 @@ export function computeGeometry(
 
 export function findCanvasAndFraming(
   fdl: FDL,
-  contextLabel: string,
+  contextIndex: number,
   canvasId: string,
   framingId: string,
 ): { context: Context; canvas: Canvas; framing: FramingDecision } | null {
-  let targetContext: Context | null = null;
-  for (const ctx of fdl.contexts) {
-    if (ctx.label === contextLabel) {
-      targetContext = ctx;
-      break;
-    }
-  }
+  // Contexts are addressed by position: labels are optional and need not be unique.
+  const targetContext = fdl.contexts.at(contextIndex);
   if (!targetContext) return null;
 
   let targetCanvas: Canvas | null = null;

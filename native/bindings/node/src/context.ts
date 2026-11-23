@@ -64,9 +64,25 @@ export class Context extends HandleWrapper {
       null,
     );
     const backing = FDL._fromHandle(docH, null);
-    const handle = addon.fdl_doc_add_context(docH, opts.label, _contextCreator);
-    if (!handle) throw new Error("fdl_doc_add_context returned NULL");
+    let handle: object | null = null;
+    try {
+      handle = addon.fdl_doc_add_context(docH, opts.label, _contextCreator);
+    } catch (e) {
+      backing.close();
+      throw e;
+    }
+    if (!handle) {
+      backing.close();
+      throw new Error("fdl_doc_add_context returned NULL");
+    }
     super(handle, backing);
+    // The hidden backing document is owned by this object; close() releases it.
+    this._adoptBackingDoc(backing);
+    try {
+    } catch (e) {
+      this.close();
+      throw e;
+    }
   }
 
   /** label */

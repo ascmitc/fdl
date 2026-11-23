@@ -897,11 +897,13 @@ the output canvas for use by image processing pipelines:
 |-----------|-------|---------|
 | `_scale_factor` | Uniform scale factor (float) | Image scaling |
 | `_scaled_bounding_box` | Scaled canvas dims **post-scale, pre-round** (float) | Source content boundary |
-| `_content_translation` | Content shift **post-scale, pre-round** (float) | Image positioning |
+| `_content_translation` | **Final** content shift: alignment shift + canvas-rounding shift `(rounded_canvas - unrounded_canvas)/2` (float) | Image positioning |
 
 `_scaled_bounding_box` and `_content_translation` are intentionally
-**unrounded** -- they are captured in Phase 5/6 before Phase 9b runs.
-This preserves sub-pixel precision so downstream image processing (e.g.
+**unrounded**.  `_scaled_bounding_box` is captured in Phase 5/6 before
+Phase 9b runs; `_content_translation` is the alignment shift plus the
+`canvas_delta/2` shift Phase 9b applies to the anchors, i.e. the final
+translation consistent with the output FDL's anchors.  This preserves sub-pixel precision so downstream image processing (e.g.
 `fdl_imaging`'s warp-based pipeline) can place content without
 re-quantizing.  They may differ by sub-pixel amounts from the final
 rounded `canvas.dimensions`.
@@ -999,9 +1001,9 @@ else:                                                        # PAD / CROP
    is bit-exact regardless of whether either value is an integer.
 6. **Anchors are relative**: After hierarchy preparation, anchors represent positions
    relative to the canvas origin.
-7. **Unrounded side-channel for imaging**: `_scaled_bounding_box` and
-   `_content_translation` are exported as custom attributes in their pre-round
-   float form, so image processors can reproduce template geometry at sub-pixel
+7. **Unrounded side-channel for imaging**: `_scaled_bounding_box` (pre-round) and
+   `_content_translation` (final: alignment shift plus canvas-rounding
+   `delta/2`) are exported as unrounded custom attributes, so image processors can reproduce template geometry at sub-pixel
    precision without re-quantizing.
 
 ### Common Scenarios

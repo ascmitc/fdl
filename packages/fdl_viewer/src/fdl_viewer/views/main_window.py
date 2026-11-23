@@ -6,9 +6,11 @@ Main window for FDL Viewer application.
 Provides the main application window with sidebar and tabbed content area.
 """
 
+import logging
 import tempfile
 from pathlib import Path
 
+from fdl import ATTR_SCALE_FACTOR
 from fdl_imaging import (
     get_fdl_components,
     transform_image_with_computed_values,
@@ -36,6 +38,8 @@ from fdl_viewer.views.common.error_dialog import ErrorDialog
 from fdl_viewer.views.dialogs.export_unit_test_dialog import ExportUnitTestDialog
 from fdl_viewer.views.sidebar.sidebar_widget import SidebarWidget
 from fdl_viewer.views.tabs.tab_container import TabContainer
+
+logger = logging.getLogger(__name__)
 
 
 class MainWindow(QMainWindow):
@@ -567,6 +571,7 @@ class MainWindow(QMainWindow):
                 source_framing=source_framing,
                 template=template,
                 new_canvas=new_canvas,
+                scale_factor=new_canvas.get_custom_attr(ATTR_SCALE_FACTOR),
                 scaled_bounding_box=scaled_bounding_box,
                 content_translation=content_translation,
             )
@@ -808,12 +813,14 @@ class MainWindow(QMainWindow):
                 source_framing=source_framing,
                 template=template,
                 new_canvas=result.canvas,
+                scale_factor=result.canvas.get_custom_attr(ATTR_SCALE_FACTOR),
                 scaled_bounding_box=result.canvas.get_custom_attr(ATTR_SCALED_BOUNDING_BOX),
                 content_translation=result.canvas.get_custom_attr(ATTR_CONTENT_TRANSLATION),
                 filter_name=filter_name,
             )
             return True
         except Exception:
+            logger.exception("Image export failed: %s", output_path)
             return False
 
     @Slot()

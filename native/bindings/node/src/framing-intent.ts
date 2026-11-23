@@ -57,16 +57,32 @@ export class FramingIntent extends HandleWrapper {
       null,
     );
     const backing = FDL._fromHandle(docH, null);
-    const handle = addon.fdl_doc_add_framing_intent(
-      docH,
-      opts.id,
-      _label,
-      opts.aspectRatio.width,
-      opts.aspectRatio.height,
-      _protection,
-    );
-    if (!handle) throw new Error("fdl_doc_add_framing_intent returned NULL");
+    let handle: object | null = null;
+    try {
+      handle = addon.fdl_doc_add_framing_intent(
+        docH,
+        opts.id,
+        _label,
+        opts.aspectRatio.width,
+        opts.aspectRatio.height,
+        _protection,
+      );
+    } catch (e) {
+      backing.close();
+      throw e;
+    }
+    if (!handle) {
+      backing.close();
+      throw new Error("fdl_doc_add_framing_intent returned NULL");
+    }
     super(handle, backing);
+    // The hidden backing document is owned by this object; close() releases it.
+    this._adoptBackingDoc(backing);
+    try {
+    } catch (e) {
+      this.close();
+      throw e;
+    }
   }
 
   /** id */

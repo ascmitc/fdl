@@ -80,37 +80,52 @@ export class FramingDecision extends HandleWrapper {
       null,
     );
     const backing = FDL._fromHandle(docH, null);
-    const ctxH = addon.fdl_doc_add_context(docH, "_", null);
-    const canvasH = addon.fdl_context_add_canvas(
-      ctxH,
-      "_",
-      "_",
-      "_",
-      1,
-      1,
-      1.0,
-    );
-    const handle = addon.fdl_canvas_add_framing_decision(
-      canvasH,
-      opts.id,
-      _label,
-      opts.framingIntentId,
-      _dimensions.width,
-      _dimensions.height,
-      _anchorPoint.x,
-      _anchorPoint.y,
-    );
-    if (!handle)
-      throw new Error("fdl_canvas_add_framing_decision returned NULL");
-    super(handle, backing);
-    if (
-      opts.protectionDimensions !== undefined &&
-      opts.protectionDimensions !== null
-    ) {
-      this.setProtection(
-        opts.protectionDimensions ?? new DimensionsFloat(0, 0),
-        opts.protectionAnchorPoint ?? new PointFloat(0, 0),
+    let handle: object | null = null;
+    try {
+      const ctxH = addon.fdl_doc_add_context(docH, "_", null);
+      const canvasH = addon.fdl_context_add_canvas(
+        ctxH,
+        "_",
+        "_",
+        "_",
+        1,
+        1,
+        1.0,
       );
+      handle = addon.fdl_canvas_add_framing_decision(
+        canvasH,
+        opts.id,
+        _label,
+        opts.framingIntentId,
+        _dimensions.width,
+        _dimensions.height,
+        _anchorPoint.x,
+        _anchorPoint.y,
+      );
+    } catch (e) {
+      backing.close();
+      throw e;
+    }
+    if (!handle) {
+      backing.close();
+      throw new Error("fdl_canvas_add_framing_decision returned NULL");
+    }
+    super(handle, backing);
+    // The hidden backing document is owned by this object; close() releases it.
+    this._adoptBackingDoc(backing);
+    try {
+      if (
+        opts.protectionDimensions !== undefined &&
+        opts.protectionDimensions !== null
+      ) {
+        this.setProtection(
+          opts.protectionDimensions ?? new DimensionsFloat(0, 0),
+          opts.protectionAnchorPoint ?? new PointFloat(0, 0),
+        );
+      }
+    } catch (e) {
+      this.close();
+      throw e;
     }
   }
 

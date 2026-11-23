@@ -1,0 +1,1595 @@
+[
+  {
+    "id": "scen1_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_1_FitDecision-into-UHD/Results/Scen1-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_1_FitDecision-into-UHD/Results/Scen1-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen1_D",
+    "sourceFdl": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_1_FitDecision-into-UHD/Results/Scen1-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_1_FitDecision-into-UHD/Results/Scen1-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen2_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_2_FitProtection-into-UHD/Results/Scen2-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_2_FitProtection-into-UHD/Results/Scen2-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen2_D",
+    "sourceFdl": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_2_FitProtection-into-UHD/Results/Scen2-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_2_FitProtection-into-UHD/Results/Scen2-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen3_D",
+    "sourceFdl": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_3_Preserving-Protection/Results/Scen3-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_3_Preserving-Protection/Results/Scen3-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 3376
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen3_E",
+    "sourceFdl": "resources/FDL/Original_Source_Files/E_8640x5760_1x_15PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/E_8640x5760_1x_15PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_3_Preserving-Protection/Results/Scen3-RESULT-E_8640x5760_1x_15PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_3_Preserving-Protection/Results/Scen3-RESULT-E_8640x5760_1x_15PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 3376
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen3_F",
+    "sourceFdl": "resources/FDL/Original_Source_Files/F_8640x5760_1x_20PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/F_8640x5760_1x_20PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_3_Preserving-Protection/Results/Scen3-RESULT-F_8640x5760_1x_20PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_3_Preserving-Protection/Results/Scen3-RESULT-F_8640x5760_1x_20PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 3376
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen4_D",
+    "sourceFdl": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_4_Preserving-Canvas/Results/Scen4-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_4_Preserving-Canvas/Results/Scen4-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen4_E",
+    "sourceFdl": "resources/FDL/Original_Source_Files/E_8640x5760_1x_15PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/E_8640x5760_1x_15PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_4_Preserving-Canvas/Results/Scen4-RESULT-E_8640x5760_1x_15PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_4_Preserving-Canvas/Results/Scen4-RESULT-E_8640x5760_1x_15PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen4_F",
+    "sourceFdl": "resources/FDL/Original_Source_Files/F_8640x5760_1x_20PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/F_8640x5760_1x_20PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_4_Preserving-Canvas/Results/Scen4-RESULT-F_8640x5760_1x_20PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_4_Preserving-Canvas/Results/Scen4-RESULT-F_8640x5760_1x_20PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen5_A",
+    "sourceFdl": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_5_Normalizing_LensSqueezeTo1/Results/Scen5-RESULT-A_4448x3096_1-3x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_5_Normalizing_LensSqueezeTo1/Results/Scen5-RESULT-A_4448x3096_1-3x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen5_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_5_Normalizing_LensSqueezeTo1/Results/Scen5-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_5_Normalizing_LensSqueezeTo1/Results/Scen5-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen5_C",
+    "sourceFdl": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_5_Normalizing_LensSqueezeTo1/Results/Scen5-RESULT-C_4448x3096_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_5_Normalizing_LensSqueezeTo1/Results/Scen5-RESULT-C_4448x3096_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen6_A",
+    "sourceFdl": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_6_Normalizing_LensSqueezeTo2/Results/Scen6-RESULT-A_4448x3096_1-3x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_6_Normalizing_LensSqueezeTo2/Results/Scen6-RESULT-A_4448x3096_1-3x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen6_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_6_Normalizing_LensSqueezeTo2/Results/Scen6-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_6_Normalizing_LensSqueezeTo2/Results/Scen6-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen6_C",
+    "sourceFdl": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_6_Normalizing_LensSqueezeTo2/Results/Scen6-RESULT-C_4448x3096_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_6_Normalizing_LensSqueezeTo2/Results/Scen6-RESULT-C_4448x3096_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen7_G",
+    "sourceFdl": "resources/FDL/Original_Source_Files/G_5040x3780_1x_TopAligned-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/G_5040x3780_1x_TopAligned-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_7_TopAlignedSource-PreserveProtection-Centered/Results/Scen7-RESULT-G_5040x3780_1x_TopAligned-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_7_TopAlignedSource-PreserveProtection-Centered/Results/Scen7-RESULT-G_5040x3780_1x_TopAligned-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen8_G",
+    "sourceFdl": "resources/FDL/Original_Source_Files/G_5040x3780_1x_TopAligned-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/G_5040x3780_1x_TopAligned-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_8_TopAlignedSource-PreserveCanvas-Centered/Results/Scen8-RESULT-G_5040x3780_1x_TopAligned-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_8_TopAlignedSource-PreserveCanvas-Centered/Results/Scen8-RESULT-G_5040x3780_1x_TopAligned-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen9_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_9_PadToMax/Results/Scen9-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_9_PadToMax/Results/Scen9-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen9_G",
+    "sourceFdl": "resources/FDL/Original_Source_Files/G_5040x3780_1x_TopAligned-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/G_5040x3780_1x_TopAligned-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_9_PadToMax/Results/Scen9-RESULT-G_5040x3780_1x_TopAligned-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_9_PadToMax/Results/Scen9-RESULT-G_5040x3780_1x_TopAligned-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen10_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_10_FitWidth_MaintainAspectRatio/Results/B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_10_FitWidth_MaintainAspectRatio/Results/B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 4000,
+      "targetHeight": 2500,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen10_J",
+    "sourceFdl": "resources/FDL/Original_Source_Files/J_4320x3456_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/J_4320x3456_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_10_FitWidth_MaintainAspectRatio/Results/J_4320x3456_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_10_FitWidth_MaintainAspectRatio/Results/J_4320x3456_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 4000,
+      "targetHeight": 2500,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen11_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_11_FitHeight_MaintainAspectRatio/Results/B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_11_FitHeight_MaintainAspectRatio/Results/B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 4000,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "height",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen11_J",
+    "sourceFdl": "resources/FDL/Original_Source_Files/J_4320x3456_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/J_4320x3456_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_11_FitHeight_MaintainAspectRatio/Results/J_4320x3456_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_11_FitHeight_MaintainAspectRatio/Results/J_4320x3456_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 4000,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "height",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen12_D",
+    "sourceFdl": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_12_FitDecision_Fill/Results/Scen12-RESULTD_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_12_FitDecision_Fill/Results/Scen12-RESULTD_8640x5760_1x_10PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 1436,
+      "targetHeight": 1080,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fill",
+      "alignmentMethodHorizontal": "right",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.dimensions",
+      "maximumDimensions": {
+        "width": 1436,
+        "height": 1080
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen13_D",
+    "sourceFdl": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_13_FitDecision_With_Protection_Fill/Results/Scen13-RESULTD_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_13_FitDecision_With_Protection_Fill/Results/Scen13-RESULTD_8640x5760_1x_10PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 1436,
+      "targetHeight": 1080,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fill",
+      "alignmentMethodHorizontal": "right",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 1436,
+        "height": 1080
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen14_D",
+    "sourceFdl": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/D_8640x5760_1x_10PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_14_Preserving-Protection-WithMaxDim-Cropping/Results/Scen14-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_14_Preserving-Protection-WithMaxDim-Cropping/Results/Scen14-RESULT-D_8640x5760_1x_10PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 4000,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen14_E",
+    "sourceFdl": "resources/FDL/Original_Source_Files/E_8640x5760_1x_15PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/E_8640x5760_1x_15PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_14_Preserving-Protection-WithMaxDim-Cropping/Results/Scen14-RESULT-E_8640x5760_1x_15PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_14_Preserving-Protection-WithMaxDim-Cropping/Results/Scen14-RESULT-E_8640x5760_1x_15PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 4000,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen14_F",
+    "sourceFdl": "resources/FDL/Original_Source_Files/F_8640x5760_1x_20PercentSafety-FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/F_8640x5760_1x_20PercentSafety-FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_14_Preserving-Protection-WithMaxDim-Cropping/Results/Scen14-RESULT-F_8640x5760_1x_20PercentSafety-FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_14_Preserving-Protection-WithMaxDim-Cropping/Results/Scen14-RESULT-F_8640x5760_1x_20PercentSafety-FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 4000,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen15_A",
+    "sourceFdl": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_15_Retention_Of_Relative_Anchors/Results/Scen15-RESULT-A_4448x3096_1-3x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_15_Retention_Of_Relative_Anchors/Results/Scen15-RESULT-A_4448x3096_1-3x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen15_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_15_Retention_Of_Relative_Anchors/Results/Scen15-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_15_Retention_Of_Relative_Anchors/Results/Scen15-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen15_C",
+    "sourceFdl": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_15_Retention_Of_Relative_Anchors/Results/Scen15-RESULT-C_4448x3096_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_15_Retention_Of_Relative_Anchors/Results/Scen15-RESULT-C_4448x3096_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen16_A",
+    "sourceFdl": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_16_Retention_Of_Relative_Anchors_pad_to_max_top_left/Results/Scen16-RESULT-A_4448x3096_1-3x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_16_Retention_Of_Relative_Anchors_pad_to_max_top_left/Results/Scen16-RESULT-A_4448x3096_1-3x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 4000,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "top",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen16_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_16_Retention_Of_Relative_Anchors_pad_to_max_top_left/Results/Scen16-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_16_Retention_Of_Relative_Anchors_pad_to_max_top_left/Results/Scen16-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 4000,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "top",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen16_C",
+    "sourceFdl": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_16_Retention_Of_Relative_Anchors_pad_to_max_top_left/Results/Scen16-RESULT-C_4448x3096_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_16_Retention_Of_Relative_Anchors_pad_to_max_top_left/Results/Scen16-RESULT-C_4448x3096_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 4000,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "top",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen17_A",
+    "sourceFdl": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_17_Retention_Of_Relative_Anchors_pad_to_max_bottom_left/Results/Scen17-RESULT-A_4448x3096_1-3x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_17_Retention_Of_Relative_Anchors_pad_to_max_bottom_left/Results/Scen17-RESULT-A_4448x3096_1-3x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 4000,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "bottom",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen17_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_17_Retention_Of_Relative_Anchors_pad_to_max_bottom_left/Results/Scen17-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_17_Retention_Of_Relative_Anchors_pad_to_max_bottom_left/Results/Scen17-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 4000,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "bottom",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen17_C",
+    "sourceFdl": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_17_Retention_Of_Relative_Anchors_pad_to_max_bottom_left/Results/Scen17-RESULT-C_4448x3096_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_17_Retention_Of_Relative_Anchors_pad_to_max_bottom_left/Results/Scen17-RESULT-C_4448x3096_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 4000,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "bottom",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen18_A",
+    "sourceFdl": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_18_Normalizing_LensSqueezeTo2_PadToMax_NonUniform_Crop/Results/Scen18-RESULT-A_4448x3096_1-3x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_18_Normalizing_LensSqueezeTo2_PadToMax_NonUniform_Crop/Results/Scen18-RESULT-A_4448x3096_1-3x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen18_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_18_Normalizing_LensSqueezeTo2_PadToMax_NonUniform_Crop/Results/Scen18-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_18_Normalizing_LensSqueezeTo2_PadToMax_NonUniform_Crop/Results/Scen18-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen18_C",
+    "sourceFdl": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_18_Normalizing_LensSqueezeTo2_PadToMax_NonUniform_Crop/Results/Scen18-RESULT-C_4448x3096_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_18_Normalizing_LensSqueezeTo2_PadToMax_NonUniform_Crop/Results/Scen18-RESULT-C_4448x3096_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 2.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen19_RED_EPIC",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_06_RED_EPIC_Dragon_6K.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_06_RED_EPIC_Dragon_6K.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_19_PadToMax_RED_EPIC_Dragon_6K/Results/Scen19-RESULT-Test_06_RED_EPIC_Dragon_6K.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_19_PadToMax_RED_EPIC_Dragon_6K/Results/Scen19-RESULT-Test_06_RED_EPIC_Dragon_6K.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen20_SONY_FX3",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_01_Sony_FX3.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_01_Sony_FX3.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_20_Preserving_Protection_WithMaxDim_Cropping_Sony_FX3/Results/Scen20-RESULT-Test_01_Sony_FX3.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_20_Preserving_Protection_WithMaxDim_Cropping_Sony_FX3/Results/Scen20-RESULT-Test_01_Sony_FX3.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 4000,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen23_BLACKMAGIC_17K_65",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_09_Blackmagic_URSA_Cine_17K_65.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_09_Blackmagic_URSA_Cine_17K_65.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_23_FitDecision_With_Protection_Fill_Blackmagic_17K_65/Results/Scen23-RESULT-Test_09_Blackmagic_URSA_Cine_17K_65.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_23_FitDecision_With_Protection_Fill_Blackmagic_17K_65/Results/Scen23-RESULT-Test_09_Blackmagic_URSA_Cine_17K_65.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 1436,
+      "targetHeight": 1080,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fill",
+      "alignmentMethodHorizontal": "right",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 1436,
+        "height": 1080
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen24_ARRI_ALEXA_65_19",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_19_ARRI_Alexa_65.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_19_ARRI_Alexa_65.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_24_Preserving_Protection_WithMaxDim_Cropping_ARRI_Alexa_65/Results/Scen24-RESULT-Test_19_ARRI_Alexa_65.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_24_Preserving_Protection_WithMaxDim_Cropping_ARRI_Alexa_65/Results/Scen24-RESULT-Test_19_ARRI_Alexa_65.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 4000,
+        "height": 2160
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen25_ARRI_ALEXA_65_20",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_20_ARRI_Alexa_65.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_20_ARRI_Alexa_65.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_25_FitDecision_With_Protection_Fill_ARRI_Alexa_65/Results/Scen25-RESULT-Test_20_ARRI_Alexa_65.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_25_FitDecision_With_Protection_Fill_ARRI_Alexa_65/Results/Scen25-RESULT-Test_20_ARRI_Alexa_65.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 1436,
+      "targetHeight": 1080,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fill",
+      "alignmentMethodHorizontal": "right",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 1436,
+        "height": 1080
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen26_BLACKMAGIC_12K_LF_CUSTOM",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_58_Blackmagic_URSA_Cine_12K_LF_CustomFraming.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_58_Blackmagic_URSA_Cine_12K_LF_CustomFraming.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_26_FitHeight_MaintainAspectRatio_Blackmagic_12K_LF_CustomFraming/Results/Scen26-RESULT-Test_58_Blackmagic_URSA_Cine_12K_LF_CustomFraming.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_26_FitHeight_MaintainAspectRatio_Blackmagic_12K_LF_CustomFraming/Results/Scen26-RESULT-Test_58_Blackmagic_URSA_Cine_12K_LF_CustomFraming.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 4000,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "height",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen27_RED_EPIC_CUSTOM",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_60_RED_EPIC_Dragon_6K_CustomFraming.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_60_RED_EPIC_Dragon_6K_CustomFraming.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_27_FitHeight_MaintainAspectRatio_RED_EPIC_CustomFraming/Results/Scen27-RESULT-Test_60_RED_EPIC_Dragon_6K_CustomFraming.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_27_FitHeight_MaintainAspectRatio_RED_EPIC_CustomFraming/Results/Scen27-RESULT-Test_60_RED_EPIC_Dragon_6K_CustomFraming.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 4000,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "height",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen28_ARRI_ALEXA_65_CUSTOM",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_62_ARRI_Alexa_65_CustomFraming.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_62_ARRI_Alexa_65_CustomFraming.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_28_FitHeight_MaintainAspectRatio_ARRI_Alexa_65_CustomFraming/Results/Scen28-RESULT-Test_62_ARRI_Alexa_65_CustomFraming.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_28_FitHeight_MaintainAspectRatio_ARRI_Alexa_65_CustomFraming/Results/Scen28-RESULT-Test_62_ARRI_Alexa_65_CustomFraming.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 4000,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "height",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "framing_decision.dimensions",
+      "maximumDimensions": {
+        "width": 6000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen29_SONY_FX3_01",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_01_Sony_FX3.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_01_Sony_FX3.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_29_FitDecision_With_Protection_Fill_Sony_FX3_01/Results/Scen29-RESULT-Test_01_Sony_FX3.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_29_FitDecision_With_Protection_Fill_Sony_FX3_01/Results/Scen29-RESULT-Test_01_Sony_FX3.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 1436,
+      "targetHeight": 1080,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fill",
+      "alignmentMethodHorizontal": "right",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 1436,
+        "height": 1080
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen30_SONY_FX3_02",
+    "sourceFdl": "resources/FDL/New_Source_Files/Test_02_Sony_FX3.fdl",
+    "sourceImage": "resources/FDL/New_Source_Files/Test_02_Sony_FX3.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_30_FitDecision_With_Protection_Fill_Sony_FX3_02/Results/Scen30-RESULT-Test_02_Sony_FX3.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_30_FitDecision_With_Protection_Fill_Sony_FX3_02/Results/Scen30-RESULT-Test_02_Sony_FX3.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 1436,
+      "targetHeight": 1080,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "fill",
+      "alignmentMethodHorizontal": "right",
+      "alignmentMethodVertical": "center",
+      "preserveFromSourceCanvas": "canvas.dimensions",
+      "maximumDimensions": {
+        "width": 1436,
+        "height": 1080
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen31_TOPLEFT_TOPCENTER",
+    "sourceFdl": "resources/FDL/EdgeCases/alignment_combos/source/combo_src_topleft_tpl_topcenter_source.fdl",
+    "sourceImage": "resources/FDL/EdgeCases/alignment_combos/source/combo_src_topleft_tpl_topcenter_source.tiff",
+    "expectedFdl": "resources/FDL/EdgeCases/alignment_combos/Results/Scen31-RESULT-combo_src_topleft_tpl_topcenter.fdl",
+    "expectedImage": "resources/FDL/EdgeCases/alignment_combos/Results/Scen31-RESULT-combo_src_topleft_tpl_topcenter.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "combo_canvas",
+    "framingId": "combo_canvas-combo_intent",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 2160,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "fit_all",
+      "alignmentMethodHorizontal": "center",
+      "alignmentMethodVertical": "top",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 4096,
+        "height": 2400
+      },
+      "padToMaximum": false,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen32_EFF_TOPLEFT_BOTTOMRIGHT",
+    "sourceFdl": "resources/FDL/EdgeCases/alignment_combos/source/eff_topleft_to_bottomright_source.fdl",
+    "sourceImage": "resources/FDL/EdgeCases/alignment_combos/source/eff_topleft_to_bottomright_source.tiff",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_32_EffTopLeft_To_BottomRight/Results/Scen32-RESULT-eff_topleft_to_bottomright.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_32_EffTopLeft_To_BottomRight/Results/Scen32-RESULT-eff_topleft_to_bottomright.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "eff_combo_canvas",
+    "framingId": "eff_combo_canvas-eff_combo_intent",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 4000,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "right",
+      "alignmentMethodVertical": "bottom",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 5000,
+        "height": 5000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen33_A",
+    "sourceFdl": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_33_PadToMax_ZeroHeightSentinel_TopLeft/Results/Scen33-RESULT-A_4448x3096_1-3x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_33_PadToMax_ZeroHeightSentinel_TopLeft/Results/Scen33-RESULT-A_4448x3096_1-3x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 0,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "top",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen33_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_33_PadToMax_ZeroHeightSentinel_TopLeft/Results/Scen33-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_33_PadToMax_ZeroHeightSentinel_TopLeft/Results/Scen33-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 0,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "top",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen33_C",
+    "sourceFdl": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_33_PadToMax_ZeroHeightSentinel_TopLeft/Results/Scen33-RESULT-C_4448x3096_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_33_PadToMax_ZeroHeightSentinel_TopLeft/Results/Scen33-RESULT-C_4448x3096_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 0,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.protection_dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "top",
+      "preserveFromSourceCanvas": "framing_decision.protection_dimensions",
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen34_A",
+    "sourceFdl": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/A_4448x3096_1-3x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft/Results/Scen34-RESULT-A_4448x3096_1-3x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft/Results/Scen34-RESULT-A_4448x3096_1-3x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 0,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "bottom",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen34_B",
+    "sourceFdl": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/B_4448x3096_1x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft/Results/Scen34-RESULT-B_4448x3096_1x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft/Results/Scen34-RESULT-B_4448x3096_1x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 0,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "bottom",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  },
+  {
+    "id": "scen34_C",
+    "sourceFdl": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.fdl",
+    "sourceImage": "resources/FDL/Original_Source_Files/C_4448x3096_2x_FramingChart.tif",
+    "expectedFdl": "resources/FDL/Scenarios_For_Implementers/Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft/Results/Scen34-RESULT-C_4448x3096_2x_FramingChart.fdl",
+    "expectedImage": "resources/FDL/Scenarios_For_Implementers/Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft/Results/Scen34-RESULT-C_4448x3096_2x_FramingChart.001001.exr",
+    "contextIndex": 0,
+    "canvasId": "1",
+    "framingId": "1-1",
+    "template": {
+      "targetWidth": 3840,
+      "targetHeight": 0,
+      "targetAnamorphicSqueeze": 1.0,
+      "fitSource": "framing_decision.dimensions",
+      "fitMethod": "width",
+      "alignmentMethodHorizontal": "left",
+      "alignmentMethodVertical": "bottom",
+      "preserveFromSourceCanvas": null,
+      "maximumDimensions": {
+        "width": 3840,
+        "height": 4000
+      },
+      "padToMaximum": true,
+      "roundEven": "even",
+      "roundMode": "round"
+    }
+  }
+]
