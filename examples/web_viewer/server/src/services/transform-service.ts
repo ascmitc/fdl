@@ -115,14 +115,21 @@ export function applyTransform(
 
   const sourceGeometry = computeGeometry(found.canvas, found.framing);
 
+  // The template owns a hidden backing document; close it once applied. The result
+  // is an independent document, so it stays valid.
   const template = createTemplate(templateParams);
-  const result = template.apply(
-    found.canvas,
-    found.framing,
-    `${canvasId}_output`,
-    `${framingId}_output`,
-    found.context.label as string,
-  );
+  let result: ReturnType<CanvasTemplate["apply"]>;
+  try {
+    result = template.apply(
+      found.canvas,
+      found.framing,
+      `${canvasId}_output`,
+      `${framingId}_output`,
+      found.context.label as string,
+    );
+  } finally {
+    template.close();
+  }
 
   // The template adds the output context to the result FDL; address it by position too.
   const outputContextIndex = result.fdl.contexts
