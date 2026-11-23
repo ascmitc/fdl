@@ -63,23 +63,27 @@ afterEach(() => {
 // -----------------------------------------------------------------------
 
 describe("Collections parity", () => {
-  it.skip("contexts negative index", () => {
-    // GAP: CollectionWrapper.at() has no negative indexing (returns null for -1)
+  // JS deliberately differs from Python here: a miss returns null rather than raising, but
+  // negative indexes count from the end, as Array.prototype.at does.
+  it("contexts negative index counts from the end", () => {
     expect(doc.contexts.at(-1)!.label).toBe("Source");
+    expect(
+      doc.contexts.at(-1)!.equals(doc.contexts.at(doc.contexts.length - 1)!),
+    ).toBe(true);
+  });
+
+  it("contexts negative index past the start returns null", () => {
+    expect(doc.contexts.at(-(doc.contexts.length + 1))).toBeNull();
   });
 
   it("contexts out-of-range index returns null (Python raises IndexError)", () => {
     expect(doc.contexts.at(99)).toBeNull();
   });
 
-  it.skip("contexts out-of-range index raises", () => {
-    // GAP: CollectionWrapper.at() returns null instead of throwing for an out-of-range index
-    expect(() => doc.contexts.at(99)).toThrow();
-  });
-
-  it.skip("contexts findById", () => {
-    // GAP: contexts collection has no findById (it throws); Python get_by_id matches the label
-    expect(doc.contexts.findById("Source")!.label).toBe("Source");
+  // Contexts have no id in the schema, so only the label finder exists (Python's get_by_id
+  // falls back to the label). The error says what to use instead.
+  it("contexts findById explains that contexts are found by label", () => {
+    expect(() => doc.contexts.findById("Source")).toThrow(/findByLabel/);
   });
 
   it("contexts findByLabel (Python get_by_id)", () => {
@@ -115,9 +119,15 @@ describe("Collections parity", () => {
 // -----------------------------------------------------------------------
 
 describe("Context clip id parity", () => {
-  it.skip("hash", () => {
-    // GAP: no hash() equivalent on Context in JS
-    expect.fail("not implemented");
+  // Python hashes by label; JS Map/Set use object identity and every collection access wraps
+  // a fresh object, so a hash would be useless. Use equals() and the label as the key.
+  it("equals() compares by content and the label works as a Map key", () => {
+    const a = doc.contexts.at(0)!;
+    const b = doc.contexts.at(0)!;
+    expect(a).not.toBe(b);
+    expect(a.equals(b)).toBe(true);
+    const byLabel = new Map([[a.label, a]]);
+    expect(byLabel.get(b.label)!.equals(b)).toBe(true);
   });
 
   it("set clipId from object", () => {
@@ -155,9 +165,14 @@ describe("Context clip id parity", () => {
 });
 
 describe("Canvas hash parity", () => {
-  it.skip("hash", () => {
-    // GAP: no hash() equivalent on Canvas in JS
-    expect.fail("not implemented");
+  it("equals() compares by content and the id works as a Map key", () => {
+    const ctx = doc.contexts.at(0)!;
+    const a = ctx.canvases.at(0)!;
+    const b = ctx.canvases.at(0)!;
+    expect(a).not.toBe(b);
+    expect(a.equals(b)).toBe(true);
+    const byId = new Map([[a.id, a]]);
+    expect(byId.get(b.id)!.equals(b)).toBe(true);
   });
 });
 
