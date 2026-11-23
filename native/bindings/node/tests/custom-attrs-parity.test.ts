@@ -13,6 +13,8 @@ import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { FDL } from "../src/fdl.js";
+import { FDLError } from "../src/errors.js";
+import { PointFloat } from "../src/types.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const FIXTURE = resolve(
@@ -75,30 +77,70 @@ describe("custom attr type rules", () => {
     expect(doc.getCustomAttr("note")).toBe("second");
   });
 
-  it.skip("type mismatch raises and preserves original", () => {
-    // GAP: caSet does not check the scalar setter return code; no error is raised on type mismatch
-
+  it("type mismatch raises and preserves original", () => {
     doc.setCustomAttr("x", 10);
     expect(() => doc.setCustomAttr("x", "nope")).toThrow(/type mismatch/);
     expect(doc.getCustomAttr("x")).toBe(10);
   });
 
-  it.skip("bool type mismatch raises and preserves original", () => {
-    // GAP: caSet does not check the scalar setter return code; no error is raised on type mismatch
-
+  it("bool type mismatch raises and preserves original", () => {
     doc.setCustomAttr("flag", true);
     expect(() => doc.setCustomAttr("flag", 42)).toThrow(/type mismatch/);
     expect(() => doc.setCustomAttr("flag", "yes")).toThrow(/type mismatch/);
     expect(doc.getCustomAttr("flag")).toBe(true);
   });
 
-  it("type mismatch leaves the original value unchanged (JS does not throw)", () => {
+  it("string attr rejects a number and keeps its value", () => {
+    doc.setCustomAttr("name", "a");
+    expect(() => doc.setCustomAttr("name", 1)).toThrow(/type mismatch/);
+    expect(doc.getCustomAttr("name")).toBe("a");
+  });
+
+  it("mismatch raises FDLError, not TypeError", () => {
     doc.setCustomAttr("x", 10);
-    doc.setCustomAttr("x", "nope");
-    expect(doc.getCustomAttr("x")).toBe(10);
-    doc.setCustomAttr("flag", true);
-    doc.setCustomAttr("flag", 42);
-    expect(doc.getCustomAttr("flag")).toBe(true);
+    let err: unknown;
+    try {
+      doc.setCustomAttr("x", "nope");
+    } catch (e) {
+      err = e;
+    }
+    expect(err).toBeInstanceOf(FDLError);
+    expect(err).not.toBeInstanceOf(TypeError);
+  });
+
+  it("int attr rejects a non-integer number", () => {
+    doc.setCustomAttr("n", 10);
+    expect(() => doc.setCustomAttr("n", 1.5)).toThrow(/type mismatch/);
+    expect(doc.getCustomAttr("n")).toBe(10);
+  });
+
+  // JS has a single number type, so a whole number written onto a float attribute is accepted
+  // (Python rejects an int on a float). A float attribute read back as 2.0 can then be rewritten.
+  it("float attr accepts an integer-valued number", () => {
+    doc.setCustomAttr("ratio", 1.5);
+    doc.setCustomAttr("ratio", 2);
+    expect(doc.getCustomAttr("ratio")).toBe(2);
+    doc.setCustomAttr("ratio", 3.25);
+    expect(doc.getCustomAttr("ratio")).toBe(3.25);
+  });
+
+  it("complex types reject a different existing type", () => {
+    doc.setCustomAttr("text", "a");
+    expect(() => doc.setCustomAttr("text", new PointFloat(1, 2))).toThrow(
+      /type mismatch/,
+    );
+    doc.setCustomAttr("pt", new PointFloat(1, 2));
+    expect(() => doc.setCustomAttr("pt", "a")).toThrow(/type mismatch/);
+  });
+
+  it("the mismatch check applies to every handle type", () => {
+    const ctx = doc.contexts.at(0)!;
+    const canvas = ctx.canvases.at(0)!;
+    for (const target of [ctx, canvas, doc.framingIntents.at(0)!]) {
+      target.setCustomAttr("k", 1);
+      expect(() => target.setCustomAttr("k", "x")).toThrow(/type mismatch/);
+      expect(target.getCustomAttr("k")).toBe(1);
+    }
   });
 
   it("unsupported value type raises TypeError", () => {
