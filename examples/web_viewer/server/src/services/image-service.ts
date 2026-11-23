@@ -135,7 +135,7 @@ export function getImageMetadata(id: string): ImageSession | null {
 export async function transformImage(
   imageId: string,
   sourceFdlJson: string,
-  contextLabel: string,
+  contextIndex: number,
   canvasId: string,
   framingId: string,
   template: TemplateParams,
@@ -157,7 +157,7 @@ export async function transformImage(
 
   const bridgeInput = JSON.stringify({
     sourceFdlJson,
-    contextLabel,
+    contextIndex,
     canvasId,
     framingId,
     template,

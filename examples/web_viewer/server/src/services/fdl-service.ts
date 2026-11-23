@@ -235,17 +235,12 @@ export function computeGeometry(
 
 export function findCanvasAndFraming(
   fdl: FDL,
-  contextLabel: string,
+  contextIndex: number,
   canvasId: string,
   framingId: string,
 ): { context: Context; canvas: Canvas; framing: FramingDecision } | null {
-  let targetContext: Context | null = null;
-  for (const ctx of fdl.contexts) {
-    if (ctx.label === contextLabel) {
-      targetContext = ctx;
-      break;
-    }
-  }
+  // Contexts are addressed by position: labels are optional and need not be unique.
+  const targetContext = fdl.contexts.at(contextIndex);
   if (!targetContext) return null;
 
   let targetCanvas: Canvas | null = null;

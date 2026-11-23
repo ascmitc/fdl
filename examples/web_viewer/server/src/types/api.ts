@@ -101,7 +101,7 @@ export interface TemplateParams {
 
 export interface TransformRequest {
   sourceSessionId: string;
-  contextLabel: string;
+  contextIndex: number;
   canvasId: string;
   framingId: string;
   template: TemplateParams;
@@ -116,6 +116,7 @@ export interface TransformResultData {
 export interface TransformResponse {
   outputSessionId: string;
   outputContextLabel: string;
+  outputContextIndex: number;
   outputCanvasId: string;
   outputFramingId: string;
   hierarchy: FdlHierarchy;
