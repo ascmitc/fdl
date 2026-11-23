@@ -10,29 +10,22 @@
 
 import { describe, it, expect } from "vitest";
 import { RoundingEven, RoundingMode } from "../src/constants.js";
-import { getAddon } from "../src/ffi/index.js";
 import { RoundStrategy } from "../src/rounding.js";
 import { DimensionsFloat } from "../src/types.js";
 
-// The WASM backend wraps JS functions; the N-API addon exports native ones.
-const isWasm = !Function.prototype.toString
-  .call(getAddon().fdl_round_dimensions)
-  .includes("[native code]");
-
 describe("rounding strategy validation", () => {
-  // GAP (WASM only): fdl_round_dimensions silently returns the input unchanged for an
-  // invalid enum string instead of raising (N-API throws, as Python raises KeyError).
-  it.skipIf(isWasm)("rejects an invalid even value when used", () => {
+  it("rejects an invalid even value when used", () => {
     const dim = new DimensionsFloat(19, 79);
     const bad = new RoundStrategy("wrong" as RoundingEven, RoundingMode.UP);
-    expect(() => dim.round(bad.even, bad.mode)).toThrow();
+    expect(() => dim.round(bad.even, bad.mode)).toThrow(TypeError);
+    expect(() => dim.round(bad.even, bad.mode)).toThrow(/RoundingEven/);
   });
 
-  // GAP (WASM only): see above, invalid mode is not rejected.
-  it.skipIf(isWasm)("rejects an invalid mode value when used", () => {
+  it("rejects an invalid mode value when used", () => {
     const dim = new DimensionsFloat(19, 79);
     const bad = new RoundStrategy(RoundingEven.EVEN, "wrong" as RoundingMode);
-    expect(() => dim.round(bad.even, bad.mode)).toThrow();
+    expect(() => dim.round(bad.even, bad.mode)).toThrow(TypeError);
+    expect(() => dim.round(bad.even, bad.mode)).toThrow(/RoundingMode/);
   });
 });
 
