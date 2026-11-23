@@ -16,7 +16,7 @@ interface AppState {
   sourceSessionId: string | null;
   outputFdl: FdlHierarchy | null;
   outputSessionId: string | null;
-  outputContextLabel: string | null;
+  outputContextIndex: number | null;
   outputCanvasId: string | null;
   outputFramingId: string | null;
 
@@ -25,7 +25,8 @@ interface AppState {
   outputGeometry: GeometryData | null;
 
   // Selection state
-  selectedContext: string;
+  // Position of the selected context in sourceFdl.contexts (labels are optional and not unique).
+  selectedContext: number | null;
   selectedCanvas: string;
   selectedFraming: string;
 
@@ -74,13 +75,13 @@ interface AppState {
     sessionId: string,
     geometry: GeometryData,
     result: TransformResultData,
-    contextLabel: string,
+    contextIndex: number,
     canvasId: string,
     framingId: string,
   ) => void;
   clearOutput: () => void;
   setSourceGeometry: (geometry: GeometryData) => void;
-  setSelectedContext: (label: string) => void;
+  setSelectedContext: (index: number) => void;
   setSelectedCanvas: (id: string) => void;
   setSelectedFraming: (id: string) => void;
   setCurrentTemplate: (template: TemplateParams) => void;
@@ -159,33 +160,29 @@ export function getContexts(state: AppState): ContextData[] {
   return state.sourceFdl?.contexts ?? EMPTY_CONTEXTS;
 }
 
+export function getSelectedContext(state: AppState): ContextData | null {
+  if (state.selectedContext === null) return null;
+  return state.sourceFdl?.contexts[state.selectedContext] ?? null;
+}
+
 export function getCanvases(state: AppState): CanvasData[] {
-  const ctx = state.sourceFdl?.contexts.find(
-    (c) => c.label === state.selectedContext,
-  );
-  return ctx?.canvases ?? EMPTY_CANVASES;
+  return getSelectedContext(state)?.canvases ?? EMPTY_CANVASES;
 }
 
 export function getFramingDecisions(state: AppState): FramingDecisionData[] {
-  const ctx = state.sourceFdl?.contexts.find(
-    (c) => c.label === state.selectedContext,
-  );
+  const ctx = getSelectedContext(state);
   const canvas = ctx?.canvases.find((c) => c.id === state.selectedCanvas);
   return canvas?.framingDecisions ?? EMPTY_FRAMINGS;
 }
 
 export function getSelectedCanvas(state: AppState): CanvasData | null {
-  const ctx = state.sourceFdl?.contexts.find(
-    (c) => c.label === state.selectedContext,
-  );
+  const ctx = getSelectedContext(state);
   return ctx?.canvases.find((c) => c.id === state.selectedCanvas) ?? null;
 }
 
 export function getOutputContext(state: AppState): ContextData | null {
-  if (!state.outputFdl || !state.outputContextLabel) return null;
-  return state.outputFdl.contexts.find(
-    (c) => c.label === state.outputContextLabel,
-  ) ?? null;
+  if (!state.outputFdl || state.outputContextIndex === null) return null;
+  return state.outputFdl.contexts[state.outputContextIndex] ?? null;
 }
 
 export function getOutputCanvas(state: AppState): CanvasData | null {
@@ -206,7 +203,7 @@ export function canTransform(state: AppState): boolean {
   return !!(
     state.sourceFdl &&
     state.sourceSessionId &&
-    state.selectedContext &&
+    state.selectedContext !== null &&
     state.selectedCanvas &&
     state.selectedFraming &&
     state.currentTemplate.targetWidth >= 0 &&
@@ -220,12 +217,12 @@ export const useAppStore = create<AppState>((set) => ({
   sourceSessionId: null,
   outputFdl: null,
   outputSessionId: null,
-  outputContextLabel: null,
+  outputContextIndex: null,
   outputCanvasId: null,
   outputFramingId: null,
   sourceGeometry: null,
   outputGeometry: null,
-  selectedContext: "",
+  selectedContext: null,
   selectedCanvas: "",
   selectedFraming: "",
   currentTemplate: { ...DEFAULT_TEMPLATE },
@@ -260,14 +257,14 @@ export const useAppStore = create<AppState>((set) => ({
     set({
       sourceFdl: fdl,
       sourceSessionId: sessionId,
-      selectedContext: fdl.contexts.length > 0 ? fdl.contexts[0].label : "",
+      selectedContext: fdl.contexts.length > 0 ? 0 : null,
       selectedCanvas:
         fdl.contexts[0]?.canvases?.[0]?.id ?? "",
       selectedFraming:
         fdl.contexts[0]?.canvases?.[0]?.framingDecisions?.[0]?.id ?? "",
       outputFdl: null,
       outputSessionId: null,
-      outputContextLabel: null,
+      outputContextIndex: null,
       outputCanvasId: null,
       outputFramingId: null,
       outputGeometry: null,
@@ -276,11 +273,11 @@ export const useAppStore = create<AppState>((set) => ({
       error: null,
     }),
 
-  setOutputFdl: (fdl, sessionId, geometry, result, contextLabel, canvasId, framingId) =>
+  setOutputFdl: (fdl, sessionId, geometry, result, contextIndex, canvasId, framingId) =>
     set({
       outputFdl: fdl,
       outputSessionId: sessionId,
-      outputContextLabel: contextLabel,
+      outputContextIndex: contextIndex,
       outputCanvasId: canvasId,
       outputFramingId: framingId,
       outputGeometry: geometry,
@@ -296,7 +293,7 @@ export const useAppStore = create<AppState>((set) => ({
     set({
       outputFdl: null,
       outputSessionId: null,
-      outputContextLabel: null,
+      outputContextIndex: null,
       outputCanvasId: null,
       outputFramingId: null,
       outputGeometry: null,
@@ -305,17 +302,17 @@ export const useAppStore = create<AppState>((set) => ({
 
   setSourceGeometry: (geometry) => set({ sourceGeometry: geometry }),
 
-  setSelectedContext: (label) =>
+  setSelectedContext: (index) =>
     set((state) => {
-      const ctx = state.sourceFdl?.contexts.find((c) => c.label === label);
+      const ctx = state.sourceFdl?.contexts[index];
       const firstCanvas = ctx?.canvases?.[0];
       return {
-        selectedContext: label,
+        selectedContext: index,
         selectedCanvas: firstCanvas?.id ?? "",
         selectedFraming: firstCanvas?.framingDecisions?.[0]?.id ?? "",
         outputFdl: null,
         outputSessionId: null,
-        outputContextLabel: null,
+        outputContextIndex: null,
         outputCanvasId: null,
         outputFramingId: null,
         outputGeometry: null,
@@ -325,16 +322,14 @@ export const useAppStore = create<AppState>((set) => ({
 
   setSelectedCanvas: (id) =>
     set((state) => {
-      const ctx = state.sourceFdl?.contexts.find(
-        (c) => c.label === state.selectedContext,
-      );
+      const ctx = getSelectedContext(state);
       const canvas = ctx?.canvases.find((c) => c.id === id);
       return {
         selectedCanvas: id,
         selectedFraming: canvas?.framingDecisions?.[0]?.id ?? "",
         outputFdl: null,
         outputSessionId: null,
-        outputContextLabel: null,
+        outputContextIndex: null,
         outputCanvasId: null,
         outputFramingId: null,
         outputGeometry: null,
@@ -347,7 +342,7 @@ export const useAppStore = create<AppState>((set) => ({
       selectedFraming: id,
       outputFdl: null,
       outputSessionId: null,
-      outputContextLabel: null,
+      outputContextIndex: null,
       outputCanvasId: null,
       outputFramingId: null,
       outputGeometry: null,
