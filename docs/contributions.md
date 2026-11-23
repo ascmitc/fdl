@@ -95,6 +95,10 @@ This mirrors the CI lint job and runs 5 checks:
 
 You can run a single step: `python scripts/lint.py --step ruff-check`
 
+clang-format is pinned to the PyPI wheel version in `scripts/lint.py` (`CLANG_FORMAT_VERSION`), the
+same one CI installs, because OS-packaged builds format differently. Install it with
+`uv tool install clang-format==19.1.7`.
+
 ### Additional verification (beyond lint)
 
 ```shell

@@ -30,6 +30,11 @@ CLANG_FORMAT_DIRS = [
 ]
 CLANG_FORMAT_EXTENSIONS = (".cpp", ".cc", ".h", ".hpp")
 
+# Must match the version installed by the CI lint job (.github/workflows/main.yml).
+# CI installs the PyPI wheel rather than the OS package, because distro builds
+# differ between Ubuntu releases and produce different formatting verdicts.
+CLANG_FORMAT_VERSION = "19.1.7"
+
 WARNING_RE = re.compile(r"^(.+?):(\d+):(\d+): (warning|error): (.+) \[(.+)\]$")
 
 OUR_CODE_PREFIXES = ("native/core/src/", "native/core/include/")
@@ -133,7 +138,13 @@ class ClangFormat(LintStep):
 
     def check_tools(self) -> str | None:
         if not shutil.which("clang-format"):
-            return "clang-format not found — install: brew install llvm"
+            return f"clang-format not found — install: uv tool install clang-format=={CLANG_FORMAT_VERSION}"
+        r = subprocess.run(["clang-format", "--version"], capture_output=True, text=True, check=False)
+        if CLANG_FORMAT_VERSION not in r.stdout:
+            return (
+                f"clang-format {CLANG_FORMAT_VERSION} required (CI version), found: {r.stdout.strip()} — "
+                f"install: uv tool install clang-format=={CLANG_FORMAT_VERSION}"
+            )
         return None
 
     def run(self, log_dir: Path) -> tuple[bool, str]:
