@@ -43,12 +43,16 @@ jobs:
       - name: Run ruff format check
         run: uvx ruff format --check .
 
-      # --- C++ linting (pinned to clang-19 to match local Homebrew) ---
-      - name: Install clang tools
+      # --- C++ linting ---
+      # clang-format comes from the PyPI wheel, pinned to match scripts/lint.py.
+      # OS packages differ between Ubuntu releases and format differently.
+      - name: Install clang-format
+        run: uv pip install "clang-format==19.1.7" --system
+
+      - name: Install clang-tidy
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format-19 clang-tidy-19
-          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 100
+          sudo apt-get install -y clang-tidy-19
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
           sudo update-alternatives --install /usr/bin/run-clang-tidy run-clang-tidy /usr/bin/run-clang-tidy-19 100
 
