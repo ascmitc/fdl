@@ -4,10 +4,10 @@ var indexSectionsWithContent =
   1: "dfstv",
   2: "f",
   3: "abcdfghmnoprstv",
-  4: "acdefhklmnoprswxy",
+  4: "acdefhklmoprswxy",
   5: "fo",
   6: "f",
-  7: "cfl"
+  7: "acfklo"
 };
 
 var indexSectionNames =
