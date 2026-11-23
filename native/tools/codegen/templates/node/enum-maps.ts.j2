@@ -13,6 +13,31 @@ import {
 {% endfor %}
 } from './constants.js';
 
+/**
+ * Facade enum -> C integer map. `require()` rejects a value that is not a member,
+ * so a bad enum string raises the same TypeError on every backend instead of
+ * reaching the addon as `undefined` (N-API threw by accident; WASM accepted it).
+ */
+export class EnumToC<E> extends Map<E, number> {
+  private readonly enumName: string;
+
+  constructor(enumName: string, entries: Iterable<readonly [E, number]>) {
+    super(entries);
+    this.enumName = enumName;
+  }
+
+  require(value: unknown): number {
+    const c = this.get(value as E);
+    if (c === undefined) {
+      const allowed = [...this.keys()].map((k) => JSON.stringify(k)).join(', ');
+      throw new TypeError(
+        `Invalid ${this.enumName} value: ${JSON.stringify(value)} (expected one of: ${allowed})`,
+      );
+    }
+    return c;
+  }
+}
+
 {% for enum in enums %}
 // {{ enum.idl_name }} ↔ {{ enum.facade_class }}
 export const {{ enum.map_name }}_FROM_C: Map<number, {{ enum.facade_class }}> = new Map([
@@ -20,8 +45,9 @@ export const {{ enum.map_name }}_FROM_C: Map<number, {{ enum.facade_class }}> = 
   [{{ val.value }}, {{ enum.facade_class }}.{{ val.member }}],
 {% endfor %}
 ]);
-export const {{ enum.map_name }}_TO_C: Map<{{ enum.facade_class }}, number> = new Map(
-  [...{{ enum.map_name }}_FROM_C].map(([k, v]) => [v, k]),
+export const {{ enum.map_name }}_TO_C: EnumToC<{{ enum.facade_class }}> = new EnumToC(
+  '{{ enum.facade_class }}',
+  [...{{ enum.map_name }}_FROM_C].map(([k, v]) => [v, k] as [{{ enum.facade_class }}, number]),
 );
 
 {% endfor %}

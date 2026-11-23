@@ -10,4 +10,5 @@ reference paths that don't exist in the source FDL.
 from fdl.testing.template_tests import (
     TestFitSourceValidation,  # noqa: F401
     TestPreserveFromSourceCanvasValidation,  # noqa: F401
+    TestScenarioErrorValidation,  # noqa: F401
 )

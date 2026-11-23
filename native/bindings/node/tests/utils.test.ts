@@ -14,9 +14,9 @@ import {
   getAnchorFromPath,
   getDimensionsFromPath,
   makeRect,
-  writeToFile,
   writeToString,
 } from "../src/utils.js";
+import { writeToFile } from "../src/utils-node.js";
 import { FDL } from "../src/fdl.js";
 import {
   Rect,
@@ -143,10 +143,10 @@ const MINIMAL_JSON = JSON.stringify(MINIMAL_FDL);
 // -----------------------------------------------------------------------
 // I/O convenience functions
 // -----------------------------------------------------------------------
-// Note: readFromString/readFromFile use createRequire for lazy loading,
+// Note: readFromString/readFromFile delegate to FDL.parse,
 // which doesn't work in vitest (runs .ts source, no compiled .js files).
 // Those functions are tested via the compiled package. Here we test
-// writeToString and writeToFile which don't use the lazy loader.
+// writeToString and writeToFile, which don't require parsing.
 
 describe("writeToString", () => {
   it("serializes FDL to JSON string", () => {

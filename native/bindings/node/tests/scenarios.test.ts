@@ -402,16 +402,26 @@ interface ScenarioConfig {
   framingIntentId?: string;
   contextCreator?: string;
   templateLabel?: string;
+  /** Error scenarios (21-22): no variants; applying the template must throw. */
+  isErrorTest?: boolean;
+  /** Error tests: source FDL path relative to FDL_ROOT. */
+  errorSourceFdl?: string;
+  errorSourceContextLabel?: string;
+  errorSourceCanvasLabel?: string;
+  /** Error tests: substring the thrown error message must contain. */
+  errorMatch?: string;
 }
+
+const ERROR_DEFAULTS = {
+  errorSourceFdl: "New_Source_Files/Test_34_Sony_FX3_Priority.fdl",
+  errorSourceContextLabel: "Sony FX3",
+  errorSourceCanvasLabel: "4K",
+};
 
 // Deterministic UUID matching Python tests
 const DETERMINISTIC_UUID = "12345678123456781234567812345678".slice(0, 30);
 
-function getScenarioPaths(
-  config: ScenarioConfig,
-  variant: SourceVariant,
-): { template: string; sourceFdl: string; expectedFdl: string } {
-  // Template path
+function getTemplatePath(config: ScenarioConfig): string {
   let templateDir: string;
   if (config.customTemplatePath) {
     templateDir = resolve(FDL_ROOT, config.customTemplatePath);
@@ -420,7 +430,13 @@ function getScenarioPaths(
   } else {
     templateDir = resolve(SCENARIOS_DIR, config.dirName);
   }
+  return resolve(templateDir, config.templateFilename);
+}
 
+function getScenarioPaths(
+  config: ScenarioConfig,
+  variant: SourceVariant,
+): { template: string; sourceFdl: string; expectedFdl: string } {
   // Source path
   let sourceDir: string;
   if (config.customSourceDir) {
@@ -443,7 +459,7 @@ function getScenarioPaths(
   );
 
   return {
-    template: resolve(templateDir, config.templateFilename),
+    template: getTemplatePath(config),
     sourceFdl: resolve(sourceDir, `${variant.fdlBasename}.fdl`),
     expectedFdl: resolve(resultsDir, resultFdlName),
   };
@@ -922,7 +938,26 @@ const SCENARIOS: ScenarioConfig[] = [
       },
     ],
   },
-  // Scenarios 21-22 are error tests — handled separately
+  {
+    number: 21,
+    name: "Error_FitSource_ProtectionDimensions_Missing",
+    dirName: "Scen_2_FitProtection-into-UHD",
+    templateFilename: "Scen_2_FitProtection-into-UHD-CANVAS-TEMPLATE.fdl",
+    resultPattern: "",
+    variants: [],
+    isErrorTest: true,
+    errorMatch: "protection_dimensions",
+  },
+  {
+    number: 22,
+    name: "Error_PreserveFromSourceCanvas_ProtectionDimensions_Missing",
+    dirName: "Scen_3_Preserving-Protection",
+    templateFilename: "Scen_3_Preserving-Protection-CANVAS-TEMPLATE.fdl",
+    resultPattern: "",
+    variants: [],
+    isErrorTest: true,
+    errorMatch: "protection_dimensions",
+  },
   {
     number: 23,
     name: "FitDecision_With_Protection_Fill_Blackmagic_17K_65",
@@ -1114,6 +1149,62 @@ const SCENARIOS: ScenarioConfig[] = [
       },
     ],
   },
+  {
+    number: 33,
+    name: "PadToMax_ZeroHeightSentinel_TopLeft",
+    dirName: "Scen_33_PadToMax_ZeroHeightSentinel_TopLeft",
+    templateFilename: "Scen_33_PadToMax_ZeroHeightSentinel_TopLeft.fdl",
+    resultPattern: "Scen33-RESULT-{variant}.fdl",
+    customSourceDir: "Original_Source_Files",
+    variants: [
+      {
+        letter: "A",
+        fdlBasename: "A_4448x3096_1-3x_FramingChart",
+        contextLabel: "ARRI ALEXA Mini LF",
+        canvasLabel: "4.5K LF Open Gate",
+      },
+      {
+        letter: "B",
+        fdlBasename: "B_4448x3096_1x_FramingChart",
+        contextLabel: "ARRI ALEXA Mini LF",
+        canvasLabel: "4.5K LF Open Gate",
+      },
+      {
+        letter: "C",
+        fdlBasename: "C_4448x3096_2x_FramingChart",
+        contextLabel: "ARRI ALEXA Mini LF",
+        canvasLabel: "4.5K LF Open Gate",
+      },
+    ],
+  },
+  {
+    number: 34,
+    name: "PadToMax_ZeroHeightSentinel_BottomLeft",
+    dirName: "Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft",
+    templateFilename: "Scen_34_PadToMax_ZeroHeightSentinel_BottomLeft.fdl",
+    resultPattern: "Scen34-RESULT-{variant}.fdl",
+    customSourceDir: "Original_Source_Files",
+    variants: [
+      {
+        letter: "A",
+        fdlBasename: "A_4448x3096_1-3x_FramingChart",
+        contextLabel: "ARRI ALEXA Mini LF",
+        canvasLabel: "4.5K LF Open Gate",
+      },
+      {
+        letter: "B",
+        fdlBasename: "B_4448x3096_1x_FramingChart",
+        contextLabel: "ARRI ALEXA Mini LF",
+        canvasLabel: "4.5K LF Open Gate",
+      },
+      {
+        letter: "C",
+        fdlBasename: "C_4448x3096_2x_FramingChart",
+        contextLabel: "ARRI ALEXA Mini LF",
+        canvasLabel: "4.5K LF Open Gate",
+      },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -1268,6 +1359,67 @@ describe("Scenario template tests (parity with Python)", () => {
       expectedFdl.close();
       sourceFdl.close();
       templateFdl.close();
+    },
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Error scenarios (config-driven: every scenario flagged isErrorTest)
+// ---------------------------------------------------------------------------
+
+describe("Scenario error validation (parity with Python)", () => {
+  const errorConfigs = SCENARIOS.filter((c) => c.isErrorTest);
+
+  it.each(errorConfigs.map((c) => ({ config: c, number: c.number })))(
+    "scen$number template apply throws",
+    ({ config }) => {
+      const templateLabel = config.templateLabel ?? "VFX Pull - Custom";
+      const framingIntentId = config.framingIntentId ?? "1";
+      const contextCreator = config.contextCreator ?? "ASC FDL Tools";
+      const contextLabel =
+        config.errorSourceContextLabel ??
+        ERROR_DEFAULTS.errorSourceContextLabel;
+      const canvasLabel =
+        config.errorSourceCanvasLabel ?? ERROR_DEFAULTS.errorSourceCanvasLabel;
+      const sourcePath = resolve(
+        FDL_ROOT,
+        config.errorSourceFdl ?? ERROR_DEFAULTS.errorSourceFdl,
+      );
+
+      const templatePath = getTemplatePath(config);
+      expect(
+        existsSync(templatePath),
+        `Template not found: ${templatePath}`,
+      ).toBe(true);
+      expect(
+        existsSync(sourcePath),
+        `Source FDL not found: ${sourcePath}`,
+      ).toBe(true);
+
+      const templateFdl = FDL.parse(readFileSync(templatePath, "utf-8"));
+      templateFdl.validate();
+      const template = findTemplate(templateFdl, templateLabel);
+      expect(template, `Template '${templateLabel}' not found`).not.toBeNull();
+
+      const sourceFdl = FDL.parse(readFileSync(sourcePath, "utf-8"));
+      const context = findContext(sourceFdl, contextLabel);
+      expect(context, `Context '${contextLabel}' not found`).not.toBeNull();
+      const canvas = findCanvas(context!, canvasLabel);
+      expect(canvas, `Canvas '${canvasLabel}' not found`).not.toBeNull();
+      const fd = findFD(canvas!, framingIntentId);
+      expect(fd, `FD '${framingIntentId}' not found`).not.toBeNull();
+      expect(fd!.protectionDimensions ?? null).toBeNull();
+
+      expect(() =>
+        template!.apply(
+          canvas!,
+          fd!,
+          DETERMINISTIC_UUID,
+          "",
+          contextLabel,
+          contextCreator,
+        ),
+      ).toThrow(config.errorMatch ?? "");
     },
   );
 });

@@ -6,6 +6,7 @@ import {
   getFdlJson,
   computeGeometry,
   findCanvasAndFraming,
+  parseContextIndex,
 } from "../services/fdl-service.js";
 import { applyTransform } from "../services/transform-service.js";
 import type { TransformRequest } from "../types/api.js";
@@ -76,8 +77,8 @@ router.get("/:id/geometry", (req, res) => {
     framing: string;
   };
 
-  const contextIndex = Number(context);
-  if (context === undefined || !Number.isInteger(contextIndex) || !canvas) {
+  const contextIndex = parseContextIndex(context);
+  if (contextIndex === null || !canvas) {
     res
       .status(400)
       .json({ error: "context (index) and canvas query params required" });

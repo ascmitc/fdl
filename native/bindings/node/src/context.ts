@@ -121,7 +121,7 @@ export class Context extends HandleWrapper {
     const err = this._addon.fdl_context_set_clip_id_json(
       this._handle,
       json,
-      json.length,
+      new TextEncoder().encode(json).length,
     );
     if (err) throw new Error(err as string);
   }

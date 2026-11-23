@@ -240,11 +240,15 @@ export class CollectionWrapper<T extends HandleWrapper> {
     return this._addon[this._countFn](this._parentHandle) as number;
   }
 
-  /** Get item at index (0-based). Returns null if out of range. */
+  /**
+   * Get the item at `index` (0-based). A negative index counts from the end, as with
+   * `Array.prototype.at`. Returns null when out of range (Python raises IndexError).
+   */
   at(index: number): T | null {
     const n = this.length;
-    if (index < 0 || index >= n) return null;
-    const h = this._addon[this._atFn](this._parentHandle, index);
+    const i = index < 0 ? index + n : index;
+    if (i < 0 || i >= n) return null;
+    const h = this._addon[this._atFn](this._parentHandle, i);
     if (!h) return null;
     return this._wrapFn(h, this._docRef);
   }
@@ -253,7 +257,12 @@ export class CollectionWrapper<T extends HandleWrapper> {
   findById(id: string): T | null {
     this._checkDoc();
     if (!this._findByIdFn) {
-      throw new Error("findById not supported on this collection");
+      throw new Error(
+        "findById is not supported on this collection" +
+          (this._findByLabelFn
+            ? " (its items have no id; use findByLabel())"
+            : ""),
+      );
     }
     const h = this._addon[this._findByIdFn](this._parentHandle, id);
     if (!h) return null;

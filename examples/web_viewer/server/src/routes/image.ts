@@ -6,7 +6,7 @@ import {
   getImageMetadata,
   transformImage,
 } from "../services/image-service.js";
-import { getFdlJson } from "../services/fdl-service.js";
+import { getFdlJson, parseContextIndex } from "../services/fdl-service.js";
 
 const router = Router();
 
@@ -39,8 +39,12 @@ router.get("/:id", (req, res) => {
 // Transform image with FDL parameters via Python OIIO bridge
 router.post("/transform", async (req, res) => {
   try {
-    const { imageId, sourceSessionId, contextIndex, canvasId, framingId, template } =
-      req.body;
+    const { imageId, sourceSessionId, canvasId, framingId, template } = req.body;
+    const contextIndex = parseContextIndex(req.body.contextIndex);
+    if (contextIndex === null) {
+      res.status(400).json({ error: "contextIndex must be a non-negative integer" });
+      return;
+    }
     const fdlJson = getFdlJson(sourceSessionId);
     if (!fdlJson) {
       res.status(404).json({ error: "Source FDL session not found" });

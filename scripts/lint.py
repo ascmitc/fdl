@@ -27,6 +27,7 @@ CLANG_FORMAT_DIRS = [
     "native/core/tests",
     "native/bindings/cpp/",
     "native/bindings/node/src/addon/",
+    "native/bindings/wasm/src/",
 ]
 CLANG_FORMAT_EXTENSIONS = (".cpp", ".cc", ".h", ".hpp")
 

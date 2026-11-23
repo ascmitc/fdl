@@ -84,7 +84,12 @@ This repository contains the ASC FDL reference implementation: a native C librar
 │   │   │   ├── fdl_ffi/             #   Low-level ctypes FFI loader and function declarations
 │   │   │   └── tests/              #   Python unit tests (351 tests)
 │   │   ├── cpp/fdl/                 # fdl.hpp — C++ RAII header-only wrapper
-│   │   └── node/                    # Node.js bindings (placeholder)
+│   │   ├── node/                    # @asc-mitc/fdl — Node.js (N-API) + WASM (browser) bindings
+│   │   │   ├── src/                 #   TypeScript facade (shared across N-API and WASM)
+│   │   │   ├── src/addon/           #   N-API C++ wrapper (generated)
+│   │   │   ├── src/wasm/            #   WASM entry point (`@asc-mitc/fdl/wasm`)
+│   │   │   └── tests/              #   vitest suites (run against both backends)
+│   │   └── wasm/                    # Emscripten Embind bindings (generated)
 │   ├── api/                         # OpenAPI spec (fdl_api.yaml)
 │   └── tools/                       # Code generation and test vector extraction scripts
 │
@@ -120,6 +125,20 @@ This repository contains the ASC FDL reference implementation: a native C librar
 **`asc-fdl-frameline-generator`** (`packages/fdl_frameline_generator/`) — Generates frameline overlay images from FDL files. Supports EXR, PNG, TIFF (via OIIO), and SVG vector output. Includes a `fdl-frameline` CLI tool.
 
 **`asc-fdl-viewer`** (`packages/fdl_viewer/`) — A PySide6 desktop application for interactively viewing, transforming, and exporting FDL files. Supports source/output scene visualization with HUD overlays, template-based transforms, and image export. Built with an MVC architecture.
+
+**`@asc-mitc/fdl`** (`native/bindings/node/`) — Node.js and browser bindings published to npm. Ships two entry points from a single package:
+
+- **Node.js / N-API** — `import { FDL } from '@asc-mitc/fdl'`. Loads a platform-native `.node` addon for full-speed access from server-side JavaScript.
+- **Browser / WASM** — `import { initialize, FDL } from '@asc-mitc/fdl/wasm'`. Loads an Emscripten-compiled WebAssembly module so the full FDL library runs in any modern browser. Requires `await initialize()` before any class is instantiated. Both entry points share the identical TypeScript facade, so application code is the same once initialized.
+
+```ts
+// Browser / universal:
+import { initialize, FDL } from '@asc-mitc/fdl/wasm';
+await initialize();
+const doc = FDL.parse(jsonString);
+console.log(doc.uuid);
+doc.close();
+```
 
 -----------------------------------------
 

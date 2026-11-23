@@ -190,7 +190,7 @@ def _build_addon_args(
         elif p.param_type in enum_to_c_maps:
             map_name = enum_to_c_maps[p.param_type]
             needed_enum_maps.add(map_name)
-            addon_args.append(f"{map_name}.get({camel_name})!")
+            addon_args.append(f"{map_name}.require({camel_name})")
         elif p.param_type == "double" and p.nullable:
             addon_args.append(f"{camel_name} ?? 0")
             addon_args.append(f"{camel_name} !== null ? 1 : 0")
@@ -511,7 +511,7 @@ def build_node_converter_context(vt: ValueType, idl: IDL) -> dict:
             default_member = defaults_override.get(f.name, "")
             default_expr = f"{info['facade_class']}.{default_member}" if default_member else "null"
             from_c_expr = f"{from_c_name}.get(raw.{f.name}) ?? {default_expr}"
-            to_c_expr = f"{to_c_name}.get(val.{f.name})!"
+            to_c_expr = f"{to_c_name}.require(val.{f.name})"
             enum_from_c_imports.append(from_c_name)
             enum_to_c_imports.append(to_c_name)
             enum_class_imports.add(info["facade_class"])
@@ -582,7 +582,7 @@ def build_node_free_function_context(ff: FreeFunctionDef, idl: IDL) -> dict:
         elif p.param_type in enum_to_c_maps:
             map_name = enum_to_c_maps[p.param_type]
             needed_enum_maps.add(map_name)
-            addon_args.append(f"{map_name}.get({camel_name})!")
+            addon_args.append(f"{map_name}.require({camel_name})")
         else:
             addon_args.append(camel_name)
 
@@ -764,7 +764,7 @@ def _build_node_builder_context(
             addon_args.append(ts_name)
         elif p.type_key == "bytes":
             addon_args.append(ts_name)
-            addon_args.append(f"{ts_name}.length")
+            addon_args.append(f"new TextEncoder().encode({ts_name}).length")  # UTF-8 byte length
         elif p.type_key in ("double", "int", "int64_t", "uint32_t"):
             addon_args.append(ts_name)
         elif p.expand and p.type_key in expand_map:
@@ -775,7 +775,7 @@ def _build_node_builder_context(
             cap = conv_camel[0].upper() + conv_camel[1:]
             addon_args.append(f"to{cap}({ts_name})")
         elif p.type_key in type_key_to_to_c:
-            addon_args.append(f"{type_key_to_to_c[p.type_key]}.get({ts_name})!")
+            addon_args.append(f"{type_key_to_to_c[p.type_key]}.require({ts_name})")
         else:
             addon_args.append(ts_name)
 
@@ -872,11 +872,11 @@ def _build_node_lifecycle_context(
             addon_args.append(f"{ts_name}._handle")
         elif p.type_key == "bytes":
             addon_args.append(f"_{ts_name}")
-            addon_args.append(f"_{ts_name}.length")
+            addon_args.append(f"new TextEncoder().encode(_{ts_name}).length")  # UTF-8 byte length
         elif p.type_key == "string" or p.type_key in ("int", "int64_t", "uint32_t", "double"):
             addon_args.append(ts_name)
         elif p.type_key in type_key_to_to_c:
-            addon_args.append(f"{type_key_to_to_c[p.type_key]}.get({ts_name})!")
+            addon_args.append(f"{type_key_to_to_c[p.type_key]}.require({ts_name})")
         elif p.type_key in converter_lookup:
             conv_camel = snake_to_camel(converter_lookup[p.type_key])
             cap = conv_camel[0].upper() + conv_camel[1:]

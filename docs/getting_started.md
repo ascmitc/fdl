@@ -739,3 +739,27 @@ custom attributes on the output canvas. Use the named constants to access them:
     auto ct = output_canvas.get_custom_attr_point_f64(fdl::ATTR_CONTENT_TRANSLATION);
     auto bb = output_canvas.get_custom_attr_dims_f64(fdl::ATTR_SCALED_BOUNDING_BOX);
     ```
+
+## TypeScript and Python Differences
+
+The TypeScript/JavaScript bindings (Node.js N-API and WebAssembly) wrap the same C core as the Python
+package and are tested against the same scenarios. Where the two languages' idioms differ, the behaviour
+below is intentional. N-API and WebAssembly behave identically.
+
+| Topic | Python | TypeScript |
+|---|---|---|
+| Item not found | `IndexError` for an index; `None` from the find helpers | `null` from `at()`, `findById()` and `findByLabel()` |
+| Negative index | `contexts[-1]` is the last item | `contexts.at(-1)` is the last item (as `Array.prototype.at`); past the start is `null` |
+| Finding contexts | `get_by_id()` falls back to the label | Contexts have no id: use `findByLabel()` (`findById()` throws and says so) |
+| Hashing | `Context` and `Canvas` hash by label or id | No hash: use `equals()`, and the label or id as a `Map` key |
+| Custom attribute type mismatch | `ValueError` | `FDLError` with the same message |
+| Invalid enum value | `KeyError` | `TypeError` naming the enum and its allowed values |
+| Custom attribute numbers | An `int` cannot overwrite a `float` | JS has one number type, so a whole number written onto a float attribute stays a float. An int attribute still rejects a non-integer |
+| Releasing objects | Freed when garbage collected | Call `close()` (or use `using`) on a document, and on an object you built standalone such as `new CanvasTemplate({...})`, which owns a hidden document |
+| Reading files | `read_from_file()` | `readFromFile()` from the Node entry point; the browser/WebAssembly entry has no file system, so pass a string to `FDL.parse()` |
+
+```typescript
+const last = doc.contexts.at(-1);          // last context, or null when empty
+const ctx = doc.contexts.findByLabel("Main");
+using template = new CanvasTemplate({ id: "HD", targetDimensions: new DimensionsInt(1920, 1080) });
+```

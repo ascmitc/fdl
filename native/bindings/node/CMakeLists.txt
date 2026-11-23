@@ -10,11 +10,18 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # cmake-js provides these variables
 include_directories(${CMAKE_JS_INC})
 
-# Find libfdl_core — check env var, then in-tree build dir
+# Find libfdl_core — check env var, then in-tree build dir.
+# On Windows/MSVC (multi-config generators) the import lib fdl_core.lib lands in a
+# per-config subdir (Release/Debug), so include those alongside the base dir.
 if(DEFINED ENV{FDL_CORE_LIB_DIR})
-  set(_SEARCH_PATHS $ENV{FDL_CORE_LIB_DIR})
+  set(_SEARCH_PATHS
+    $ENV{FDL_CORE_LIB_DIR}
+    $ENV{FDL_CORE_LIB_DIR}/Release
+    $ENV{FDL_CORE_LIB_DIR}/Debug)
 else()
-  set(_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/../../core/build")
+  set(_SEARCH_PATHS
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../core/build"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../core/build/Release")
 endif()
 
 find_library(FDL_CORE_LIB

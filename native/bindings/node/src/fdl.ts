@@ -240,10 +240,10 @@ export class FDL extends OwnedHandle {
       targetDimensions.width,
       targetDimensions.height,
       targetAnamorphicSqueeze,
-      GEOMETRY_PATH_TO_C.get(fitSource)!,
-      FIT_METHOD_TO_C.get(fitMethod)!,
-      H_ALIGN_TO_C.get(alignmentMethodHorizontal)!,
-      V_ALIGN_TO_C.get(alignmentMethodVertical)!,
+      GEOMETRY_PATH_TO_C.require(fitSource),
+      FIT_METHOD_TO_C.require(fitMethod),
+      H_ALIGN_TO_C.require(alignmentMethodHorizontal),
+      V_ALIGN_TO_C.require(alignmentMethodVertical),
       toRoundStrategy(round),
     );
     if (!handle) throw new Error("fdl_doc_add_canvas_template returned NULL");
@@ -255,7 +255,10 @@ export class FDL extends OwnedHandle {
     const addon = getAddon();
     const _jsonBytes =
       typeof jsonBytes === "string" ? jsonBytes : jsonBytes.toString("utf-8");
-    const result = addon.fdl_doc_parse_json(_jsonBytes, _jsonBytes.length);
+    const result = addon.fdl_doc_parse_json(
+      _jsonBytes,
+      new TextEncoder().encode(_jsonBytes).length,
+    );
     if (result.error) {
       const msg = result.error as string;
       throw new FDLValidationError(msg);

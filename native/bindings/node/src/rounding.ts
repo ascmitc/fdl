@@ -83,8 +83,8 @@ export function fdlRound(
   const addon = getAddon();
   return addon.fdl_round(
     value,
-    ROUNDING_EVEN_TO_C.get(even)!,
-    ROUNDING_MODE_TO_C.get(mode)!,
+    ROUNDING_EVEN_TO_C.require(even),
+    ROUNDING_MODE_TO_C.require(mode),
   ) as number;
 }
 
@@ -98,6 +98,6 @@ export function calculateScaleFactor(
   return addon.fdl_calculate_scale_factor(
     { width: fitNorm.width, height: fitNorm.height },
     { width: targetNorm.width, height: targetNorm.height },
-    FIT_METHOD_TO_C.get(fitMethod)!,
+    FIT_METHOD_TO_C.require(fitMethod),
   ) as number;
 }

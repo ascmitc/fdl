@@ -71,7 +71,20 @@ Napi::Value Wrap_fdl_apply_canvas_template(const Napi::CallbackInfo& info) {
         new_fd_name_str.c_str(),
         (source_context_label_is_null ? nullptr : source_context_label_str.c_str()),
         (context_creator_is_null ? nullptr : context_creator_str.c_str()));
-    return TemplateResultToObject(env, _r);
+    auto _out = TemplateResultToObject(env, _r);
+    if (_r.context_label) {
+        fdl_free(const_cast<char*>(_r.context_label));
+    }
+    if (_r.canvas_id) {
+        fdl_free(const_cast<char*>(_r.canvas_id));
+    }
+    if (_r.framing_decision_id) {
+        fdl_free(const_cast<char*>(_r.framing_decision_id));
+    }
+    if (_r.error) {
+        fdl_free(const_cast<char*>(_r.error));
+    }
+    return _out;
 }
 
 // Calculate scale factor based on fit method.
@@ -652,7 +665,11 @@ Napi::Value Wrap_fdl_context_resolve_canvas_for_dimensions(const Napi::CallbackI
     auto* canvas = static_cast<fdl_canvas_t*>(UnwrapHandle(info[2]));
     auto* framing = static_cast<fdl_framing_decision_t*>(UnwrapHandle(info[3]));
     fdl_resolve_canvas_result_t _r = fdl_context_resolve_canvas_for_dimensions(ctx, input_dims, canvas, framing);
-    return ResolveCanvasResultToObject(env, _r);
+    auto _out = ResolveCanvasResultToObject(env, _r);
+    if (_r.error) {
+        fdl_free(const_cast<char*>(_r.error));
+    }
+    return _out;
 }
 
 // Set clip_id on a context from a JSON string.
@@ -1037,7 +1054,11 @@ Napi::Value Wrap_fdl_doc_parse_json(const Napi::CallbackInfo& info) {
     std::string json_str_str = info[0].As<Napi::String>().Utf8Value();
     size_t json_len = static_cast<size_t>(info[1].As<Napi::Number>().Int64Value());
     fdl_parse_result_t _r = fdl_doc_parse_json(json_str_str.c_str(), json_len);
-    return ParseResultToObject(env, _r);
+    auto _out = ParseResultToObject(env, _r);
+    if (_r.error) {
+        fdl_free(const_cast<char*>(_r.error));
+    }
+    return _out;
 }
 
 // Set the default_framing_intent on a document.
@@ -1619,12 +1640,6 @@ Napi::Value Wrap_fdl_round_point(const Napi::CallbackInfo& info) {
     fdl_rounding_mode_t mode = static_cast<fdl_rounding_mode_t>(info[2].As<Napi::Number>().Uint32Value());
     fdl_point_f64_t _r = fdl_round_point(point, even, mode);
     return PointF64ToObject(env, _r);
-}
-
-// Free a template result (doc + all allocated strings).
-void Wrap_fdl_template_result_free(const Napi::CallbackInfo& info) {
-    fdl_template_result_t result = ObjectToTemplateResult(info[0].As<Napi::Object>());
-    fdl_template_result_free(&result);
 }
 
 // Get a specific error message by index.
@@ -3509,7 +3524,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("fdl_round", Napi::Function::New(env, Wrap_fdl_round));
     exports.Set("fdl_round_dimensions", Napi::Function::New(env, Wrap_fdl_round_dimensions));
     exports.Set("fdl_round_point", Napi::Function::New(env, Wrap_fdl_round_point));
-    exports.Set("fdl_template_result_free", Napi::Function::New(env, Wrap_fdl_template_result_free));
     exports.Set("fdl_validation_result_error_at", Napi::Function::New(env, Wrap_fdl_validation_result_error_at));
     exports.Set("fdl_validation_result_error_count", Napi::Function::New(env, Wrap_fdl_validation_result_error_count));
     exports.Set("fdl_validation_result_free", Napi::Function::New(env, Wrap_fdl_validation_result_free));

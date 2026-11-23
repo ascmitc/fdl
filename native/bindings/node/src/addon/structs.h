@@ -14,14 +14,6 @@
 // fdl_abi_version_t
 // -----------------------------------------------------------------------
 
-inline fdl_abi_version_t ObjectToAbiVersion(const Napi::Object& obj) {
-    fdl_abi_version_t result;
-    result.major = obj.Get("major").As<Napi::Number>().Uint32Value();
-    result.minor = obj.Get("minor").As<Napi::Number>().Uint32Value();
-    result.patch = obj.Get("patch").As<Napi::Number>().Uint32Value();
-    return result;
-}
-
 inline Napi::Object AbiVersionToObject(Napi::Env env, const fdl_abi_version_t& d) {
     auto obj = Napi::Object::New(env);
     obj.Set("major", Napi::Number::New(env, d.major));
@@ -88,15 +80,6 @@ inline Napi::Object PointF64ToObject(Napi::Env env, const fdl_point_f64_t& d) {
 // fdl_rect_t
 // -----------------------------------------------------------------------
 
-inline fdl_rect_t ObjectToRect(const Napi::Object& obj) {
-    fdl_rect_t result;
-    result.x = obj.Get("x").As<Napi::Number>().DoubleValue();
-    result.y = obj.Get("y").As<Napi::Number>().DoubleValue();
-    result.width = obj.Get("width").As<Napi::Number>().DoubleValue();
-    result.height = obj.Get("height").As<Napi::Number>().DoubleValue();
-    return result;
-}
-
 inline Napi::Object RectToObject(Napi::Env env, const fdl_rect_t& d) {
     auto obj = Napi::Object::New(env);
     obj.Set("x", Napi::Number::New(env, d.x));
@@ -128,17 +111,6 @@ inline Napi::Object RoundStrategyToObject(Napi::Env env, const fdl_round_strateg
 // fdl_parse_result_t
 // -----------------------------------------------------------------------
 
-inline fdl_parse_result_t ObjectToParseResult(const Napi::Object& obj) {
-    fdl_parse_result_t result;
-    result.doc = static_cast<fdl_doc_t*>(obj.Get("doc").As<Napi::External<void>>().Data());
-    {
-        std::string _error = obj.Get("error").As<Napi::String>().Utf8Value();
-        // Note: string is copied into the struct; caller must manage lifetime.
-        result.error = _error.c_str();
-    }
-    return result;
-}
-
 inline Napi::Object ParseResultToObject(Napi::Env env, const fdl_parse_result_t& d) {
     auto obj = Napi::Object::New(env);
     obj.Set(
@@ -150,32 +122,6 @@ inline Napi::Object ParseResultToObject(Napi::Env env, const fdl_parse_result_t&
 // -----------------------------------------------------------------------
 // fdl_template_result_t
 // -----------------------------------------------------------------------
-
-inline fdl_template_result_t ObjectToTemplateResult(const Napi::Object& obj) {
-    fdl_template_result_t result;
-    result.output_fdl = static_cast<fdl_doc_t*>(obj.Get("output_fdl").As<Napi::External<void>>().Data());
-    {
-        std::string _context_label = obj.Get("context_label").As<Napi::String>().Utf8Value();
-        // Note: string is copied into the struct; caller must manage lifetime.
-        result.context_label = _context_label.c_str();
-    }
-    {
-        std::string _canvas_id = obj.Get("canvas_id").As<Napi::String>().Utf8Value();
-        // Note: string is copied into the struct; caller must manage lifetime.
-        result.canvas_id = _canvas_id.c_str();
-    }
-    {
-        std::string _framing_decision_id = obj.Get("framing_decision_id").As<Napi::String>().Utf8Value();
-        // Note: string is copied into the struct; caller must manage lifetime.
-        result.framing_decision_id = _framing_decision_id.c_str();
-    }
-    {
-        std::string _error = obj.Get("error").As<Napi::String>().Utf8Value();
-        // Note: string is copied into the struct; caller must manage lifetime.
-        result.error = _error.c_str();
-    }
-    return result;
-}
 
 inline Napi::Object TemplateResultToObject(Napi::Env env, const fdl_template_result_t& d) {
     auto obj = Napi::Object::New(env);
@@ -193,20 +139,6 @@ inline Napi::Object TemplateResultToObject(Napi::Env env, const fdl_template_res
 // -----------------------------------------------------------------------
 // fdl_resolve_canvas_result_t
 // -----------------------------------------------------------------------
-
-inline fdl_resolve_canvas_result_t ObjectToResolveCanvasResult(const Napi::Object& obj) {
-    fdl_resolve_canvas_result_t result;
-    result.canvas = static_cast<fdl_canvas_t*>(obj.Get("canvas").As<Napi::External<void>>().Data());
-    result.framing_decision =
-        static_cast<fdl_framing_decision_t*>(obj.Get("framing_decision").As<Napi::External<void>>().Data());
-    result.was_resolved = obj.Get("was_resolved").As<Napi::Number>().Int32Value();
-    {
-        std::string _error = obj.Get("error").As<Napi::String>().Utf8Value();
-        // Note: string is copied into the struct; caller must manage lifetime.
-        result.error = _error.c_str();
-    }
-    return result;
-}
 
 inline Napi::Object ResolveCanvasResultToObject(Napi::Env env, const fdl_resolve_canvas_result_t& d) {
     auto obj = Napi::Object::New(env);
@@ -254,16 +186,6 @@ inline Napi::Object GeometryToObject(Napi::Env env, const fdl_geometry_t& d) {
 // -----------------------------------------------------------------------
 // fdl_from_intent_result_t
 // -----------------------------------------------------------------------
-
-inline fdl_from_intent_result_t ObjectToFromIntentResult(const Napi::Object& obj) {
-    fdl_from_intent_result_t result;
-    result.dimensions = ObjectToDimensionsF64(obj.Get("dimensions").As<Napi::Object>());
-    result.anchor_point = ObjectToPointF64(obj.Get("anchor_point").As<Napi::Object>());
-    result.has_protection = obj.Get("has_protection").As<Napi::Number>().Int32Value();
-    result.protection_dimensions = ObjectToDimensionsF64(obj.Get("protection_dimensions").As<Napi::Object>());
-    result.protection_anchor_point = ObjectToPointF64(obj.Get("protection_anchor_point").As<Napi::Object>());
-    return result;
-}
 
 inline Napi::Object FromIntentResultToObject(Napi::Env env, const fdl_from_intent_result_t& d) {
     auto obj = Napi::Object::New(env);

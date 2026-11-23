@@ -5,18 +5,29 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "browser": {
+    "./dist/ffi/loader-node.js": false,
+    "./dist/utils-node.js": false
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./wasm": {
+      "types": "./dist/wasm/index.d.ts",
+      "import": "./dist/wasm/index.js"
     }
   },
   "scripts": {
     "build": "cmake-js compile && tsc",
     "build:addon": "cmake-js compile",
     "build:ts": "tsc",
+    "build:wasm": "python ../../../scripts/build_wasm.py",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:wasm": "vitest run -c vitest.wasm.config.ts",
+    "test:wasm:smoke": "vitest run tests/wasm-smoke.test.ts",
     "format": "prettier --write 'src/**/*.ts'",
     "format:check": "prettier --check 'src/**/*.ts'",
     "typecheck": "tsc --noEmit",
@@ -39,6 +50,7 @@
   "files": [
     "dist/",
     "prebuilds/",
+    "wasm/",
     "src/addon/binding.cc",
     "src/addon/structs.h",
     "CMakeLists.txt"

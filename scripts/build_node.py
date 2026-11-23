@@ -14,6 +14,7 @@ Usage:
 """
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -22,6 +23,29 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 NODE_DIR = REPO_ROOT / "native" / "bindings" / "node"
 CORE_BUILD_DIR = REPO_ROOT / "native" / "core" / "build"
+
+
+def _run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
+    """Run a subprocess, working around a Windows quirk.
+
+    On Windows, npm/npx (and other Node CLIs) are ``.cmd`` shims that
+    ``CreateProcess`` cannot execute directly, so we route the command through
+    the shell there (cmd.exe resolves the ``.cmd`` via PATHEXT). On POSIX we run
+    the argv list directly as before.
+    """
+    check = kwargs.pop("check", False)
+    if os.name == "nt":
+        return subprocess.run(subprocess.list2cmdline(cmd), shell=True, check=check, **kwargs)
+    return subprocess.run(cmd, check=check, **kwargs)
+
+
+def _core_lib_search_dirs() -> list[Path]:
+    """Directories that may contain the built fdl_core library.
+
+    On Windows/MSVC (multi-config generators) the DLL lands in a per-config
+    subdir (Release/), so search it in addition to the base build dir.
+    """
+    return [CORE_BUILD_DIR, CORE_BUILD_DIR / "Release"]
 
 
 def check_prerequisites() -> list[str]:
@@ -34,12 +58,15 @@ def check_prerequisites() -> list[str]:
     if not shutil.which("cmake"):
         errors.append("cmake not found — install cmake")
 
-    # Check that libfdl_core exists
+    # Check that libfdl_core exists (search base build dir + Windows Release/ subdir)
     core_lib = None
-    for pattern in ["libfdl_core.dylib", "libfdl_core.so", "fdl_core.dll", "libfdl_core.a"]:
-        candidates = list(CORE_BUILD_DIR.glob(pattern))
-        if candidates:
-            core_lib = candidates[0]
+    for search_dir in _core_lib_search_dirs():
+        for pattern in ["libfdl_core.dylib", "libfdl_core.so", "fdl_core.dll", "libfdl_core.a"]:
+            candidates = list(search_dir.glob(pattern))
+            if candidates:
+                core_lib = candidates[0]
+                break
+        if core_lib is not None:
             break
     if core_lib is None:
         errors.append(f"libfdl_core not found in {CORE_BUILD_DIR}.\n  Build it first: python scripts/build_native.py")
@@ -51,7 +78,7 @@ def npm_install() -> int:
     """Install Node.js dependencies."""
     print("=== npm install ===")
     # Use --ignore-scripts to avoid triggering cmake-js during install
-    result = subprocess.run(
+    result = _run(
         ["npm", "install", "--ignore-scripts"],
         cwd=NODE_DIR,
         check=False,
@@ -62,11 +89,11 @@ def npm_install() -> int:
 def build_addon() -> int:
     """Build the N-API addon via cmake-js."""
     print("=== Building N-API addon (cmake-js) ===")
-    result = subprocess.run(
+    result = _run(
         ["npx", "cmake-js", "compile", "-d", str(NODE_DIR)],
         cwd=NODE_DIR,
         env={
-            **__import__("os").environ,
+            **os.environ,
             "FDL_CORE_LIB_DIR": str(CORE_BUILD_DIR),
         },
         check=False,
@@ -100,20 +127,20 @@ def _bundle_libfdl_core(dest_dir: Path) -> None:
         "libfdl_core.so.*",  # Linux versioned: libfdl_core.so.0, libfdl_core.so.0.6.0
         "fdl_core.dll",
     ]
-    for pattern in lib_patterns:
-        candidates = list(CORE_BUILD_DIR.glob(pattern))
-        for src in candidates:
-            dst = dest_dir / src.name
-            if dst.resolve() == src.resolve():
-                continue
-            shutil.copy2(src, dst)
-            print(f"  Bundled: {src.name} -> {dst}")
+    for search_dir in _core_lib_search_dirs():
+        for pattern in lib_patterns:
+            for src in search_dir.glob(pattern):
+                dst = dest_dir / src.name
+                if dst.resolve() == src.resolve():
+                    continue
+                shutil.copy2(src, dst)
+                print(f"  Bundled: {src.name} -> {dst}")
 
 
 def build_typescript() -> int:
     """Compile TypeScript to JavaScript."""
     print("=== Compiling TypeScript ===")
-    result = subprocess.run(
+    result = _run(
         ["npx", "tsc"],
         cwd=NODE_DIR,
         check=False,
@@ -124,7 +151,7 @@ def build_typescript() -> int:
 def run_tests() -> int:
     """Run vitest test suite."""
     print("=== Running vitest ===")
-    result = subprocess.run(
+    result = _run(
         ["npx", "vitest", "run"],
         cwd=NODE_DIR,
         check=False,

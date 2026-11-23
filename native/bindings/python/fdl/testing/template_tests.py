@@ -9,13 +9,17 @@ Classes:
         and extensibility hooks so that higher layers (imaging, Nuke) can
         inherit and add their own checks.
 
-    TestFitSourceValidation — scenario 21: fit_source path validation.
+    TestScenarioErrorValidation — every scenario flagged is_error_test (21-22),
+        driven generically from the ScenarioConfig error_* fields.
 
-    TestPreserveFromSourceCanvasValidation — scenario 22: preserve_from_source_canvas
-        path validation.
+    TestFitSourceValidation — fit_source effective_dimensions path validation.
+
+    TestPreserveFromSourceCanvasValidation — preserve_from_source_canvas
+        effective_dimensions path validation.
 
 Usage at the fdl level:
     from fdl.testing.template_tests import TestFDLTemplatesParameterized  # noqa: F401
+    from fdl.testing.template_tests import TestScenarioErrorValidation  # noqa: F401
     from fdl.testing.template_tests import TestFitSourceValidation  # noqa: F401
     from fdl.testing.template_tests import TestPreserveFromSourceCanvasValidation  # noqa: F401
 
@@ -43,6 +47,7 @@ from fdl.testing.scenario_config import (
     ScenarioConfig,
     SourceVariant,
     get_scenario_paths,
+    get_template_path,
     get_variant_by_letter,
 )
 
@@ -155,24 +160,62 @@ class _ErrorValidationBase:
     def _resources(self) -> Path:
         return BaseFDLTestCase.get_resources_folder()
 
-    def _load_source_components(self):
-        """Load the common source FDL (Sony FX3) used by all error tests."""
-        source_fdl_path = self._resources() / "New_Source_Files" / "Test_34_Sony_FX3_Priority.fdl"
+    def _load_source_components(self, config: ScenarioConfig | None = None):
+        """Load the source FDL used by error tests (defaults from ScenarioConfig error_* fields)."""
+        config = config or next(c for c in SCENARIO_CONFIGS.values() if c.is_error_test)
+        source_fdl_path = self._resources() / config.error_source_fdl
         assert source_fdl_path.exists(), f"Source FDL not found: {source_fdl_path}"
 
         source_fdl, error = self._tc.load_fdl_with_validation(source_fdl_path)
         assert error is None, f"Source FDL validation failed: {error}"
 
-        context = self._tc.get_component_from_fdl(source_fdl, "context", label="Sony FX3")
-        assert context is not None, "Context 'Sony FX3' not found"
+        context = self._tc.get_component_from_fdl(source_fdl, "context", label=config.error_source_context_label)
+        assert context is not None, f"Context '{config.error_source_context_label}' not found"
 
-        canvas = self._tc.get_component_from_fdl(source_fdl, "canvas", label="4K", context=context)
-        assert canvas is not None, "Canvas '4K' not found"
+        canvas = self._tc.get_component_from_fdl(source_fdl, "canvas", label=config.error_source_canvas_label, context=context)
+        assert canvas is not None, f"Canvas '{config.error_source_canvas_label}' not found"
 
-        fd = self._tc.get_component_from_fdl(source_fdl, "framing_decision", canvas=canvas, framing_intent_id="1")
-        assert fd is not None, "Framing decision with intent_id '1' not found"
+        fd = self._tc.get_component_from_fdl(source_fdl, "framing_decision", canvas=canvas, framing_intent_id=config.framing_intent_id)
+        assert fd is not None, f"Framing decision with intent_id '{config.framing_intent_id}' not found"
 
         return context, canvas, fd
+
+
+ERROR_SCENARIO_NUMBERS = sorted(n for n, c in SCENARIO_CONFIGS.items() if c.is_error_test)
+
+
+class TestScenarioErrorValidation(_ErrorValidationBase):
+    """
+    Scenarios flagged ``is_error_test`` (currently 21-22), driven from config.
+
+    Applies the scenario's template to its configured source and verifies a
+    ValueError mentioning ``error_match`` is raised.
+    """
+
+    @pytest.mark.parametrize("scen_num", ERROR_SCENARIO_NUMBERS, ids=lambda n: f"scen{n}")
+    def test_template_apply_raises(self, scen_num):
+        config = SCENARIO_CONFIGS[scen_num]
+        template_path = get_template_path(self._resources() / "Scenarios_For_Implementers", config)
+        assert template_path.exists(), f"Template FDL not found: {template_path}"
+
+        template_fdl, error = self._tc.load_fdl_with_validation(template_path)
+        assert error is None, f"Template FDL validation failed: {error}"
+
+        template = self._tc.get_component_from_fdl(template_fdl, "template", label=config.template_label)
+        assert template is not None, f"Template '{config.template_label}' not found"
+
+        context, canvas, fd = self._load_source_components(config)
+        assert fd.protection_dimensions is None, "Source should have no protection_dimensions"
+
+        with pytest.raises(ValueError, match=config.error_match):
+            template.apply(
+                source_canvas=canvas,
+                source_framing=fd,
+                new_fd_name="",
+                new_canvas_id="test",
+                source_context_label=context.label,
+                context_creator=config.context_creator,
+            )
 
 
 class TestFitSourceValidation(_ErrorValidationBase):
@@ -182,36 +225,6 @@ class TestFitSourceValidation(_ErrorValidationBase):
     Verifies that ValueError is raised when a template's fit_source
     references a path that doesn't exist in the source FDL.
     """
-
-    def test_fit_source_protection_dimensions_missing(self):
-        """ValueError when fit_source references protection_dimensions but source has none."""
-        template_fdl_path = (
-            self._resources()
-            / "Scenarios_For_Implementers"
-            / "Scen_2_FitProtection-into-UHD"
-            / "Scen_2_FitProtection-into-UHD-CANVAS-TEMPLATE.fdl"
-        )
-        assert template_fdl_path.exists(), f"Template FDL not found: {template_fdl_path}"
-
-        template_fdl, error = self._tc.load_fdl_with_validation(template_fdl_path)
-        assert error is None, f"Template FDL validation failed: {error}"
-
-        template = self._tc.get_component_from_fdl(template_fdl, "template", label="VFX Pull - Custom")
-        assert template is not None, "Template 'VFX Pull - Custom' not found"
-        assert template.fit_source == "framing_decision.protection_dimensions"
-
-        context, canvas, fd = self._load_source_components()
-        assert fd.protection_dimensions is None, "Source should have no protection_dimensions"
-
-        with pytest.raises(ValueError, match="protection_dimensions"):
-            template.apply(
-                source_canvas=canvas,
-                source_framing=fd,
-                new_fd_name="",
-                new_canvas_id="test",
-                source_context_label=context.label,
-                context_creator="ASC FDL Tools",
-            )
 
     def test_fit_source_effective_dimensions_missing(self):
         """ValueError when fit_source references effective_dimensions but source has none."""
@@ -250,36 +263,6 @@ class TestPreserveFromSourceCanvasValidation(_ErrorValidationBase):
     Verifies that ValueError is raised when a template's preserve_from_source_canvas
     references a path that doesn't exist in the source FDL.
     """
-
-    def test_preserve_from_source_canvas_protection_dimensions_missing(self):
-        """ValueError when preserve_from_source_canvas references protection_dimensions but source has none."""
-        template_fdl_path = (
-            self._resources()
-            / "Scenarios_For_Implementers"
-            / "Scen_3_Preserving-Protection"
-            / "Scen_3_Preserving-Protection-CANVAS-TEMPLATE.fdl"
-        )
-        assert template_fdl_path.exists(), f"Template FDL not found: {template_fdl_path}"
-
-        template_fdl, error = self._tc.load_fdl_with_validation(template_fdl_path)
-        assert error is None, f"Template FDL validation failed: {error}"
-
-        template = self._tc.get_component_from_fdl(template_fdl, "template", label="VFX Pull - Custom")
-        assert template is not None, "Template 'VFX Pull - Custom' not found"
-        assert template.preserve_from_source_canvas == "framing_decision.protection_dimensions"
-
-        context, canvas, fd = self._load_source_components()
-        assert fd.protection_dimensions is None, "Source should have no protection_dimensions"
-
-        with pytest.raises(ValueError, match="protection_dimensions"):
-            template.apply(
-                source_canvas=canvas,
-                source_framing=fd,
-                new_fd_name="",
-                new_canvas_id="test",
-                source_context_label=context.label,
-                context_creator="ASC FDL Tools",
-            )
 
     def test_preserve_from_source_canvas_effective_dimensions_missing(self):
         """ValueError when preserve_from_source_canvas references effective_dimensions but source has none."""
