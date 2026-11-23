@@ -40,7 +40,7 @@ interface ScenarioEntry {
   id: string;
   sourceFdl: string;
   expectedFdl: string;
-  contextLabel: string;
+  contextIndex: number;
   canvasId: string;
   framingId: string;
   template: TemplateParams;
@@ -87,7 +87,7 @@ describe("web viewer transform matches the committed Results FDLs", () => {
       const source = parseFdlFromString(readFileSync(path.join(repoRoot, entry.sourceFdl), "utf-8"));
       const result = applyTransform(
         source.sessionId,
-        entry.contextLabel,
+        entry.contextIndex,
         entry.canvasId,
         entry.framingId,
         entry.template,
@@ -97,7 +97,7 @@ describe("web viewer transform matches the committed Results FDLs", () => {
       assert.ok(actualSession, "output session should exist");
       const actual = findCanvasAndFraming(
         actualSession.fdl,
-        result.outputContextLabel,
+        result.outputContextIndex,
         result.outputCanvasId,
         result.outputFramingId,
       );
@@ -118,4 +118,21 @@ describe("web viewer transform matches the committed Results FDLs", () => {
       }
     });
   }
+});
+
+describe("contexts without labels", () => {
+  it("are addressed by index, including a second unlabeled context", () => {
+    const entry = entries.find((e) => e.id === "scen1_B");
+    assert.ok(entry);
+    const fdl = JSON.parse(readFileSync(path.join(repoRoot, entry.sourceFdl), "utf-8"));
+    const second = JSON.parse(JSON.stringify(fdl.contexts[0]));
+    second.canvases[0].id = "SECOND";
+    second.canvases[0].framing_decisions[0].id = "SECOND-1";
+    for (const context of [...fdl.contexts, second]) delete context.label;
+    fdl.contexts.push(second);
+
+    const source = parseFdlFromString(JSON.stringify(fdl));
+    const result = applyTransform(source.sessionId, 1, "SECOND", "SECOND-1", entry.template);
+    assert.equal(result.outputCanvasId, "SECOND_output");
+  });
 });
