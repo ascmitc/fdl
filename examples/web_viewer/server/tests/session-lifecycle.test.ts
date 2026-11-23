@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, it } from "node:test";
+import { after, describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
@@ -18,6 +18,9 @@ const entries = JSON.parse(readFileSync(path.join(here, "scenario_inputs.json"),
 const sourceJson = readFileSync(path.join(repoRoot, entries[0].sourceFdl), "utf-8");
 
 const THIRTY_ONE_MINUTES_MS = 31 * 60 * 1000;
+
+// Close any documents the tests leave behind.
+after(() => evictExpiredSessions(Number.POSITIVE_INFINITY));
 
 describe("FDL session lifecycle", () => {
   it("closes and removes sessions older than the TTL", () => {
@@ -41,6 +44,5 @@ describe("FDL session lifecycle", () => {
 
     assert.ok(getSession(sessionId), "fresh session should be kept");
     assert.equal(session.fdl.isClosed, false);
-    session.fdl.close();
   });
 });

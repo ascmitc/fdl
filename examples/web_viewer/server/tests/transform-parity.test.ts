@@ -13,7 +13,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, it } from "node:test";
+import { after, describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
@@ -26,6 +26,7 @@ import type { Canvas } from "@asc-mitc/fdl";
 
 import {
   computeGeometry,
+  evictExpiredSessions,
   findCanvasAndFraming,
   getSession,
   parseFdlFromString,
@@ -81,6 +82,9 @@ function findOutputCanvas(fdl: ReturnType<typeof readFromFile>): Canvas {
   throw new Error("expected FDL has no output canvas");
 }
 
+// Close the native documents held by sessions once the tests are done.
+after(() => evictExpiredSessions(Number.POSITIVE_INFINITY));
+
 describe("web viewer transform matches the committed Results FDLs", () => {
   for (const entry of entries) {
     it(entry.id, () => {
@@ -104,17 +108,21 @@ describe("web viewer transform matches the committed Results FDLs", () => {
       assert.ok(actual, "output canvas and framing should be found");
 
       const expectedFdl = readFromFile(path.join(repoRoot, entry.expectedFdl), true);
-      const expectedCanvas = findOutputCanvas(expectedFdl);
-      const expectedFraming = expectedCanvas.framingDecisions.at(0);
-      assert.ok(expectedFraming, "expected canvas should have a framing decision");
+      try {
+        const expectedCanvas = findOutputCanvas(expectedFdl);
+        const expectedFraming = expectedCanvas.framingDecisions.at(0);
+        assert.ok(expectedFraming, "expected canvas should have a framing decision");
 
-      assertClose(
-        computeGeometry(actual.canvas, actual.framing),
-        computeGeometry(expectedCanvas, expectedFraming),
-        "geometry",
-      );
-      for (const attr of [ATTR_SCALE_FACTOR, ATTR_CONTENT_TRANSLATION, ATTR_SCALED_BOUNDING_BOX]) {
-        assertClose(actual.canvas.getCustomAttr(attr), expectedCanvas.getCustomAttr(attr), attr);
+        assertClose(
+          computeGeometry(actual.canvas, actual.framing),
+          computeGeometry(expectedCanvas, expectedFraming),
+          "geometry",
+        );
+        for (const attr of [ATTR_SCALE_FACTOR, ATTR_CONTENT_TRANSLATION, ATTR_SCALED_BOUNDING_BOX]) {
+          assertClose(actual.canvas.getCustomAttr(attr), expectedCanvas.getCustomAttr(attr), attr);
+        }
+      } finally {
+        expectedFdl.close();
       }
     });
   }
