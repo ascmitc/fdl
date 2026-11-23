@@ -53,9 +53,16 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-tidy-19
-          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
-          sudo update-alternatives --install /usr/bin/run-clang-tidy run-clang-tidy /usr/bin/run-clang-tidy-19 100
-          # Fail loudly if the OS package stops being LLVM 19 (see CLANG_TIDY_MAJOR in scripts/lint.py).
+          # ubuntu-latest ships a newer clang-tidy that update-alternatives does not
+          # replace, so put the LLVM 19 tools first on PATH explicitly.
+          mkdir -p "$HOME/llvm19/bin"
+          ln -sf /usr/bin/clang-tidy-19 "$HOME/llvm19/bin/clang-tidy"
+          ln -sf /usr/bin/run-clang-tidy-19 "$HOME/llvm19/bin/run-clang-tidy"
+          echo "$HOME/llvm19/bin" >> "$GITHUB_PATH"
+
+      - name: Verify clang-tidy version
+        # Fail loudly if the tool is not LLVM 19 (see CLANG_TIDY_MAJOR in scripts/lint.py).
+        run: |
           clang-tidy --version
           clang-tidy --version | grep -q "LLVM version 19\."
 
